@@ -5,7 +5,7 @@ Lead Product Designer | FinTech, Marketplaces, Design Systems, B2B/B2C SaaS, AI-
 Email: rebosidium@gmail.com
 LinkedIn: https://www.linkedin.com/in/ribadima/
 Telegram: @ribadima
-Website: https://rebosidium.github.io/portfolio/
+Website: https://dmitryrybalka.com/
 English: B2, working proficiency
 Availability: Open to remote / relocation
 
@@ -128,9 +128,9 @@ Scale: 1000+ clinics, 35+ countries
 
 ## Portfolio And Resume Artifacts
 
-- Visual portfolio: https://rebosidium.github.io/portfolio/
-- LLM-readable index: https://rebosidium.github.io/portfolio/llms.txt
-- Full LLM-readable context: https://rebosidium.github.io/portfolio/llms-full.txt
-- Plain text resume: https://rebosidium.github.io/portfolio/resume.txt
-- Markdown resume mirror: https://rebosidium.github.io/portfolio/resume.md
-- JSON Resume: https://rebosidium.github.io/portfolio/resume.json
+- Visual portfolio: https://dmitryrybalka.com/
+- LLM-readable index: https://dmitryrybalka.com/llms.txt
+- Full LLM-readable context: https://dmitryrybalka.com/llms-full.txt
+- Plain text resume: https://dmitryrybalka.com/resume.txt
+- Markdown resume mirror: https://dmitryrybalka.com/resume.md
+- JSON Resume: https://dmitryrybalka.com/resume.json
