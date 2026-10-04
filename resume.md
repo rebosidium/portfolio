@@ -91,7 +91,7 @@ Scale: 1000+ clinics, 35+ countries
 
 - EF SET English Certificate, B2 Upper Intermediate, EF SET, Jun 2025.
 - Scrum Fundamentals Certified, SCRUMstudy, Jun 2025.
-- Master's Degree in Finance, Academic International Institute, May 2012.
+- Specialist Degree in Finance, Academic International Institute, May 2012.
 
 ## Skills And Tools
 
