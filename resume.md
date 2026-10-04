@@ -84,7 +84,7 @@ Scale: 1000+ clinics, 35+ countries
 
 - Designed UX for a healthcare platform used by 1000+ clinics across 35+ countries.
 - Launched an online treatment flow for 10K+ B2C patients.
-- Improved NPS from 37% to 54%.
+- Improved NPS from 37 to 54.
 - Integrated third-party modules, national labs, and Storybook-based UI components.
 
 ## Education And Certifications
