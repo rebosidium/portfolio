@@ -1,4 +1,4 @@
-# Dmitrii Rybalka Resume
+# Dmitry Rybalka Resume
 
 Lead Product Designer | FinTech, Marketplaces, Design Systems, B2B/B2C SaaS, AI-assisted Design
 
