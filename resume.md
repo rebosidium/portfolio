@@ -69,9 +69,9 @@ Scale: 50M+ MAU, 35K+ vendors
 Senior Product Designer
 Jun 2019 - Apr 2020
 Early-stage DIY marketplace startup
-Scale: 500+ suppliers, 2,000 B2B clients
+Scale: 500+ suppliers, 2K B2B clients
 
-- Led UX for a DIY marketplace startup with 500+ suppliers and 2,000 B2B clients.
+- Led UX for a DIY marketplace startup with 500+ suppliers and 2K B2B clients.
 - Increased conversion from 0.5% to 1.6%.
 - Launched product, checkout, and logistics workflows.
 

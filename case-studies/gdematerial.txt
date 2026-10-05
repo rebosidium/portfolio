@@ -8,7 +8,7 @@ GdeMaterial was an early-stage DIY marketplace for construction and home improve
 
 - Role: Senior Product Designer
 - Dates: Jun. 2019 - Apr. 2020
-- Scale: 500+ suppliers, 2K+ B2B clients
+- Scale: 500+ suppliers, 2K B2B clients
 - Platforms: Web, mobile web, marketplace
 - Products: DIY Marketplace, Checkout, Logistics
 - Scope: Marketplace UX, Product Catalog, Checkout, Logistics, Supplier Tools
