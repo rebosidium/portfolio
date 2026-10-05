@@ -13,7 +13,7 @@ Availability: Open to remote / relocation
 
 Product design leader with 15+ years of hands-on experience creating B2B/B2C digital products across FinTech, marketplaces, classifieds, HealthTech, leasing, and e-commerce. Experienced in leading full-cycle design from discovery and hypothesis framing to delivery, connecting user needs, business context, UX research, design systems, and product metrics such as conversion, retention, churn, NPS, and LTV.
 
-Currently leading Product Design, UX Research, DesignOps, and Design Systems across an international classifieds group with 5M+ MAU and 8+ product verticals. Previously worked at Raiffeisen Bank and Raiffeisen Leasing on an institutional trading terminal, internal leasing platform, and B2B marketplace. At Yandex.Market, developed analytics products and seller-facing tools for marketplace teams and vendors. Strong in design reviews, team development, OKRs, cross-functional collaboration, and AI-assisted workflows.
+Currently leading Product Design, UX Research, DesignOps, and Design Systems across an international classifieds group with 5M MAU and 8+ product verticals. Previously worked at Raiffeisen Bank and Raiffeisen Leasing on an institutional trading terminal, internal leasing platform, and B2B marketplace. At Yandex.Market, developed analytics products and seller-facing tools for marketplace teams and vendors. Strong in design reviews, team development, OKRs, cross-functional collaboration, and AI-assisted workflows.
 
 ## Professional Experience
 
@@ -22,7 +22,7 @@ Currently leading Product Design, UX Research, DesignOps, and Design Systems acr
 Design Lead
 Aug 2025 - Present
 Project markets: Cyprus, Mongolia, Tajikistan
-Scale: 5M+ MAU
+Scale: 5M MAU
 
 - Developed the design function across Product Design, DesignOps, Design Systems, and UX Research.
 - Led a team of 7 Product Designers and 1 UX Research Lead across 8+ product verticals.
@@ -57,12 +57,12 @@ Raiffeisen Leasing: B2B Leasing Marketplace and Internal CRM
 Senior Product Designer
 Apr 2020 - Jul 2021
 Large-scale e-commerce marketplace
-Scale: 50M+ MAU, 35K+ vendors
+Scale: 50M+ MAU, 35K vendors
 
 - Led UX for a large-scale analytics platform used by product and category teams.
 - Reduced vendor onboarding time from 90 days to 1 day by redesigning agreement workflows.
-- Designed seller tools for 35,000+ marketplace vendors.
-- Improved product taxonomy and categorization for 57M+ SKUs covering 890 marketplace categories.
+- Designed seller tools for 35,000 marketplace vendors.
+- Improved product taxonomy and categorization for 57M SKUs covering 890 marketplace categories.
 
 ### GdeMaterial
 

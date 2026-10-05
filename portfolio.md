@@ -23,7 +23,7 @@ The visual portfolio is available at `/`. This Markdown file is a concise agent-
 
 ### Larixon Classifieds
 
-Design Lead for an international classifieds group serving 5M+ monthly active users across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica. Work includes design leadership, UX research, design systems, DesignOps, and AI-assisted workflows.
+Design Lead for an international classifieds group serving 5M monthly active users across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica. Work includes design leadership, UX research, design systems, DesignOps, and AI-assisted workflows.
 
 ### Raiffeisen Group
 
@@ -31,7 +31,7 @@ Lead Product Designer on trading, investment, leasing, CRM, and B2B marketplace 
 
 ### Yandex.Market
 
-Senior Product Designer on analytics products, seller-facing tools, vendor onboarding, dashboards, and product taxonomy. Work includes B2B tools for 35K+ vendors and taxonomy logic across 57M+ SKUs and 890 categories.
+Senior Product Designer on analytics products, seller-facing tools, vendor onboarding, dashboards, and product taxonomy. Work includes B2B tools for 35K vendors and taxonomy logic across 57M SKUs and 890 categories.
 
 ### GdeMaterial
 

@@ -10,7 +10,7 @@ He has worked on classifieds, marketplaces, fintech products, trading terminals,
 
 ## What is his current role?
 
-He is currently Design Lead at Larixon Classifieds, an international classifieds group serving 5M+ monthly active users.
+He is currently Design Lead at Larixon Classifieds, an international classifieds group serving 5M monthly active users.
 
 ## What is his leadership experience?
 
@@ -26,7 +26,7 @@ Yes. He launched UX Research from zero to one at Larixon Classifieds and introdu
 
 ## What measurable results are shown in the portfolio?
 
-Examples include 5M+ MAU products, 50M+ MAU marketplace scale, 35K+ vendors, vendor onboarding reduced from 90 days to 1 day, leasing offer generation reduced from 12 minutes to 2 minutes, process automation increased from 10% to 90%, conversion increased from 0.5% to 1.6%, and NPS improved from 37 to 54.
+Examples include 5M MAU products, 50M+ MAU marketplace scale, 35K vendors, vendor onboarding reduced from 90 days to 1 day, leasing offer generation reduced from 12 minutes to 2 minutes, process automation increased from 10% to 90%, conversion increased from 0.5% to 1.6%, and NPS improved from 37 to 54.
 
 ## What roles would be a strong fit?
 

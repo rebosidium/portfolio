@@ -2,13 +2,13 @@
 
 ## Overview
 
-Larixon Classifieds is an international classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica, serving 5M+ monthly active users.
+Larixon Classifieds is an international classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica, serving 5M monthly active users.
 
 ## Role And Context
 
 - Role: Design Lead
 - Dates: Aug. 2025 - Present
-- Scale: 5M+ MAU
+- Scale: 5M MAU
 - Platform: Web and app
 - Product: Multi-country classifieds platforms
 - Scope: Product Design, UX Research, DesignOps, Design Systems
