@@ -25,7 +25,7 @@ Project markets: Cyprus, Mongolia, Tajikistan
 Scale: 5M+ MAU
 
 - Developed the design function across Product Design, DesignOps, Design Systems, and UX Research.
-- Led a team of 7+ Product Designers and 1 UX Research Lead across 8+ product verticals.
+- Led a team of 7 Product Designers and 1 UX Research Lead across 8+ product verticals.
 - Built the Design System from 0 to 1: Web/App, DSO roles, governance, and maturity tracker.
 - Launched UX Research from 0 to 1 across Cyprus, Mongolia, and Tajikistan, including cross-country studies.
 - Established OKR-based DesignOps, reviews, Jira visibility, onboarding, and IDPs.

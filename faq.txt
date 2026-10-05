@@ -14,7 +14,7 @@ He is currently Design Lead at Larixon Classifieds, an international classifieds
 
 ## What is his leadership experience?
 
-He has led 7+ Product Designers and a UX Research Lead at Larixon Classifieds, mentored 5 designers at Raiffeisen Group, supported hiring, ran design reviews, introduced 1:1s, improved onboarding, and created individual development plans.
+He has led 7 Product Designers and a UX Research Lead at Larixon Classifieds, mentored 5 designers at Raiffeisen Group, supported hiring, ran design reviews, introduced 1:1s, improved onboarding, and created individual development plans.
 
 ## Does he have design system experience?
 
