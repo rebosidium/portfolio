@@ -16,7 +16,7 @@ Larixon Classifieds is an international classifieds group with market-leading pl
 
 ## Contribution
 
-- Scaled design leadership: Led 7+ Product Designers and 1 UX Research Lead across 8+ product verticals.
+- Led product design teams: Led 7+ Product Designers and 1 UX Research Lead across 8+ product verticals.
 - Launched UX Research from zero to one: Started cross-country research across Cyprus, Mongolia, and Tajikistan.
 - Built Design System from zero to one: Created Web and App foundations with governance, DSO roles, and 90% component coverage for key flows.
 - Introduced AI-assisted workflows: Supported discovery, research synthesis, and documentation.

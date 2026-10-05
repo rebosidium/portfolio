@@ -22,7 +22,7 @@ Yes. He has built design-system foundations at Larixon Classifieds with governan
 
 ## Does he have UX research experience?
 
-Yes. He launched UX Research from zero to one at Larixon Classifieds and introduced cross-country research across Cyprus, Mongolia, and Tajikistan. He has also used AI-assisted workflows for hypothesis exploration, interview simulation, and research synthesis.
+Yes. He launched UX Research from zero to one at Larixon Classifieds and introduced cross-country research across Cyprus, Mongolia, and Tajikistan. He has also used LLM-powered tools for research preparation, insight synthesis, and early hypothesis exploration.
 
 ## What measurable results are shown in the portfolio?
 

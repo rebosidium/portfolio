@@ -21,14 +21,14 @@ Raiffeisen Leasing is the group's corporate leasing business. The work covered B
 - Led UX for a professional trading terminal: Designed a trading experience for 500+ institutional clients, including asset managers and brokers.
 - Improved design quality across teams: Mentored 5 designers, ran design reviews and 1:1s, and supported hiring across 2 product teams.
 - Defined product design strategy across 5+ tools: Aligned business goals, user needs, and product hypotheses across the investment product ecosystem.
-- Introduced LLM-powered research workflows: Used AI tools to simulate user interviews, explore hypotheses, and speed up early design validation.
+- Introduced LLM-powered research workflows: Used LLM-powered tools to accelerate research preparation, synthesize insights, and explore early hypotheses.
 
 ## Leasing Marketplace And CRM
 
 - Designed a B2B leasing marketplace and modular CRM: Created workflows for 19 role types, 350+ sales representatives, B2B clients, and car dealers.
 - Increased process automation from 10% to 90%: Streamlined business rules, operational flows, and internal decision-making.
 - Reduced offer generation time from 12 minutes to 2 minutes: Redesigned quoting workflows, UI logic, and offer preparation scenarios.
-- Introduced a scalable design process: Created reusable UX patterns and collaboration practices adopted across a 40+ designer organization.
+- Contributed to defining and implementing the Triple Diamond design process for an organization of 40+ designers.
 
 ## Relevant Capabilities
 

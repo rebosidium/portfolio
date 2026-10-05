@@ -25,7 +25,7 @@ Project markets: Cyprus, Mongolia, Tajikistan
 Scale: 5M+ MAU
 
 - Developed the design function across Product Design, DesignOps, Design Systems, and UX Research.
-- Scaled the team to 7+ Product Designers and 1 UX Research Lead across 8+ product verticals.
+- Led a team of 7+ Product Designers and 1 UX Research Lead across 8+ product verticals.
 - Built the Design System from 0 to 1: Web/App, DSO roles, governance, and maturity tracker.
 - Launched UX Research from 0 to 1 across Cyprus, Mongolia, and Tajikistan, including cross-country studies.
 - Established OKR-based DesignOps, reviews, Jira visibility, onboarding, and IDPs.
@@ -50,7 +50,7 @@ Raiffeisen Leasing: B2B Leasing Marketplace and Internal CRM
 - Designed a B2B leasing marketplace and modular CRM for 19 role types and 350+ sales reps.
 - Cut offer generation time from 12 minutes to 2 minutes by redesigning quoting workflows and UI logic.
 - Increased process automation from 10% to 90% by streamlining business rules and operational flows.
-- Introduced a scalable design process adopted across a 40+ designer organization.
+- Contributed to defining and implementing the Triple Diamond design process for an organization of 40+ designers.
 
 ### Yandex.Market
 
@@ -61,7 +61,7 @@ Scale: 50M+ MAU, 35K+ vendors
 
 - Led UX for a large-scale analytics platform used by product and category teams.
 - Reduced vendor onboarding time from 90 days to 1 day by redesigning agreement workflows.
-- Designed seller tools adopted by 35,000+ marketplace vendors.
+- Designed seller tools for 35,000+ marketplace vendors.
 - Improved product taxonomy and categorization for 57M+ SKUs covering 890 marketplace categories.
 
 ### GdeMaterial
