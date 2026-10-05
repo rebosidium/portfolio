@@ -18,15 +18,17 @@ He has led 7 Product Designers and a UX Research Lead at Larixon Classifieds, me
 
 ## Does he have design system experience?
 
-Yes. He has built design-system foundations at Larixon Classifieds with governance and DSO roles, and created Storybook-based UI components and scalable patterns at Medesk Ltd.
+Yes. He has built design-system foundations at Larixon Classifieds with governance and DSO roles, and designed and automated a design system using Storybook at Medesk Ltd., with reusable UI components and scalable patterns.
 
 ## Does he have UX research experience?
 
 Yes. He launched UX Research from zero to one at Larixon Classifieds and introduced cross-country research across Cyprus, Mongolia, and Tajikistan. He has also used LLM-powered tools for research preparation, insight synthesis, and early hypothesis exploration.
 
-## What measurable results are shown in the portfolio?
+## What company reach, product audience, and measurable outcomes are shown in the portfolio?
 
-Examples include 5M MAU products, 50M+ MAU marketplace scale, 35K vendors, vendor onboarding reduced from 90 days to 1 day, leasing offer generation reduced from 12 minutes to 2 minutes, process automation increased from 10% to 90%, conversion increased from 0.5% to 1.6%, and NPS improved from 37 to 54.
+Company reach: Larixon Classifieds serves 5M monthly active users (MAU), and Yandex.Market serves 50M+ MAU. Product audience: seller tools for 35K vendors at Yandex.Market and a trading terminal for 500+ institutional clients at Raiffeisen Bank.
+
+Measured outcomes include vendor onboarding reduced from 90 days to 1 day, leasing offer generation reduced from 12 minutes to 2 minutes, process automation increased from 10% to 90%, conversion increased from 0.5% to 1.6%, and NPS improved from 37 to 54.
 
 ## What roles would be a strong fit?
 

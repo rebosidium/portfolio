@@ -17,9 +17,9 @@ Medesk is a B2B HealthTech SaaS platform for clinics and medical teams, used by 
 ## HealthTech SaaS And Design System
 
 - Designed UX for a healthcare platform used by 1000 clinics: Improved core workflows for clinic teams, operations, and patient management across international markets.
-- Built reusable design system components: Created Storybook-based UI components and scalable interface patterns for core product flows and third-party integrations.
+- Designed and automated a design system using Storybook: Created Storybook-based UI components and scalable interface patterns for core product flows and third-party integrations.
 - Launched an online treatment flow for 10K B2C patients: Designed patient-facing experiences supporting digital treatment, communication, and care delivery.
-- Integrated 10 third-party modules and 5 medical laboratories: Designed integration flows supporting external services, lab data, and connected healthcare workflows.
+- Integrated 10 external modules and 5 medical laboratories: Designed integration flows supporting external services, lab data, and connected healthcare workflows.
 - Improved NPS from 37 to 54: Refined key product flows and patient interactions to improve service quality and user satisfaction.
 
 ## Relevant Capabilities

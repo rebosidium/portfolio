@@ -105,7 +105,6 @@ Early-stage DIY marketplace for construction and home improvement materials.
 Contributions and reported results:
 
 - Led UX for a DIY marketplace startup with 500+ suppliers and 2K B2B clients.
-- Built and launched mtrl.pro, a B2B platform for construction and wholesale clients.
 - Increased conversion from 0.5% to 1.6% through product page and checkout redesign.
 - Launched purchase and logistics workflows, including real-time communication between suppliers and buyers.
 
@@ -125,8 +124,8 @@ Contributions and reported results:
 - Designed UX for a healthcare platform used by 1000 clinics across 35 countries.
 - Launched an online treatment flow for 10K B2C patients.
 - Improved NPS from 37 to 54.
-- Integrated 10 third-party modules and 5 medical laboratories.
-- Designed and developed the design system using Storybook-based UI components.
+- Integrated 10 external modules and 5 medical laboratories.
+- Designed and automated a design system using Storybook.
 
 ## Earlier Experience | 2011-2016
 

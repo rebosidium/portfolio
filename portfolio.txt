@@ -1,6 +1,6 @@
 # Dmitry Rybalka Portfolio
 
-Product Design Lead with 15+ years of experience leading UX/UI and Product Design for B2B and B2C digital products used by millions.
+Product Design Lead with 15+ years in UX/UI and Product Design for B2B and B2C digital products used by millions. Experience includes leading design teams.
 
 ## Summary
 

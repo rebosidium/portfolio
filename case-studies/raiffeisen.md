@@ -12,7 +12,8 @@ Raiffeisen Leasing is the group's corporate leasing business. The work covered B
 - Dates: Jul. 2021 - Aug. 2025
 - Trading and investment period: Aug. 2024 - Aug. 2025
 - Leasing marketplace and CRM period: Jul. 2021 - Aug. 2024
-- Scale: 2M+ retail clients, 500+ institutional clients
+- Company reach: 2M+ retail clients at Raiffeisen Bank.
+- Product audience: 500+ institutional clients using the trading terminal.
 - Platforms: Web, desktop, internal tools
 - Products: Trading Terminal, Leasing CRM
 - Scope: Trading UX, Leasing UX, B2B Marketplace, CRM, FinTech UX
