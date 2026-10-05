@@ -39,7 +39,7 @@ Senior Product Designer on an early-stage DIY marketplace for construction and h
 
 ### Medesk Ltd.
 
-Senior Product Designer on a B2B HealthTech SaaS platform used by 1000+ clinics across 35+ countries. Work includes clinic workflows, patient flows, third-party integrations, and design system components.
+Senior Product Designer on a B2B HealthTech SaaS platform used by 1000 clinics across 35 countries. Work includes clinic workflows, patient flows, third-party integrations, and design system components.
 
 ## Primary Links
 

@@ -79,11 +79,11 @@ Scale: 500+ suppliers, 2,000 B2B clients
 
 Senior Product Designer
 Sep 2016 - Jun 2019
-B2B HealthTech SaaS used in 35+ countries
-Scale: 1000+ clinics, 35+ countries
+B2B HealthTech SaaS used in 35 countries
+Scale: 1000 clinics, 35 countries
 
-- Designed UX for a healthcare platform used by 1000+ clinics across 35+ countries.
-- Launched an online treatment flow for 10K+ B2C patients.
+- Designed UX for a healthcare platform used by 1000 clinics across 35 countries.
+- Launched an online treatment flow for 10K B2C patients.
 - Improved NPS from 37 to 54.
 - Integrated third-party modules, national labs, and Storybook-based UI components.
 
