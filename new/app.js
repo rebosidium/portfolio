@@ -240,16 +240,8 @@
           });
         } else intro.from('.title-line > span',{yPercent:110,duration:.85,stagger:.1},.3);
       }
-      const cleanups = [];
-      document.querySelectorAll('.feature').forEach(feature => {
-        if(feature.dataset.nodeId==='85:47')return;
-        const art = feature.querySelector('.feature-art');
-        const enter = () => gsap.to(art,{y:-6,rotation:-4,scale:1.045,duration:.4,ease:'power3.out',overwrite:true});
-        const leave = () => gsap.to(art,{y:0,rotation:0,scale:1,duration:.55,ease:'elastic.out(1,.5)',overwrite:true});
-        feature.addEventListener('pointerenter',enter); feature.addEventListener('pointerleave',leave);
-        cleanups.push(() => {feature.removeEventListener('pointerenter',enter); feature.removeEventListener('pointerleave',leave);});
-      });
-      return () => {cleanups.forEach(fn => fn());split?.revert();};
+      // Feature movement lives inside the approved frame animations.
+      return () => split?.revert();
     });
   });
   reduced.addEventListener('change',() => {

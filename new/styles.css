@@ -56,11 +56,11 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .feature{display:flex;gap:8px;align-items:center;min-width:0}
 .feature-art{flex:none;width:var(--feature-size);height:var(--feature-size);transition:width .35s var(--ease),height .35s var(--ease)}
 .feature-art img{display:block;width:100%;height:100%;object-fit:cover}
-.campfire-art{position:relative}
-.campfire-art>img[data-reveal]{transition:none}
-.campfire-art canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;opacity:0;visibility:hidden}
-.campfire-art.campfire-rendered canvas{opacity:1;visibility:visible}
-.campfire-art.campfire-rendered>img,.image-fades .campfire-art.campfire-rendered>img[data-reveal].image-ready{opacity:0;visibility:hidden}
+.campfire-art,.animated-feature-art{position:relative}
+.campfire-art>img[data-reveal],.animated-feature-art>img[data-reveal]{transition:none}
+.campfire-art canvas,.animated-feature-art canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;opacity:0;visibility:hidden}
+.campfire-art.campfire-rendered canvas,.animated-feature-art.icon-rendered canvas{opacity:1;visibility:visible}
+.campfire-art.campfire-rendered>img,.image-fades .campfire-art.campfire-rendered>img[data-reveal].image-ready,.animated-feature-art.icon-rendered>img,.image-fades .animated-feature-art.icon-rendered>img[data-reveal].image-ready{opacity:0;visibility:hidden}
 .feature p{margin:0;font-size:18px;font-weight:500;line-height:normal;flex:1;color:#000}
 @media(min-width:1024px) and (max-width:1439px){.header,.features{padding-left:var(--gutter);padding-right:var(--gutter)}.feature p{font-size:clamp(15px,1.25vw,18px)}.feature-art{width:min(var(--feature-size),clamp(88px,8.333vw,120px));height:min(var(--feature-size),clamp(88px,8.333vw,120px))}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.shell-pending .promo{transform:none;pointer-events:auto}.nav-pending .header{pointer-events:auto}.nav-pending .header a{visibility:visible;opacity:1}.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}}
