@@ -10,9 +10,10 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .promo-content{height:64px;display:flex;align-items:center;justify-content:center;gap:15px;white-space:nowrap}
 .promo-illustration{width:58px;height:58px;object-fit:cover;flex:none}
 .promo-text{font-size:16px;line-height:28px;font-weight:500;margin:0}
-.promo-button{height:40px;display:flex;align-items:center;justify-content:center;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;font-size:16px;line-height:28px;font-weight:500;transition:background .18s,border-color .18s,transform .18s}
-.promo-button:hover{background:#ffffff20;border-color:#ffffffb3}
-.promo-button:active{transform:scale(.97)}
+.promo-action{display:block;flex:none;border-radius:1000px}
+.promo-button{height:40px;display:flex;align-items:center;justify-content:center;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;font-size:16px;line-height:28px;font-weight:500;pointer-events:none;transition:background .18s,border-color .18s,scale .12s}
+.promo-action:hover .promo-button{background:#ffffff20;border-color:#ffffffb3}
+.promo-action:active .promo-button{scale:.97}
 .promo-close{position:absolute;right:24px;top:12px;width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;color:white;padding:0;opacity:.4;cursor:pointer;transition:opacity .18s}
 .promo-close:hover,.promo-close:focus-visible{opacity:1}
 .promo-close img{display:block}

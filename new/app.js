@@ -3,6 +3,7 @@
   const content = document.querySelector('.promo-content');
   const illustration = document.querySelector('.promo-illustration');
   const text = document.querySelector('.promo-text');
+  const action = document.querySelector('.promo-action');
   const button = document.querySelector('.promo-button');
   const close = document.querySelector('.promo-close');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -14,14 +15,14 @@
   variants.forEach(v => {const img = new Image(); img.src = v.image;});
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
   let timer, transition, dismissed = false, hovered = false;
-  const apply = () => {
+  const apply = (updateColor = true) => {
     const v = variants[index];
-    promo.style.backgroundColor = v.color;
+    if (updateColor) promo.style.backgroundColor = v.color;
     content.style.gap = `${v.gap}px`;
     illustration.src = v.image;
     text.textContent = v.text;
     button.textContent = v.cta;
-    button.href = `mailto:rebosidium@gmail.com?subject=${encodeURIComponent(v.subject)}`;
+    action.href = `mailto:rebosidium@gmail.com?subject=${encodeURIComponent(v.subject)}`;
     promo.dataset.variant = v.id;
   };
   apply();
@@ -31,11 +32,13 @@
     if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) return;
     timer = setTimeout(() => {
       if (window.gsap) {
+        const next = (index + 1) % variants.length;
         transition = gsap.timeline({onComplete:schedule});
-        transition.to(content,{y:-8,opacity:0,duration:.22,ease:'power2.in'}).call(() => {
-          index = (index + 1) % variants.length;
-          apply();
-        }).fromTo(content,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out'});
+        transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut'},0)
+          .to(content,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
+            index = next;
+            apply(false);
+          },null,.22).fromTo(content,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out'},.22);
       } else {index = (index + 1) % variants.length; apply(); schedule();}
     }, 10000);
   };
@@ -53,13 +56,22 @@
   });
   schedule();
   if (!window.gsap) return;
+  if (window.SplitText) gsap.registerPlugin(SplitText);
   const mm = gsap.matchMedia();
   mm.add('(prefers-reduced-motion: no-preference)',() => {
     const intro = gsap.timeline({defaults:{ease:'power3.out'}});
     intro.from('.header > a, .header nav a',{y:8,opacity:0,duration:.5,stagger:.05},0)
       .from('.portrait',{y:18,opacity:0,scale:.97,duration:.85},.1)
-      .from('.title-line > span',{yPercent:110,duration:.85,stagger:.1},.3)
       .from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
+    let split;
+    if (window.SplitText) {
+      split = SplitText.create('.title-line > span',{
+        type:'words',wordsClass:'title-word',aria:'none',autoSplit:true,
+        onSplit(self) {
+          return gsap.from(self.words,{yPercent:90,opacity:0,duration:.6,stagger:.045,delay:.3,ease:'power3.out',clearProps:'transform,opacity'});
+        }
+      });
+    } else intro.from('.title-line > span',{yPercent:110,duration:.85,stagger:.1},.3);
     const cleanups = [];
     document.querySelectorAll('.feature').forEach(feature => {
       const art = feature.querySelector('.feature-art');
@@ -68,7 +80,28 @@
       feature.addEventListener('pointerenter',enter); feature.addEventListener('pointerleave',leave);
       cleanups.push(() => {feature.removeEventListener('pointerenter',enter); feature.removeEventListener('pointerleave',leave);});
     });
-    return () => cleanups.forEach(fn => fn());
+    return () => {cleanups.forEach(fn => fn());split?.revert();};
   });
-  reduced.addEventListener('change',() => {transition?.kill();gsap.set(content,{clearProps:'transform,opacity'});schedule();});
+  mm.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)',() => {
+    const xTo = gsap.quickTo(button,'x',{duration:.16,ease:'power3.out'});
+    const yTo = gsap.quickTo(button,'y',{duration:.16,ease:'power3.out'});
+    const reset = () => {xTo(0);yTo(0);};
+    const move = event => {
+      if (event.pointerType !== 'mouse' || document.activeElement === action) return;
+      const rect = action.getBoundingClientRect();
+      xTo(gsap.utils.clamp(-4,4,(event.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 4));
+      yTo(gsap.utils.clamp(-3,3,(event.clientY - rect.top - rect.height / 2) / (rect.height / 2) * 3));
+    };
+    action.addEventListener('pointermove',move);
+    action.addEventListener('pointerleave',reset);
+    action.addEventListener('focus',reset);
+    return () => {
+      action.removeEventListener('pointermove',move);
+      action.removeEventListener('pointerleave',reset);
+      action.removeEventListener('focus',reset);
+      xTo.tween.kill();yTo.tween.kill();
+      gsap.set(button,{clearProps:'transform'});
+    };
+  });
+  reduced.addEventListener('change',() => {transition?.kill();apply();gsap.set(content,{clearProps:'transform,opacity'});schedule();});
 })();
