@@ -92,27 +92,6 @@
     });
     return () => {cleanups.forEach(fn => fn());split?.revert();};
   });
-  mm.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)',() => {
-    const xTo = gsap.quickTo(button,'x',{duration:.16,ease:'power3.out'});
-    const yTo = gsap.quickTo(button,'y',{duration:.16,ease:'power3.out'});
-    const reset = () => {xTo(0);yTo(0);};
-    const move = event => {
-      if (event.pointerType !== 'mouse' || document.activeElement === action) return;
-      const rect = action.getBoundingClientRect();
-      xTo(gsap.utils.clamp(-4,4,(event.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 4));
-      yTo(gsap.utils.clamp(-3,3,(event.clientY - rect.top - rect.height / 2) / (rect.height / 2) * 3));
-    };
-    action.addEventListener('pointermove',move);
-    action.addEventListener('pointerleave',reset);
-    action.addEventListener('focus',reset);
-    return () => {
-      action.removeEventListener('pointermove',move);
-      action.removeEventListener('pointerleave',reset);
-      action.removeEventListener('focus',reset);
-      xTo.tween.kill();yTo.tween.kill();
-      gsap.set(button,{clearProps:'transform'});
-    };
-  });
   reduced.addEventListener('change',() => {
     transition?.kill();apply();gsap.set(content,{clearProps:'transform,opacity'});
     if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
