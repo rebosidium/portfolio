@@ -43,7 +43,7 @@
     return variantAssets.get(variant.id);
   };
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
-  const rotationDelay = 10000;
+  const rotationDelay = 6000;
   let timer, transition, layoutTransition, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
   const enhanceGlassButton = async () => {
     if (dismissed || action.closest('lg-button')) return;
