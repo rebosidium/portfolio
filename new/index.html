@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="73938e310885">
+<html lang="en" data-build="9f30ea3806a7">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,8 +15,8 @@
   <link rel="preload" as="font" href="assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
   <link rel="modulepreload" href="vendor/components.js?v=968d5372ad45">
   <link rel="modulepreload" href="vendor/liquid-glass.js">
-  <link rel="modulepreload" href="portrait-spin.js?v=ae2b28ca209e">
-  <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=669b47a9e72c" crossorigin>
+  <link rel="modulepreload" href="portrait-spin.js?v=54b6d1309754">
+  <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=19581afb45f9" crossorigin>
   <script>
     window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve});
     window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve});
@@ -30,12 +30,12 @@
     },1600);
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
       document.documentElement.classList.add('motion-pending','image-fades');
-      // Slow deferred libraries must not bypass the 44-frame startup buffer.
+      // Slow deferred libraries must not bypass the prepared welcome turn.
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     }
   </script>
   <link rel="stylesheet" href="styles.css?v=d2eb2e338574">
-  <script type="module" src="portrait-boot.js?v=5da149cb871e" onerror="window.resolvePortraitReady(false)"></script>
+  <script type="module" src="portrait-boot.js?v=f9b5f148dfd9" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
   <script defer src="app.js?v=4b050063da81" onerror="window.portraitReady.then(window.releasePageFallback)"></script>

@@ -5,7 +5,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL)return {ready:Promise.resolve(false),startIntro(){return false},skipIntro(){},destroy(){}};
   let selectionAngle=-56.3529411764706,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
-  let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false;
+  let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
   const startupReady=new Promise(resolve=>{resolveStartup=resolve});
   const settleStartup=value=>{if(!startupSettled){startupSettled=true;resolveStartup(value)}};
   const cleanup=[];
@@ -76,22 +76,33 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   function physicalSize(){
     const width=stage.clientWidth||sourceSize[0];
-    const ratio=Math.max(1,window.devicePixelRatio||1);
+    // Seventy predecoded welcome poses are temporary. Keep their pixel budget
+    // at 2× CSS; restore the full selected resolution for the small manual LRU.
+    const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,introConsumed&&!introFrames.size?Infinity:2));
     const w=Math.min(sourceSize[0],Math.max(1,Math.ceil(width*ratio)));
     return [w,Math.max(1,Math.round(w*sourceSize[1]/sourceSize[0]))];
+  }
+  function sizedResource(drawable,width,height,size,dispose){
+    if(width===size[0]&&height===size[1])return {drawable,width,height,dispose};
+    const surface=document.createElement('canvas');surface.width=size[0];surface.height=size[1];
+    const context=surface.getContext('2d');
+    if(!context){dispose();throw new Error('Не удалось подготовить портрет.')}
+    context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+    try{context.drawImage(drawable,0,0,surface.width,surface.height)}finally{dispose()}
+    return {drawable:surface,width:surface.width,height:surface.height,dispose:()=>{surface.width=surface.height=0}};
   }
   async function decodeBlob(blob,size){
     if(typeof createImageBitmap==='function'){
       let bitmap;
       try{bitmap=await createImageBitmap(blob,{resizeWidth:size[0],resizeHeight:size[1],resizeQuality:'high'})}
       catch{bitmap=await createImageBitmap(blob)}
-      return {drawable:bitmap,width:bitmap.width,height:bitmap.height,dispose:()=>bitmap.close()};
+      return sizedResource(bitmap,bitmap.width,bitmap.height,size,()=>bitmap.close());
     }
     const objectURL=URL.createObjectURL(blob),img=new Image();img.decoding='async';
     try{
       if(typeof img.decode==='function'){img.src=objectURL;await img.decode()}
       else await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Не удалось прочитать кадр.'));img.src=objectURL});
-      return {drawable:img,width:img.naturalWidth,height:img.naturalHeight,dispose:()=>{img.onload=img.onerror=null;img.src='';URL.revokeObjectURL(objectURL)}};
+      return sizedResource(img,img.naturalWidth,img.naturalHeight,size,()=>{img.onload=img.onerror=null;img.src='';URL.revokeObjectURL(objectURL)});
     }catch(error){img.src='';URL.revokeObjectURL(objectURL);throw error}
   }
   function scheduleRender(){if(!raf)raf=requestAnimationFrame(render)}
@@ -225,8 +236,13 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     releaseIntroFrames();
   }
   function releaseIntroFrames(){
+    const prepared=introFrames.size>0;
     introFrames.clear();allowBackground=true;trimCache();queuePump();
+    if(prepared&&preparing){
+      for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(entry.index!==displayedIndex&&entry.index!==wantedIndex){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    }
     if(ready&&startupSettled&&!preparing)warmWindow(Math.max(0,displayedIndex),1);
+    if(prepared)checkResize();
   }
   function startIntro(){
     if(introConsumed||media.matches||document.hidden)return false;
@@ -243,7 +259,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     if(!first){requestDecode(introPreparedIndex,0);return}
     introRequested=false;introConsumed=true;introTime=0;introFrom=indexToAngle(first.index)-360;
     currentAngle=targetAngle=introFrom;lastMotionPhase=currentAngle;lastMotionDirection=1;
-    wantedIndex=first.index;draw(first,indexToAngle(first.index));
+    wantedIndex=first.index;beginStats();draw(first,indexToAngle(first.index));
     mode='intro';previousTick=0;canvas.dataset.mode=mode;canvas.dataset.introCount='1';
     scheduleRender();
   }
@@ -429,7 +445,14 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     const value=data.variants?.[key],count=data.frames;
     if(!value||!Number.isInteger(count)||count<2||count>1000||!Array.isArray(value.size)||value.size.length!==2||!value.size.every(n=>Number.isInteger(n)&&n>0&&n<=4096)||!Array.isArray(value.chunks)||!value.chunks.length)throw new Error('Не удалось прочитать описание поворота.');
     if(!Array.isArray(data.frame_angles)||data.frame_angles.length!==count||!data.frame_angles.every((n,i)=>Number.isFinite(n)&&n>=0&&n<360&&(!i||n>data.frame_angles[i-1])))throw new Error('Не удалось прочитать ракурсы.');
-    if(!Array.isArray(data.startup_indices)||data.startup_indices.length!==Math.ceil(count*.35)||new Set(data.startup_indices).size!==data.startup_indices.length||!data.startup_indices.every(i=>Number.isInteger(i)&&i>=0&&i<count))throw new Error('Invalid startup frame set');
+    const validIndices=indices=>Array.isArray(indices)&&indices.length>0&&new Set(indices).size===indices.length&&indices.every(i=>Number.isInteger(i)&&i>=0&&i<count);
+    if(!Number.isInteger(data.original_frames)||data.original_frames<2||data.original_frames>count||!validIndices(data.original_indices)||data.original_indices.length!==data.original_frames||!validIndices(data.intro_indices)||data.intro_indices.length<2||data.intro_indices.at(-1)!==data.front_index||!validIndices(data.startup_indices))throw new Error('Invalid startup frame set');
+    const originals=new Set(data.original_indices),intro=new Set(data.intro_indices),startup=new Set(data.startup_indices);
+    const near=data.original_indices.slice().sort((a,b)=>angleDistance(data.frame_angles[a],0)-angleDistance(data.frame_angles[b],0)).slice(0,Math.ceil(data.original_frames*.35));
+    const expected=new Set([...near,...data.intro_indices.filter(i=>!originals.has(i))]);
+    if(startup.size!==expected.size||[...expected].some(i=>!startup.has(i))||[...intro].some(i=>!startup.has(i))||[...expected].some(i=>!originals.has(i)&&!intro.has(i)))throw new Error('Invalid startup composition');
+    let previous=-360;
+    for(const index of data.intro_indices){const angle=data.frame_angles[index]===0?0:data.frame_angles[index]-360;if(angle<=previous)throw new Error('Invalid intro path');previous=angle}
     const seen=new Set();frameChunk=new Array(count);
     chunkStates=value.chunks.map((chunk,id)=>{
       if(typeof chunk.file!=='string'||!new RegExp('^assets/seedance-(startup|rest)-'+key+'-[0-9]{2}\\.zip(?:\\?v=[a-f0-9]{12})?$').test(chunk.file)||!Number.isSafeInteger(chunk.bytes)||chunk.bytes<=0||chunk.bytes>10_000_000||!Array.isArray(chunk.frames)||!chunk.frames.length)throw new Error('Повреждено описание части поворота.');
@@ -462,16 +485,17 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       if(!response.ok)throw new Error('Не удалось загрузить описание аватарки.');
       const data=await response.json();if(token!==generation)return;
       const key=chooseVariant();variant=prepareVariant(data,key);manifest=data;
-      urls=Array.from({length:data.frames},(_,i)=>String(i));angles=data.frame_angles.slice();blobs=new Array(urls.length);
+      urls=Array.from({length:data.frames},(_,i)=>String(i));angles=data.frame_angles.slice();blobs=new Array(urls.length);introPath=data.intro_indices.slice();
       sourceSize=variant.size.slice();renderSize=physicalSize();
       currentAngle=targetAngle=requestedAngle;wantedIndex=angleToIndex(currentAngle);updateAngle(currentAngle);
-      canvas.dataset.quality=key;
+      canvas.dataset.quality=key;canvas.dataset.totalFrameCount=String(data.frames);canvas.dataset.originalFrameCount=String(data.original_frames);
       const initial=wantedIndex;
       const near=Array.from({length:urls.length},(_,i)=>i).sort((a,b)=>angleDistance(indexToAngle(a),requestedAngle)-angleDistance(indexToAngle(b),requestedAngle));
       const order=[];for(const index of near){const id=frameChunk[index];if(!order.includes(id))order.push(id)}
       order.forEach((id,i)=>{chunkStates[id].order=i;chunkStates[id].priority=50+i});
-      // Download 35% around the front early; keep only a small decoded window.
-      const firstWindow=[initial,wrap(initial-1,urls.length),wrap(initial+1,urls.length)];
+      // Prepare the original front buffer plus the denser welcome-turn frames.
+      const previousOriginal=data.original_indices.filter(index=>index<initial).at(-1)??data.original_indices.at(-1);
+      const firstWindow=introConsumed?[initial,wrap(initial-1,urls.length),wrap(initial+1,urls.length)]:[initial,previousOriginal,introPath[1]];
       firstWindow.forEach((index,i)=>ensureEncoded(index,i));
       const startupFrames=startupSettled?firstWindow:data.startup_indices;
       await Promise.all([Promise.all(firstWindow.map(waitDecoded)),Promise.all(startupFrames.map(index=>waitEncoded(index,0)))]);
@@ -484,12 +508,12 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       setStatus('Можно вращать · остальные ракурсы загружаются в фоне');loadProgress();diagnostics();
       canvas.dataset.startupFrameCount=String(startupFrames.length);canvas.dataset.startupFraction=(startupFrames.length/data.frames).toFixed(3);
       if(!introConsumed){
-        introPreparedIndex=angleToIndex(-56);
+        introPreparedIndex=introPath[0];
         wantedIndex=introPreparedIndex;
         introFrames.clear();
-        for(let index=introPreparedIndex;;index=wrap(index+1,urls.length)){introFrames.add(index);if(index===angleToIndex(0))break}
+        for(const index of introPath)introFrames.add(index);
         canvas.dataset.introPrefetchedFrames=String(introFrames.size);
-        await Promise.all([...introFrames].map(waitDecoded));
+        await Promise.all([...introFrames].map(waitDecoded)).catch(error=>{if(!introConsumed||error.name!=='AbortError')throw error});
         if(token!==generation)return;
       }else{allowBackground=true;warmWindow(initial,1)}
       preparing=false;
@@ -502,8 +526,10 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   function checkResize(){
     if(!ready||!startupSettled||preparing)return;clearTimeout(resizeTimer);
+    // Finish the short welcome turn with its prepared bitmaps; resize once idle.
+    if(mode==='intro')return;
     resizeTimer=setTimeout(()=>{
-      if(!ready||!startupSettled||preparing)return;
+      if(!ready||!startupSettled||preparing||mode==='intro')return;
       if(manifest&&chooseVariant()!==canvas.dataset.quality){init();return}
       const next=physicalSize();
       if(Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;
