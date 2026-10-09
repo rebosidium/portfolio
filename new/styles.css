@@ -15,14 +15,13 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .promo-action:hover .promo-button,.promo-action:focus-visible .promo-button{background-color:#ffffff14;border-color:#ffffff80;box-shadow:inset 0 1px 0 #ffffff59,inset 0 -1px 0 #00000008,0 2px 6px #0000000d}
 .promo-action:active .promo-button{background-color:#ffffff05;box-shadow:inset 0 1px 3px #0000000d,inset 0 1px 0 #ffffff33}
 .promo-glass{display:inline-flex;flex:none;--lg-on-glass:#fff;--lg-focus:#fff;--lg-tint:#ffffff0a;--lg-shadow-2:0 2px 6px #0000000d;--lg-fallback:blur(10px) saturate(1.15)}
-.promo-glass .lg-button__el{display:inline-flex;min-height:40px;height:40px;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;background:#ffffff02;font-family:Manrope,sans-serif;font-size:16px;font-weight:500;line-height:28px;transition:border-color .28s,background-color .28s}
+.promo-glass .lg-button__el{display:inline-flex;min-height:40px;height:40px;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;background:#ffffff02;font-family:Manrope,sans-serif;font-size:16px;font-weight:500;line-height:28px}
 .promo-glass .lg-button__el:focus-visible{outline:2px solid #fff;outline-offset:5px}
 .promo-glass .lg-button__label{pointer-events:none}
-.promo-glass .lg-surface{opacity:0;transition:opacity .28s var(--ease)}
-.promo-glass .lg-surface__tint{background:linear-gradient(180deg,#ffffff26,#ffffff08);box-shadow:inset 0 1px 0 #ffffff45,inset 0 -1px 0 #00000008}
-.promo-glass:hover .lg-surface,.promo-glass:focus-within .lg-surface{opacity:1}
-.promo-glass .lg-button__el:hover,.promo-glass .lg-button__el:focus-visible{border-color:#ffffff80}
-.promo-glass .lg-button__el:active{background-color:#ffffff0a}
+/* Keep the backdrop filter's ancestors opaque; fade only the decorative tint. */
+.promo-glass .lg-surface{opacity:1}
+.promo-glass .lg-surface__tint{background:linear-gradient(180deg,#ffffff26,#ffffff08);opacity:0;transition:opacity .28s var(--ease)}
+.promo-glass:hover .lg-surface__tint,.promo-glass:focus-within .lg-surface__tint{opacity:1}
 .promo-close{position:absolute;right:24px;top:12px;width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;color:white;padding:0;opacity:.4;cursor:pointer;transition:opacity .18s}
 .promo-close:hover,.promo-close:focus-visible{opacity:1}
 .promo-close img{display:block}

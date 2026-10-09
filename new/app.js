@@ -46,13 +46,31 @@
   const rotationDelay = 10000;
   let timer, transition, layoutTransition, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
   const enhanceGlassButton = async () => {
-    if (dismissed) return;
+    if (dismissed || action.closest('lg-button')) return;
     try {
       await import('./vendor/components.js');
-      if (dismissed) return;
+      if (dismissed || action.closest('lg-button')) return;
+      // Do not swap the fallback link underneath a pointer or keyboard focus.
+      if (action.matches(':hover') || document.activeElement === action) {
+        const original = action;
+        const cleanup = () => {
+          original.removeEventListener('pointerleave',retry);
+          original.removeEventListener('blur',retry);
+          close.removeEventListener('click',cleanup);
+        };
+        const retry = () => {
+          if (original.matches(':hover') || document.activeElement === original) return;
+          cleanup();
+          enhanceGlassButton();
+        };
+        original.addEventListener('pointerleave',retry);
+        original.addEventListener('blur',retry);
+        close.addEventListener('click',cleanup,{once:true});
+        return;
+      }
       const glass = document.createElement('lg-button');
       glass.className = 'promo-glass';
-      for (const [name,value] of Object.entries({href:action.href,radius:'capsule',refraction:'6',chroma:'0',specular:'.25',bezel:'.6'})) glass.setAttribute(name,value);
+      for (const [name,value] of Object.entries({href:action.href,radius:'capsule',refraction:'6',chroma:'0',specular:'0',bezel:'.6'})) glass.setAttribute(name,value);
       glass.textContent = button.textContent;
       const focused = document.activeElement === action;
       action.replaceWith(glass);
