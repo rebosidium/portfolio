@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="26b0ab7d19b0">
+<html lang="en" data-build="73938e310885">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,27 +9,36 @@
   <meta name="description" content="15+ years of hands-on product design, AI-assisted prototyping and design leadership.">
   <base href="/new/">
   <link rel="icon" href="data:,">
-  <link rel="preload" as="image" href="assets/portrait-front.webp?v=38f33841c2ab" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/portrait-start.webp?v=2bd283908647" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/portrait-front.webp?v=38f33841c2ab" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
   <link rel="modulepreload" href="vendor/components.js?v=968d5372ad45">
   <link rel="modulepreload" href="vendor/liquid-glass.js">
+  <link rel="modulepreload" href="portrait-spin.js?v=ae2b28ca209e">
+  <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=669b47a9e72c" crossorigin>
   <script>
+    window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve});
+    window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve});
+    window.releasePageFallback = () => {
+      document.documentElement.classList.remove('motion-pending','image-fades');
+      window.resolvePortraitReveal(true);
+    };
     document.documentElement.classList.add('glass-pending');
     window.glassRevealFallback = setTimeout(() => {
       document.documentElement.classList.remove('glass-pending');
     },1600);
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
       document.documentElement.classList.add('motion-pending','image-fades');
-      window.pageRevealFallback = setTimeout(() => {
-        document.documentElement.classList.remove('motion-pending','image-fades');
-      },1600);
+      // Slow deferred libraries must not bypass the 44-frame startup buffer.
+      window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=52bcadbb0d86">
+  <link rel="stylesheet" href="styles.css?v=d2eb2e338574">
+  <script type="module" src="portrait-boot.js?v=5da149cb871e" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=e4711cf790e0"></script>
+  <script defer src="app.js?v=4b050063da81" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body>
@@ -52,7 +61,7 @@
   </header>
   <main>
     <section class="hero" aria-labelledby="hero-title" data-node-id="85:95">
-      <div class="portrait" role="img" aria-label="Dmitry Rybalka"><img src="assets/portrait-front.webp?v=38f33841c2ab" width="311" height="311" fetchpriority="high" loading="eager" decoding="async" data-reveal alt="" aria-hidden="true" draggable="false" data-node-id="85:48"><canvas width="311" height="311" aria-hidden="true"></canvas></div>
+      <div class="portrait" role="img" aria-label="Dmitry Rybalka"><picture><source media="(prefers-reduced-motion: reduce)" srcset="assets/portrait-front.webp?v=38f33841c2ab"><img src="assets/portrait-start.webp?v=2bd283908647" width="311" height="311" fetchpriority="high" loading="eager" decoding="async" data-reveal alt="" aria-hidden="true" draggable="false" data-node-id="85:48"></picture><canvas width="311" height="311" aria-hidden="true"></canvas></div>
       <h1 id="hero-title" aria-label="Hi, I’m Dmitry. I design products and lead design teams"><span class="title-line" aria-hidden="true"><span>Hi, I’m Dmitry. I design products</span></span><span class="title-line" aria-hidden="true"><span>and lead design teams</span></span></h1>
     </section>
     <section class="features" aria-label="Design experience" data-node-id="85:44">

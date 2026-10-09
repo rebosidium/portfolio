@@ -162,9 +162,6 @@
     initialReady = true; schedule();
     const warmRemaining = async () => {
       await glassReady;
-      import('./portrait-spin.js?v=9ee642d4c842').then(({mountSeedancePortrait}) => {
-        mountSeedancePortrait(document.querySelector('.portrait'),{manifestURL:'assets/seedance-manifest.json?v=a6502cd9c738'});
-      }).catch(() => {});
       for (const offset of [1,2]) {
         if (dismissed || reduced.matches) return;
         await preloadVariant(variants[(index + offset) % variants.length]);
@@ -173,25 +170,32 @@
     if (window.requestIdleCallback) requestIdleCallback(warmRemaining,{timeout:1500});
     else setTimeout(warmRemaining,200);
   });
-  if (!window.gsap) {finishBoot(); return;}
+  if (!window.gsap) {
+    Promise.all([window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true)});
+    return;
+  }
   if (window.SplitText) gsap.registerPlugin(SplitText);
   const mm = gsap.matchMedia();
   const fontsReady = document.fonts
     ? Promise.allSettled([document.fonts.load('500 48px Lora'),document.fonts.load('600 20px Manrope')])
     : Promise.resolve();
+  const poster=document.querySelector('.portrait img');
   Promise.all([
+    window.portraitReady,
+    Promise.race([decodeImage(poster),new Promise(resolve=>setTimeout(resolve,1600))]),
     Promise.race([fontsReady,new Promise(resolve => setTimeout(resolve,800))]),
     Promise.race([glassReady,new Promise(resolve => setTimeout(resolve,1600))])
   ]).then(() => {
     let playIntro = root.classList.contains('motion-pending');
     finishBoot();
+    if(!playIntro)window.resolvePortraitReveal(true);
     mm.add('(prefers-reduced-motion: no-preference)',() => {
       let split;
       if (playIntro) {
         playIntro = false;
         const intro = gsap.timeline({defaults:{ease:'power3.out'}});
         intro.from('.header > a, .header nav a',{y:8,opacity:0,duration:.5,stagger:.05},0)
-          .from('.portrait',{y:18,opacity:0,scale:.97,duration:.85},.1)
+          .from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1)
           .from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
         if (window.SplitText) {
           split = SplitText.create('.title-line > span',{

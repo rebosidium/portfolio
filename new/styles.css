@@ -45,6 +45,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .title-line{display:block;overflow:hidden}
 .title-line>span{display:block}
 .motion-pending .header a,.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature{opacity:0}
+.motion-pending .portrait{pointer-events:none}
 .image-fades img[data-reveal]{opacity:0;transition:opacity .4s var(--ease)}
 .image-fades img[data-reveal].image-ready{opacity:1}
 .features{max-width:1440px;margin:max(16px,calc(62.6px + var(--vertical-room) * .4)) auto 0;padding:0 72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;transition:margin-top .35s var(--ease)}
