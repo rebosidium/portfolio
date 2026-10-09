@@ -12,8 +12,8 @@
     main{max-width:780px;margin:auto;padding:30px 24px}
     h1{font:400 34px Georgia,serif;margin:0 0 12px}
     p{color:#726d67;line-height:1.5}
-    .stage{position:relative;width:min(100%,500px);aspect-ratio:1;margin:24px auto;background:#f8f5f3;border-radius:24px;overflow:hidden;touch-action:pan-y;cursor:grab}
-    .stage.dragging{cursor:grabbing;touch-action:none}
+    .stage{position:relative;width:min(100%,500px);aspect-ratio:1;margin:24px auto;background:#f8f5f3;border-radius:24px;overflow:hidden;touch-action:pan-y pinch-zoom;cursor:grab}
+    .stage.dragging{cursor:grabbing}
     .stage.dark{background:#25272c}
     canvas{display:block;width:100%;height:100%;object-fit:contain;outline-offset:-4px}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;align-items:center}
@@ -33,7 +33,7 @@
 <body>
 <main>
   <h1>Вращение аватарки</h1>
-  <p id="hint">Потяните влево или вправо, чтобы повернуть фигурку. Можно использовать ползунок или стрелки на клавиатуре.</p>
+  <p id="hint">Крутите фигурку в любую сторону — без ограничения оборотов. Быстрый взмах продолжит вращение по инерции. Можно использовать ползунок или стрелки на клавиатуре.</p>
   <div class="controls">
     <label>Ролик <select id="version"><option value="v2-lite">Версия 2 · быстрая</option><option value="v2">Версия 2 · полная</option><option value="v1">Версия 1 · предыдущая</option></select></label>
     <label>Фон <select id="background"><option value="">Сайт · #F8F5F3</option><option value="dark">Тёмный</option></select></label>
@@ -56,6 +56,6 @@
     Управление последовательностью кадров. Угол приблизительный; ракурсы сзади сгенерированы.
   </footer>
 </main>
-<script src="spin-player-v4.js" defer></script>
+<script src="spin-player-v5.js" defer></script>
 </body>
 </html>
