@@ -130,14 +130,17 @@
       if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) {schedule(); return;}
       if (window.gsap) {
         const started = performance.now();
+        // Fading a backdrop-filter ancestor changes the sampled backdrop and flashes the rim.
+        // Keep the glass and its ancestors opaque; transition only the image and text leaves.
+        const changingContent = [illustration,text,button];
         transition = gsap.timeline({onComplete:() => {
           if (timer === undefined) schedule(Math.max(0,rotationDelay - (performance.now() - started)));
         }});
         transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut'},0)
-          .to(content,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
+          .to(changingContent,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
             index = next;
             apply(false);
-          },null,.22).fromTo(content,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out'},.22);
+          },null,.22).fromTo(changingContent,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out',clearProps:'transform,opacity'},.22);
       } else {index = next; apply(); schedule();}
     }, delay);
   };
@@ -218,7 +221,7 @@
     });
   });
   reduced.addEventListener('change',() => {
-    transition?.kill();apply();gsap.set(content,{clearProps:'transform,opacity'});
+    transition?.kill();apply();gsap.set([content,illustration,text,button],{clearProps:'transform,opacity'});
     if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
     schedule();
   });
