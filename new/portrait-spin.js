@@ -1,9 +1,13 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 export function mountSeedancePortrait(stage, {manifestURL} = {}) {
-  const canvas=stage.querySelector('canvas'),posterElement=stage.querySelector('img');
+  const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
-  if(!ctx||!posterElement||!manifestURL)return {ready:Promise.resolve(false),startIntro(){return false},skipIntro(){},destroy(){}};
+  if(!ctx||!posterElement||!manifestURL){
+    const state=Object.freeze({generation:0,quality:null,desiredQuality:null,ready:false,allReady:false,loading:false,error:'Portrait unavailable',activeDownloads:0});
+    const allFramesReady=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
+    return {ready:Promise.resolve(false),get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
+  }
   let selectionAngle=-56.3529411764706,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
   let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
   const startupReady=new Promise(resolve=>{resolveStartup=resolve});
@@ -23,6 +27,10 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
   let variant=null,chunkStates=[],frameChunk=[],chunkPumpQueued=false,lastPreemptAt=-1000,loadStartedAt=0;
   const activeChunks=new Set(),encodedWaiters=new Map();
+  let currentStartupReady=false,encodedAllReady=false,loadAttemptActive=false,loadQuality=null,loadError='';
+  let resolveAllFrames=null,lastLoadState=null;
+  let allFramesPromise=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
+  const loadSubscribers=new Set();
   const introFrames=new Set();
   let allowBackground=false,preparing=false;
   let stats={draws:0,gaps:[],drawTimes:[],decodeTimes:[],lastDraw:0,waits:0};
@@ -31,6 +39,37 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const angleDistance=(a,b)=>Math.abs(wrap(a-b+180,360)-180);
   const shortestDelta=(a,b)=>wrap(a-b+180,360)-180;
   const cancelled=()=>new DOMException('Cancelled','AbortError');
+  function loadingState(){
+    const desiredQuality=chooseVariant(),qualityReady=currentStartupReady&&loadQuality===desiredQuality;
+    return Object.freeze({generation,quality:loadQuality,desiredQuality,ready:qualityReady,allReady:encodedAllReady,
+      loading:loadAttemptActive&&!(qualityReady&&encodedAllReady&&activeChunks.size===0),error:loadError,activeDownloads:activeChunks.size});
+  }
+  function notifyLoading(){
+    const state=loadingState();
+    if(lastLoadState&&Object.keys(state).every(key=>state[key]===lastLoadState[key]))return;
+    lastLoadState=state;
+    // Optional dependent components must not interrupt the portrait loader.
+    for(const callback of [...loadSubscribers]){try{callback(state)}catch{}}
+  }
+  function subscribeLoading(callback){
+    if(typeof callback!=='function')return ()=>{};
+    loadSubscribers.add(callback);
+    try{callback(loadingState())}catch{}
+    return ()=>loadSubscribers.delete(callback);
+  }
+  function settleAllFrames(value){
+    if(!resolveAllFrames)return;
+    const resolve=resolveAllFrames;resolveAllFrames=null;
+    resolve(Object.freeze({generation,quality:loadQuality,ready:value}));
+  }
+  function beginLoading(){
+    // Resolve obsolete waiters with their old token before creating a new one.
+    settleAllFrames(false);generation++;
+    currentStartupReady=encodedAllReady=false;loadAttemptActive=true;loadQuality=null;loadError='';
+    allFramesPromise=new Promise(resolve=>{resolveAllFrames=resolve});
+    delete canvas.dataset.allReady;delete canvas.dataset.allLoadedMs;
+    notifyLoading();return generation;
+  }
   function setStatus(text){canvas.dataset.status=text}
   function angleToIndex(angle){
     const target=wrap(angle,360);
@@ -321,7 +360,12 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   function loadProgress(){
     canvas.dataset.activeDownloads=String(activeChunks.size);
     Object.assign(canvas.dataset,{encodedReadyCount:String(loadedCount),encodedBytes:String(loadedBytes),totalBytes:String(variant?.encoded_bytes||0)});
-    if(loadedCount===urls.length){canvas.dataset.allReady='true';if(!canvas.dataset.allLoadedMs)canvas.dataset.allLoadedMs=(performance.now()-loadStartedAt).toFixed(1)}
+    if(urls.length>0&&loadedCount===urls.length){
+      encodedAllReady=true;canvas.dataset.allReady='true';
+      if(!canvas.dataset.allLoadedMs)canvas.dataset.allLoadedMs=(performance.now()-loadStartedAt).toFixed(1);
+      settleAllFrames(true);
+    }
+    notifyLoading();
   }
   function queuePump(){
     if(chunkPumpQueued)return;chunkPumpQueued=true;
@@ -423,6 +467,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     }
     while(activeChunks.size<CHUNK_WORKERS&&pending.length){
       const chunk=pending.shift();chunk.state='loading';chunk.preempted=false;activeChunks.add(chunk);
+      loadProgress();
       readChunk(chunk,token).catch(error=>{
         if(token!==generation)return;
         if(error.name==='AbortError'&&chunk.preempted){chunk.state='pending';return}
@@ -469,7 +514,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   async function init(){
     if(destroyed||media.matches||document.hidden)return;
     const requestedAngle=selectionAngle;
-    const token=++generation;fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
+    const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
     const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
     releaseDrag();stop();ready=false;bufferReady=false;preparing=true;
@@ -478,6 +523,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     clearDecoded();cancelAnimationFrame(raf);raf=0;displayedIndex=-1;loadedBytes=0;loadedCount=0;runtimeFetches=0;blobs=[];urls=[];angles=[];variant=null;chunkStates=[];activeChunks.clear();
     for(const name of ['ready','bitmapEpoch','frame','alpha','preloadMs','readyBytes','readyFrames','allReady','allLoadedMs'])delete canvas.dataset[name];
     canvas.dataset.version='seedance';canvas.dataset.mode='loading';
+    loadProgress();
     // Retain the displayed pose while an automatic quality change loads.
     setStatus('Подготавливаю поворот…');beginStats();
     try{
@@ -489,6 +535,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       sourceSize=variant.size.slice();renderSize=physicalSize();
       currentAngle=targetAngle=requestedAngle;wantedIndex=angleToIndex(currentAngle);updateAngle(currentAngle);
       canvas.dataset.quality=key;canvas.dataset.totalFrameCount=String(data.frames);canvas.dataset.originalFrameCount=String(data.original_frames);
+      loadQuality=key;notifyLoading();
       const initial=wantedIndex;
       const near=Array.from({length:urls.length},(_,i)=>i).sort((a,b)=>angleDistance(indexToAngle(a),requestedAngle)-angleDistance(indexToAngle(b),requestedAngle));
       const order=[];for(const index of near){const id=frameChunk[index];if(!order.includes(id))order.push(id)}
@@ -519,12 +566,15 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       preparing=false;
       diagnostics();
       stage.dataset.spinReady='true';stage.tabIndex=0;stage.setAttribute('aria-busy','false');canvas.dataset.ready='true';canvas.dataset.preloadMs=(performance.now()-loadStartedAt).toFixed(1);
+      currentStartupReady=true;notifyLoading();
       settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
     }catch(error){
       if(token!==generation)return;fallback(error);
     }finally{clearTimeout(startupDeadline)}
   }
   function checkResize(){
+    // A desired quality change closes dependent gates before the resize debounce.
+    notifyLoading();
     if(!ready||!startupSettled||preparing)return;clearTimeout(resizeTimer);
     // Finish the short welcome turn with its prepared bitmaps; resize once idle.
     if(mode==='intro')return;
@@ -542,6 +592,15 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(checkResize):null;
   resizeObserver?.observe(stage);
   listen(window,'resize',checkResize);
+  let densityQuery;
+  const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
+  function watchDensity(){
+    densityQuery?.removeEventListener('change',densityChanged);
+    densityQuery=window.matchMedia(`(resolution: ${Math.max(1,window.devicePixelRatio||1)}dppx)`);
+    densityQuery.addEventListener('change',densityChanged);
+  }
+  watchDensity();cleanup.push(()=>densityQuery?.removeEventListener('change',densityChanged));
+  if(navigator.connection?.addEventListener)listen(navigator.connection,'change',()=>{notifyLoading();checkResize()});
   listen(stage,'pointerdown',event=>{
     if(media.matches||event.button!==0||event.isPrimary===false)return;
     skipIntro();
@@ -601,23 +660,28 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     }else if(event.key==='Home'){event.preventDefault();setTarget(0,{session:true})}
 
   });
-  function suspend(){
-    generation++;ready=bufferReady=false;preparing=false;skipIntro();settleStartup(false);releaseDrag();stop();fetchController?.abort();rejectEncoded(cancelled());
+  function suspend(error=''){
+    settleAllFrames(false);generation++;
+    currentStartupReady=encodedAllReady=loadAttemptActive=false;loadError=error;
+    allFramesPromise=Promise.resolve(Object.freeze({generation,quality:loadQuality,ready:false}));
+    delete canvas.dataset.ready;delete canvas.dataset.allReady;delete canvas.dataset.allLoadedMs;
+    ready=bufferReady=false;preparing=false;skipIntro();settleStartup(false);releaseDrag();stop();fetchController?.abort();rejectEncoded(cancelled());
     clearDecoded();cancelAnimationFrame(raf);raf=0;clearTimeout(resizeTimer);blobs=[];activeChunks.clear();
     stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','false');
+    canvas.dataset.activeDownloads='0';notifyLoading();
   }
   function fallback(error){
-    suspend();stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label','Dmitry Rybalka');
+    suspend(error?.message||'');stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label','Dmitry Rybalka');
     canvas.dataset.mode=media.matches?'reduced':'static';canvas.dataset.error=error?.message||'';
     selectionAngle=0;ctx.clearRect(0,0,canvas.width,canvas.height);
     // The static poster remains visible if a network/decode request fails.
     posterElement.classList.add('image-ready');
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
-  listen(document,'visibilitychange',()=>{if(document.hidden){skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else queuePump()});
+  listen(document,'visibilitychange',()=>{if(document.hidden){skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
-  if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);}
+  if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
-  return {ready:startupReady,startIntro,skipIntro,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());stage.classList.remove('portrait-rendered');}};
+  return {ready:startupReady,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }

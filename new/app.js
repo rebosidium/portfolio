@@ -211,6 +211,7 @@
       }
       const cleanups = [];
       document.querySelectorAll('.feature').forEach(feature => {
+        if(feature.dataset.nodeId==='85:47')return;
         const art = feature.querySelector('.feature-art');
         const enter = () => gsap.to(art,{y:-6,rotation:-4,scale:1.045,duration:.4,ease:'power3.out',overwrite:true});
         const leave = () => gsap.to(art,{y:0,rotation:0,scale:1,duration:.55,ease:'elastic.out(1,.5)',overwrite:true});
