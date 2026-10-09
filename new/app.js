@@ -21,9 +21,9 @@
     root.classList.remove('motion-pending');
   };
   const variants = [
-    {id:'audit',color:'#8e6dd0',image:'assets/audit.png?v=20261009-assets1',text:'Find opportunities to improve your product with a design audit',cta:'Book an audit',subject:'Design audit',gap:15},
-    {id:'work',color:'#0b9bf7',image:'assets/open-to-work.png?v=20261009-assets1',text:'Open to new design roles and exciting projects',cta:'Let’s talk',subject:'Design role or project',gap:15},
-    {id:'consulting',color:'#59bf61',image:'assets/consulting.png?v=20261009-assets1',text:'Design consulting & mentoring for individuals and teams',cta:'Book Consulting',subject:'Design consulting',gap:23}
+    {id:'audit',color:'#8e6dd0',image:'assets/audit.png?v=47213b1faa6f',text:'Find opportunities to improve your product with a design audit',cta:'Book an audit',subject:'Design audit',gap:15},
+    {id:'work',color:'#0b9bf7',image:'assets/open-to-work.png?v=379829166b85',text:'Open to new design roles and exciting projects',cta:'Let’s talk',subject:'Design role or project',gap:15},
+    {id:'consulting',color:'#59bf61',image:'assets/consulting.png?v=c955eb126e6c',text:'Design consulting & mentoring for individuals and teams',cta:'Book Consulting',subject:'Design consulting',gap:23}
   ];
   const variantAssets = new Map();
   const cacheVariant = (variant,image) => {
@@ -48,7 +48,7 @@
   const enhanceGlassButton = async () => {
     if (dismissed || action.closest('lg-button')) return;
     try {
-      await import('./vendor/components.js');
+      await import('./vendor/components.js?v=968d5372ad45');
       if (dismissed || action.closest('lg-button')) return;
       // Do not swap the fallback link underneath a pointer or keyboard focus.
       if (action.matches(':hover') || document.activeElement === action) {
