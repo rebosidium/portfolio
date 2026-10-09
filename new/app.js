@@ -43,6 +43,7 @@
     return variantAssets.get(variant.id);
   };
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
+  const rotationDelay = 10000;
   let timer, transition, layoutTransition, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
   const enhanceGlassButton = async () => {
     if (dismissed) return;
@@ -91,31 +92,36 @@
     resolve();
   },4000));
   cacheVariant(variants[index],illustration);
-  const pause = () => {clearTimeout(timer); rotationGeneration++;};
-  const schedule = () => {
+  const pause = () => {clearTimeout(timer); timer = undefined; rotationGeneration++;};
+  const schedule = (delay = rotationDelay) => {
     pause();
     if (!initialReady || dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) return;
     const generation = rotationGeneration;
     timer = setTimeout(async () => {
+      if (generation !== rotationGeneration) return;
+      timer = undefined;
       const next = (index + 1) % variants.length;
       const ready = await preloadVariant(variants[next]);
       if (generation !== rotationGeneration) return;
       if (!ready) {schedule(); return;}
       if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) {schedule(); return;}
       if (window.gsap) {
-        transition = gsap.timeline({onComplete:schedule});
+        const started = performance.now();
+        transition = gsap.timeline({onComplete:() => {
+          if (timer === undefined) schedule(Math.max(0,rotationDelay - (performance.now() - started)));
+        }});
         transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut'},0)
           .to(content,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
             index = next;
             apply(false);
           },null,.22).fromTo(content,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out'},.22);
       } else {index = next; apply(); schedule();}
-    }, 10000);
+    }, delay);
   };
   promo.addEventListener('pointerenter',() => {hovered = true; pause();});
   promo.addEventListener('pointerleave',() => {hovered = false; schedule();});
   promo.addEventListener('focusin',pause);
-  promo.addEventListener('focusout',() => setTimeout(schedule,0));
+  promo.addEventListener('focusout',() => setTimeout(() => schedule(),0));
   document.addEventListener('visibilitychange',() => document.hidden ? pause() : schedule());
   close.addEventListener('click',event => {
     if (dismissed) return;
