@@ -1,6 +1,6 @@
 @font-face{font-family:Manrope;src:url('assets/manrope.woff2') format('woff2');font-style:normal;font-weight:400 800;font-display:swap}
 @font-face{font-family:Lora;src:url('assets/lora-medium.ttf') format('truetype');font-style:normal;font-weight:500;font-display:swap}
-:root{--canvas:#f8f5f3;--ink:#090c0c;--nav:#232522;--audit:#8e6dd0;--work:#0b9bf7;--consulting:#59bf61;--gutter:5vw;--ease:cubic-bezier(.22,1,.36,1)}
+:root{--canvas:#f8f5f3;--ink:#090c0c;--nav:#232522;--audit:#8e6dd0;--work:#0b9bf7;--consulting:#59bf61;--gutter:5vw;--ease:cubic-bezier(.22,1,.36,1);--promo-space:64px;--vertical-room:max(0px,calc(100svh - 900px + 64px - var(--promo-space)))}
 *{box-sizing:border-box}
 body{margin:0;background:var(--canvas);color:var(--ink);font-family:Manrope,sans-serif;min-width:1024px;min-height:900px;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -22,13 +22,15 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .header a{position:relative}
 .header nav a:after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .header nav a:hover:after,.header nav a:focus-visible:after{transform:scaleX(1);transform-origin:left}
-.hero{width:856px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
+main{overflow-anchor:none}
+.hero{width:856px;margin:0 auto;padding-top:calc(var(--vertical-room) * .35);display:flex;flex-direction:column;align-items:center;gap:10px;transition:padding-top .35s var(--ease)}
 .portrait{width:311px;height:311px}
 .portrait img{display:block;width:311px;height:311px;object-fit:cover}
 h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:48px;line-height:1.4;text-align:center;margin:0;width:100%;letter-spacing:0}
 .title-line{display:block;overflow:hidden}
 .title-line>span{display:block}
-.features{max-width:1440px;margin:62.6px auto 0;padding:0 72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.features{max-width:1440px;margin:calc(62.6px + var(--vertical-room) * .4) auto 0;padding:0 72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;transition:margin-top .35s var(--ease)}
+.layout-changing .hero,.layout-changing .features{transition:none}
 .feature{display:flex;gap:8px;align-items:center;min-width:0}
 .feature-art{flex:none;width:120px;height:120px}
 .feature-art img{display:block;width:120px;height:120px;object-fit:cover}

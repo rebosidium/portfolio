@@ -14,7 +14,12 @@
   ];
   variants.forEach(v => {const img = new Image(); img.src = v.image;});
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
-  let timer, transition, dismissed = false, hovered = false;
+  let timer, transition, layoutTransition, dismissed = false, hovered = false;
+  const settleDismissal = () => {
+    document.documentElement.style.setProperty('--promo-space','0px');
+    promo.hidden = true;
+    document.body.classList.remove('layout-changing');
+  };
   const apply = (updateColor = true) => {
     const v = variants[index];
     if (updateColor) promo.style.backgroundColor = v.color;
@@ -48,11 +53,16 @@
   promo.addEventListener('focusout',() => setTimeout(schedule,0));
   document.addEventListener('visibilitychange',() => document.hidden ? pause() : schedule());
   close.addEventListener('click',event => {
+    if (dismissed) return;
     dismissed = true; pause(); transition?.kill();
     if (event.detail === 0) document.querySelector('.identity').focus({preventScroll:true});
     else close.blur();
-    if (window.gsap && !reduced.matches) gsap.to(promo,{height:0,opacity:0,duration:.36,ease:'power3.inOut',onComplete:() => {promo.hidden = true;}});
-    else promo.hidden = true;
+    if (window.gsap && !reduced.matches) {
+      document.body.classList.add('layout-changing');
+      layoutTransition = gsap.timeline({onComplete:settleDismissal});
+      layoutTransition.to(promo,{height:0,opacity:0,duration:.6,ease:'power3.inOut',autoRound:false},0)
+        .to(document.documentElement,{'--promo-space':'0px',duration:.6,ease:'power3.inOut'},0);
+    } else settleDismissal();
   });
   schedule();
   if (!window.gsap) return;
@@ -103,5 +113,9 @@
       gsap.set(button,{clearProps:'transform'});
     };
   });
-  reduced.addEventListener('change',() => {transition?.kill();apply();gsap.set(content,{clearProps:'transform,opacity'});schedule();});
+  reduced.addEventListener('change',() => {
+    transition?.kill();apply();gsap.set(content,{clearProps:'transform,opacity'});
+    if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
+    schedule();
+  });
 })();
