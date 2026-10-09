@@ -14,6 +14,15 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .promo-button{height:40px;display:flex;align-items:center;justify-content:center;padding:6px 24px;border:1px solid #ffffff59;border-radius:1000px;background:linear-gradient(180deg,#ffffff26,#ffffff08),#ffffff08;box-shadow:inset 0 1px 0 #ffffff45,inset 0 -1px 0 #00000008,0 2px 6px #0000000d;-webkit-backdrop-filter:blur(12px) saturate(130%);backdrop-filter:blur(12px) saturate(130%);font-size:16px;line-height:28px;font-weight:500;text-shadow:0 1px 2px #00000014;pointer-events:none;transition:background-color .22s,border-color .22s,box-shadow .22s}
 .promo-action:hover .promo-button,.promo-action:focus-visible .promo-button{background-color:#ffffff14;border-color:#ffffff80;box-shadow:inset 0 1px 0 #ffffff59,inset 0 -1px 0 #00000008,0 2px 6px #0000000d}
 .promo-action:active .promo-button{background-color:#ffffff05;box-shadow:inset 0 1px 3px #0000000d,inset 0 1px 0 #ffffff33}
+.promo-glass{display:inline-flex;flex:none;--lg-on-glass:#fff;--lg-focus:#fff;--lg-tint:#ffffff0a;--lg-shadow-2:0 2px 6px #0000000d;--lg-fallback:blur(10px) saturate(1.15)}
+.promo-glass .lg-button__el{display:inline-flex;min-height:40px;height:40px;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;background:#ffffff02;font-family:Manrope,sans-serif;font-size:16px;font-weight:500;line-height:28px;transition:border-color .28s,background-color .28s}
+.promo-glass .lg-button__el:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.promo-glass .lg-button__label{pointer-events:none}
+.promo-glass .lg-surface{opacity:0;transition:opacity .28s var(--ease)}
+.promo-glass .lg-surface__tint{background:linear-gradient(180deg,#ffffff26,#ffffff08);box-shadow:inset 0 1px 0 #ffffff45,inset 0 -1px 0 #00000008}
+.promo-glass:hover .lg-surface,.promo-glass:focus-within .lg-surface{opacity:1}
+.promo-glass .lg-button__el:hover,.promo-glass .lg-button__el:focus-visible{border-color:#ffffff80}
+.promo-glass .lg-button__el:active{background-color:#ffffff0a}
 .promo-close{position:absolute;right:24px;top:12px;width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;color:white;padding:0;opacity:.4;cursor:pointer;transition:opacity .18s}
 .promo-close:hover,.promo-close:focus-visible{opacity:1}
 .promo-close img{display:block}
@@ -29,6 +38,9 @@ main{overflow-anchor:none}
 h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px - max(0px,calc(var(--compact-room) - 180px)) * .1),48px);line-height:1.4;text-align:center;margin:0;width:100%;letter-spacing:0;transition:font-size .35s var(--ease)}
 .title-line{display:block;overflow:hidden}
 .title-line>span{display:block}
+.motion-pending .header a,.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature{opacity:0}
+.image-fades img[data-reveal]{opacity:0;transition:opacity .4s var(--ease)}
+.image-fades img[data-reveal].image-ready{opacity:1}
 .features{max-width:1440px;margin:max(16px,calc(62.6px + var(--vertical-room) * .4)) auto 0;padding:0 72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;transition:margin-top .35s var(--ease)}
 .layout-changing .header,.layout-changing .hero,.layout-changing .portrait,.layout-changing h1,.layout-changing .features,.layout-changing .feature-art,.layout-changing .feature-art img{transition:none}
 .feature{display:flex;gap:8px;align-items:center;min-width:0}
@@ -36,4 +48,4 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .feature-art img{display:block;width:100%;height:100%;object-fit:cover}
 .feature p{margin:0;font-size:18px;font-weight:500;line-height:normal;flex:1;color:#000}
 @media(min-width:1024px) and (max-width:1439px){.header,.features{padding-left:var(--gutter);padding-right:var(--gutter)}.feature p{font-size:clamp(15px,1.25vw,18px)}.feature-art{width:min(var(--feature-size),clamp(88px,8.333vw,120px));height:min(var(--feature-size),clamp(88px,8.333vw,120px))}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.motion-pending .header a,.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}}
