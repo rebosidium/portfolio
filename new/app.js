@@ -44,7 +44,18 @@
   };
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
   const rotationDelay = 6000;
-  let timer, transition, layoutTransition, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
+  let timer, transition, layoutTransition, shellTimeline, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
+  let bannerEntered = !root.classList.contains('shell-pending');
+  const navigation = [...document.querySelectorAll('.header > a, .header nav a')];
+  const releaseShell = window.releaseShellFallback;
+  const settleShell = () => {
+    shellTimeline?.kill();
+    if (window.gsap) gsap.set([promo,...navigation],{clearProps:'transform,opacity'});
+    bannerEntered = true;
+    releaseShell();
+    if (timer === undefined) schedule();
+  };
+  window.releaseShellFallback = settleShell;
   const enhanceGlassButton = async () => {
     if (dismissed || action.closest('lg-button')) return;
     try {
@@ -118,7 +129,7 @@
   const pause = () => {clearTimeout(timer); timer = undefined; rotationGeneration++;};
   const schedule = (delay = rotationDelay) => {
     pause();
-    if (!initialReady || dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) return;
+    if (!initialReady || !bannerEntered || dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) return;
     const generation = rotationGeneration;
     timer = setTimeout(async () => {
       if (generation !== rotationGeneration) return;
@@ -152,6 +163,8 @@
   close.addEventListener('click',event => {
     if (dismissed) return;
     dismissed = true; pause(); transition?.kill();
+    // Dismissal completes the one-off shell entrance before collapsing the banner.
+    if (root.classList.contains('nav-pending') || shellTimeline?.isActive()) settleShell();
     if (event.detail === 0) document.querySelector('.identity').focus({preventScroll:true});
     else close.blur();
     if (window.gsap && !reduced.matches) {
@@ -174,6 +187,7 @@
     else setTimeout(warmRemaining,200);
   });
   if (!window.gsap) {
+    settleShell();
     Promise.all([window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true)});
     return;
   }
@@ -182,14 +196,32 @@
   const fontsReady = document.fonts
     ? Promise.allSettled([document.fonts.load('500 48px Lora'),document.fonts.load('600 20px Manrope')])
     : Promise.resolve();
+  const fontDeadline = Promise.race([fontsReady,new Promise(resolve => setTimeout(resolve,800))]);
+  const glassDeadline = Promise.race([glassReady,new Promise(resolve => setTimeout(resolve,1600))]);
+  Promise.all([
+    fontDeadline,glassDeadline,
+    Promise.race([decodeImage(illustration),new Promise(resolve => setTimeout(resolve,1600))])
+  ]).then(() => {
+    if (reduced.matches || document.hidden || dismissed || !root.classList.contains('nav-pending')) {settleShell();return;}
+    // Translation keeps every glass-filter ancestor opaque throughout the entrance.
+    gsap.set(promo,{y:0,yPercent:-100});
+    gsap.set(navigation,{y:12,opacity:0});
+    root.classList.remove('shell-pending');
+    shellTimeline = gsap.timeline({onComplete:settleShell});
+    shellTimeline.to(promo,{yPercent:0,duration:1.5,ease:'power2.inOut',clearProps:'transform',onComplete:() => {
+      bannerEntered = true;schedule();
+    }},0)
+      .call(() => root.classList.remove('nav-pending'),null,1.64)
+      .to(navigation,{y:0,opacity:1,duration:1.05,stagger:.07,ease:'power2.out',clearProps:'transform,opacity'},1.64);
+  });
   const poster=document.querySelector('.portrait img');
   Promise.all([
+    window.shellReady,
     window.portraitReady,
     Promise.race([decodeImage(poster),new Promise(resolve=>setTimeout(resolve,1600))]),
-    Promise.race([fontsReady,new Promise(resolve => setTimeout(resolve,800))]),
-    Promise.race([glassReady,new Promise(resolve => setTimeout(resolve,1600))])
+    fontDeadline,glassDeadline
   ]).then(() => {
-    let playIntro = root.classList.contains('motion-pending');
+    let playIntro = root.classList.contains('motion-pending') && !reduced.matches;
     finishBoot();
     if(!playIntro)window.resolvePortraitReveal(true);
     mm.add('(prefers-reduced-motion: no-preference)',() => {
@@ -197,8 +229,7 @@
       if (playIntro) {
         playIntro = false;
         const intro = gsap.timeline({defaults:{ease:'power3.out'}});
-        intro.from('.header > a, .header nav a',{y:8,opacity:0,duration:.5,stagger:.05},0)
-          .from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1)
+        intro.from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1)
           .from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
         if (window.SplitText) {
           split = SplitText.create('.title-line > span',{
@@ -222,6 +253,7 @@
     });
   });
   reduced.addEventListener('change',() => {
+    if (reduced.matches) {settleShell();window.resolvePortraitReveal(true);}
     transition?.kill();apply();gsap.set([content,illustration,text,button],{clearProps:'transform,opacity'});
     if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
     schedule();
