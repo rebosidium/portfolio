@@ -100,6 +100,11 @@
     promo.dataset.variant = v.id;
   };
   apply();
+  // Modulepreload starts the downloads in the head; mount the button before the intro.
+  const glassReady = enhanceGlassButton().finally(() => {
+    clearTimeout(window.glassRevealFallback);
+    root.classList.remove('glass-pending');
+  });
   const visibleReady = Promise.all([...document.querySelectorAll('img[data-reveal]')].map(async image => {
     const ready = await decodeImage(image);
     image.classList.add('image-ready');
@@ -156,7 +161,7 @@
   Promise.race([visibleReady,imageDeadline]).then(() => {
     initialReady = true; schedule();
     const warmRemaining = async () => {
-      await enhanceGlassButton();
+      await glassReady;
       for (const offset of [1,2]) {
         if (dismissed || reduced.matches) return;
         await preloadVariant(variants[(index + offset) % variants.length]);
@@ -171,7 +176,10 @@
   const fontsReady = document.fonts
     ? Promise.allSettled([document.fonts.load('500 48px Lora'),document.fonts.load('600 20px Manrope')])
     : Promise.resolve();
-  Promise.race([fontsReady,new Promise(resolve => setTimeout(resolve,800))]).then(() => {
+  Promise.all([
+    Promise.race([fontsReady,new Promise(resolve => setTimeout(resolve,800))]),
+    Promise.race([glassReady,new Promise(resolve => setTimeout(resolve,1600))])
+  ]).then(() => {
     let playIntro = root.classList.contains('motion-pending');
     finishBoot();
     mm.add('(prefers-reduced-motion: no-preference)',() => {

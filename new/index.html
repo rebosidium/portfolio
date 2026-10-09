@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="c0a03b13aaca">
+<html lang="en" data-build="f16de6c2cb5e">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,13 @@
   <link rel="preload" as="image" href="assets/portrait.png?v=e5a3dd0c6362" fetchpriority="high">
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
+  <link rel="modulepreload" href="vendor/components.js?v=968d5372ad45">
+  <link rel="modulepreload" href="vendor/liquid-glass.js">
   <script>
+    document.documentElement.classList.add('glass-pending');
+    window.glassRevealFallback = setTimeout(() => {
+      document.documentElement.classList.remove('glass-pending');
+    },1600);
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
       document.documentElement.classList.add('motion-pending','image-fades');
       window.pageRevealFallback = setTimeout(() => {
@@ -20,10 +26,10 @@
       },1600);
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=f828b254c428">
+  <link rel="stylesheet" href="styles.css?v=e959e9665d29">
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=9f159a6108f5"></script>
+  <script defer src="app.js?v=98b981968d4c"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body>
