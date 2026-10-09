@@ -162,6 +162,9 @@
     initialReady = true; schedule();
     const warmRemaining = async () => {
       await glassReady;
+      import('./portrait-spin.js?v=9ee642d4c842').then(({mountSeedancePortrait}) => {
+        mountSeedancePortrait(document.querySelector('.portrait'),{manifestURL:'assets/seedance-manifest.json?v=a6502cd9c738'});
+      }).catch(() => {});
       for (const offset of [1,2]) {
         if (dismissed || reduced.matches) return;
         await preloadVariant(variants[(index + offset) % variants.length]);
