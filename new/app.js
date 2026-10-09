@@ -44,9 +44,10 @@
   promo.addEventListener('focusin',pause);
   promo.addEventListener('focusout',() => setTimeout(schedule,0));
   document.addEventListener('visibilitychange',() => document.hidden ? pause() : schedule());
-  close.addEventListener('click',() => {
+  close.addEventListener('click',event => {
     dismissed = true; pause(); transition?.kill();
-    document.querySelector('.identity').focus({preventScroll:true});
+    if (event.detail === 0) document.querySelector('.identity').focus({preventScroll:true});
+    else close.blur();
     if (window.gsap && !reduced.matches) gsap.to(promo,{height:0,opacity:0,duration:.36,ease:'power3.inOut',onComplete:() => {promo.hidden = true;}});
     else promo.hidden = true;
   });
