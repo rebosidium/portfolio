@@ -8,9 +8,9 @@ button{font:inherit}
 a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:5px}
 .promo{height:64px;background:var(--audit);color:#fff;position:relative;overflow:hidden}
 .shell-pending .promo{transform:translateY(-100%);pointer-events:none}
-.promo-content{height:64px;display:flex;align-items:center;justify-content:center;gap:15px;padding:0 80px;white-space:nowrap}
+.promo-content{height:64px;display:flex;align-items:center;justify-content:center;gap:15px;padding:0 80px;padding-left:clamp(16px,calc(100vw - 784px),80px);white-space:nowrap}
 .promo-illustration{width:58px;height:58px;object-fit:cover;flex:none}
-.promo-text{font-size:16px;line-height:28px;font-weight:500;margin:0;min-width:0;white-space:normal}
+.promo-text{font-size:16px;line-height:28px;font-weight:500;margin:0;white-space:nowrap;flex:none}
 .glass-pending .promo-action{visibility:hidden;pointer-events:none}
 .promo-action{display:block;flex:none;border-radius:1000px}
 .promo-button{position:relative;isolation:isolate;height:40px;display:flex;align-items:center;justify-content:center;padding:6px 24px;border:1px solid #ffffff66;border-radius:1000px;background:#ffffff02;box-shadow:0 2px 6px #0000000d;-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);font-size:16px;line-height:28px;font-weight:500;pointer-events:none}
@@ -28,7 +28,7 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .promo-close:hover,.promo-close:focus-visible{opacity:1}
 .promo-close img{display:block}
 .header{height:clamp(56px,calc(111px - var(--compact-room) * .35),111px);max-width:1440px;padding:0 var(--gutter);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;color:var(--nav);font-size:20px;font-weight:600;line-height:normal;transition:height .35s var(--ease)}
-.header nav{display:flex;gap:clamp(16px,calc(4vw - 25.6px),32px);align-items:center}
+.header nav{display:flex;gap:32px;align-items:center}
 .header a{position:relative}
 .header nav a:after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .header nav a:hover:after,.header nav a:focus-visible:after{transform:scaleX(1);transform-origin:left}
