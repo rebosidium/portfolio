@@ -47,6 +47,7 @@
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
   const rotationDelay = 6000;
   let timer, transition, layoutTransition, shellTimeline, rotationGeneration = 0, dismissed = promo.hidden, hovered = false, initialReady = false;
+  let rotationCleanup = null;
   let bannerEntered = !root.classList.contains('shell-pending') && !root.classList.contains('mobile-shell-pending');
   const navigation = [...document.querySelectorAll('.header > a, .header nav a')];
   const releaseShell = window.releaseShellFallback;
@@ -67,6 +68,7 @@
       if (root.classList.contains('mobile-shell-pending')) await window.mobileHeaderReady;
       await import('./vendor/components.js?v=968d5372ad45');
       if (dismissed || action.closest('lg-button')) return;
+      if (transition?.isActive()) {setTimeout(enhanceGlassButton,100);return;}
       // Do not swap the fallback link underneath a pointer or keyboard focus.
       if (action.matches(':hover') || document.activeElement === action) {
         const original = action;
@@ -124,6 +126,11 @@
     promo.dataset.variant = v.id;
   };
   apply();
+  window.mobileLayout.addEventListener('change',() => {
+    if (!rotationCleanup) return;
+    transition?.kill();rotationCleanup();rotationCleanup = null;transition = null;
+    apply();schedule();
+  });
   // Modulepreload starts the downloads in the head; mount the button before the intro.
   const glassReady = enhanceGlassButton().finally(() => {
     clearTimeout(window.glassRevealFallback);
@@ -155,16 +162,46 @@
       if (window.gsap) {
         const started = performance.now();
         // Fading a backdrop-filter ancestor changes the sampled backdrop and flashes the rim.
-        // Keep the glass and its ancestors opaque; transition only the image and text leaves.
-        const changingContent = [illustration,text,button];
+        // Keep filter ancestors opaque; the mobile CTA moves and fades its own visual leaves.
+        const mobileCta = window.mobileLayout.matches;
+        const changingContent = mobileCta ? [illustration,text] : [illustration,text,button];
         transition = gsap.timeline({onComplete:() => {
+          transition = null;rotationCleanup = null;
           if (timer === undefined) schedule(Math.max(0,rotationDelay - (performance.now() - started)));
         }});
         transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut'},0)
           .to(changingContent,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
             index = next;
             apply(false);
-          },null,.22).fromTo(changingContent,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out',clearProps:'transform,opacity'},.22);
+          },null,.22).fromTo(changingContent,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out',clearProps:'transform,opacity',...(mobileCta ? {immediateRender:false} : {})},.22);
+        if (mobileCta) {
+          const host = action.closest('lg-button') || action;
+          const surface = host.surface;
+          const leaves = surface ? [button,surface.layer,surface.shadow] : [action.querySelector('.promo-button')];
+          const out = {duration:.22,ease:'power2.in'};
+          const enter = {duration:.36,ease:'power3.out',immediateRender:false};
+          rotationCleanup = () => {
+            gsap.set([illustration,text],{clearProps:'transform,opacity'});
+            gsap.set(host,{clearProps:'transform'});
+            gsap.set(leaves,{clearProps:'opacity'});
+            if (surface) {
+              gsap.set(surface.tint,{clearProps:'opacity'});
+              gsap.set(action,{clearProps:'borderColor,backgroundColor'});
+            }
+          };
+          transition.to(host,{y:-8,...out},0)
+            .fromTo(host,{y:8},{y:0,...enter,clearProps:'transform'},.22)
+            .to(leaves,{opacity:0,...out},0)
+            .fromTo(leaves,{opacity:0},{opacity:1,...enter,clearProps:'opacity'},.22);
+          if (surface) {
+            const material = getComputedStyle(action),tintOpacity = getComputedStyle(surface.tint).opacity;
+            const borderColor = material.borderColor,backgroundColor = material.backgroundColor;
+            transition.to(action,{borderColor:'#ffffff00',backgroundColor:'#ffffff00',...out},0)
+              .fromTo(action,{borderColor:'#ffffff00',backgroundColor:'#ffffff00'},{borderColor,backgroundColor,...enter,clearProps:'borderColor,backgroundColor'},.22)
+              .to(surface.tint,{opacity:0,...out},0)
+              .fromTo(surface.tint,{opacity:0},{opacity:tintOpacity,...enter,clearProps:'opacity'},.22);
+          }
+        }
       } else {index = next; apply(); schedule();}
     }, delay);
   };
@@ -176,6 +213,7 @@
   close.addEventListener('click',event => {
     if (dismissed) return;
     dismissed = true; pause(); transition?.kill();
+    rotationCleanup?.();rotationCleanup = null;
     // Dismissal completes the one-off shell entrance before collapsing the banner.
     if (root.classList.contains('nav-pending') || shellTimeline?.isActive()) settleShell();
     if (event.detail === 0) document.querySelector('.identity').focus({preventScroll:true});
@@ -260,7 +298,7 @@
   });
   reduced.addEventListener('change',() => {
     if (reduced.matches) {settleShell();window.resolvePortraitReveal(true);}
-    transition?.kill();apply();gsap.set([content,illustration,text,button],{clearProps:'transform,opacity'});
+    transition?.kill();rotationCleanup?.();rotationCleanup = null;apply();gsap.set([content,illustration,text,button],{clearProps:'transform,opacity'});
     if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
     schedule();
   });

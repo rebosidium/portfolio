@@ -67,7 +67,8 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .feature p{margin:0;font-size:18px;font-weight:500;line-height:normal;flex:1;min-width:0;color:#000}
 /* Mobile/tablet layout is independent of the desktop height-fit calculations. */
 @media(max-width:1023px) and (pointer:coarse){
-  :root{--gutter:24px;--portrait-size:246px;--feature-size:clamp(88px,27.273vw,120px)}
+  /* Align the 28.8px dismiss icon with the 28px menu icon inside its 44px control. */
+  :root{--gutter:24px;--promo-dismiss-inset:calc(var(--gutter) - 6.6px);--portrait-size:246px;--feature-size:clamp(88px,27.273vw,120px)}
   body{min-width:320px;padding-bottom:40px}
   .promo{height:auto}
   /* Fade only content leaves, keeping the glass and its ancestors opaque. */
@@ -76,17 +77,18 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   html.mobile-promo-pending .promo .promo-close{opacity:0}
   .promo-content{height:auto;min-height:128px;padding:16px;display:grid;grid-template-columns:59.2px minmax(0,1fr);column-gap:12px!important;row-gap:8px!important;white-space:normal;max-width:600px;margin:auto}
   .promo-illustration{grid-row:1 / 3;width:59.2px;height:59.2px;align-self:center}
-  .promo-text{white-space:normal;flex:initial;font-size:16px;line-height:1.4;padding-right:40px;overflow-wrap:break-word}
+  .promo-text{white-space:normal;flex:initial;font-size:16px;line-height:1.4;padding-right:calc(40px + var(--promo-dismiss-inset));overflow-wrap:break-word}
   .promo-continuation{display:block}
   .promo-action,.promo-glass{grid-column:2;justify-self:start;max-width:100%}
   .promo-button,.promo-glass .lg-button__el{height:auto;min-height:44px;padding:4px 24px;font-size:16px;white-space:nowrap}
-  .promo-close{right:0;top:50%;transform:translateY(-50%);width:54px;height:54px}
+  .promo-close{right:calc(max(0px,(100% - 600px) / 2) + var(--promo-dismiss-inset));top:50%;transform:translateY(-50%);width:54px;height:54px}
   .promo-close img{width:28.8px;height:28.8px}
   .header{position:relative;height:86px;padding:0 var(--gutter);max-width:600px;transition:none;z-index:2}
   .menu-toggle{display:grid;place-items:center;width:44px;height:44px;margin-right:-2px;padding:0;border:0;background:transparent;color:var(--nav);cursor:pointer}
   .menu-toggle img{display:block;width:28px;height:28px}
   .menu-toggle .menu-close-icon{display:none}
   .header>.identity,.menu-toggle{transition:opacity .45s var(--ease)}
+  .header.menu-animating .menu-toggle{transition:none}
   .mobile-shell-pending .header>.identity,.mobile-shell-pending .menu-toggle{opacity:0;visibility:hidden}
   .mobile-header-ready .header>.identity{opacity:1}
   .mobile-shell-pending .promo-action{visibility:hidden;pointer-events:none}
@@ -120,7 +122,6 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   h1{font-size:30px}
   .promo-content{grid-template-columns:46.4px minmax(0,1fr);padding:16px 12px}
   .promo-illustration{width:46.4px;height:46.4px}
-  .promo-text{font-size:16px;padding-right:40px}
   .promo-continuation{display:inline}
   .promo-button,.promo-glass .lg-button__el{padding-left:18px;padding-right:18px}
 }

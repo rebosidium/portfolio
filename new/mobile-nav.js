@@ -14,10 +14,11 @@
   let navigationFocus = null;
   document.addEventListener('focusin',event => {navigationFocus = header.contains(event.target) ? event.target : null;});
   const clearAnimation = () => {
-    for (const element of [nav,...links]) {
+    for (const element of [nav,...links,toggle]) {
       element.style.removeProperty('opacity');
       element.style.removeProperty('transform');
     }
+    header.classList.remove('menu-animating');
   };
   const setVisible = (open,returnFocus = false) => {
     const expanded = mobile.matches && open;
@@ -46,6 +47,7 @@
       if (scrollPosition) window.scrollTo(scrollPosition.x,scrollPosition.y);
       scrollPosition = null;
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
+      window.portraitPlayer?.returnFromMenu?.();
     }
   };
   const setOpen = (open,returnFocus = false,instant = false) => {
@@ -55,9 +57,11 @@
     transition?.kill();
     transition = null;
     const animate = window.gsap && !reduced.matches && mobile.matches && !instant;
+    if (animate) header.classList.add('menu-animating');
     if (open) {
       const wasVisible = header.classList.contains('menu-open');
       nav.inert = false;
+      if (animate && !wasVisible) gsap.set(toggle,{opacity:0});
       setVisible(true);
       if (!animate) {clearAnimation();return;}
       gsap.killTweensOf(links);
@@ -67,6 +71,7 @@
       }
       transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
         .to(nav,{opacity:1,duration:.28,ease:'power2.out'},0)
+        .to(toggle,{opacity:1,duration:.16,ease:'power2.out'},0)
         .to(links,{opacity:1,y:0,duration:.32,stagger:.055,ease:'power3.out'},.07);
     } else {
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
@@ -78,9 +83,13 @@
       };
       if (!animate) {finish();return;}
       nav.inert = true;
-      transition = gsap.timeline({onComplete:finish})
-        .to(links,{opacity:0,y:8,duration:.16,stagger:{each:.025,from:'end'},ease:'power2.in'},0)
-        .to(nav,{opacity:0,duration:.24,ease:'power2.inOut'},.04);
+      window.portraitPlayer?.prepareMenuPose?.();
+      // Let every link leave in reverse order before fading the full-screen panel.
+      transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
+        .to(links,{opacity:0,y:12,duration:.24,stagger:{each:.055,from:'end'},ease:'power3.in'},0)
+        .to([nav,toggle],{opacity:0,duration:.28,ease:'power2.inOut'})
+        .call(() => {nav.inert = false;setVisible(false,returnFocus);})
+        .to(toggle,{opacity:1,duration:.18,ease:'power2.out',clearProps:'opacity'});
     }
   };
   toggle.addEventListener('click',() => setOpen(!desiredOpen,true));

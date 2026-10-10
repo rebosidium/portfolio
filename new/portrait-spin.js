@@ -27,6 +27,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
   let raf=0,previousTick=0,mode='idle',drag=null;
   let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
   let returnRequested=false,returnStarted=0,returnCount=0;
+  let menuPoseActive=false;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
@@ -321,6 +322,22 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
     Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3)});
     delete canvas.dataset.returnDurationMs;
     setStatus('Возвращаюсь в анфас · можно снова вращать');scheduleRender();
+  }
+  function prepareMenuPose(){
+    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing)return false;
+    followPaused=true;skipIntro();setTarget(45,{session:true});menuPoseActive=true;
+    return true;
+  }
+  function returnFromMenu(){
+    if(!menuPoseActive)return false;
+    menuPoseActive=false;
+    if(destroyed||media.matches)return false;
+    followPaused=true;releaseDrag();skipIntro();
+    // A quality change already preserves this pending spring through init().
+    if(!ready||preparing){if(!loadAttemptActive)return false;returnRequested=true;return true;}
+    stop();
+    if(document.hidden){returnRequested=true;return true;}
+    returnToFront(0);return true;
   }
   function renderReturn(elapsed){
     // Exact damped-spring step: stable across refresh rates and long frames.
@@ -767,10 +784,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
     posterElement.classList.add('image-ready');
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
-  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();applyCursorTarget()}});
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
-  return {ready:startupReady,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
+  return {ready:startupReady,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }
