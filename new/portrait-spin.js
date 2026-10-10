@@ -342,6 +342,13 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     setTarget(back?lastMotionPhase+(delta===-180?180:delta):mobileScrollFrontPhase,{shortest:false,damping:145,maxStep:6});
     return true;
   }
+  function clearMobileScrollPose(){
+    if(destroyed||media.matches||drag||menuPoseActive||returnRequested)return false;
+    followPaused=true;skipIntro();
+    // Reuse the spring's pending return, which survives a quality reload.
+    if(!ready||preparing||document.hidden){if(!ready&&!loadAttemptActive)return false;returnRequested=true;return true;}
+    stop();returnToFront(0);return true;
+  }
   function returnFromMenu(){
     if(!menuPoseActive)return false;
     menuPoseActive=false;
@@ -802,7 +809,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
-    turn:setMobileScrollPose,subscribeLoading,
+    turn:setMobileScrollPose,clear:clearMobileScrollPose,subscribeLoading,
     canRetry:()=>ready&&startupSettled&&!preparing&&!drag
   },mobileLayout,media));
   if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
@@ -838,7 +845,7 @@ function mountMobilePortraitScroll(stage,player,mobile,reduced){
   listen(stage,'keydown',event=>{if(['ArrowLeft','ArrowRight','Home'].includes(event.key)){reset();initial=false;}});
   listen(document,'visibilitychange',()=>{applied=null;schedule()});
   listen(window,'pageshow',()=>{initial=true;applied=null;lastY=scrollY;schedule()});
-  listen(mobile,'change',()=>{if(!mobile.matches&&owned)player.turn(false);reset();schedule()});
+  listen(mobile,'change',()=>{if(!mobile.matches&&owned)player.clear();reset();schedule()});
   listen(reduced,'change',()=>{reset();schedule()});
   const changes=new MutationObserver(()=>{
     const open=root.classList.contains('mobile-menu-open');
