@@ -56,6 +56,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .features{max-width:1440px;margin:max(16px,calc(62.6px + var(--vertical-room) * .4)) auto 0;padding:0 var(--gutter);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--column-gap);transition:margin-top .35s var(--ease)}
 .layout-changing .header,.layout-changing .hero,.layout-changing .portrait,.layout-changing h1,.layout-changing .features,.layout-changing .feature-art,.layout-changing .feature-art img{transition:none}
 .feature{display:flex;gap:8px;align-items:center;min-width:0}
+.feature:focus-visible{outline:2px solid var(--nav);outline-offset:8px;border-radius:8px}
 .feature-art{flex:none;width:var(--feature-size);height:var(--feature-size);transition:width .35s var(--ease),height .35s var(--ease)}
 .feature-art img{display:block;width:100%;height:100%;object-fit:cover}
 .campfire-art,.animated-feature-art{position:relative}
