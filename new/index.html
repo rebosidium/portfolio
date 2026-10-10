@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="4ba916c77522">
+<html lang="en" data-build="b88e706f19df">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,15 +19,30 @@
     }
   </script>
   <link rel="icon" href="data:,">
+  <link rel="preload" as="image" href="assets/audit.png?v=47213b1faa6f" media="(max-width: 1023px) and (pointer: coarse)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/lucide-menu.svg?v=af6491988ac1" media="(max-width: 1023px) and (pointer: coarse)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=2bd283908647" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=38f33841c2ab" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
   <link rel="modulepreload" href="vendor/components.js?v=968d5372ad45">
   <link rel="modulepreload" href="vendor/liquid-glass.js">
-  <link rel="modulepreload" href="portrait-spin.js?v=8751e62af2b1">
+  <link rel="modulepreload" href="portrait-spin.js?v=ef72347da01e">
   <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=19581afb45f9" crossorigin>
   <script>
+    window.mobileLayout = matchMedia('(max-width: 1023px) and (pointer: coarse)');
+    window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve});
+    window.mobileHeaderReady = Promise.resolve();
+    if (window.mobileLayout.matches) {
+      window.mobileHeaderReady = new Promise(resolve => {window.resolveMobileHeaderReady = resolve});
+      document.documentElement.classList.add('mobile-shell-pending','mobile-promo-pending');
+      window.releaseMobileShell = () => {
+        document.documentElement.classList.add('mobile-shell-ready','mobile-header-ready');
+        document.documentElement.classList.remove('mobile-shell-pending','mobile-promo-pending');
+        window.resolveMobileHeaderReady();
+      };
+      window.mobileShellFallback = setTimeout(() => window.releaseMobileShell(),3000);
+    }
     window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve});
     window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve});
     window.shellReady = new Promise(resolve => {window.resolveShellReady = resolve});
@@ -39,6 +54,7 @@
     window.releasePageFallback = () => {
       document.documentElement.classList.remove('motion-pending','image-fades');
       window.releaseShellFallback();
+      window.releaseMobileShell?.();
       window.resolvePortraitReveal(true);
     };
     document.documentElement.classList.add('glass-pending');
@@ -46,17 +62,20 @@
       document.documentElement.classList.remove('glass-pending');
     },1600);
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-      document.documentElement.classList.add('motion-pending','image-fades','shell-pending','nav-pending');
-      window.shellRevealFallback = setTimeout(() => window.releaseShellFallback(),6500);
+      document.documentElement.classList.add('motion-pending','image-fades');
+      if (!window.mobileLayout.matches) {
+        document.documentElement.classList.add('shell-pending','nav-pending');
+        window.shellRevealFallback = setTimeout(() => window.releaseShellFallback(),6500);
+      }
       // Slow deferred libraries must not bypass the prepared welcome turn.
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=8a4f1a5e00bf">
-  <script type="module" src="portrait-boot.js?v=92bf48d6089b" onerror="window.resolvePortraitReady(false)"></script>
+  <link rel="stylesheet" href="styles.css?v=5837e51388de">
+  <script type="module" src="portrait-boot.js?v=6f206e892829" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=5d9f0ae7e978" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
+  <script defer src="app.js?v=1de63409b212" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body>
@@ -64,23 +83,25 @@
     <div class="promo-content">
       <img class="promo-illustration" src="assets/audit.png?v=47213b1faa6f" width="58" height="58" decoding="async" data-reveal alt="">
       <p class="promo-text">Find opportunities to improve your product with a design audit</p>
-      <a class="promo-action" href="mailto:rebosidium@gmail.com?subject=Design%20audit"><span class="promo-button">Book an audit</span></a>
+      <a class="promo-action" href="mailto:rebosidium@gmail.com?subject=Design%20audit"><span class="promo-button"><span class="promo-label">Book an audit</span></span></a>
     </div>
     <button class="promo-close" type="button" aria-label="Close announcement"><img src="assets/close.svg?v=98906bf4e1cc" width="24" height="24" alt=""></button>
   </aside>
   <header class="header">
     <a class="identity" href="/new/">Dmitry Rybalka</a>
-    <nav aria-label="Main navigation">
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false"><img class="menu-icon" src="assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
+    <nav id="main-navigation" aria-label="Main navigation">
       <a href="/#experience">Work</a>
       <a href="mailto:rebosidium@gmail.com">Email</a>
       <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <a href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
   <main>
     <section class="hero" aria-labelledby="hero-title" data-node-id="85:95">
       <div class="portrait" role="img" aria-label="Dmitry Rybalka"><picture><source media="(prefers-reduced-motion: reduce)" srcset="assets/portrait-front.webp?v=38f33841c2ab"><img src="assets/portrait-start.webp?v=2bd283908647" width="311" height="311" fetchpriority="high" loading="eager" decoding="async" data-reveal alt="" aria-hidden="true" draggable="false" data-node-id="85:48"></picture><canvas width="311" height="311" aria-hidden="true"></canvas></div>
-      <h1 id="hero-title" aria-label="Hi, I’m Dmitry. I design products and lead design teams"><span class="title-line" aria-hidden="true"><span>Hi, I’m Dmitry. I design products</span></span><span class="title-line" aria-hidden="true"><span>and lead design teams</span></span></h1>
+      <h1 id="hero-title" aria-label="Hi, I’m Dmitry. I design products and lead design teams"><span class="title-line" aria-hidden="true"><span>Hi, I’m Dmitry. I design products</span></span> <span class="title-line" aria-hidden="true"><span>and lead design teams</span></span></h1>
     </section>
     <section class="features" aria-label="Design experience" data-node-id="85:44">
       <div class="feature" data-node-id="85:45"><div class="feature-art animated-feature-art"><img src="assets/medal.png?v=e1a852833eb4" width="120" height="120" decoding="async" data-reveal alt=""><canvas width="120" height="120" aria-hidden="true"></canvas></div><p>15+ years of hands-on design focused on product goals</p></div>
@@ -88,5 +109,7 @@
       <div class="feature" data-node-id="85:47"><div class="feature-art campfire-art"><img src="assets/campfire.png?v=2d026b3c3a1c" width="120" height="120" decoding="async" data-reveal alt=""><canvas width="120" height="120" aria-hidden="true"></canvas></div><p>Leading design teams, hiring<br> and mentoring designers</p></div>
     </section>
   </main>
+  <script fetchpriority="high" src="mobile-nav.js?v=2712d1ac76d8"></script>
+  <script fetchpriority="high" src="mobile-shell.js?v=cce77810fd81"></script>
 </body>
 </html>

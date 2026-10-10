@@ -1,10 +1,12 @@
 (() => {
+  window.promoControlsReady = true;
+  window.releaseMobilePromoClose?.();
   const promo = document.querySelector('.promo');
   const content = document.querySelector('.promo-content');
   const illustration = document.querySelector('.promo-illustration');
   const text = document.querySelector('.promo-text');
   let action = document.querySelector('.promo-action');
-  let button = document.querySelector('.promo-button');
+  let button = document.querySelector('.promo-label');
   const close = document.querySelector('.promo-close');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
@@ -44,8 +46,8 @@
   };
   let index = Math.max(0, variants.findIndex(v => v.id === new URLSearchParams(location.search).get('banner')));
   const rotationDelay = 6000;
-  let timer, transition, layoutTransition, shellTimeline, rotationGeneration = 0, dismissed = false, hovered = false, initialReady = false;
-  let bannerEntered = !root.classList.contains('shell-pending');
+  let timer, transition, layoutTransition, shellTimeline, rotationGeneration = 0, dismissed = promo.hidden, hovered = false, initialReady = false;
+  let bannerEntered = !root.classList.contains('shell-pending') && !root.classList.contains('mobile-shell-pending');
   const navigation = [...document.querySelectorAll('.header > a, .header nav a')];
   const releaseShell = window.releaseShellFallback;
   const settleShell = () => {
@@ -56,9 +58,13 @@
     if (timer === undefined) schedule();
   };
   window.releaseShellFallback = settleShell;
+  window.mobileHeaderReady.then(() => {if (window.mobileLayout.matches) {bannerEntered = true;releaseShell();schedule();}});
+  window.mobileLayout.addEventListener('change',() => {if (window.mobileLayout.matches && root.classList.contains('nav-pending')) settleShell();});
   const enhanceGlassButton = async () => {
     if (dismissed || action.closest('lg-button')) return;
     try {
+      // Keep the mobile native CTA in place until its entrance completes.
+      if (root.classList.contains('mobile-shell-pending')) await window.mobileHeaderReady;
       await import('./vendor/components.js?v=968d5372ad45');
       if (dismissed || action.closest('lg-button')) return;
       // Do not swap the fallback link underneath a pointer or keyboard focus.
@@ -155,7 +161,7 @@
       } else {index = next; apply(); schedule();}
     }, delay);
   };
-  promo.addEventListener('pointerenter',() => {hovered = true; pause();});
+  promo.addEventListener('pointerenter',event => {if(event.pointerType === 'touch') return;hovered = true; pause();});
   promo.addEventListener('pointerleave',() => {hovered = false; schedule();});
   promo.addEventListener('focusin',pause);
   promo.addEventListener('focusout',() => setTimeout(() => schedule(),0));
@@ -188,7 +194,7 @@
   });
   if (!window.gsap) {
     settleShell();
-    Promise.all([window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true)});
+    Promise.all([window.mobileHeaderReady,window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true)});
     return;
   }
   if (window.SplitText) gsap.registerPlugin(SplitText);
@@ -202,6 +208,7 @@
     fontDeadline,glassDeadline,
     Promise.race([decodeImage(illustration),new Promise(resolve => setTimeout(resolve,1600))])
   ]).then(() => {
+    if (window.mobileLayout.matches) return;
     if (reduced.matches || document.hidden || dismissed || !root.classList.contains('nav-pending')) {settleShell();return;}
     // Translation keeps every glass-filter ancestor opaque throughout the entrance.
     gsap.set(promo,{y:0,yPercent:-100});
@@ -216,7 +223,7 @@
   });
   const poster=document.querySelector('.portrait img');
   Promise.all([
-    window.shellReady,
+    window.shellReady,window.mobileHeaderReady,
     window.portraitReady,
     Promise.race([decodeImage(poster),new Promise(resolve=>setTimeout(resolve,1600))]),
     fontDeadline,glassDeadline

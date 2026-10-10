@@ -726,6 +726,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
   }
   listen(stage,'pointermove',moveDrag);
   function finishDrag(event){
+    // Touch implicitly captures the poster first. Transferring capture to the
+    // stage emits a bubbling loss on that child; the gesture is still active.
+    if(event.type==='lostpointercapture'&&event.target!==stage)return;
     if(!drag||event.pointerId!==drag.id)return;
     if(event.type!=='pointerup'){releaseDrag();stop();setStatus('Готово · выбранный ракурс');return}
     if(drag.horizontal&&Number.isFinite(event.clientX)&&Number.isFinite(event.clientY))moveDrag(event);

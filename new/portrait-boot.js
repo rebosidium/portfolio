@@ -1,4 +1,4 @@
-import {mountSeedancePortrait} from './portrait-spin.js?v=8751e62af2b1';
+import {mountSeedancePortrait} from './portrait-spin.js?v=ef72347da01e';
 
 // This module starts independently of GSAP, LiquidGlass and the other page images.
 const player=mountSeedancePortrait(document.querySelector('.portrait'),{interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=19581afb45f9'});
