@@ -281,8 +281,8 @@
       if (playIntro) {
         playIntro = false;
         const intro = gsap.timeline({defaults:{ease:'power3.out'}});
-        intro.from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1)
-          .from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
+        intro.from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1);
+        if (!window.mobileLayout.matches) intro.from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
         if (window.SplitText) {
           split = SplitText.create('.title-line > span',{
             type:'words',wordsClass:'title-word',aria:'none',autoSplit:true,

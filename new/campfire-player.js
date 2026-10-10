@@ -44,8 +44,37 @@ export function mountFeatureIcons(configurations,{portraitPlayer,mobileLayout=nu
 function createMobileIconCoordinator(configurations,players,mobileLayout,portraitPlayer){
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'),cleanup=[];
   const sections=configurations.filter(c=>c.feature&&players[c.name]?.setScrollActive);
-  let selected=null,raf=0,destroyed=false;
+  const revealed=new Set(),revealAnimations=new Map();
+  const canReveal=typeof IntersectionObserver==='function'&&sections.every(s=>typeof s.feature.animate==='function');
+  let selected=null,raf=0,destroyed=false,pageReady=!window.portraitReveal;
   const listen=(target,name,handler,options)=>{target?.addEventListener(name,handler,options);cleanup.push(()=>target?.removeEventListener(name,handler,options))};
+  function finishReveal(feature){
+    const animation=revealAnimations.get(feature);
+    if(animation){animation.onfinish=null;animation.cancel();revealAnimations.delete(feature)}
+    feature.classList.remove('mobile-feature-pending','mobile-feature-revealing');revealed.add(feature);
+  }
+  function finishReveals(){for(const {feature} of sections)finishReveal(feature)}
+  function prepareReveals(){
+    if(!mobileLayout.matches||reduced.matches||!canReveal){finishReveals();return}
+    const pendingPage=document.documentElement.classList.contains('motion-pending');
+    for(const {feature} of sections){
+      if(revealed.has(feature))continue;
+      const rect=feature.getBoundingClientRect();
+      // A late optional module must not hide content that is already on screen.
+      if(!pendingPage&&rect.bottom>0&&rect.top<innerHeight){finishReveal(feature);continue}
+      feature.classList.add('mobile-feature-pending');
+    }
+  }
+  function reveal(feature){
+    if(revealed.has(feature))return;
+    revealed.add(feature);feature.classList.remove('mobile-feature-pending');
+    feature.classList.add('mobile-feature-revealing');
+    try{
+      const animation=feature.animate([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+      revealAnimations.set(feature,animation);
+      animation.onfinish=()=>{finishReveal(feature);schedule()};
+    }catch{finishReveal(feature)}
+  }
   function select(next){
     if(next===selected)return;
     // Freeze the previous canvas before the next section can start its loop.
@@ -55,13 +84,17 @@ function createMobileIconCoordinator(configurations,players,mobileLayout,portrai
   }
   function update(){
     raf=0;if(destroyed)return;
-    if(!mobileLayout.matches||reduced.matches||document.hidden||document.documentElement.classList.contains('mobile-menu-open')){select(null);return}
+    if(!mobileLayout.matches||reduced.matches){finishReveals();select(null);return}
+    if(!pageReady||document.hidden||document.documentElement.classList.contains('mobile-menu-open')){for(const animation of revealAnimations.values())animation.pause();select(null);return}
+    for(const animation of revealAnimations.values())if(animation.playState==='paused')animation.play();
     const viewport=window.visualViewport,top=viewport?.offsetTop||0,height=viewport?.height||innerHeight,bottom=top+height,center=top+height/2;
     let next=null,distance=Infinity;
     for(const section of sections){
       const rect=section.feature.getBoundingClientRect(),style=getComputedStyle(section.feature);
-      if(rect.width<=0||rect.height<=0||style.display==='none'||style.visibility==='hidden'||Number(style.opacity)<.01)continue;
+      if(rect.width<=0||rect.height<=0||style.display==='none'||style.visibility==='hidden')continue;
       const visible=Math.max(0,Math.min(rect.bottom,bottom)-Math.max(rect.top,top));
+      if(visible>=Math.min(rect.height,height)*.4)reveal(section.feature);
+      if(section.feature.classList.contains('mobile-feature-pending')||(Number(style.opacity)<.01&&!section.feature.classList.contains('mobile-feature-revealing')))continue;
       if(visible<Math.min(rect.height,height)*.5)continue;
       const delta=Math.abs(rect.top+rect.height/2-center);
       if(delta<distance||(delta===distance&&section.name===selected)){next=section.name;distance=delta}
@@ -71,15 +104,22 @@ function createMobileIconCoordinator(configurations,players,mobileLayout,portrai
   const schedule=()=>{if(!destroyed&&!raf)raf=requestAnimationFrame(update)};
   listen(window,'scroll',schedule,{passive:true});listen(window,'resize',schedule,{passive:true});
   listen(window.visualViewport,'scroll',schedule,{passive:true});listen(window.visualViewport,'resize',schedule,{passive:true});
-  listen(document,'visibilitychange',schedule);listen(mobileLayout,'change',schedule);listen(reduced,'change',schedule);
-  const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(schedule,{threshold:[0,.5,1]}):null;
+  const layoutChanged=()=>{prepareReveals();schedule()};
+  listen(document,'visibilitychange',schedule);listen(mobileLayout,'change',layoutChanged);listen(reduced,'change',layoutChanged);
+  const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(schedule,{threshold:[0,.4,.5,1]}):null;
   const resize=typeof ResizeObserver==='function'?new ResizeObserver(schedule):null;
   for(const section of sections){intersection?.observe(section.feature);resize?.observe(section.feature)}
   const rootChanges=typeof MutationObserver==='function'?new MutationObserver(schedule):null;
   rootChanges?.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
   cleanup.push(portraitPlayer.subscribeLoading(schedule));
-  window.portraitReveal?.then(schedule,()=>{});schedule();
-  return {get activeName(){return selected},destroy(){destroyed=true;cancelAnimationFrame(raf);raf=0;select(null);intersection?.disconnect();resize?.disconnect();rootChanges?.disconnect();cleanup.forEach(fn=>fn())}};
+  const previousFallback=window.releaseMobileFeatureReveal;
+  const release=()=>{finishReveals();pageReady=true;schedule()};
+  window.releaseMobileFeatureReveal=release;
+  cleanup.push(()=>{if(window.releaseMobileFeatureReveal===release)window.releaseMobileFeatureReveal=previousFallback});
+  for(const {feature} of sections)listen(feature,'focusin',()=>{finishReveal(feature);schedule()});
+  prepareReveals();
+  window.portraitReveal?.then(()=>{pageReady=true;schedule()},release);schedule();
+  return {get activeName(){return selected},destroy(){destroyed=true;cancelAnimationFrame(raf);raf=0;select(null);finishReveals();intersection?.disconnect();resize?.disconnect();rootChanges?.disconnect();cleanup.forEach(fn=>fn())}};
 }
 export function mountCampfireFeature(feature,options={}){
   const mounted=mountFeatureIcons([{name:'campfire',feature,id:'campfire-approved-v4',prefix:'campfire-v4',leave:'freeze',renderedClass:'campfire-rendered',...options}],options);

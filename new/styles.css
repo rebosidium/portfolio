@@ -113,6 +113,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .feature-art{transition:none}
   .feature p{font-size:clamp(18px,5vw,22px);line-height:1.4;overflow-wrap:break-word}
   .feature p br{display:none}
+  .feature.mobile-feature-pending{opacity:0;transform:translateY(18px)}
   /* Room to scroll every feature into the active viewport position. */
   body:after{content:'';display:block;height:100svh}
 }
@@ -127,4 +128,4 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .promo-continuation{display:inline}
   .promo-button,.promo-glass .lg-button__el{padding-left:18px;padding-right:18px}
 }
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.shell-pending .promo{transform:none;pointer-events:auto}.nav-pending .header{pointer-events:auto}.nav-pending .header a{visibility:visible;opacity:1}.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.shell-pending .promo{transform:none;pointer-events:auto}.nav-pending .header{pointer-events:auto}.nav-pending .header a{visibility:visible;opacity:1}.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}.feature.mobile-feature-pending{opacity:1;transform:none}}

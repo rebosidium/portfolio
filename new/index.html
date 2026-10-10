@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="33e174455439">
+<html lang="en" data-build="8aa57c9cd97a">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,6 +52,7 @@
       window.resolveShellReady(true);
     };
     window.releasePageFallback = () => {
+      window.releaseMobileFeatureReveal?.();
       document.documentElement.classList.remove('motion-pending','image-fades');
       window.releaseShellFallback();
       window.releaseMobileShell?.();
@@ -71,11 +72,11 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=380bf28f2795">
-  <script type="module" src="portrait-boot.js?v=86a1185a45ad" onerror="window.resolvePortraitReady(false)"></script>
+  <link rel="stylesheet" href="styles.css?v=a958be4bb852">
+  <script type="module" src="portrait-boot.js?v=3781fdc6e5c1" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=e50103fd43ac" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
+  <script defer src="app.js?v=d30fe402dfeb" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body>
