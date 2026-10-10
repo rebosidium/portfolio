@@ -7,12 +7,11 @@
   const promo = document.querySelector('.promo');
   const close = promo.querySelector('.promo-close');
   const release = window.releaseMobileShell;
-  let entrances = [], ctaTimer, settled = false;
+  let entrances = [], settled = false;
   const finish = () => {
     if (settled) return;
     settled = true;
     entrances.forEach(animation => animation.cancel());
-    clearTimeout(ctaTimer);
     clearTimeout(window.mobileShellFallback);
     release?.();
     close.removeEventListener('click',finish);
@@ -60,16 +59,6 @@
       animate(close,{opacity:0},{opacity:.4},650,160)
     ];
     root.classList.remove('mobile-promo-pending');
-    ctaTimer = setTimeout(() => {
-      const action = promo.querySelector('.promo-action');
-      const label = promo.querySelector('.promo-label,.lg-button__label');
-      const material = label.closest('.promo-button') || action;
-      // The material and filter stay opaque; fade the label and border separately.
-      animate(label,{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'},650);
-      animate(material,{borderColor:'rgba(255,255,255,0)'},{borderColor:'rgba(255,255,255,.4)'},650);
-      animate(action,{transform:'translateY(6px)'},{transform:'translateY(0)'},650);
-      root.classList.add('mobile-shell-ready');
-    },440);
     await waitAnimations(bannerAnimations);
     if (settled) return;
     await window.mobileNavigationReady;

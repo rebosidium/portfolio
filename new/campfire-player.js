@@ -34,32 +34,74 @@ function createIconQueue(portraitPlayer){
   const unsubscribe=portraitPlayer.subscribeLoading(()=>{if(!ready())flush();else pump()});
   return {enqueue,pump,get state(){return {activeDownloads:downloads,activeDecoders:decodes,queuedDownloads:network.length,queuedDecoders:decoders.length,gateOpen:ready()}},destroy(){destroyed=true;unsubscribe();flush()}};
 }
-export function mountFeatureIcons(configurations,{portraitPlayer}={}){
+export function mountFeatureIcons(configurations,{portraitPlayer,mobileLayout=null}={}){
   if(!portraitPlayer?.subscribeLoading)return {players:{},destroy(){}};
   const shared=createIconQueue(portraitPlayer),players={};
-  for(const c of configurations)players[c.name]=mountIcon(c.feature,{...c,portraitPlayer,shared});
-  return {players,get state(){return shared.state},destroy(){Object.values(players).forEach(p=>p.destroy());shared.destroy()}};
+  for(const c of configurations)players[c.name]=mountIcon(c.feature,{...c,portraitPlayer,shared,mobileLayout});
+  const scrolling=mobileLayout?createMobileIconCoordinator(configurations,players,mobileLayout,portraitPlayer):null;
+  return {players,get state(){return {...shared.state,scrollActiveIcon:scrolling?.activeName||null}},destroy(){scrolling?.destroy();Object.values(players).forEach(p=>p.destroy());shared.destroy()}};
+}
+function createMobileIconCoordinator(configurations,players,mobileLayout,portraitPlayer){
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),cleanup=[];
+  const sections=configurations.filter(c=>c.feature&&players[c.name]?.setScrollActive);
+  let selected=null,raf=0,destroyed=false;
+  const listen=(target,name,handler,options)=>{target?.addEventListener(name,handler,options);cleanup.push(()=>target?.removeEventListener(name,handler,options))};
+  function select(next){
+    if(next===selected)return;
+    // Freeze the previous canvas before the next section can start its loop.
+    if(selected)players[selected].setScrollActive(false);
+    selected=next;
+    if(selected)players[selected].setScrollActive(true);
+  }
+  function update(){
+    raf=0;if(destroyed)return;
+    if(!mobileLayout.matches||reduced.matches||document.hidden||document.documentElement.classList.contains('mobile-menu-open')){select(null);return}
+    const viewport=window.visualViewport,top=viewport?.offsetTop||0,height=viewport?.height||innerHeight,bottom=top+height,center=top+height/2;
+    let next=null,distance=Infinity;
+    for(const section of sections){
+      const rect=section.feature.getBoundingClientRect(),style=getComputedStyle(section.feature);
+      if(rect.width<=0||rect.height<=0||style.display==='none'||style.visibility==='hidden'||Number(style.opacity)<.01)continue;
+      const visible=Math.max(0,Math.min(rect.bottom,bottom)-Math.max(rect.top,top));
+      if(visible<Math.min(rect.height,height)*.5)continue;
+      const delta=Math.abs(rect.top+rect.height/2-center);
+      if(delta<distance||(delta===distance&&section.name===selected)){next=section.name;distance=delta}
+    }
+    select(next);
+  }
+  const schedule=()=>{if(!destroyed&&!raf)raf=requestAnimationFrame(update)};
+  listen(window,'scroll',schedule,{passive:true});listen(window,'resize',schedule,{passive:true});
+  listen(window.visualViewport,'scroll',schedule,{passive:true});listen(window.visualViewport,'resize',schedule,{passive:true});
+  listen(document,'visibilitychange',schedule);listen(mobileLayout,'change',schedule);listen(reduced,'change',schedule);
+  const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(schedule,{threshold:[0,.5,1]}):null;
+  const resize=typeof ResizeObserver==='function'?new ResizeObserver(schedule):null;
+  for(const section of sections){intersection?.observe(section.feature);resize?.observe(section.feature)}
+  const rootChanges=typeof MutationObserver==='function'?new MutationObserver(schedule):null;
+  rootChanges?.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+  cleanup.push(portraitPlayer.subscribeLoading(schedule));
+  window.portraitReveal?.then(schedule,()=>{});schedule();
+  return {get activeName(){return selected},destroy(){destroyed=true;cancelAnimationFrame(raf);raf=0;select(null);intersection?.disconnect();resize?.disconnect();rootChanges?.disconnect();cleanup.forEach(fn=>fn())}};
 }
 export function mountCampfireFeature(feature,options={}){
   const mounted=mountFeatureIcons([{name:'campfire',feature,id:'campfire-approved-v4',prefix:'campfire-v4',leave:'freeze',renderedClass:'campfire-rendered',...options}],options);
   return {get state(){return mounted.players.campfire?.state},destroy:()=>mounted.destroy()};
 }
-function mountIcon(feature,{portraitPlayer,shared,manifestURL,id,prefix,posters,leave='poster',renderedClass='icon-rendered'}={}) {
+function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,id,prefix,posters,leave='poster',renderedClass='icon-rendered'}={}) {
   const art=feature?.querySelector('.feature-art'),originalPoster=art?.querySelector('img'),canvas=art?.querySelector('canvas');
   const context=canvas?.getContext('2d');
   if(!context||!originalPoster||!portraitPlayer?.subscribeLoading)return {destroy(){}};
   const media=matchMedia('(prefers-reduced-motion: reduce)'),hoverMedia=matchMedia('(hover: hover)'),sets=new Map(),cache=new Map(),queue=[],cleanup=[];
   const CACHE_LIMIT=12,DECODE_WORKERS=2,LOOKAHEAD=7;
   let poster=originalPoster,manifest=null,active=null,job=null,controller=null,jobGeneration=0,decodeEpoch=0,inFlight=0;
-  let avatarState=portraitPlayer.loadingState,gateOpen=false,hovered=false,focused=false,touchFocus=false,inView=false,destroyed=false,playing=false,returning=false;
+  let avatarState=portraitPlayer.loadingState,gateOpen=false,hovered=false,focused=false,touchFocus=false,scrollActive=false,inView=false,destroyed=false,playing=false,returning=false;
   let raf=0,startedAt=0,pausedElapsed=null,displayedFrame=0,displayedKey=null,clock=0,draws=0,starts=0,resizeTimer=0,cycles=0;
   let staticPosterToken=0;
-  const activated=()=>hovered||focused;
+  const mobileMode=()=>!!mobileLayout?.matches;
+  const activated=()=>mobileMode()?scrollActive:hovered||focused;
   const owner={priority:()=>activated()?0:inView?1:2};
   const wrap=index=>((index%96)+96)%96;
   const listen=(target,name,fn,options)=>{target.addEventListener(name,fn,options);cleanup.push(()=>target.removeEventListener(name,fn,options));};
   // Keyboard focus remains available on a device whose primary pointer has no hover.
-  const loadEligible=()=>!destroyed&&!media.matches&&(hoverMedia.matches||focused)&&!document.hidden;
+  const loadEligible=()=>!destroyed&&!media.matches&&(mobileMode()?scrollActive:hoverMedia.matches||focused)&&!document.hidden;
   const eligible=()=>loadEligible()&&inView;
   const gated=()=>{const current=portraitPlayer.loadingState;return loadEligible()&&gateOpen&&current.generation===avatarState.generation&&avatarReady(current)};
   const decodeGated=()=>gated()&&inView;
@@ -93,7 +135,7 @@ function mountIcon(feature,{portraitPlayer,shared,manifestURL,id,prefix,posters,
     if(mode)canvas.dataset.mode=mode;
     Object.assign(canvas.dataset,{quality:active?.key||'',requestedQuality:chooseQuality(),ready:String(!!active),frame:String(displayedFrame),
       decodedCacheCount:String([...cache.values()].filter(e=>e.resource).length),decodeWorkers:String(inFlight),drawCount:String(draws),startCount:String(starts),
-      hovered:String(hovered),focused:String(focused),avatarGeneration:String(avatarState.generation),loadingGeneration:String(jobGeneration),encodedReadyCount:String(active?.blobs.filter(Boolean).length||0)});
+      hovered:String(hovered),focused:String(focused),scrollActive:String(scrollActive),avatarGeneration:String(avatarState.generation),loadingGeneration:String(jobGeneration),encodedReadyCount:String(active?.blobs.filter(Boolean).length||0)});
   }
   function closeResource(resource){try{resource?.dispose()}catch{}}
   function trimCache(){
@@ -328,7 +370,7 @@ function mountIcon(feature,{portraitPlayer,shared,manifestURL,id,prefix,posters,
     updateStaticPoster();
     focused=!touchFocus&&feature.contains(document.activeElement);
     if(!loadEligible()){
-      cancelJob();stop(media.matches?'reduced':document.hidden?'hidden':'no-hover',media.matches||leave==='poster');suspendDecoding();
+      cancelJob();stop(media.matches?'reduced':document.hidden?'hidden':mobileMode()?'scroll-paused':'no-hover',media.matches||leave==='poster');suspendDecoding();
       if(media.matches){for(const e of cache.values())closeResource(e.resource);cache.clear()}
       diagnostics();
       return;
@@ -350,6 +392,7 @@ function mountIcon(feature,{portraitPlayer,shared,manifestURL,id,prefix,posters,
     diagnostics();shared.pump();
   });
   listen(media,'change',environmentChanged);listen(hoverMedia,'change',environmentChanged);listen(document,'visibilitychange',environmentChanged);
+  if(mobileLayout)listen(mobileLayout,'change',environmentChanged);
   listen(window,'resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{updateStaticPoster();loadSelected();diagnostics()},140)});
   if(navigator.connection?.addEventListener)listen(navigator.connection,'change',()=>{updateStaticPoster();loadSelected()});
   const resizeObserver=new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{updateStaticPoster();loadSelected();diagnostics()},140)});resizeObserver.observe(art);
@@ -363,7 +406,10 @@ function mountIcon(feature,{portraitPlayer,shared,manifestURL,id,prefix,posters,
   updateStaticPoster();watchDensity();cleanup.push(()=>densityQuery.removeEventListener('change',densityChanged));
   cleanup.push(portraitPlayer.subscribeLoading(avatarChanged));
   diagnostics(media.matches?'reduced':!hoverMedia.matches?'no-hover':'waiting-avatar');
-  return {get state(){return {quality:active?.key||null,hovered,focused,playing,returning,frame:displayedFrame,gateOpen,avatarGeneration:avatarState.generation}},destroy(){
+  return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,gateOpen,avatarGeneration:avatarState.generation}},setScrollActive(value){
+    const next=!!value;if(next===scrollActive)return;scrollActive=next;
+    environmentChanged();shared.pump();
+  },destroy(){
     destroyed=true;staticPosterToken++;cancelJob();stop('static',true);decodeEpoch++;clearTimeout(resizeTimer);resizeObserver.disconnect();intersectionObserver.disconnect();cleanup.forEach(fn=>fn());
     for(const entry of cache.values()){if(entry.resource)closeResource(entry.resource);else entry.reject(cancelled())}cache.clear();queue.length=0;
     for(const set of sets.values())if(set.posterURL)URL.revokeObjectURL(set.posterURL);

@@ -5,6 +5,10 @@
   const content = document.querySelector('.promo-content');
   const illustration = document.querySelector('.promo-illustration');
   const text = document.querySelector('.promo-text');
+  const desktopCopy = text.querySelector('.promo-desktop-copy');
+  const mobileDescription = text.querySelector('.promo-mobile-description');
+  const mobileAction = text.querySelector('.promo-inline-action');
+  const mobileLabel = text.querySelector('.promo-inline-label');
   let action = document.querySelector('.promo-action');
   let button = document.querySelector('.promo-label');
   const close = document.querySelector('.promo-close');
@@ -113,24 +117,34 @@
     if (updateColor) promo.style.backgroundColor = v.color;
     content.style.gap = `${v.gap}px`;
     illustration.src = v.image;
-    text.textContent = v.text;
+    desktopCopy.textContent = v.text;
     if (v.mobileLine) {
-      text.textContent = v.text.slice(0,v.text.indexOf(v.mobileLine));
+      desktopCopy.textContent = v.text.slice(0,v.text.indexOf(v.mobileLine));
       const continuation = document.createElement('span');
       continuation.className = 'promo-continuation';
       continuation.textContent = v.mobileLine;
-      text.append(continuation);
+      desktopCopy.append(continuation);
     }
+    mobileDescription.textContent = `${v.text}. `;
+    if (v.mobileLine) {
+      mobileDescription.textContent = v.text.slice(0,v.text.indexOf(v.mobileLine));
+      const line = document.createElement('br');
+      line.className = 'promo-inline-break';
+      mobileDescription.append(line,`${v.mobileLine}. `);
+    }
+    mobileLabel.textContent = v.cta;
     button.textContent = v.cta;
     action.href = `mailto:rebosidium@gmail.com?subject=${encodeURIComponent(v.subject)}`;
+    mobileAction.href = action.href;
     promo.dataset.variant = v.id;
   };
   apply();
-  window.mobileLayout.addEventListener('change',() => {
-    if (!rotationCleanup) return;
-    transition?.kill();rotationCleanup();rotationCleanup = null;transition = null;
+  const updateLayout = () => {
+    transition?.kill();rotationCleanup?.();rotationCleanup = null;transition = null;
+    if (window.gsap) gsap.set([illustration,text,button],{clearProps:'transform,opacity'});
     apply();schedule();
-  });
+  };
+  window.mobileLayout.addEventListener('change',updateLayout);
   // Modulepreload starts the downloads in the head; mount the button before the intro.
   const glassReady = enhanceGlassButton().finally(() => {
     clearTimeout(window.glassRevealFallback);
@@ -175,32 +189,9 @@
             apply(false);
           },null,.22).fromTo(changingContent,{y:8,opacity:0},{y:0,opacity:1,duration:.36,ease:'power3.out',clearProps:'transform,opacity',...(mobileCta ? {immediateRender:false} : {})},.22);
         if (mobileCta) {
-          const host = action.closest('lg-button') || action;
-          const surface = host.surface;
-          const leaves = surface ? [button,surface.layer,surface.shadow] : [action.querySelector('.promo-button')];
-          const out = {duration:.22,ease:'power2.in'};
-          const enter = {duration:.36,ease:'power3.out',immediateRender:false};
           rotationCleanup = () => {
             gsap.set([illustration,text],{clearProps:'transform,opacity'});
-            gsap.set(host,{clearProps:'transform'});
-            gsap.set(leaves,{clearProps:'opacity'});
-            if (surface) {
-              gsap.set(surface.tint,{clearProps:'opacity'});
-              gsap.set(action,{clearProps:'borderColor,backgroundColor'});
-            }
           };
-          transition.to(host,{y:-8,...out},0)
-            .fromTo(host,{y:8},{y:0,...enter,clearProps:'transform'},.22)
-            .to(leaves,{opacity:0,...out},0)
-            .fromTo(leaves,{opacity:0},{opacity:1,...enter,clearProps:'opacity'},.22);
-          if (surface) {
-            const material = getComputedStyle(action),tintOpacity = getComputedStyle(surface.tint).opacity;
-            const borderColor = material.borderColor,backgroundColor = material.backgroundColor;
-            transition.to(action,{borderColor:'#ffffff00',backgroundColor:'#ffffff00',...out},0)
-              .fromTo(action,{borderColor:'#ffffff00',backgroundColor:'#ffffff00'},{borderColor,backgroundColor,...enter,clearProps:'borderColor,backgroundColor'},.22)
-              .to(surface.tint,{opacity:0,...out},0)
-              .fromTo(surface.tint,{opacity:0},{opacity:tintOpacity,...enter,clearProps:'opacity'},.22);
-          }
         }
       } else {index = next; apply(); schedule();}
     }, delay);
