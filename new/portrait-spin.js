@@ -1,7 +1,7 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
-export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = {}) {
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -25,9 +25,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
   let generation=0,bitmapEpoch=0,fetchController=null,manifest=null,urls=[],angles=[],blobs=[];
   let sourceSize=[1200,1200],renderSize=[1200,1200],ready=false;
   let raf=0,previousTick=0,mode='idle',drag=null;
+  let settleDampingMs=DAMPING_MS,settleMaxStep=12;
   let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
   let returnRequested=false,returnStarted=0,returnCount=0;
   let menuPoseActive=false;
+  let mobileScrollFrontPhase=0;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
@@ -268,12 +270,14 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
     if(!drag)return;const id=drag.id;drag=null;stage.classList.remove('dragging');
     if(stage.hasPointerCapture?.(id))stage.releasePointerCapture(id);
   }
-  function setTarget(angle,{shortest=true,session=false}={}){
+  function setTarget(angle,{shortest=true,session=false,damping=DAMPING_MS,maxStep=12}={}){
     if(!ready)return;releaseDrag();
     if(session){stop();beginStats()}
     inertiaVelocity=motionVelocity=0;mode='settle';
+    settleDampingMs=damping;settleMaxStep=maxStep;
     canvas.dataset.mode=mode;
     targetAngle=shortest?currentAngle+shortestDelta(angle,currentAngle):angle;
+    canvas.dataset.targetPhase=targetAngle.toFixed(3);
     scheduleRender();
   }
   function cursorAngle(){
@@ -325,7 +329,17 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
   }
   function prepareMenuPose(){
     if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing)return false;
-    followPaused=true;skipIntro();setTarget(45,{session:true});menuPoseActive=true;
+    followPaused=true;skipIntro();setTarget(mobileLayout?.matches?45*1.3:45,{session:true});menuPoseActive=true;
+    return true;
+  }
+  function setMobileScrollPose(back){
+    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing||drag||returnRequested||menuPoseActive)return false;
+    followPaused=true;skipIntro();stop();beginStats();
+    const delta=shortestDelta(back?180:0,lastMotionPhase);
+    if(back&&angleDistance(lastMotionPhase,180)>1.5)mobileScrollFrontPhase=Math.round(lastMotionPhase/360)*360;
+    // The exact half-turn follows the same rightward direction as the menu pose.
+    // Keep the original front so a rounded back frame cannot flip the return path.
+    setTarget(back?lastMotionPhase+(delta===-180?180:delta):mobileScrollFrontPhase,{shortest:false,damping:145,maxStep:6});
     return true;
   }
   function returnFromMenu(){
@@ -419,8 +433,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
       paintMotion(currentAngle,motionVelocity);
     }else if(mode==='settle'){
       const delta=targetAngle-currentAngle;
-      const eased=delta*(1-Math.exp(-elapsed/DAMPING_MS));
-      const limit=12*elapsed/(1000/60);
+      const eased=delta*(1-Math.exp(-elapsed/settleDampingMs));
+      const limit=settleMaxStep*elapsed/(1000/60);
       let proposed=Math.abs(delta)<.15?targetAngle:currentAngle+Math.max(-limit,Math.min(limit,eased));
       if(Math.abs(targetAngle-proposed)<.15)proposed=targetAngle;
       const next=angleToIndex(proposed),direction=Math.sign(delta)||1;
@@ -787,7 +801,51 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = 
   listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
+  if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
+    turn:setMobileScrollPose,subscribeLoading,
+    canRetry:()=>ready&&startupSettled&&!preparing&&!drag
+  },mobileLayout,media));
   if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
   return {ready:startupReady,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
+}
+
+// Mobile scroll owns only its requested pose; manual rotation and menu spring win.
+function mountMobilePortraitScroll(stage,player,mobile,reduced){
+  const cleanup=[],root=document.documentElement;
+  let raf=0,destroyed=false,pageReady=!window.portraitReveal,lastY=scrollY,direction=0;
+  let owned=false,desiredBack=false,applied=null,initial=true,ready=false;
+  let menuOpen=root.classList.contains('mobile-menu-open');
+  const listen=(target,name,handler)=>{target?.addEventListener(name,handler,{passive:true});cleanup.push(()=>target?.removeEventListener(name,handler))};
+  const schedule=()=>{if(!destroyed&&!raf)raf=requestAnimationFrame(update)};
+  function reset(){owned=false;desiredBack=false;applied=null;direction=0;initial=true;lastY=scrollY}
+  function update(){
+    raf=0;if(destroyed||!pageReady||!mobile.matches||reduced.matches||document.hidden||root.classList.contains('mobile-menu-open'))return;
+    const rect=stage.getBoundingClientRect(),top=window.visualViewport?.offsetTop||0;
+    const halfHidden=rect.height>0&&rect.top+rect.height/2<=top;
+    const back=(direction>0||initial&&scrollY>0)&&halfHidden;
+    if(back||direction<0&&desiredBack){desiredBack=back;owned=true;if(applied!==desiredBack)applied=null}
+    initial=false;direction=0;
+    if(!owned||applied===desiredBack)return;
+    if(player.turn(desiredBack))applied=desiredBack;
+    else if(player.canRetry())schedule();
+  }
+  listen(window,'scroll',()=>{const delta=scrollY-lastY;if(Math.abs(delta)>1){direction=Math.sign(delta);lastY=scrollY;schedule()}});
+  listen(window,'resize',schedule);listen(window.visualViewport,'resize',schedule);
+  listen(window.visualViewport,'scroll',schedule);
+  listen(window,'pointerup',schedule);listen(window,'pointercancel',schedule);
+  listen(stage,'pointerdown',()=>{reset();initial=false;});
+  listen(stage,'keydown',event=>{if(['ArrowLeft','ArrowRight','Home'].includes(event.key)){reset();initial=false;}});
+  listen(document,'visibilitychange',()=>{applied=null;schedule()});
+  listen(window,'pageshow',()=>{initial=true;applied=null;lastY=scrollY;schedule()});
+  listen(mobile,'change',()=>{if(!mobile.matches&&owned)player.turn(false);reset();schedule()});
+  listen(reduced,'change',()=>{reset();schedule()});
+  const changes=new MutationObserver(()=>{
+    const open=root.classList.contains('mobile-menu-open');
+    if(open!==menuOpen){menuOpen=open;reset();initial=false;cancelAnimationFrame(raf);raf=0;}
+  });
+  changes.observe(root,{attributes:true,attributeFilter:['class']});cleanup.push(()=>changes.disconnect());
+  cleanup.push(player.subscribeLoading(state=>{if(ready&&!state.ready)applied=null;ready=state.ready;schedule()}));
+  window.portraitReveal?.then(()=>{pageReady=true;schedule()},()=>{pageReady=true;schedule()});schedule();
+  return ()=>{destroyed=true;cancelAnimationFrame(raf);cleanup.forEach(fn=>fn())};
 }
