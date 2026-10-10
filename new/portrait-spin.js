@@ -1,6 +1,7 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
-export function mountSeedancePortrait(stage, {manifestURL} = {}) {
+// Approved cursor-follow with manual rotation and spring return.
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag'} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -15,6 +16,9 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const cleanup=[];
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  const FOLLOW_MAX_ANGLE=49,FOLLOW_DAMPING_MS=95,FOLLOW_DEAD_ZONE=8,FOLLOW_SOFT_RADIUS=1.5;
+  let cursorPoint=null,followVisible=true,followPaused=false;
   const CACHE_LIMIT=12,DECODE_WORKERS=2,CHUNK_WORKERS=2,DAMPING_MS=60;
   const DRAG_TURNS=3,DRAG_DAMPING_MS=20,RETURN_OMEGA=26,RETURN_DAMPING=.72,RETURN_MAX_SPEED=900;
   const RELEASE_WINDOW_MS=110,RELEASE_IDLE_MS=120;
@@ -83,7 +87,8 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   function indexToAngle(index){index=wrap(index,urls.length);return angles[index]??index/urls.length*360}
   function updateAngle(angle){
     const shown=wrap(angle,360);
-    stage.setAttribute('aria-label','Dmitry Rybalka. Drag to rotate; release to return to the front. Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
+    const instruction=cursorFollow?'Move the pointer to turn Dmitry toward it. Drag to rotate freely; release to return to the front.':'Drag to rotate; release to return to the front.';
+    stage.setAttribute('aria-label','Dmitry Rybalka. '+instruction+' Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
     canvas.dataset.angle=String(shown);
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
@@ -270,6 +275,43 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     targetAngle=shortest?currentAngle+shortestDelta(angle,currentAngle):angle;
     scheduleRender();
   }
+  function cursorAngle(){
+    if(!cursorPoint)return 0;
+    const rect=stage.getBoundingClientRect(),center=rect.left+rect.width/2,dx=cursorPoint.x-center;
+    const reach=Math.max(FOLLOW_DEAD_ZONE+1,dx<0?center:window.innerWidth-center);
+    const distance=Math.max(0,Math.abs(dx)-FOLLOW_DEAD_ZONE)/(reach-FOLLOW_DEAD_ZONE);
+    // Attenuate near the portrait in both axes, with a smooth join to full influence.
+    const radius=Math.max(1,Math.min(rect.width*FOLLOW_SOFT_RADIUS,center,window.innerWidth-center));
+    const proximity=Math.min(1,Math.hypot(dx,cursorPoint.y-(rect.top+rect.height/2))/radius);
+    const influence=proximity*proximity*(3-2*proximity);
+    return Math.sign(dx)*Math.min(1,distance)*influence*FOLLOW_MAX_ANGLE;
+  }
+  function applyCursorTarget(){
+    if(!cursorFollow||followPaused||drag||returnRequested||mode==='return'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
+    const angle=cursorAngle(),next=angleToIndex(angle);
+    canvas.dataset.followTarget=angle.toFixed(3);
+    if(mode==='idle'&&next===displayedIndex)return;
+    if(mode!=='follow'){releaseDrag();stop();beginStats();mode='follow';canvas.dataset.mode=mode;previousTick=0;}
+    const nextTarget=currentAngle+shortestDelta(angle,currentAngle);
+    const direction=Math.sign(nextTarget-currentAngle);
+    if(lastMotionDirection&&direction&&direction!==lastMotionDirection)currentAngle=lastMotionPhase;
+    targetAngle=currentAngle+shortestDelta(angle,currentAngle);
+    setStatus('Поворот за курсором');scheduleRender();
+  }
+  function renderFollow(elapsed){
+    const before=currentAngle,delta=targetAngle-currentAngle;
+    const eased=delta*(1-Math.exp(-elapsed/FOLLOW_DAMPING_MS));
+    const limit=9*elapsed/(1000/60);
+    currentAngle=Math.abs(delta)<.15?targetAngle:currentAngle+Math.max(-limit,Math.min(limit,eased));
+    motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    paintMotion(currentAngle,motionVelocity);
+    if(Math.abs(targetAngle-currentAngle)<.15){
+      const index=angleToIndex(targetAngle),entry=decoded(index);
+      if(!entry){requestDecode(index,0);return}
+      if(index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,indexToAngle(index));
+      stop();setStatus('Готово · слежу за курсором');
+    }
+  }
   function returnToFront(velocity=0){
     if(!ready||media.matches||document.hidden)return;
     // Start from the visible unwrapped pose, not a fast drag's decoder backlog.
@@ -342,7 +384,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     introTime=nextTime;currentAngle=proposed;targetAngle=0;
     if(entry.index!==displayedIndex)draw(entry,indexToAngle(entry.index));
     canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase='0';canvas.dataset.introProgress=progress.toFixed(3);
-    if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';releaseIntroFrames();stop()}
+    if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';releaseIntroFrames();stop();applyCursorTarget()}
   }
   function render(now){
     raf=0;
@@ -350,6 +392,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     if(introRequested)beginIntro();
     const elapsed=previousTick?Math.max(0,Math.min(80,now-previousTick)):1000/60;previousTick=now;
     if(mode==='intro')renderIntro(elapsed);
+    else if(mode==='follow')renderFollow(elapsed);
     else if(mode==='return')renderReturn(elapsed);
     else if(mode==='drag'){
       const before=currentAngle;
@@ -375,7 +418,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     }else if(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch){
       wantedIndex=displayedIndex;if(!introFrames.size)warmWindow(displayedIndex,1);else requestDecode(displayedIndex,0);const entry=decoded(displayedIndex);if(entry){draw(entry,indexToAngle(displayedIndex));diagnostics()}
     }
-    if(mode==='intro'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
+    if(mode==='intro'||mode==='follow'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
   }
   // Each shard is a stored ZIP. The manifest points directly to complete WebP
   // payloads, so a frame can become usable before the shard finishes loading.
@@ -591,6 +634,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       currentStartupReady=true;notifyLoading();
       settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
       if(returnRequested)returnToFront();
+      else applyCursorTarget();
     }catch(error){
       if(token!==generation)return;fallback(error);
     }finally{clearTimeout(startupDeadline)}
@@ -614,7 +658,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(checkResize):null;
   resizeObserver?.observe(stage);
-  listen(window,'resize',checkResize);
+  listen(window,'resize',()=>{checkResize();applyCursorTarget()});
   let densityQuery;
   const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
   function watchDensity(){
@@ -624,8 +668,29 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   watchDensity();cleanup.push(()=>densityQuery?.removeEventListener('change',densityChanged));
   if(navigator.connection?.addEventListener)listen(navigator.connection,'change',()=>{notifyLoading();checkResize()});
+  if(cursorFollow){
+    listen(window,'pointermove',event=>{
+      if(event.pointerType!=='mouse'||!finePointer.matches)return;
+      cursorPoint={x:event.clientX,y:event.clientY};
+      // Manual rotation and its spring finish before cursor-follow can resume.
+      if(drag||returnRequested||mode==='return'||event.buttons)return;
+      followPaused=false;applyCursorTarget();
+    },{passive:true});
+    const resetCursor=()=>{cursorPoint=null;applyCursorTarget()};
+    listen(document,'pointerleave',resetCursor);listen(window,'blur',resetCursor);listen(window,'focus',applyCursorTarget);
+    listen(finePointer,'change',()=>{cursorPoint=null;if(!finePointer.matches&&mode==='follow')stop();else applyCursorTarget()});
+    if(typeof IntersectionObserver==='function'){
+      const observer=new IntersectionObserver(entries=>{
+        followVisible=entries[0].isIntersecting;
+        if(!followVisible&&mode==='follow'){stop();cancelAnimationFrame(raf);raf=0}
+        else if(followVisible)applyCursorTarget();
+      });
+      observer.observe(stage);cleanup.push(()=>observer.disconnect());
+    }
+  }
   listen(stage,'pointerdown',event=>{
     if(media.matches||event.button!==0||event.isPrimary===false)return;
+    if(cursorFollow)followPaused=true;
     skipIntro();
     if(!ready||!startupSettled||preparing){returnRequested=false;return}
     if(drag){if(event.pointerId!==drag.id){releaseDrag();stop();setStatus('Готово · выбранный ракурс')}return}
@@ -699,7 +764,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     posterElement.classList.add('image-ready');
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
-  listen(document,'visibilitychange',()=>{if(document.hidden){skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize()}});
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
