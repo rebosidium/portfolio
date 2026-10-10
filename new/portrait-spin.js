@@ -16,12 +16,13 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   const CACHE_LIMIT=12,DECODE_WORKERS=2,CHUNK_WORKERS=2,DAMPING_MS=60;
-  const DRAG_TURNS=3,DRAG_DAMPING_MS=20,INERTIA_TAU_MS=400,INERTIA_MAX_SPEED=900,INERTIA_MIN_SPEED=8;
+  const DRAG_TURNS=3,DRAG_DAMPING_MS=20,RETURN_OMEGA=26,RETURN_DAMPING=.72,RETURN_MAX_SPEED=900;
   const RELEASE_WINDOW_MS=110,RELEASE_IDLE_MS=120;
   let generation=0,bitmapEpoch=0,fetchController=null,manifest=null,urls=[],angles=[],blobs=[];
   let sourceSize=[1200,1200],renderSize=[1200,1200],ready=false;
   let raf=0,previousTick=0,mode='idle',drag=null;
-  let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0,motionSettling=false;
+  let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
+  let returnRequested=false,returnStarted=0,returnCount=0;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
@@ -82,7 +83,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   function indexToAngle(index){index=wrap(index,urls.length);return angles[index]??index/urls.length*360}
   function updateAngle(angle){
     const shown=wrap(angle,360);
-    stage.setAttribute('aria-label','Dmitry Rybalka. Drag to rotate, or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
+    stage.setAttribute('aria-label','Dmitry Rybalka. Drag to rotate; release to return to the front. Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
     canvas.dataset.angle=String(shown);
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
@@ -200,7 +201,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   function warmWindow(index,direction=1){
     resetChunkPriorities();
-    if(mode==='settle'&&!motionSettling)ensureEncoded(angleToIndex(targetAngle),0);
+    if(mode==='settle')ensureEncoded(angleToIndex(targetAngle),0);
     const offsets=[0,...Array.from({length:8},(_,i)=>(i+1)*direction),-direction,-2*direction,-3*direction];
     const wanted=new Set(offsets.map(offset=>wrap(index+offset,urls.length)));
     if(displayedIndex>=0)wanted.add(displayedIndex);
@@ -252,7 +253,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   function stop(){
     if(mode==='intro')introConsumed=true;
-    mode='idle';previousTick=0;inertiaVelocity=motionVelocity=0;motionSettling=false;
+    mode='idle';previousTick=0;inertiaVelocity=motionVelocity=0;returnRequested=false;
     if(displayedIndex>=0){currentAngle+=shortestDelta(indexToAngle(displayedIndex),currentAngle);targetAngle=currentAngle}
     lastMotionPhase=currentAngle;lastMotionDirection=0;
     canvas.dataset.mode=mode;diagnostics();
@@ -264,10 +265,39 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   function setTarget(angle,{shortest=true,session=false}={}){
     if(!ready)return;releaseDrag();
     if(session){stop();beginStats()}
-    inertiaVelocity=motionVelocity=0;motionSettling=false;mode='settle';
+    inertiaVelocity=motionVelocity=0;mode='settle';
     canvas.dataset.mode=mode;
     targetAngle=shortest?currentAngle+shortestDelta(angle,currentAngle):angle;
     scheduleRender();
+  }
+  function returnToFront(velocity=0){
+    if(!ready||media.matches||document.hidden)return;
+    // Start from the visible unwrapped pose, not a fast drag's decoder backlog.
+    currentAngle=lastMotionPhase;targetAngle=currentAngle+shortestDelta(0,currentAngle);
+    inertiaVelocity=Math.max(-RETURN_MAX_SPEED,Math.min(RETURN_MAX_SPEED,velocity));
+    returnRequested=true;mode='return';previousTick=0;returnStarted=performance.now();returnCount++;
+    Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3)});
+    delete canvas.dataset.returnDurationMs;
+    setStatus('Возвращаюсь в анфас · можно снова вращать');scheduleRender();
+  }
+  function renderReturn(elapsed){
+    // Exact damped-spring step: stable across refresh rates and long frames.
+    const dt=elapsed/1000,w=RETURN_OMEGA,z=RETURN_DAMPING,wd=w*Math.sqrt(1-z*z),x=currentAngle-targetAngle,v=inertiaVelocity;
+    const decay=Math.exp(-z*w*dt),sine=Math.sin(wd*dt),cosine=Math.cos(wd*dt),before=currentAngle;
+    currentAngle=targetAngle+decay*(x*cosine+(v+z*w*x)/wd*sine);
+    inertiaVelocity=decay*(v*cosine-(z*w*v+w*w*x)/wd*sine);
+    motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    paintMotion(currentAngle,motionVelocity);
+    if(Math.abs(currentAngle-targetAngle)<.12&&Math.abs(inertiaVelocity)<5){
+      const front=angleToIndex(0);wantedIndex=front;warmWindow(front,lastMotionDirection||1);
+      const entry=decoded(front);
+      // A slow decoder may delay the last pose, but cannot leave a near-front angle as the endpoint.
+      if(!entry){stats.waits++;return}
+      if(front!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,0);
+      currentAngle=targetAngle;lastMotionPhase=currentAngle;
+      canvas.dataset.returnDurationMs=(performance.now()-returnStarted).toFixed(1);
+      stop();setStatus('Готово · анфас');
+    }
   }
   function skipIntro(){
     introConsumed=true;introRequested=false;
@@ -320,21 +350,13 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     if(introRequested)beginIntro();
     const elapsed=previousTick?Math.max(0,Math.min(80,now-previousTick)):1000/60;previousTick=now;
     if(mode==='intro')renderIntro(elapsed);
-    else if(mode==='drag'||mode==='coast'||(mode==='settle'&&motionSettling)){
-      const coasting=mode==='coast',before=currentAngle;
-      if(coasting){
-        const decay=Math.exp(-elapsed/INERTIA_TAU_MS);
-        targetAngle+=inertiaVelocity*INERTIA_TAU_MS/1000*(1-decay);inertiaVelocity*=decay;
-      }
+    else if(mode==='return')renderReturn(elapsed);
+    else if(mode==='drag'){
+      const before=currentAngle;
       currentAngle+=(targetAngle-currentAngle)*(1-Math.exp(-elapsed/DRAG_DAMPING_MS));
       if(Math.abs(targetAngle-currentAngle)<.15)currentAngle=targetAngle;
       motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
       paintMotion(currentAngle,motionVelocity);
-      if(coasting&&Math.abs(inertiaVelocity)<INERTIA_MIN_SPEED){inertiaVelocity=motionVelocity=0;motionSettling=true;mode='settle';canvas.dataset.mode=mode;setStatus('Останавливаюсь…')}
-      if(mode==='settle'&&Math.abs(targetAngle-currentAngle)<.15){
-        const finalPhase=targetAngle+shortestDelta(indexToAngle(angleToIndex(targetAngle)),targetAngle);
-        if(Math.abs(finalPhase-lastMotionPhase)<.001&&displayedIndex===angleToIndex(targetAngle)){currentAngle=targetAngle;motionSettling=false;mode='idle';updateAngle(indexToAngle(displayedIndex));setStatus('Готово · выбранный ракурс');diagnostics()}
-      }
     }else if(mode==='settle'){
       const delta=targetAngle-currentAngle;
       const eased=delta*(1-Math.exp(-elapsed/DAMPING_MS));
@@ -353,7 +375,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     }else if(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch){
       wantedIndex=displayedIndex;if(!introFrames.size)warmWindow(displayedIndex,1);else requestDecode(displayedIndex,0);const entry=decoded(displayedIndex);if(entry){draw(entry,indexToAngle(displayedIndex));diagnostics()}
     }
-    if(mode==='intro'||mode==='settle'||mode==='drag'||mode==='coast'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
+    if(mode==='intro'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
   }
   // Each shard is a stored ZIP. The manifest points directly to complete WebP
   // payloads, so a frame can become usable before the shard finishes loading.
@@ -513,11 +535,11 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   }
   async function init(){
     if(destroyed||media.matches||document.hidden)return;
-    const requestedAngle=selectionAngle;
+    const requestedAngle=selectionAngle,resumeReturn=returnRequested;
     const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
     const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
-    releaseDrag();stop();ready=false;bufferReady=false;preparing=true;
+    releaseDrag();stop();returnRequested=resumeReturn;ready=false;bufferReady=false;preparing=true;
     if(introConsumed)releaseIntroFrames();
     stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','true');
     clearDecoded();cancelAnimationFrame(raf);raf=0;displayedIndex=-1;loadedBytes=0;loadedCount=0;runtimeFetches=0;blobs=[];urls=[];angles=[];variant=null;chunkStates=[];activeChunks.clear();
@@ -568,6 +590,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
       stage.dataset.spinReady='true';stage.tabIndex=0;stage.setAttribute('aria-busy','false');canvas.dataset.ready='true';canvas.dataset.preloadMs=(performance.now()-loadStartedAt).toFixed(1);
       currentStartupReady=true;notifyLoading();
       settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
+      if(returnRequested)returnToFront();
     }catch(error){
       if(token!==generation)return;fallback(error);
     }finally{clearTimeout(startupDeadline)}
@@ -604,7 +627,7 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
   listen(stage,'pointerdown',event=>{
     if(media.matches||event.button!==0||event.isPrimary===false)return;
     skipIntro();
-    if(!ready||!startupSettled||preparing)return;
+    if(!ready||!startupSettled||preparing){returnRequested=false;return}
     if(drag){if(event.pointerId!==drag.id){releaseDrag();stop();setStatus('Готово · выбранный ракурс')}return}
     if(event.isPrimary===false)return;
     skipIntro();stop();beginStats();
@@ -633,8 +656,8 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     if(now>last.time)drag.samples.push({time:now,x:event.clientX});
     else drag.samples[drag.samples.length-1]={time:now,x:event.clientX};
     while(drag.samples.length>2&&drag.samples[1].time<now-RELEASE_WINDOW_MS)drag.samples.shift();
-    targetAngle=drag.angle+dx*drag.gain;inertiaVelocity=0;motionSettling=false;mode='drag';canvas.dataset.mode=mode;
-    setStatus('Вращение · отпустите, чтобы продолжить по инерции');scheduleRender();
+    targetAngle=drag.angle+dx*drag.gain;inertiaVelocity=0;mode='drag';canvas.dataset.mode=mode;
+    setStatus('Вращение · отпустите, чтобы вернуться в анфас');scheduleRender();
   }
   listen(stage,'pointermove',moveDrag);
   function finishDrag(event){
@@ -645,14 +668,12 @@ export function mountSeedancePortrait(stage, {manifestURL} = {}) {
     const now=performance.now(),first=drag.samples[0],last=drag.samples.at(-1),duration=last.time-first.time;
     const velocity=drag.horizontal&&now-drag.lastMoved<=RELEASE_IDLE_MS&&duration>0?(last.x-first.x)*drag.gain*1000/duration:0;
     const moved=drag.horizontal;releaseDrag();
-    if(moved&&!media.matches&&Math.abs(velocity)>=INERTIA_MIN_SPEED){
-      inertiaVelocity=Math.max(-INERTIA_MAX_SPEED,Math.min(INERTIA_MAX_SPEED,velocity));motionSettling=false;mode='coast';canvas.dataset.mode=mode;
-      setStatus('Вращение по инерции · коснитесь, чтобы остановить');scheduleRender();
-    }else if(moved){inertiaVelocity=0;motionSettling=true;mode='settle';canvas.dataset.mode=mode;setStatus('Выбираю ракурс…');scheduleRender()}
+    if(!media.matches&&(moved||angleDistance(selectionAngle,0)>.12))returnToFront(velocity);
     else{diagnostics();setStatus('Готово · выбранный ракурс')}
   }
   for(const eventName of ['pointerup','pointercancel','lostpointercapture'])listen(stage,eventName,finishDrag);
   listen(stage,'keydown',event=>{
+    if(['ArrowLeft','ArrowRight','Home'].includes(event.key)&&(!ready||preparing))returnRequested=false;
     if(!ready||!startupSettled||preparing)return;
     skipIntro();
     if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
