@@ -29,7 +29,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
   let returnRequested=false,returnStarted=0,returnCount=0;
   let menuPoseActive=false;
-  let mobileScrollFrontPhase=0;
+  let mobileScrollFrontPhase=0,mobileScrollReturn=false;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
@@ -262,6 +262,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function stop(){
     if(mode==='intro')introConsumed=true;
     mode='idle';previousTick=0;inertiaVelocity=motionVelocity=0;returnRequested=false;
+    mobileScrollReturn=false;
     if(displayedIndex>=0){currentAngle+=shortestDelta(indexToAngle(displayedIndex),currentAngle);targetAngle=currentAngle}
     lastMotionPhase=currentAngle;lastMotionDirection=0;
     canvas.dataset.mode=mode;diagnostics();
@@ -303,10 +304,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     targetAngle=currentAngle+shortestDelta(angle,currentAngle);
     setStatus('Поворот за курсором');scheduleRender();
   }
-  function renderFollow(elapsed){
+  function renderFollow(elapsed,damping=FOLLOW_DAMPING_MS,maxStep=9){
     const before=currentAngle,delta=targetAngle-currentAngle;
-    const eased=delta*(1-Math.exp(-elapsed/FOLLOW_DAMPING_MS));
-    const limit=9*elapsed/(1000/60);
+    const eased=delta*(1-Math.exp(-elapsed/damping));
+    const limit=maxStep*elapsed/(1000/60);
     currentAngle=Math.abs(delta)<.15?targetAngle:currentAngle+Math.max(-limit,Math.min(limit,eased));
     motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
     paintMotion(currentAngle,motionVelocity);
@@ -314,13 +315,13 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       const index=angleToIndex(targetAngle),entry=decoded(index);
       if(!entry){requestDecode(index,0);return}
       if(index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,indexToAngle(index));
-      stop();setStatus('Готово · слежу за курсором');
+      const scrolling=mode==='scroll';stop();setStatus(scrolling?'Готово · поворот по прокрутке':'Готово · слежу за курсором');
     }
   }
-  function returnToFront(velocity=0){
+  function returnToFront(velocity=0,frontPhase=null){
     if(!ready||media.matches||document.hidden)return;
     // Start from the visible unwrapped pose, not a fast drag's decoder backlog.
-    currentAngle=lastMotionPhase;targetAngle=currentAngle+shortestDelta(0,currentAngle);
+    currentAngle=lastMotionPhase;targetAngle=frontPhase??currentAngle+shortestDelta(0,currentAngle);
     inertiaVelocity=Math.max(-RETURN_MAX_SPEED,Math.min(RETURN_MAX_SPEED,velocity));
     returnRequested=true;mode='return';previousTick=0;returnStarted=performance.now();returnCount++;
     Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3)});
@@ -332,14 +333,20 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     followPaused=true;skipIntro();setTarget(mobileLayout?.matches?45*1.3:45,{session:true});menuPoseActive=true;
     return true;
   }
-  function setMobileScrollPose(back){
-    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing||drag||returnRequested||menuPoseActive)return false;
-    followPaused=true;skipIntro();stop();beginStats();
-    const delta=shortestDelta(back?180:0,lastMotionPhase);
-    if(back&&angleDistance(lastMotionPhase,180)>1.5)mobileScrollFrontPhase=Math.round(lastMotionPhase/360)*360;
-    // The exact half-turn follows the same rightward direction as the menu pose.
-    // Keep the original front so a rounded back frame cannot flip the return path.
-    setTarget(back?lastMotionPhase+(delta===-180?180:delta):mobileScrollFrontPhase,{shortest:false,damping:145,maxStep:6});
+  function setMobileScrollPose(progress,fresh=false){
+    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing||drag||(returnRequested&&!mobileScrollReturn)||menuPoseActive)return false;
+    followPaused=true;skipIntro();
+    const velocity=motionVelocity;
+    if(fresh||mobileScrollReturn){stop();beginStats()}
+    if(fresh)mobileScrollFrontPhase=Math.round(lastMotionPhase/360)*360;
+    if(progress===0){
+      // Only the last few degrees settle independently; the turn itself follows scroll.
+      stop();returnToFront(Math.min(0,velocity),mobileScrollFrontPhase);mobileScrollReturn=true;return true;
+    }
+    // A paused scroll holds a partial pose; there is no timed run to the back.
+    if(mode!=='scroll'){stop();beginStats();mode='scroll';canvas.dataset.mode=mode;}
+    targetAngle=mobileScrollFrontPhase+180*progress;canvas.dataset.targetPhase=targetAngle.toFixed(3);
+    scheduleRender();
     return true;
   }
   function clearMobileScrollPose(){
@@ -431,6 +438,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const elapsed=previousTick?Math.max(0,Math.min(80,now-previousTick)):1000/60;previousTick=now;
     if(mode==='intro')renderIntro(elapsed);
     else if(mode==='follow')renderFollow(elapsed);
+    else if(mode==='scroll')renderFollow(elapsed,45,24);
     else if(mode==='return')renderReturn(elapsed);
     else if(mode==='drag'){
       const before=currentAngle;
@@ -456,7 +464,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }else if(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch){
       wantedIndex=displayedIndex;if(!introFrames.size)warmWindow(displayedIndex,1);else requestDecode(displayedIndex,0);const entry=decoded(displayedIndex);if(entry){draw(entry,indexToAngle(displayedIndex));diagnostics()}
     }
-    if(mode==='intro'||mode==='follow'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
+    if(mode==='intro'||mode==='follow'||mode==='scroll'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
   }
   // Each shard is a stored ZIP. The manifest points directly to complete WebP
   // payloads, so a frame can become usable before the shard finishes loading.
@@ -616,11 +624,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   async function init(){
     if(destroyed||media.matches||document.hidden)return;
-    const requestedAngle=selectionAngle,resumeReturn=returnRequested;
+    const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn;
     const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
     const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
-    releaseDrag();stop();returnRequested=resumeReturn;ready=false;bufferReady=false;preparing=true;
+    releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;ready=false;bufferReady=false;preparing=true;
     if(introConsumed)releaseIntroFrames();
     stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','true');
     clearDecoded();cancelAnimationFrame(raf);raf=0;displayedIndex=-1;loadedBytes=0;loadedCount=0;runtimeFetches=0;blobs=[];urls=[];angles=[];variant=null;chunkStates=[];activeChunks.clear();
@@ -671,7 +679,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       stage.dataset.spinReady='true';stage.tabIndex=0;stage.setAttribute('aria-busy','false');canvas.dataset.ready='true';canvas.dataset.preloadMs=(performance.now()-loadStartedAt).toFixed(1);
       currentStartupReady=true;notifyLoading();
       settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
-      if(returnRequested)returnToFront();
+      if(returnRequested){
+        // Encoded pose angles wrap at 360; keep a small negative spring overshoot negative.
+        if(mobileScrollReturn)currentAngle=lastMotionPhase=mobileScrollFrontPhase+shortestDelta(selectionAngle,mobileScrollFrontPhase);
+        returnToFront(0,mobileScrollReturn?mobileScrollFrontPhase:null);
+      }
       else applyCursorTarget();
     }catch(error){
       if(token!==generation)return;fallback(error);
@@ -729,6 +741,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   listen(stage,'pointerdown',event=>{
     if(media.matches||event.button!==0||event.isPrimary===false)return;
     if(cursorFollow)followPaused=true;
+    mobileScrollReturn=false;
     skipIntro();
     if(!ready||!startupSettled||preparing){returnRequested=false;return}
     if(drag){if(event.pointerId!==drag.id){releaseDrag();stop();setStatus('Готово · выбранный ракурс')}return}
@@ -821,20 +834,22 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
 function mountMobilePortraitScroll(stage,player,mobile,reduced){
   const cleanup=[],root=document.documentElement;
   let raf=0,destroyed=false,pageReady=!window.portraitReveal,lastY=scrollY,direction=0;
-  let owned=false,desiredBack=false,applied=null,initial=true,ready=false;
+  let owned=false,desired=0,applied=null,fresh=true,initial=true,ready=false;
   let menuOpen=root.classList.contains('mobile-menu-open');
   const listen=(target,name,handler)=>{target?.addEventListener(name,handler,{passive:true});cleanup.push(()=>target?.removeEventListener(name,handler))};
   const schedule=()=>{if(!destroyed&&!raf)raf=requestAnimationFrame(update)};
-  function reset(){owned=false;desiredBack=false;applied=null;direction=0;initial=true;lastY=scrollY}
+  function reset(){owned=false;desired=0;applied=null;fresh=true;direction=0;initial=true;lastY=scrollY}
   function update(){
     raf=0;if(destroyed||!pageReady||!mobile.matches||reduced.matches||document.hidden||root.classList.contains('mobile-menu-open'))return;
     const rect=stage.getBoundingClientRect(),top=window.visualViewport?.offsetTop||0;
-    const halfHidden=rect.height>0&&rect.top+rect.height/2<=top;
-    const back=(direction>0||initial&&scrollY>0)&&halfHidden;
-    if(back||direction<0&&desiredBack){desiredBack=back;owned=true;if(applied!==desiredBack)applied=null}
+    // Begin at the eye line (35% hidden), reach the back before the head leaves (85%).
+    const hidden=rect.height>0?(top-rect.top)/rect.height:0;
+    const progress=Math.max(0,Math.min(1,(hidden-.35)/.5));
+    const next=progress*progress*(3-2*progress);
+    if(owned||(direction!==0||initial&&scrollY>0)&&next>0){desired=next;owned=true}
     initial=false;direction=0;
-    if(!owned||applied===desiredBack)return;
-    if(player.turn(desiredBack))applied=desiredBack;
+    if(!owned||applied===desired)return;
+    if(player.turn(desired,fresh)){applied=desired;fresh=false;}
     else if(player.canRetry())schedule();
   }
   listen(window,'scroll',()=>{const delta=scrollY-lastY;if(Math.abs(delta)>1){direction=Math.sign(delta);lastY=scrollY;schedule()}});
