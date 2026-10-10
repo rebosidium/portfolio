@@ -2,7 +2,7 @@
 @font-face{font-family:Lora;src:url('assets/lora-medium.ttf?v=9bfe70fd1d70') format('truetype');font-style:normal;font-weight:500;font-display:swap}
 :root{--canvas:#f8f5f3;--ink:#090c0c;--nav:#232522;--audit:#8e6dd0;--work:#0b9bf7;--consulting:#59bf61;--gutter:clamp(24px,calc(10vw - 72px),72px);--column-gap:clamp(12px,calc(4vw - 33.6px),24px);--ease:cubic-bezier(.22,1,.36,1);--promo-space:64px;--vertical-room:calc(100svh - 900px + 64px - var(--promo-space));--compact-room:max(0px,calc(0px - var(--vertical-room)));--portrait-size:clamp(200px,calc(311px - max(0px,calc(var(--compact-room) - 140px))),311px);--feature-size:clamp(88px,calc(120px - max(0px,calc(var(--compact-room) - 180px)) * .4),120px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--canvas);color:var(--ink);font-family:Manrope,sans-serif;min-height:100svh;padding-bottom:24px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:Manrope,sans-serif;min-width:800px;min-height:100svh;padding-bottom:24px;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:5px}
