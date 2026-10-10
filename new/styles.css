@@ -81,7 +81,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .promo-close{right:0;top:0;width:54px;height:54px}
   .header{position:relative;height:86px;padding:0 var(--gutter);max-width:600px;transition:none;z-index:2}
   .menu-toggle{display:grid;place-items:center;width:44px;height:44px;margin-right:-2px;padding:0;border:0;background:transparent;color:var(--nav);cursor:pointer}
-  .menu-toggle img{display:block}
+  .menu-toggle img{display:block;width:36px;height:36px}
   .menu-toggle .menu-close-icon{display:none}
   .header>.identity,.menu-toggle{transition:opacity .45s var(--ease)}
   .mobile-shell-pending .header>.identity,.mobile-shell-pending .menu-toggle{opacity:0;visibility:hidden}
