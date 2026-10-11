@@ -381,7 +381,8 @@ function mountGlanceSection(){
   const animations=new Set(),cardMotion=new Map();
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
-  let assetsPrepared=false,flushCards=()=>{};const warmedImages=[];
+  let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='';const warmedImages=[];
+  const failedArtwork=new Set(),artworkCandidates=(section.querySelector('template')?.content.querySelector('.glance-illustration')?.srcset||'').split(',').map(candidate=>{const [url,width]=candidate.trim().split(/\s+/);return {url,width:parseInt(width,10)}}).filter(candidate=>candidate.url&&candidate.width).sort((a,b)=>a.width-b.width);
   let mobileResourcesReady=false,mobilePreparing=false,desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const mobileStack=createMobileGlanceStack(section,mobile,reduced);
@@ -463,10 +464,31 @@ function mountGlanceSection(){
       });
     }
   }
+  const artworkSize=()=>mobile.matches?Math.min(400,innerWidth-40)*.85:280;
+  const artworkUrl=size=>{
+    const pixels=size*Math.max(1,devicePixelRatio||1);
+    return (artworkCandidates.find(candidate=>candidate.width>=pixels)||artworkCandidates.at(-1))?.url;
+  };
   function updateArtworkSize(){
     if(mobile.matches&&!mobileResourcesReady)return;
-    const size=mobile.matches?Math.min(400,innerWidth-40)*.85:280;
-    for(const image of section.querySelectorAll('.glance-illustration'))if(image.sizes!==size+'px')image.sizes=size+'px';
+    const images=[...section.querySelectorAll('.glance-illustration')],size=artworkSize(),url=artworkUrl(size);
+    if(!images.length||!url||failedArtwork.has(url))return;
+    if(images.every(image=>image.getAttribute('src')===url)){
+      for(const image of images)if(image.sizes!==size+'px')image.sizes=size+'px';
+      return;
+    }
+    if(pendingArtwork===url)return;
+    const swap=++artworkSwap,generation=player?.loadingState.generation;
+    pendingArtwork=url;
+    // Keep the displayed bitmap until the chosen replacement has decoded. An
+    // active srcset would bypass the mobile queue when screen density changes.
+    const replacement=new Image();replacement.fetchPriority='low';replacement.decoding='async';replacement.src=url;
+    replacement.decode().then(()=>{
+      if(swap!==artworkSwap)return;
+      pendingArtwork='';
+      if((mobile.matches&&!mobileResourcesReady)||generation!==player?.loadingState.generation||artworkUrl(artworkSize())!==url){schedule();return;}
+      for(const image of images){image.sizes=artworkSize()+'px';image.src=url;}
+    }).catch(()=>{if(swap===artworkSwap)pendingArtwork='';failedArtwork.add(url)});
   }
   function prepareAssets(){
     if(assetsPrepared||mobile.matches)return;
@@ -476,9 +498,7 @@ function mountGlanceSection(){
     // Start one responsive, low-priority image after the portrait's welcome frames
     // are prepared. The four cards reuse the same browser-selected cached resource.
     const image=new Image();image.fetchPriority='low';image.decoding='async';
-    if(source.sizes)image.sizes=source.sizes;
-    if(source.srcset)image.srcset=source.srcset;
-    image.src=source.src;image.decode().catch(()=>{});warmedImages.push(image);
+    image.src=artworkUrl(280)||source.src;image.decode().catch(()=>{});warmedImages.push(image);
     const panel=new Image();panel.fetchPriority='low';panel.src='assets/glance-panel.svg?v=aaa98db3584e';warmedImages.push(panel);
   }
   async function prepareMobileResources(){
@@ -519,10 +539,14 @@ function mountGlanceSection(){
     if(!section.dataset.assetsStartedAt)section.dataset.assetsStartedAt=performance.now().toFixed(1);
     if(mobile.matches)section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
+    // Lock the selected URL before mounting: only this controller may upgrade
+    // mobile artwork after the current face and icon generation is ready.
+    for(const image of fragment.querySelectorAll('.glance-illustration')){
+      image.removeAttribute('srcset');image.sizes=artworkSize()+'px';image.src=artworkUrl(artworkSize())||image.src;
+    }
     for(const image of fragment.querySelectorAll('img'))image.loading='eager';
     // Mount the stable panel/title without waiting for image IO. Pending cards
     // reveal in their usual order once the illustrations have decoded.
-    if(mobile.matches)for(const image of fragment.querySelectorAll('.glance-illustration'))image.sizes=(Math.min(400,innerWidth-40)*.85)+'px';
     if(!mobile.matches&&!reduced.matches&&typeof IntersectionObserver==='function')
       for(const element of fragment.querySelectorAll('h2,.glance-card'))element.dataset.revealPending='true';
     section.replaceChildren(fragment);mounted=true;section.inert=mobile.matches;
