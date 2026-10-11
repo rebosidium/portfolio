@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="d064ee303b0c">
+<html lang="en" data-build="2fd030888a78">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,16 +53,24 @@
     window.releaseGlanceFallback = () => {
       const section = document.querySelector('.at-glance');
       const template = section?.querySelector('template');
+      // A script fetch error can arrive before the parser has reached this section.
+      // Keep the independent deadline alive and retry after the complete document.
+      if (!section || (template && template.content.querySelectorAll('.glance-card').length !== 4)) {
+        document.addEventListener('DOMContentLoaded',() => window.releaseGlanceFallback(),{once:true});
+        return;
+      }
+      clearTimeout(window.glanceRevealFallback);
       if (!template) return;
       const content = template.content.cloneNode(true);
-      if (window.mobileLayout.matches) {
-        // A failed app must not start secondary graphics ahead of the first-screen resources.
-        content.querySelectorAll('img,.glance-panel').forEach(element => element.remove());
-        section.classList.add('mobile-glance-text-fallback');
-      }
+      // A failed or indefinitely stalled script must leave readable text, without
+      // starting secondary graphics or waiting for another loading promise.
+      content.querySelectorAll('img,.glance-panel').forEach(element => element.remove());
+      section.classList.add('mobile-glance-text-fallback');
       section.replaceChildren(content);
       section.removeAttribute('aria-busy');section.inert = false;section.dataset.glanceState = 'fallback';
+      window.dispatchEvent(new Event('glancefallback'));
     };
+    window.glanceRevealFallback = setTimeout(() => window.releaseGlanceFallback(),21000);
     window.shellReady = new Promise(resolve => {window.resolveShellReady = resolve});
     window.releaseShellFallback = () => {
       clearTimeout(window.shellRevealFallback);
@@ -76,6 +84,7 @@
       window.releaseMobileShell?.();
       window.resolvePortraitReveal(true);
       window.resolveStartScreenReady(true);
+      window.releaseGlanceFallback();
     };
     document.documentElement.classList.add('glass-pending');
     window.glassRevealFallback = setTimeout(() => {
@@ -91,11 +100,11 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=e872e1cca05a">
+  <link rel="stylesheet" href="styles.css?v=21a1c1c77c50">
   <script type="module" src="portrait-boot.js?v=5bc0f06015d0" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=137e77749c79" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
+  <script defer src="app.js?v=ac98796188cf" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">

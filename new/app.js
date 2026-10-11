@@ -398,15 +398,15 @@
 // The second screen has its own load/reveal lifecycle; it never joins the hero gate.
 function mountGlanceSection(){
   const section=document.querySelector('.at-glance'),intro=document.querySelector('.intro-screen');
-  if(!section||!intro||!window.startScreenReady)return;
+  if(!section||!intro||!window.startScreenReady||section.dataset.glanceState==='fallback')return;
   const mobile=window.mobileLayout,reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const portrait=document.querySelector('.portrait'),promo=document.querySelector('.promo');
   const animations=new Set(),cardMotion=new Map();
-  let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
+  let frame=0,screenReady=false,player=null,mounted=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
-  let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='';const warmedImages=[];
+  let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='';const artworkCache=new Map();
   const failedArtwork=new Set(),artworkCandidates=(section.querySelector('template')?.content.querySelector('.glance-illustration')?.srcset||'').split(',').map(candidate=>{const [url,width]=candidate.trim().split(/\s+/);return {url,width:parseInt(width,10)}}).filter(candidate=>candidate.url&&candidate.width).sort((a,b)=>a.width-b.width);
-  let mobileResourcesReady=false,mobilePreparing=false,desktopWatching=false;
+  let desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const mobileStack=createMobileGlanceStack(section,mobile,reduced);
   const clearCard=card=>cardMotion.get(card)?.reset();
@@ -419,6 +419,7 @@ function mountGlanceSection(){
     animation.finished.then(()=>{element.removeAttribute('data-reveal-pending');animation.cancel();animations.delete(animation)},()=>animations.delete(animation));
   }
   function watchContent(){
+    if(section.dataset.glanceState==='fallback')return;
     if(mobile.matches){mobileStack.update();return;}
     if(desktopWatching)return;
     desktopWatching=true;
@@ -492,115 +493,75 @@ function mountGlanceSection(){
     const pixels=size*Math.max(1,devicePixelRatio||1);
     return (artworkCandidates.find(candidate=>candidate.width>=pixels)||artworkCandidates.at(-1))?.url;
   };
-  const currentMobileResourcesReady=()=>{
-    const state=player?.loadingState,encoded=window.featureIconPlayers?.encodedState;
-    if(!reduced.matches&&state&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return false;
-    return !encoded||encoded.ready||encoded.skipped||Boolean(encoded.error);
+  const loadArtwork=url=>{
+    if(!artworkCache.has(url)){
+      const image=new Image();image.fetchPriority='low';image.decoding='async';image.src=url;
+      artworkCache.set(url,image.decode());
+    }
+    return artworkCache.get(url);
   };
   function updateArtworkSize(){
-    if(mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))return;
     const images=[...section.querySelectorAll('.glance-illustration')],size=artworkSize(),url=artworkUrl(size);
     if(!images.length||!url||failedArtwork.has(url))return;
-    if(images.every(image=>image.getAttribute('src')===url)){
+    if(images.every(image=>image.getAttribute('src')===url&&image.dataset.artworkReady)){
       for(const image of images)if(image.sizes!==size+'px')image.sizes=size+'px';
       return;
     }
     if(pendingArtwork===url)return;
-    const swap=++artworkSwap,generation=player?.loadingState.generation;
+    const swap=++artworkSwap;
     pendingArtwork=url;
-    // Keep the displayed bitmap until the chosen replacement has decoded. An
-    // active srcset would bypass the mobile queue when screen density changes.
-    const replacement=new Image();replacement.fetchPriority='low';replacement.decoding='async';replacement.src=url;
-    replacement.decode().then(()=>{
+    // Keep the displayed bitmap until a replacement has decoded. Static artwork
+    // is independent of the face generation and the optional icon animation queue.
+    loadArtwork(url).then(()=>{
       if(swap!==artworkSwap)return;
       pendingArtwork='';
-      if((mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))||generation!==player?.loadingState.generation||artworkUrl(artworkSize())!==url){schedule();return;}
-      for(const image of images){image.sizes=artworkSize()+'px';image.src=url;}
+      if(artworkUrl(artworkSize())!==url){schedule();return;}
+      for(const image of images){image.sizes=artworkSize()+'px';image.src=url;image.dataset.artworkReady='true';image.style.removeProperty('visibility');}
+      section.dataset.artworkReadyAt=performance.now().toFixed(1);
     }).catch(()=>{if(swap===artworkSwap)pendingArtwork='';failedArtwork.add(url)});
   }
   function prepareAssets(){
-    if(assetsPrepared||mobile.matches)return;
+    if(assetsPrepared)return;
     const source=section.querySelector('template')?.content.querySelector('.glance-illustration');
     if(!source)return;
     assetsPrepared=true;section.dataset.assetsStartedAt=performance.now().toFixed(1);
     // Start one responsive, low-priority image after the portrait's welcome frames
     // are prepared. The four cards reuse the same browser-selected cached resource.
-    const image=new Image();image.fetchPriority='low';image.decoding='async';
-    image.src=artworkUrl(280)||source.src;image.decode().catch(()=>{});warmedImages.push(image);
-    const panel=new Image();panel.fetchPriority='low';panel.src='assets/glance-panel.svg?v=aaa98db3584e';warmedImages.push(panel);
+    loadArtwork(artworkUrl(artworkSize())||source.src).catch(()=>{});
+    const panel=new Image();panel.fetchPriority='low';panel.src='assets/glance-panel.svg?v=aaa98db3584e';
   }
-  async function prepareMobileResources(){
-    if(mobilePreparing||mobileResourcesReady||!mobile.matches||!screenReady)return;
-    mobilePreparing=true;
-    try{
-      await window.firstScreenResourcesReady;
-      await window.preloadMobilePromoResources?.();
-      const icons=await window.featureIconsReady;
-      const encoded=await icons?.preloadEncoded();
-      await Promise.allSettled([...document.querySelectorAll('.intro-screen img')].map(image=>image.decode?.()));
-      // Let the shared queue release its final completed request before secondary artwork.
-      await new Promise(resolve=>requestAnimationFrame(resolve));
-      if(!mobile.matches)return;
-      const state=player?.loadingState;
-      if(!reduced.matches&&state&&!state.error&&(state.loading||!state.ready||!state.allReady||state.activeDownloads))return;
-      const current=icons?.encodedState;
-      if(current&&!current.ready&&!current.skipped&&!current.error)return;
-      mobileResourcesReady=true;
-      section.dataset.firstResourcesAt=performance.now().toFixed(1);
-      section.dataset.resourceGeneration=String(state?.generation??0);
-      if(encoded?.error||state?.error)section.dataset.resourceFallback='true';
-    }finally{mobilePreparing=false;schedule();}
-  }
-  async function loadContent(){
-    if(mounted||assetsLoading||!screenReady)return;
-    if(mobile.matches&&mobileResourcesReady){
-      const encoded=window.featureIconPlayers?.encodedState;
-      if(encoded&&!encoded.ready&&!encoded.skipped&&!encoded.error)mobileResourcesReady=false;
-    }
-    if(mobile.matches&&!mobileResourcesReady){prepareMobileResources();return;}
-    // Start no secondary resources during a current portrait-quality download.
-    const state=player?.loadingState;
-    if(mobile.matches&&state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
+  function loadContent(){
+    if(mounted||!screenReady)return;
     const template=section.querySelector('template');
     if(!template){if(section.querySelector('.glance-inner')){mounted=true;contentReady=true;watchContent();}return;}
-    prepareAssets();assetsLoading=true;section.dataset.glanceState='assets';
+    prepareAssets();
     if(!section.dataset.assetsStartedAt)section.dataset.assetsStartedAt=performance.now().toFixed(1);
-    if(mobile.matches)section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
-    // Lock the selected URL before mounting: only this controller may upgrade
-    // mobile artwork after the current face and icon generation is ready.
+    // One explicit candidate is reused by all four cards. Only the bitmap waits
+    // for decode; the section's text and scroll geometry never depend on image IO.
     for(const image of fragment.querySelectorAll('.glance-illustration')){
       image.removeAttribute('srcset');image.sizes=artworkSize()+'px';image.src=artworkUrl(artworkSize())||image.src;
+      image.style.visibility='hidden';
     }
     for(const image of fragment.querySelectorAll('img'))image.loading='eager';
-    // Mount the stable panel/title without waiting for image IO. Pending cards
-    // reveal in their usual order once the illustrations have decoded.
+    // Mount after the welcome turn, retaining the approved desktop staircase.
     if(!mobile.matches&&!reduced.matches&&typeof IntersectionObserver==='function')
       for(const element of fragment.querySelectorAll('h2,.glance-card'))element.dataset.revealPending='true';
-    section.replaceChildren(fragment);mounted=true;section.inert=mobile.matches;
-    section.dataset.mountedAt=performance.now().toFixed(1);if(!mobile.matches)watchContent();schedule();
-    const images=[...section.querySelectorAll('img')];
-    const decoded=Promise.all(images.map(image=>image.decode().catch(()=>{image.style.visibility='hidden'})));
-    await Promise.race([decoded,new Promise(resolve=>setTimeout(resolve,10000))]);
+    section.replaceChildren(fragment);mounted=true;section.inert=false;
+    clearTimeout(window.glanceRevealFallback);
+    section.dataset.mountedAt=performance.now().toFixed(1);
     contentReady=true;section.dataset.glanceState='ready';section.dataset.readyAt=performance.now().toFixed(1);
-    section.removeAttribute('aria-busy');warmedImages.length=0;
-    // A quality change during decode must not reveal or measure the hidden stack.
-    if(!mobile.matches||(mobileResourcesReady&&currentMobileResourcesReady())){
-      section.removeAttribute('data-content-pending');section.inert=false;
-      watchContent();if(!mobile.matches)flushCards();
-    }else mobileResourcesReady=false;
+    section.removeAttribute('aria-busy');section.removeAttribute('data-content-pending');
+    updateArtworkSize();watchContent();if(!mobile.matches)flushCards();
     schedule();
   }
   function update(){
     frame=0;
     if(mobile.matches){
-      // Icon quality can change while the portrait remains in the same tier.
-      if(mobileResourcesReady&&!currentMobileResourcesReady())mobileResourcesReady=false;
       intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;
       if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]')){e.removeAttribute('data-reveal-pending');e.dataset.revealed='true';}flushCards=()=>{};desktopWatching=false;}
-      if(screenReady&&!mobileResourcesReady)prepareMobileResources();
       if(screenReady)loadContent();
-      if(contentReady&&mobileResourcesReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();mobileStack.update();}
+      if(contentReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();mobileStack.update();}
       return;
     }
     mobileStack.reset();
@@ -629,7 +590,7 @@ function mountGlanceSection(){
   window.addEventListener('pointerup',()=>{appliedPose=null;schedule();setTimeout(schedule,700)},{passive:true});
   window.addEventListener('pointercancel',()=>{appliedPose=null;schedule()},{passive:true});
   if(typeof ResizeObserver==='function'){const sizes=new ResizeObserver(schedule);for(const element of [promo,portrait,section])sizes.observe(element);}
-  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);mobileResourcesReady=false;if(mobile.matches&&mounted)section.dataset.contentPending='true';appliedPose=null;schedule()});
+  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
   reduced.addEventListener('change',()=>{
     if(reduced.matches){
       for(const animation of animations)animation.cancel();animations.clear();observer?.disconnect();
@@ -647,13 +608,15 @@ function mountGlanceSection(){
     await player?.introFinished;
     screenReady=true;section.dataset.introFinishedAt=performance.now().toFixed(1);
     player?.subscribeLoading(state=>{
-      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;mobileResourcesReady=false;}
+      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;}
       schedule();
     });
+    // Preserve encoded warming, but never await it for section visibility. The
+    // shared player still gates every animation request on ALL current face frames.
+    window.featureIconsReady.then(icons=>{if(mobile.matches)return icons?.preloadEncoded()}).catch(()=>{});
     schedule();
   });
-  // The existing first-screen timeout has already released the page by this point.
-  setTimeout(()=>{if(!mobile.matches&&!mounted&&!contentReady&&!player?.loadingState.loading){window.releaseGlanceFallback();schedule()}},30000);
+  window.addEventListener('glancefallback',()=>{mounted=true;contentReady=true;screenReady=true;player=window.portraitPlayer;schedule()});
   schedule();
 }
 
@@ -674,6 +637,7 @@ function createMobileGlanceStack(section,mobile,reduced){
     }
   }
   function update(){
+    if(section.classList.contains('mobile-glance-text-fallback')){reset();return;}
     if(!mobile.matches||reduced.matches){failedWidth=0;reset();return;}
     if(failedWidth===innerWidth)return;
     if(document.hidden||document.documentElement.classList.contains('mobile-menu-open'))return;

@@ -85,6 +85,8 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%);width:280px;height:280px;object-fit:contain}
 .glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
+.at-glance[data-glance-state="fallback"] .glance-card,.at-glance[data-glance-state="fallback"] .glance-card-surface{min-height:0}
+.at-glance[data-glance-state="fallback"] .glance-card-surface{padding:26px;height:auto}
 .glance-card-companies p{font-size:17px;line-height:23px}
 @media(max-width:1359px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
 .at-glance[data-content-pending] .glance-inner{visibility:hidden}
