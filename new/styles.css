@@ -64,8 +64,8 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .campfire-art,.animated-feature-art{position:relative}
 .campfire-art>img[data-reveal],.animated-feature-art>img[data-reveal]{transition:none}
 .campfire-art canvas,.animated-feature-art canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;opacity:0;visibility:hidden}
-.campfire-art.campfire-rendered canvas,.campfire-art.icon-poster-rendered canvas,.animated-feature-art.icon-rendered canvas{opacity:1;visibility:visible}
-.campfire-art.campfire-rendered>img,.image-fades .campfire-art.campfire-rendered>img[data-reveal].image-ready,.campfire-art.icon-poster-rendered>img,.image-fades .campfire-art.icon-poster-rendered>img[data-reveal].image-ready,.animated-feature-art.icon-rendered>img,.image-fades .animated-feature-art.icon-rendered>img[data-reveal].image-ready{opacity:0;visibility:hidden}
+.campfire-art.campfire-rendered canvas,.animated-feature-art.icon-rendered canvas{opacity:1;visibility:visible}
+.campfire-art.campfire-rendered>img,.image-fades .campfire-art.campfire-rendered>img[data-reveal].image-ready,.animated-feature-art.icon-rendered>img,.image-fades .animated-feature-art.icon-rendered>img[data-reveal].image-ready{opacity:0;visibility:hidden}
 .feature p{margin:0;font-size:18px;font-weight:500;line-height:normal;flex:1;min-width:0;color:#000}
 /* A native sticky first screen lets the next panel travel over it with the scroll. */
 .with-glance{padding-bottom:0}
