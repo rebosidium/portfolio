@@ -70,7 +70,7 @@ function createMobileIconCoordinator(configurations,players,mobileLayout,portrai
     revealed.add(feature);feature.classList.remove('mobile-feature-pending');
     feature.classList.add('mobile-feature-revealing');
     try{
-      const animation=feature.animate([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+      const animation=feature.animate([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:900,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
       revealAnimations.set(feature,animation);
       animation.onfinish=()=>{finishReveal(feature);schedule()};
     }catch{finishReveal(feature)}
