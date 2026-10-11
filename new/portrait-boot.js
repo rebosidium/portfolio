@@ -1,7 +1,7 @@
 import {mountSeedancePortrait} from './portrait-spin.js?v=c02d38248226';
 
 // This module starts independently of GSAP, LiquidGlass and the other page images.
-const player=mountSeedancePortrait(document.querySelector('.portrait'),{interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=19581afb45f9',mobileLayout:window.mobileLayout});
+const player=mountSeedancePortrait(document.querySelector('.portrait'),{interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=c6815470ab3d',mobileLayout:window.mobileLayout});
 window.portraitPlayer=player;
 player.ready.then(ready=>window.resolvePortraitReady(ready),()=>window.resolvePortraitReady(false));
 Promise.all([player.ready,window.portraitReveal]).then(([ready,revealed])=>{
