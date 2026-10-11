@@ -1,4 +1,25 @@
 (() => {
+  const introScreen = document.querySelector('.intro-screen');
+  const glanceSection = document.querySelector('.at-glance');
+  if (introScreen && glanceSection) {
+    let coverFrame = 0;
+    const updateCover = () => {
+      coverFrame = 0;
+      const covered = !window.mobileLayout.matches && glanceSection.getBoundingClientRect().top <= 0;
+      introScreen.inert = covered;
+      introScreen.toggleAttribute('data-covered',covered);
+      if (covered) {
+        if (introScreen.contains(document.activeElement)) document.querySelector('#glance-title').focus({preventScroll:true});
+        introScreen.setAttribute('aria-hidden','true');
+      } else introScreen.removeAttribute('aria-hidden');
+    };
+    const scheduleCover = () => {if (!coverFrame) coverFrame = requestAnimationFrame(updateCover);};
+    window.addEventListener('scroll',scheduleCover,{passive:true});
+    window.addEventListener('resize',scheduleCover,{passive:true});
+    window.addEventListener('pageshow',scheduleCover);
+    window.mobileLayout.addEventListener('change',scheduleCover);
+    updateCover();
+  }
   window.promoControlsReady = true;
   window.releaseMobilePromoClose?.();
   const promo = document.querySelector('.promo');

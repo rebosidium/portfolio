@@ -6,7 +6,7 @@
   const links = [...nav.querySelectorAll('a')];
   const mobile = window.mobileLayout;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const background = [document.querySelector('.promo'),document.querySelector('main'),header.querySelector('.identity')];
+  const background = [document.querySelector('.promo'),document.querySelector('.intro-content') || document.querySelector('main'),header.querySelector('.identity')];
   let scrollPosition = null;
   let inertBefore = [];
   let desiredOpen = false;
@@ -40,7 +40,7 @@
     toggle.setAttribute('aria-label',expanded ? 'Close menu' : 'Open menu');
     if (!expanded) {
       background.forEach((element,index) => {element.inert = inertBefore[index];});
-      header.removeAttribute('role');
+      header.setAttribute('role','banner');
       header.removeAttribute('aria-modal');
       header.removeAttribute('aria-label');
       document.body.style.removeProperty('--menu-scroll-y');

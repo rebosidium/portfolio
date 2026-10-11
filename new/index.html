@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="7cf456af2efd">
+<html lang="en" data-build="f9d6a7667bcd">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -72,14 +72,16 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=fcb31d1faf6b">
+  <link rel="stylesheet" href="styles.css?v=43527f319d59">
   <script type="module" src="portrait-boot.js?v=a3bbe501b78d" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=14cf97fbb079" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
+  <script defer src="app.js?v=f8b7474b3016" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
-<body>
+<body class="with-glance">
+  <main class="page-main">
+  <div class="intro-screen">
   <aside class="promo" aria-label="Design services and availability" data-node-id="61:44">
     <div class="promo-content">
       <img class="promo-illustration" src="assets/audit.png?v=47213b1faa6f" width="58" height="58" decoding="async" data-reveal alt="">
@@ -88,7 +90,7 @@
     </div>
     <button class="promo-close" type="button" aria-label="Close announcement"><img src="assets/close.svg?v=98906bf4e1cc" width="24" height="24" alt=""></button>
   </aside>
-  <header class="header">
+  <header class="header" role="banner">
     <a class="identity" href="/new/">Dmitry Rybalka</a>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false"><img class="menu-icon" src="assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
     <nav id="main-navigation" aria-label="Main navigation">
@@ -99,7 +101,7 @@
       <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
-  <main>
+  <div class="intro-content">
     <section class="hero" aria-labelledby="hero-title" data-node-id="85:95">
       <div class="portrait" role="img" aria-label="Dmitry Rybalka"><picture><source media="(prefers-reduced-motion: reduce)" srcset="assets/portrait-front.webp?v=38f33841c2ab"><img src="assets/portrait-start.webp?v=2bd283908647" width="311" height="311" fetchpriority="high" loading="eager" decoding="async" data-reveal alt="" aria-hidden="true" draggable="false" data-node-id="85:48"></picture><canvas width="311" height="311" aria-hidden="true"></canvas></div>
       <h1 id="hero-title" aria-label="Hi, I’m Dmitry. I design products and lead design teams"><span class="title-line" aria-hidden="true"><span>Hi, I’m Dmitry. I design products</span></span> <span class="title-line" aria-hidden="true"><span>and lead design teams</span></span></h1>
@@ -109,8 +111,34 @@
       <div class="feature" data-node-id="85:46" tabindex="0" aria-label="AI-assisted design and prototyping to test ideas"><div class="feature-art animated-feature-art"><img src="assets/disco-party-seedance-v2-poster-120.webp?v=83b1cee6cb49" width="120" height="120" decoding="async" data-reveal alt=""><canvas width="120" height="120" aria-hidden="true"></canvas></div><p>AI-assisted design<br> and prototyping to test ideas</p></div>
       <div class="feature" data-node-id="85:47" tabindex="0" aria-label="Leading design teams, hiring and mentoring designers"><div class="feature-art campfire-art"><img src="assets/campfire-flame-only-seedance-v7-poster-120.webp?v=4ebe75c5ca6e" width="120" height="120" decoding="async" data-reveal alt=""><canvas width="120" height="120" aria-hidden="true"></canvas></div><p>Leading design teams, hiring<br> and mentoring designers</p></div>
     </section>
+  </div>
+  </div>
+  <section class="at-glance" aria-labelledby="glance-title" data-node-id="124:527">
+    <div class="glance-panel" aria-hidden="true" data-node-id="124:515"></div>
+    <div class="glance-inner">
+      <h2 id="glance-title" tabindex="-1" data-node-id="124:499">At a glance</h2>
+      <div class="glance-grid">
+        <article class="glance-card glance-card-companies" data-node-id="120:116">
+          <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
+          <p><strong>Worked with </strong>Raiffeisen Group, Yandex Market, Larixon Classifieds, Medesk, and GdeMaterial, among others</p>
+        </article>
+        <article class="glance-card" data-node-id="120:119">
+          <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
+          <p><strong>AI tools in the workflow</strong> — ChatGPT, Claude, OpenRouter, and Higgsfield — support research, creative exploration, and automation</p>
+        </article>
+        <article class="glance-card" data-node-id="120:122">
+          <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
+          <p><strong>Designed B2B and B2C </strong>products across fintech, marketplaces, classifieds, healthtech, and leasing.</p>
+        </article>
+        <article class="glance-card" data-node-id="120:125">
+          <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
+          <p><strong>International projects </strong>span Russia, Cyprus, Mongolia, the US, the UK, and Tajikistan, and include a healthcare platform used in 35 countries.</p>
+        </article>
+      </div>
+    </div>
+  </section>
   </main>
-  <script fetchpriority="high" src="mobile-nav.js?v=2c191e4353f6"></script>
+  <script fetchpriority="high" src="mobile-nav.js?v=76a948b5ebf0"></script>
   <script fetchpriority="high" src="mobile-shell.js?v=b95e75011719"></script>
 </body>
 </html>
