@@ -4,15 +4,26 @@
   window.promoControlsReady = true;
   window.releaseMobilePromoClose?.();
   const promo = document.querySelector('.promo');
-  const content = document.querySelector('.promo-content');
-  const illustration = document.querySelector('.promo-illustration');
-  const text = document.querySelector('.promo-text');
+  let content = document.querySelector('.promo-content');
+  let illustration = document.querySelector('.promo-illustration');
+  let text = document.querySelector('.promo-text');
   let action = document.querySelector('.promo-action');
   let button = document.querySelector('.promo-label');
   const close = document.querySelector('.promo-close');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
+  let preparedPromos = null,preparedPromise = null;
+  const activatePrepared = (slide,n) => {
+    index=n;content=slide.content;illustration=slide.image;text=slide.text;action=slide.action;button=slide.label;
+  };
+  const preparePromos = () => {
+    if(preparedPromos||preparedPromise||window.mobileLayout.matches||dismissed||!window.gsap||typeof window.createReadyPromos!=='function')return;
+    preparedPromise=window.createReadyPromos({promo,content,variants,index,decodeImage,activate:activatePrepared})
+      .then(prepared=>{preparedPromos=prepared;return prepared;}).catch(()=>null)
+      .finally(()=>{preparedPromise=null;});
+  };
   const syncGlassBackground = () => {
+    if(preparedPromos&&!window.mobileLayout.matches)return;
     const surface = action.closest('lg-button')?.surface;
     if (!surface) return;
     // Give the existing material a local backdrop underneath the button, without
@@ -157,6 +168,7 @@
         mobileMaterial.settle(true);
       }
       if (focused) action.focus({preventScroll:true});
+      preparePromos();
     } catch {
       if (mobileMaterial) restore();
       // The original mail link and CSS glass remain usable if the optional module fails.
@@ -168,6 +180,7 @@
     document.body.classList.remove('layout-changing');
   };
   const apply = (updateColor = true) => {
+    if(preparedPromos&&!window.mobileLayout.matches){preparedPromos.show(index);return;}
     const v = variants[index];
     if (updateColor) promo.style.backgroundColor = v.color;
     content.style.gap = `${v.gap}px`;
@@ -188,6 +201,12 @@
   apply();
   mountGlanceSection();
   window.mobileLayout.addEventListener('change',() => {
+    if(window.mobileLayout.matches&&preparedPromos){
+      transition?.kill();rotationCleanup?.();transition=null;rotationCleanup=null;
+      const original=preparedPromos.destroy();preparedPromos=null;
+      content=original.content;illustration=original.image;text=original.text;action=original.action;button=original.label;
+      apply();schedule();
+    }else if(!window.mobileLayout.matches)preparePromos();
     if (!rotationCleanup) return;
     transition?.kill();rotationCleanup();rotationCleanup = null;transition = null;
     apply();schedule();
@@ -227,10 +246,18 @@
       timer = undefined;
       const next = (index + 1) % variants.length;
       const ready = await preloadVariant(variants[next]);
+      if(preparedPromise)await preparedPromise;
       if (generation !== rotationGeneration) return;
       if (!ready) {schedule(); return;}
       if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement) || mobileBannerOffscreen()) {schedule(); return;}
-      if (window.gsap) {
+      if(preparedPromos&&!window.mobileLayout.matches&&window.gsap){
+        const started=performance.now();
+        rotationCleanup=()=>preparedPromos?.show(index);
+        transition=preparedPromos.rotate(next,()=>{
+          transition=null;rotationCleanup=null;
+          if(timer===undefined)schedule(Math.max(0,rotationDelay-(performance.now()-started)));
+        });
+      }else if (window.gsap) {
         const started = performance.now();
         // Fading a backdrop-filter ancestor changes the sampled backdrop and flashes the rim.
         // Keep filter ancestors opaque; the mobile CTA moves and fades its own visual leaves.
