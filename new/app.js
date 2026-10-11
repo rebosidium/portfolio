@@ -1,7 +1,6 @@
 (async () => {
   // Mobile material is initialized before the app captures its state; desktop never waits.
   if (window.mobileLayout.matches) await window.mobileBootstrapReady;
-  mountGlanceSection();
   window.promoControlsReady = true;
   window.releaseMobilePromoClose?.();
   const promo = document.querySelector('.promo');
@@ -187,6 +186,7 @@
     syncGlassBackground();
   };
   apply();
+  mountGlanceSection();
   window.mobileLayout.addEventListener('change',() => {
     if (!rotationCleanup) return;
     transition?.kill();rotationCleanup();rotationCleanup = null;transition = null;
@@ -404,9 +404,10 @@ function mountGlanceSection(){
   const animations=new Set(),cardMotion=new Map();
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
-  let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='';const warmedImages=[];
+  let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='',preparedArtwork='';
+  const artworkLoads=new Map();let panelImage;
   const failedArtwork=new Set(),artworkCandidates=(section.querySelector('template')?.content.querySelector('.glance-illustration')?.srcset||'').split(',').map(candidate=>{const [url,width]=candidate.trim().split(/\s+/);return {url,width:parseInt(width,10)}}).filter(candidate=>candidate.url&&candidate.width).sort((a,b)=>a.width-b.width);
-  let mobileResourcesReady=false,mobilePreparing=false,desktopWatching=false;
+  let desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const mobileStack=createMobileGlanceStack(section,mobile,reduced);
   const clearCard=card=>cardMotion.get(card)?.reset();
@@ -492,13 +493,16 @@ function mountGlanceSection(){
     const pixels=size*Math.max(1,devicePixelRatio||1);
     return (artworkCandidates.find(candidate=>candidate.width>=pixels)||artworkCandidates.at(-1))?.url;
   };
-  const currentMobileResourcesReady=()=>{
-    const state=player?.loadingState,encoded=window.featureIconPlayers?.encodedState;
-    if(!reduced.matches&&state&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return false;
-    return !encoded||encoded.ready||encoded.skipped||Boolean(encoded.error);
+  const warmArtwork=url=>{
+    if(!artworkLoads.has(url)){
+      const image=new Image();image.fetchPriority='low';image.decoding='async';image.src=url;
+      const ready=image.decode().then(()=>image);
+      ready.catch(()=>failedArtwork.add(url));
+      artworkLoads.set(url,{image,ready});
+    }
+    return artworkLoads.get(url).ready;
   };
   function updateArtworkSize(){
-    if(mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))return;
     const images=[...section.querySelectorAll('.glance-illustration')],size=artworkSize(),url=artworkUrl(size);
     if(!images.length||!url||failedArtwork.has(url))return;
     if(images.every(image=>image.getAttribute('src')===url)){
@@ -506,69 +510,40 @@ function mountGlanceSection(){
       return;
     }
     if(pendingArtwork===url)return;
-    const swap=++artworkSwap,generation=player?.loadingState.generation;
+    const swap=++artworkSwap;
     pendingArtwork=url;
-    // Keep the displayed bitmap until the chosen replacement has decoded. An
-    // active srcset would bypass the mobile queue when screen density changes.
-    const replacement=new Image();replacement.fetchPriority='low';replacement.decoding='async';replacement.src=url;
-    replacement.decode().then(()=>{
+    // Static artwork is independent of animation generations. Keep the current
+    // bitmap until this one selected low-priority replacement has decoded.
+    warmArtwork(url).then(()=>{
       if(swap!==artworkSwap)return;
       pendingArtwork='';
-      if((mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))||generation!==player?.loadingState.generation||artworkUrl(artworkSize())!==url){schedule();return;}
+      if(artworkUrl(artworkSize())!==url){schedule();return;}
       for(const image of images){image.sizes=artworkSize()+'px';image.src=url;}
     }).catch(()=>{if(swap===artworkSwap)pendingArtwork='';failedArtwork.add(url)});
   }
   function prepareAssets(){
-    if(assetsPrepared||mobile.matches)return;
     const source=section.querySelector('template')?.content.querySelector('.glance-illustration');
     if(!source)return;
-    assetsPrepared=true;section.dataset.assetsStartedAt=performance.now().toFixed(1);
-    // Start one responsive, low-priority image after the portrait's welcome frames
-    // are prepared. The four cards reuse the same browser-selected cached resource.
-    const image=new Image();image.fetchPriority='low';image.decoding='async';
-    image.src=artworkUrl(280)||source.src;image.decode().catch(()=>{});warmedImages.push(image);
-    const panel=new Image();panel.fetchPriority='low';panel.src='assets/glance-panel.svg?v=aaa98db3584e';warmedImages.push(panel);
-  }
-  async function prepareMobileResources(){
-    if(mobilePreparing||mobileResourcesReady||!mobile.matches||!screenReady)return;
-    mobilePreparing=true;
-    try{
-      await window.firstScreenResourcesReady;
-      await window.preloadMobilePromoResources?.();
-      const icons=await window.featureIconsReady;
-      const encoded=await icons?.preloadEncoded();
-      await Promise.allSettled([...document.querySelectorAll('.intro-screen img')].map(image=>image.decode?.()));
-      // Let the shared queue release its final completed request before secondary artwork.
-      await new Promise(resolve=>requestAnimationFrame(resolve));
-      if(!mobile.matches)return;
-      const state=player?.loadingState;
-      if(!reduced.matches&&state&&!state.error&&(state.loading||!state.ready||!state.allReady||state.activeDownloads))return;
-      const current=icons?.encodedState;
-      if(current&&!current.ready&&!current.skipped&&!current.error)return;
-      mobileResourcesReady=true;
-      section.dataset.firstResourcesAt=performance.now().toFixed(1);
-      section.dataset.resourceGeneration=String(state?.generation??0);
-      if(encoded?.error||state?.error)section.dataset.resourceFallback='true';
-    }finally{mobilePreparing=false;schedule();}
+    if(!assetsPrepared)section.dataset.assetsStartedAt=performance.now().toFixed(1);
+    assetsPrepared=true;
+    // One shared Q94 bitmap starts after the initial banner image, alongside
+    // the high-priority portrait. It never joins either animation/reveal gate.
+    const url=artworkUrl(artworkSize())||source.src;
+    if(preparedArtwork!==url){
+      preparedArtwork=url;
+      warmArtwork(url).then(()=>{section.dataset.artworkReadyAt=performance.now().toFixed(1)},()=>{});
+    }
+    if(!panelImage){panelImage=new Image();panelImage.fetchPriority='low';panelImage.src='assets/glance-panel.svg?v=aaa98db3584e';}
   }
   async function loadContent(){
-    if(mounted||assetsLoading||!screenReady)return;
-    if(mobile.matches&&mobileResourcesReady){
-      const encoded=window.featureIconPlayers?.encodedState;
-      if(encoded&&!encoded.ready&&!encoded.skipped&&!encoded.error)mobileResourcesReady=false;
-    }
-    if(mobile.matches&&!mobileResourcesReady){prepareMobileResources();return;}
-    // Start no secondary resources during a current portrait-quality download.
-    const state=player?.loadingState;
-    if(mobile.matches&&state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
+    if(mounted||assetsLoading||!assetsPrepared)return;
     const template=section.querySelector('template');
     if(!template){if(section.querySelector('.glance-inner')){mounted=true;contentReady=true;watchContent();}return;}
     prepareAssets();assetsLoading=true;section.dataset.glanceState='assets';
     if(!section.dataset.assetsStartedAt)section.dataset.assetsStartedAt=performance.now().toFixed(1);
     if(mobile.matches)section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
-    // Lock the selected URL before mounting: only this controller may upgrade
-    // mobile artwork after the current face and icon generation is ready.
+    // Lock one selected URL before mounting; all four cards share its cache.
     for(const image of fragment.querySelectorAll('.glance-illustration')){
       image.removeAttribute('srcset');image.sizes=artworkSize()+'px';image.src=artworkUrl(artworkSize())||image.src;
     }
@@ -583,29 +558,24 @@ function mountGlanceSection(){
     const decoded=Promise.all(images.map(image=>image.decode().catch(()=>{image.style.visibility='hidden'})));
     await Promise.race([decoded,new Promise(resolve=>setTimeout(resolve,10000))]);
     contentReady=true;section.dataset.glanceState='ready';section.dataset.readyAt=performance.now().toFixed(1);
-    section.removeAttribute('aria-busy');warmedImages.length=0;
-    // A quality change during decode must not reveal or measure the hidden stack.
-    if(!mobile.matches||(mobileResourcesReady&&currentMobileResourcesReady())){
-      section.removeAttribute('data-content-pending');section.inert=false;
-      watchContent();if(!mobile.matches)flushCards();
-    }else mobileResourcesReady=false;
+    section.removeAttribute('aria-busy');
+    section.removeAttribute('data-content-pending');section.inert=false;
+    watchContent();if(!mobile.matches)flushCards();
     schedule();
   }
   function update(){
     frame=0;
+    if(assetsPrepared&&!mounted)prepareAssets();
     if(mobile.matches){
-      // Icon quality can change while the portrait remains in the same tier.
-      if(mobileResourcesReady&&!currentMobileResourcesReady())mobileResourcesReady=false;
       intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;
       if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]')){e.removeAttribute('data-reveal-pending');e.dataset.revealed='true';}flushCards=()=>{};desktopWatching=false;}
-      if(screenReady&&!mobileResourcesReady)prepareMobileResources();
-      if(screenReady)loadContent();
-      if(contentReady&&mobileResourcesReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();mobileStack.update();}
+      if(assetsPrepared)loadContent();
+      if(contentReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();mobileStack.update();}
       return;
     }
     mobileStack.reset();
     if(contentReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();watchContent();}
-    if(screenReady)loadContent();
+    if(assetsPrepared)loadContent();
     // Move the banner and header together instead of fading any glass ancestor.
     const shift=screenReady&&!reduced.matches?Math.min(Math.max(0,scrollY),promo.getBoundingClientRect().height):0;
     intro.style.setProperty('--intro-scroll-shift',`${-shift}px`);
@@ -629,7 +599,7 @@ function mountGlanceSection(){
   window.addEventListener('pointerup',()=>{appliedPose=null;schedule();setTimeout(schedule,700)},{passive:true});
   window.addEventListener('pointercancel',()=>{appliedPose=null;schedule()},{passive:true});
   if(typeof ResizeObserver==='function'){const sizes=new ResizeObserver(schedule);for(const element of [promo,portrait,section])sizes.observe(element);}
-  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);mobileResourcesReady=false;if(mobile.matches&&mounted)section.dataset.contentPending='true';appliedPose=null;schedule()});
+  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
   reduced.addEventListener('change',()=>{
     if(reduced.matches){
       for(const animation of animations)animation.cancel();animations.clear();observer?.disconnect();
@@ -640,14 +610,16 @@ function mountGlanceSection(){
     appliedPose=null;schedule();
   });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
-  window.portraitReady.then(()=>{player=window.portraitPlayer;prepareAssets()});
+  const bannerImage=promo.querySelector('.promo-illustration');
+  Promise.race([bannerImage?.decode().catch(()=>{}),new Promise(resolve=>setTimeout(resolve,1600))]).then(()=>{prepareAssets();loadContent()});
+  window.portraitReady.then(()=>{player=window.portraitPlayer});
   Promise.all([window.startScreenReady,window.portraitReady]).then(async()=>{
     section.dataset.firstScreenAt=performance.now().toFixed(1);
     player=window.portraitPlayer;
     await player?.introFinished;
     screenReady=true;section.dataset.introFinishedAt=performance.now().toFixed(1);
     player?.subscribeLoading(state=>{
-      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;mobileResourcesReady=false;}
+      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;}
       schedule();
     });
     schedule();
