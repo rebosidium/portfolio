@@ -133,7 +133,7 @@ export function mountCampfireFeature(feature,options={}){
   const mounted=mountFeatureIcons([{name:'campfire',feature,id:'campfire-approved-v4',prefix:'campfire-v4',leave:'freeze',renderedClass:'campfire-rendered',...options}],options);
   return {get state(){return mounted.players.campfire?.state},destroy:()=>mounted.destroy()};
 }
-function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,id,prefix,posters,leave='poster',renderedClass='icon-rendered'}={}) {
+function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,id,prefix,posters,leave='poster',renderedClass='icon-rendered',canvasPoster=false}={}) {
   const art=feature?.querySelector('.feature-art'),originalPoster=art?.querySelector('img'),canvas=art?.querySelector('canvas');
   const context=canvas?.getContext('2d');
   if(!context||!originalPoster||!portraitPlayer?.subscribeLoading)return {destroy(){}};
@@ -191,6 +191,14 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
     image.removeAttribute('srcset');image.removeAttribute('sizes');
     return image;
   }
+  function paintPoster(){
+    if(!canvasPoster||destroyed||art.classList.contains(renderedClass)||!poster.complete||!poster.naturalWidth)return;
+    // Keep Safari's scaling/sampling path identical before and after the first hover.
+    // Reuse the already loaded static image; this does not request/decode animation frames.
+    if(canvas.width!==poster.naturalWidth||canvas.height!==poster.naturalHeight){canvas.width=poster.naturalWidth;canvas.height=poster.naturalHeight}
+    context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(poster,0,0,canvas.width,canvas.height);
+    art.classList.add('icon-poster-rendered');
+  }
   function updateStaticPoster(){
     const url=posters?.[chooseQuality()];if(!url)return;
     originalPoster.removeAttribute('srcset');originalPoster.removeAttribute('sizes');
@@ -204,6 +212,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
       if(destroyed||token!==staticPosterToken||(!media.matches&&active))return;
       poster.replaceWith(image);poster=image;
       if(media.matches)art.classList.remove(renderedClass);
+      paintPoster();
     };
     image.src=url;
   }
@@ -274,7 +283,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   }
   function stop(mode='idle',showPoster=false){
     playing=false;returning=false;cancelAnimationFrame(raf);raf=0;
-    if(showPoster){pausedElapsed=null;art.classList.remove(renderedClass)}
+    if(showPoster){pausedElapsed=null;art.classList.remove(renderedClass);paintPoster()}
     else if(leave==='freeze'&&displayedKey)pausedElapsed=displayedFrame*1000/frameRate();
     diagnostics(mode);
   }
@@ -428,6 +437,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
       if(art.classList.contains(renderedClass)&&!draw(set,replacementIndex))throw new Error('Icon replacement frame unavailable');
       const image=prepareImage(set.image);
       poster.replaceWith(image);poster=image;active=set;job=null;controller=null;staticPosterToken++;delete canvas.dataset.error;
+      paintPoster();
       // Resume the exact displayed phase; the next frame follows after a full frame interval.
       if(!activated()&&leave==='poster')stop('idle',true);
       start();
@@ -485,7 +495,8 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
     densityQuery=matchMedia(`(resolution: ${devicePixelRatio||1}dppx)`);
     densityChanged=()=>{watchDensity();updateStaticPoster();loadSelected();diagnostics()};densityQuery.addEventListener('change',densityChanged);
   }
-  updateStaticPoster();watchDensity();cleanup.push(()=>densityQuery.removeEventListener('change',densityChanged));
+  listen(originalPoster,'load',()=>{if(poster===originalPoster)paintPoster()});
+  updateStaticPoster();paintPoster();watchDensity();cleanup.push(()=>densityQuery.removeEventListener('change',densityChanged));
   cleanup.push(portraitPlayer.subscribeLoading(avatarChanged));
   diagnostics(media.matches?'reduced':!hoverMedia.matches?'no-hover':'waiting-avatar');
   return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,frames:frameCount(),fps:frameRate(),gateOpen,avatarGeneration:avatarState.generation}},get encodedState(){return encodedState()},preloadEncoded,setScrollActive(value){
@@ -496,5 +507,6 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
     for(const entry of cache.values()){if(entry.resource)closeResource(entry.resource);else entry.reject(cancelled())}cache.clear();queue.length=0;
     for(const set of sets.values())if(set.posterURL)URL.revokeObjectURL(set.posterURL);
     if(poster!==originalPoster)poster.replaceWith(originalPoster);
+    art.classList.remove('icon-poster-rendered');
   }};
 }
