@@ -673,7 +673,7 @@ function createMobileGlanceStack(section,mobile,reduced){
     failedWidth=0;
     if(!active)return;
     active=false;width=0;step=0;entrance=0;
-    section.classList.remove('mobile-glance-stack');
+    section.classList.remove('mobile-glance-stack','mobile-glance-compact-heading');
     for(const name of ['--glance-stage-height','--glance-travel'])section.style.removeProperty(name);
     delete section.dataset.cardProgress;
     for(const card of section.querySelectorAll('.glance-card')){
@@ -688,6 +688,7 @@ function createMobileGlanceStack(section,mobile,reduced){
     const cards=[...section.querySelectorAll('.glance-card')],inner=section.querySelector('.glance-inner'),grid=section.querySelector('.glance-grid');
     if(!cards.length||!inner||!grid)return;
     if(!active||width!==innerWidth){
+      section.classList.remove('mobile-glance-compact-heading');
       section.classList.add('mobile-glance-stack');active=true;width=innerWidth;
       const probe=document.createElement('span');
       probe.setAttribute('aria-hidden','true');
@@ -696,7 +697,13 @@ function createMobileGlanceStack(section,mobile,reduced){
       const smallViewport=probe.getBoundingClientRect().height||innerHeight;
       probe.remove();
       const padding=parseFloat(getComputedStyle(inner).paddingBottom)||0;
-      const contentHeight=grid.offsetTop+grid.offsetHeight+padding;
+      let contentHeight=grid.offsetTop+grid.offsetHeight+padding;
+      // Extra heading space must not disable the stack on smaller phones.
+      // Use its previous spacing only when the enlarged heading cannot fit.
+      if(smallViewport>=480&&contentHeight>smallViewport){
+        section.classList.add('mobile-glance-compact-heading');
+        contentHeight=grid.offsetTop+grid.offsetHeight+padding;
+      }
       // Fit against the smallest stable viewport, independently of the URL bar.
       // Cache list fallback too, so it cannot switch during the same scroll.
       if(smallViewport<480||contentHeight>smallViewport){const failed=width;reset();failedWidth=failed;return;}
