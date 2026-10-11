@@ -110,6 +110,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   h1{font-size:34px;line-height:1.4;transition:none;overflow-wrap:break-word}
   .title-line,.title-line>span{display:inline;overflow:visible}
   .features{max-width:560px;margin:35px auto 0;padding:0 var(--gutter) 0 0;grid-template-columns:minmax(0,1fr);gap:24px;transition:none}
+  .feature[data-node-id="85:46"]{order:-1}
   .feature-art{transition:none}
   .feature p{font-size:clamp(18px,5vw,22px);line-height:1.4;overflow-wrap:break-word}
   .feature p br{display:none}

@@ -21,6 +21,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   let cursorPoint=null,followVisible=true,followPaused=false;
   const CACHE_LIMIT=12,DECODE_WORKERS=2,CHUNK_WORKERS=2,DAMPING_MS=60;
   const DRAG_TURNS=3,DRAG_DAMPING_MS=20,RETURN_OMEGA=26,RETURN_DAMPING=.72,RETURN_MAX_SPEED=900;
+  // Menu release has no gesture velocity; give its mobile return a visible rebound.
+  const MENU_RETURN_OMEGA=18,MENU_RETURN_DAMPING=.55;
   const RELEASE_WINDOW_MS=110,RELEASE_IDLE_MS=120;
   let generation=0,bitmapEpoch=0,fetchController=null,manifest=null,urls=[],angles=[],blobs=[];
   let sourceSize=[1200,1200],renderSize=[1200,1200],ready=false;
@@ -28,7 +30,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   let settleDampingMs=DAMPING_MS,settleMaxStep=12;
   let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
   let returnRequested=false,returnStarted=0,returnCount=0;
-  let menuPoseActive=false;
+  let menuPoseActive=false,menuReturnRequested=false;
   let mobileScrollFrontPhase=0,mobileScrollReturn=false;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
@@ -115,10 +117,15 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     for(const entry of cache.values()){if(entry.state==='ready')closeResource(entry.resource);rejectWaiters(entry,cancelled())}
     cache.clear();queue.length=0;failedFrames.clear();
   }
+  function menuReboundFrames(){
+    // Prepare the rebound before crossing front; predictive decoding can skip it.
+    return menuReturnRequested&&mobileLayout?.matches&&urls.length?[angleToIndex(targetAngle-6),angleToIndex(targetAngle-7),angleToIndex(targetAngle)]:[];
+  }
   function trimCache(){
     const decoded=[...cache.values()].filter(e=>e.state==='ready');
     const limit=introFrames.size?introFrames.size+2:CACHE_LIMIT;
-    const removable=decoded.filter(e=>!introFrames.has(e.index)&&e.index!==displayedIndex&&e.index!==wantedIndex).sort((a,b)=>a.used-b.used);
+    const rebound=new Set(menuReboundFrames());
+    const removable=decoded.filter(e=>!introFrames.has(e.index)&&!rebound.has(e.index)&&e.index!==displayedIndex&&e.index!==wantedIndex).sort((a,b)=>a.used-b.used);
     let count=decoded.length;
     while(count>limit&&removable.length){const entry=removable.shift();if(cache.get(entry.index)!==entry)continue;cache.delete(entry.index);closeResource(entry.resource);count--}
   }
@@ -211,9 +218,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     resetChunkPriorities();
     if(mode==='settle')ensureEncoded(angleToIndex(targetAngle),0);
     const offsets=[0,...Array.from({length:8},(_,i)=>(i+1)*direction),-direction,-2*direction,-3*direction];
-    const wanted=new Set(offsets.map(offset=>wrap(index+offset,urls.length)));
+    const rebound=menuReboundFrames(),wanted=new Set([...rebound,...offsets.map(offset=>wrap(index+offset,urls.length))]);
     if(displayedIndex>=0)wanted.add(displayedIndex);
     for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    rebound.forEach(candidate=>requestDecode(candidate,0));
     offsets.forEach((offset,i)=>requestDecode(index+offset,i===0?0:2+i));
   }
   function warmMotion(angle,velocity){
@@ -223,7 +231,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const reach=Math.max(0,(angle-lastMotionPhase)*direction);
     const bridge=angleToIndex(lastMotionPhase+direction*Math.min(90,reach));
     const prediction=angleToIndex(angle+velocity*lead/1000);
-    const indices=reach>90?[bridge,angleToIndex(lastMotionPhase+direction*Math.min(45,reach)),prediction,index]:[prediction,index];
+    const indices=[...menuReboundFrames(),...(reach>90?[bridge,angleToIndex(lastMotionPhase+direction*Math.min(45,reach)),prediction,index]:[prediction,index])];
     indices.push(...[lead+20,lead+40].map(ms=>angleToIndex(angle+velocity*ms/1000)),wrap(index+direction,urls.length),wrap(index-direction,urls.length));
     const wanted=new Set(indices);if(displayedIndex>=0)wanted.add(displayedIndex);
     for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
@@ -262,7 +270,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function stop(){
     if(mode==='intro')introConsumed=true;
     mode='idle';previousTick=0;inertiaVelocity=motionVelocity=0;returnRequested=false;
-    mobileScrollReturn=false;
+    mobileScrollReturn=menuReturnRequested=false;
     if(displayedIndex>=0){currentAngle+=shortestDelta(indexToAngle(displayedIndex),currentAngle);targetAngle=currentAngle}
     lastMotionPhase=currentAngle;lastMotionDirection=0;
     canvas.dataset.mode=mode;diagnostics();
@@ -324,7 +332,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     currentAngle=lastMotionPhase;targetAngle=frontPhase??currentAngle+shortestDelta(0,currentAngle);
     inertiaVelocity=Math.max(-RETURN_MAX_SPEED,Math.min(RETURN_MAX_SPEED,velocity));
     returnRequested=true;mode='return';previousTick=0;returnStarted=performance.now();returnCount++;
-    Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3)});
+    Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3),returnProfile:menuReturnRequested&&mobileLayout?.matches?'mobile-menu':'gesture'});
     delete canvas.dataset.returnDurationMs;
     setStatus('Возвращаюсь в анфас · можно снова вращать');scheduleRender();
   }
@@ -361,15 +369,18 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     menuPoseActive=false;
     if(destroyed||media.matches)return false;
     followPaused=true;releaseDrag();skipIntro();
+    const mobileMenu=!!mobileLayout?.matches;
     // A quality change already preserves this pending spring through init().
-    if(!ready||preparing){if(!loadAttemptActive)return false;returnRequested=true;return true;}
+    if(!ready||preparing){if(!loadAttemptActive)return false;menuReturnRequested=mobileMenu;returnRequested=true;return true;}
     stop();
+    menuReturnRequested=mobileMenu;
     if(document.hidden){returnRequested=true;return true;}
     returnToFront(0);return true;
   }
   function renderReturn(elapsed){
     // Exact damped-spring step: stable across refresh rates and long frames.
-    const dt=elapsed/1000,w=RETURN_OMEGA,z=RETURN_DAMPING,wd=w*Math.sqrt(1-z*z),x=currentAngle-targetAngle,v=inertiaVelocity;
+    const mobileMenu=menuReturnRequested&&mobileLayout?.matches;
+    const dt=elapsed/1000,w=mobileMenu?MENU_RETURN_OMEGA:RETURN_OMEGA,z=mobileMenu?MENU_RETURN_DAMPING:RETURN_DAMPING,wd=w*Math.sqrt(1-z*z),x=currentAngle-targetAngle,v=inertiaVelocity;
     const decay=Math.exp(-z*w*dt),sine=Math.sin(wd*dt),cosine=Math.cos(wd*dt),before=currentAngle;
     currentAngle=targetAngle+decay*(x*cosine+(v+z*w*x)/wd*sine);
     inertiaVelocity=decay*(v*cosine-(z*w*v+w*w*x)/wd*sine);
@@ -624,11 +635,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   async function init(){
     if(destroyed||media.matches||document.hidden)return;
-    const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn;
+    const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn,resumeMenuReturn=menuReturnRequested;
     const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
     const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
-    releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;ready=false;bufferReady=false;preparing=true;
+    releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;menuReturnRequested=resumeMenuReturn;ready=false;bufferReady=false;preparing=true;
     if(introConsumed)releaseIntroFrames();
     stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','true');
     clearDecoded();cancelAnimationFrame(raf);raf=0;displayedIndex=-1;loadedBytes=0;loadedCount=0;runtimeFetches=0;blobs=[];urls=[];angles=[];variant=null;chunkStates=[];activeChunks.clear();
@@ -741,7 +752,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   listen(stage,'pointerdown',event=>{
     if(media.matches||event.button!==0||event.isPrimary===false)return;
     if(cursorFollow)followPaused=true;
-    mobileScrollReturn=false;
+    mobileScrollReturn=menuReturnRequested=false;
     skipIntro();
     if(!ready||!startupSettled||preparing){returnRequested=false;return}
     if(drag){if(event.pointerId!==drag.id){releaseDrag();stop();setStatus('Готово · выбранный ракурс')}return}
@@ -792,7 +803,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   for(const eventName of ['pointerup','pointercancel','lostpointercapture'])listen(stage,eventName,finishDrag);
   listen(stage,'keydown',event=>{
-    if(['ArrowLeft','ArrowRight','Home'].includes(event.key)&&(!ready||preparing))returnRequested=false;
+    if(['ArrowLeft','ArrowRight','Home'].includes(event.key)&&(!ready||preparing)){returnRequested=menuReturnRequested=false;}
     if(!ready||!startupSettled||preparing)return;
     skipIntro();
     if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
