@@ -69,6 +69,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .with-glance{padding-bottom:0}
 .with-glance .page-main::after{content:"";display:block;height:max(24px,calc(100svh - 762px))}
 .intro-screen{position:sticky;top:0;z-index:0;min-height:calc(100svh - 2px);padding-bottom:85px}
+.intro-screen{transform:translateY(var(--intro-scroll-shift,0px))}
 .intro-screen[data-covered]{visibility:hidden}
 .at-glance{position:relative;z-index:1;min-height:762px;overflow-anchor:none}
 /* Nine-slice the original Figma panel, keeping its 60px circular corners intact. */
@@ -76,13 +77,18 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-inner{position:relative;max-width:1440px;margin:auto;padding:0 var(--gutter) 133px}
 .at-glance h2{height:200px;margin:0;display:grid;place-items:center;font-family:Lora,Georgia,serif;font-weight:500;font-size:48px;line-height:1.4;text-align:center;color:var(--ink)}
 .glance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,306px));justify-content:center;gap:24px;margin-top:29px}
-.glance-card{position:relative;min-width:0;min-height:400px;padding:240px 11px 27px 26px;background:var(--canvas);border-radius:24px;color:#000}
+.glance-card{position:relative;min-width:0;min-height:400px}
+.glance-card-surface{position:relative;min-height:400px;padding:240px 11px 27px 26px;background:var(--canvas);border-radius:24px;color:#000}
 .glance-card-companies{top:-4px}
 .glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%);width:280px;height:280px;object-fit:contain}
 .glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
 .glance-card-companies p{font-size:17px;line-height:23px}
-@media(max-width:1359px){.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
+@media(max-width:1359px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
+.at-glance[data-content-pending] .glance-inner{visibility:hidden}
+.glance-card[data-reveal-pending],.at-glance h2[data-reveal-pending]{opacity:0;transform:translateY(28px);pointer-events:none}
+.glance-card-surface{transition:transform .65s cubic-bezier(.22,1,.36,1);transform:translate(var(--card-x,0px),var(--card-y,0px)) rotate(var(--card-tilt,0deg));transform-origin:50% 60%}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.glance-card:hover .glance-card-surface{--card-y:-7px}}
 /* Mobile/tablet layout is independent of the desktop height-fit calculations. */
 @media(max-width:1023px) and (pointer:coarse){
   /* Align the 28.8px dismiss icon with the 28px menu icon inside its 44px control. */
@@ -90,7 +96,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   body{min-width:320px;padding-bottom:40px}
   .with-glance{padding-bottom:40px}
   .with-glance .page-main::after{display:none}
-  .intro-screen{position:static;min-height:0;padding-bottom:0}
+  .intro-screen{transform:none;position:static;min-height:0;padding-bottom:0}
   .at-glance{display:none}
   .promo{height:auto}
   /* Fade only content leaves, keeping the glass and its ancestors opaque. */
@@ -151,4 +157,4 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .promo-continuation{display:inline}
   .promo-button,.promo-glass .lg-button__el{padding-left:18px;padding-right:18px}
 }
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.shell-pending .promo{transform:none;pointer-events:auto}.nav-pending .header{pointer-events:auto}.nav-pending .header a{visibility:visible;opacity:1}.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}.feature.mobile-feature-pending{opacity:1;transform:none}.intro-screen{position:relative}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}.shell-pending .promo{transform:none;pointer-events:auto}.nav-pending .header{pointer-events:auto}.nav-pending .header a{visibility:visible;opacity:1}.motion-pending .title-line>span,.motion-pending .portrait,.motion-pending .feature,.image-fades img[data-reveal]{opacity:1}.feature.mobile-feature-pending{opacity:1;transform:none}.intro-screen{position:relative;transform:none}.glance-card[data-reveal-pending],.at-glance h2[data-reveal-pending]{opacity:1;transform:none;pointer-events:auto}.glance-card-surface{transform:none}}

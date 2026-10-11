@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="f9d6a7667bcd">
+<html lang="en" data-build="483916da8ae4">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,7 @@
   <link rel="preload" as="font" href="assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
   <link rel="modulepreload" href="vendor/components.js?v=968d5372ad45">
   <link rel="modulepreload" href="vendor/liquid-glass.js">
-  <link rel="modulepreload" href="portrait-spin.js?v=245852e6d93a">
+  <link rel="modulepreload" href="portrait-spin.js?v=c02d38248226">
   <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=19581afb45f9" crossorigin>
   <script>
     window.mobileLayout = matchMedia('(max-width: 1023px) and (pointer: coarse)');
@@ -45,6 +45,14 @@
     }
     window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve});
     window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve});
+    window.startScreenReady = new Promise(resolve => {window.resolveStartScreenReady = resolve});
+    window.releaseGlanceFallback = () => {
+      const section = document.querySelector('.at-glance');
+      const template = section?.querySelector('template');
+      if (!template || window.mobileLayout.matches) return;
+      section.replaceChildren(template.content.cloneNode(true));
+      section.removeAttribute('aria-busy');section.inert = false;section.dataset.glanceState = 'fallback';
+    };
     window.shellReady = new Promise(resolve => {window.resolveShellReady = resolve});
     window.releaseShellFallback = () => {
       clearTimeout(window.shellRevealFallback);
@@ -57,6 +65,7 @@
       window.releaseShellFallback();
       window.releaseMobileShell?.();
       window.resolvePortraitReveal(true);
+      window.resolveStartScreenReady(true);
     };
     document.documentElement.classList.add('glass-pending');
     window.glassRevealFallback = setTimeout(() => {
@@ -72,11 +81,11 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=43527f319d59">
-  <script type="module" src="portrait-boot.js?v=a3bbe501b78d" onerror="window.resolvePortraitReady(false)"></script>
+  <link rel="stylesheet" href="styles.css?v=a8e2179a2e61">
+  <script type="module" src="portrait-boot.js?v=8d6ebc3a5f25" onerror="window.resolvePortraitReady(false)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=f8b7474b3016" onerror="window.portraitReady.then(window.releasePageFallback)"></script>
+  <script defer src="app.js?v=5595ab9daf1e" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">
@@ -113,29 +122,39 @@
     </section>
   </div>
   </div>
-  <section class="at-glance" aria-labelledby="glance-title" data-node-id="124:527">
+  <section class="at-glance" aria-label="At a glance" aria-labelledby="glance-title" aria-busy="true" inert data-glance-state="waiting" data-node-id="124:527">
+    <template>
     <div class="glance-panel" aria-hidden="true" data-node-id="124:515"></div>
     <div class="glance-inner">
       <h2 id="glance-title" tabindex="-1" data-node-id="124:499">At a glance</h2>
       <div class="glance-grid">
         <article class="glance-card glance-card-companies" data-node-id="120:116">
+          <div class="glance-card-surface">
           <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p><strong>Worked with </strong>Raiffeisen Group, Yandex Market, Larixon Classifieds, Medesk, and GdeMaterial, among others</p>
+          </div>
         </article>
         <article class="glance-card" data-node-id="120:119">
+          <div class="glance-card-surface">
           <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p><strong>AI tools in the workflow</strong> — ChatGPT, Claude, OpenRouter, and Higgsfield — support research, creative exploration, and automation</p>
+          </div>
         </article>
         <article class="glance-card" data-node-id="120:122">
+          <div class="glance-card-surface">
           <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p><strong>Designed B2B and B2C </strong>products across fintech, marketplaces, classifieds, healthtech, and leasing.</p>
+          </div>
         </article>
         <article class="glance-card" data-node-id="120:125">
+          <div class="glance-card-surface">
           <img class="glance-illustration" src="assets/glance-nature-stamps.png?v=56205d2d705e" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p><strong>International projects </strong>span Russia, Cyprus, Mongolia, the US, the UK, and Tajikistan, and include a healthcare platform used in 35 countries.</p>
+          </div>
         </article>
       </div>
     </div>
+    </template>
   </section>
   </main>
   <script fetchpriority="high" src="mobile-nav.js?v=76a948b5ebf0"></script>

@@ -7,10 +7,13 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   if(!ctx||!posterElement||!manifestURL){
     const state=Object.freeze({generation:0,quality:null,desiredQuality:null,ready:false,allReady:false,loading:false,error:'Portrait unavailable',activeDownloads:0});
     const allFramesReady=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
-    return {ready:Promise.resolve(false),get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
+    return {ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
   }
   let selectionAngle=-56.3529411764706,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
   let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
+  let resolveIntroFinished,introFinishedSettled=false;
+  const introFinished=new Promise(resolve=>{resolveIntroFinished=resolve});
+  const finishIntro=value=>{if(!introFinishedSettled){introFinishedSettled=true;resolveIntroFinished(value)}};
   const startupReady=new Promise(resolve=>{resolveStartup=resolve});
   const settleStartup=value=>{if(!startupSettled){startupSettled=true;resolveStartup(value)}};
   const cleanup=[];
@@ -32,6 +35,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   let returnRequested=false,returnStarted=0,returnCount=0;
   let menuPoseActive=false,menuReturnRequested=false;
   let mobileScrollFrontPhase=0,mobileScrollReturn=false;
+  let desktopCoverActive=false,desktopCoverProgress=0,desktopCoverFront=0;
   let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
   let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
   const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
@@ -301,7 +305,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     return Math.sign(dx)*Math.min(1,distance)*influence*FOLLOW_MAX_ANGLE;
   }
   function applyCursorTarget(){
-    if(!cursorFollow||followPaused||drag||returnRequested||mode==='return'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
+    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
     const angle=cursorAngle(),next=angleToIndex(angle);
     canvas.dataset.followTarget=angle.toFixed(3);
     if(mode==='idle'&&next===displayedIndex)return;
@@ -323,7 +327,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       const index=angleToIndex(targetAngle),entry=decoded(index);
       if(!entry){requestDecode(index,0);return}
       if(index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,indexToAngle(index));
-      const scrolling=mode==='scroll';stop();setStatus(scrolling?'Готово · поворот по прокрутке':'Готово · слежу за курсором');
+      const scrolling=mode==='scroll',covering=mode==='cover';stop();
+      if(covering&&desktopCoverProgress===0)desktopCoverActive=false;setStatus(scrolling?'Готово · поворот по прокрутке':'Готово · слежу за курсором');
     }
   }
   function returnToFront(velocity=0,frontPhase=null){
@@ -356,6 +361,20 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     targetAngle=mobileScrollFrontPhase+180*progress;canvas.dataset.targetPhase=targetAngle.toFixed(3);
     scheduleRender();
     return true;
+  }
+  // Desktop panel overlap owns its pose; the mobile scroll controller remains independent.
+  function setDesktopCoverPose(progress){
+    if(destroyed||media.matches||mobileLayout?.matches||document.hidden||!ready||!startupSettled||preparing||!introFinishedSettled||drag||returnRequested||menuPoseActive)return false;
+    progress=Math.max(0,Math.min(1,progress));
+    if(!desktopCoverActive){desktopCoverFront=Math.round(lastMotionPhase/360)*360;desktopCoverActive=true;}
+    desktopCoverProgress=progress;followPaused=true;
+    if(mode!=='cover'){stop();beginStats();mode='cover';canvas.dataset.mode=mode;}
+    targetAngle=desktopCoverFront+180*progress;canvas.dataset.coverProgress=progress.toFixed(3);canvas.dataset.targetPhase=targetAngle.toFixed(3);
+    scheduleRender();return true;
+  }
+  function clearDesktopCoverPose(){
+    if(!desktopCoverActive)return;desktopCoverActive=false;desktopCoverProgress=0;
+    if(mode==='cover'){stop();if(ready&&!media.matches&&!document.hidden)returnToFront(0);}
   }
   function clearMobileScrollPose(){
     if(destroyed||media.matches||drag||menuPoseActive||returnRequested)return false;
@@ -398,6 +417,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
   }
   function skipIntro(){
+    finishIntro(false);
     introConsumed=true;introRequested=false;
     if(mode==='intro'){releaseDrag();stop();canvas.dataset.introCancelled='true'}
     releaseIntroFrames();
@@ -440,7 +460,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     introTime=nextTime;currentAngle=proposed;targetAngle=0;
     if(entry.index!==displayedIndex)draw(entry,indexToAngle(entry.index));
     canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase='0';canvas.dataset.introProgress=progress.toFixed(3);
-    if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';releaseIntroFrames();stop();applyCursorTarget()}
+    if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';finishIntro(true);releaseIntroFrames();stop();applyCursorTarget()}
   }
   function render(now){
     raf=0;
@@ -450,6 +470,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(mode==='intro')renderIntro(elapsed);
     else if(mode==='follow')renderFollow(elapsed);
     else if(mode==='scroll')renderFollow(elapsed,45,24);
+    else if(mode==='cover')renderFollow(elapsed,70,14);
     else if(mode==='return')renderReturn(elapsed);
     else if(mode==='drag'){
       const before=currentAngle;
@@ -475,7 +496,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }else if(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch){
       wantedIndex=displayedIndex;if(!introFrames.size)warmWindow(displayedIndex,1);else requestDecode(displayedIndex,0);const entry=decoded(displayedIndex);if(entry){draw(entry,indexToAngle(displayedIndex));diagnostics()}
     }
-    if(mode==='intro'||mode==='follow'||mode==='scroll'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
+    if(mode==='intro'||mode==='follow'||mode==='scroll'||mode==='cover'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
   }
   // Each shard is a stored ZIP. The manifest points directly to complete WebP
   // payloads, so a frame can become usable before the shard finishes loading.
@@ -695,6 +716,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
         if(mobileScrollReturn)currentAngle=lastMotionPhase=mobileScrollFrontPhase+shortestDelta(selectionAngle,mobileScrollFrontPhase);
         returnToFront(0,mobileScrollReturn?mobileScrollFrontPhase:null);
       }
+      else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);
       else applyCursorTarget();
     }catch(error){
       if(token!==generation)return;fallback(error);
@@ -836,16 +858,16 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     posterElement.classList.add('image-ready');
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
-  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else applyCursorTarget()}});
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
     turn:setMobileScrollPose,clear:clearMobileScrollPose,subscribeLoading,
     canRetry:()=>ready&&startupSettled&&!preparing&&!drag
   },mobileLayout,media));
-  if(media.matches){canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
+  if(media.matches){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
-  return {ready:startupReady,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
+  return {ready:startupReady,introFinished,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }
 
 // Mobile scroll owns only its requested pose; manual rotation and menu spring win.

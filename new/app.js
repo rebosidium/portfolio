@@ -1,25 +1,5 @@
 (() => {
-  const introScreen = document.querySelector('.intro-screen');
-  const glanceSection = document.querySelector('.at-glance');
-  if (introScreen && glanceSection) {
-    let coverFrame = 0;
-    const updateCover = () => {
-      coverFrame = 0;
-      const covered = !window.mobileLayout.matches && glanceSection.getBoundingClientRect().top <= 0;
-      introScreen.inert = covered;
-      introScreen.toggleAttribute('data-covered',covered);
-      if (covered) {
-        if (introScreen.contains(document.activeElement)) document.querySelector('#glance-title').focus({preventScroll:true});
-        introScreen.setAttribute('aria-hidden','true');
-      } else introScreen.removeAttribute('aria-hidden');
-    };
-    const scheduleCover = () => {if (!coverFrame) coverFrame = requestAnimationFrame(updateCover);};
-    window.addEventListener('scroll',scheduleCover,{passive:true});
-    window.addEventListener('resize',scheduleCover,{passive:true});
-    window.addEventListener('pageshow',scheduleCover);
-    window.mobileLayout.addEventListener('change',scheduleCover);
-    updateCover();
-  }
+  mountGlanceSection();
   window.promoControlsReady = true;
   window.releaseMobilePromoClose?.();
   const promo = document.querySelector('.promo');
@@ -290,7 +270,7 @@
   });
   if (!window.gsap) {
     settleShell();
-    Promise.all([window.mobileHeaderReady,window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true)});
+    Promise.all([window.mobileHeaderReady,window.portraitReady,Promise.race([decodeImage(document.querySelector('.portrait img')),new Promise(resolve=>setTimeout(resolve,1600))])]).then(()=>{finishBoot();window.resolvePortraitReveal(true);window.resolveStartScreenReady?.(true)});
     return;
   }
   if (window.SplitText) gsap.registerPlugin(SplitText);
@@ -326,12 +306,12 @@
   ]).then(() => {
     let playIntro = root.classList.contains('motion-pending') && !reduced.matches;
     finishBoot();
-    if(!playIntro)window.resolvePortraitReveal(true);
+    if(!playIntro){window.resolvePortraitReveal(true);window.resolveStartScreenReady?.(true);}
     mm.add('(prefers-reduced-motion: no-preference)',() => {
       let split;
       if (playIntro) {
         playIntro = false;
-        const intro = gsap.timeline({defaults:{ease:'power3.out'}});
+        const intro = gsap.timeline({defaults:{ease:'power3.out'},onComplete:()=>window.resolveStartScreenReady?.(true)});
         intro.from('.portrait',{y:18,opacity:0,scale:.97,duration:.85,onComplete:()=>window.resolvePortraitReveal(true)},.1);
         if (!window.mobileLayout.matches) intro.from('.feature',{y:18,opacity:0,duration:.7,stagger:.11},.6);
         if (window.SplitText) {
@@ -348,9 +328,122 @@
     });
   });
   reduced.addEventListener('change',() => {
-    if (reduced.matches) {settleShell();window.resolvePortraitReveal(true);}
+    if (reduced.matches) {settleShell();window.resolvePortraitReveal(true);window.resolveStartScreenReady?.(true);}
     transition?.kill();rotationCleanup?.();rotationCleanup = null;apply();gsap.set([content,illustration,text,button],{clearProps:'transform,opacity'});
     if (dismissed && reduced.matches) {layoutTransition?.kill();settleDismissal();}
     schedule();
   });
 })();
+
+// The second screen has its own load/reveal lifecycle; it never joins the hero gate.
+function mountGlanceSection(){
+  const section=document.querySelector('.at-glance'),intro=document.querySelector('.intro-screen');
+  if(!section||!intro||!window.startScreenReady)return;
+  const mobile=window.mobileLayout,reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const portrait=document.querySelector('.portrait'),promo=document.querySelector('.promo');
+  const animations=new Set();
+  let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
+  let ownsPose=false,appliedPose=null,lastGeneration=-1;
+  const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
+  const clearCard=card=>{const surface=card.querySelector('.glance-card-surface');for(const p of ['--card-x','--card-y','--card-tilt'])surface.style.removeProperty(p)};
+  function reveal(element,delay=0){
+    if(element.dataset.revealed)return;
+    element.dataset.revealed='true';observer?.unobserve(element);
+    if(reduced.matches||!element.animate){element.removeAttribute('data-reveal-pending');return;}
+    const animation=element.animate([{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'translateY(0)'}],{duration:1050,delay,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+    animations.add(animation);
+    animation.finished.then(()=>{element.removeAttribute('data-reveal-pending');animation.cancel();animations.delete(animation)},()=>animations.delete(animation));
+  }
+  function watchContent(){
+    const heading=section.querySelector('h2'),cards=[...section.querySelectorAll('.glance-card')];
+    if(!reduced.matches&&typeof IntersectionObserver==='function'){
+      observer=new IntersectionObserver(entries=>{
+        const visible=entries.filter(e=>e.isIntersecting).map(e=>e.target);
+        for(const element of visible){
+          const index=cards.indexOf(element);
+          reveal(element,index<0?0:140+(innerWidth>=1360?index:index%2)*170);
+        }
+      },{threshold:.12});
+      for(const e of [heading,...cards]){e.dataset.revealPending='true';observer.observe(e);}
+    }else for(const e of [heading,...cards])reveal(e);
+    for(const card of cards){
+      const surface=card.querySelector('.glance-card-surface');
+      card.addEventListener('pointermove',event=>{
+        if(event.pointerType!=='mouse'||mobile.matches||reduced.matches)return;
+        const rect=card.getBoundingClientRect(),x=Math.max(-1,Math.min(1,2*(event.clientX-rect.left)/rect.width-1));
+        surface.style.setProperty('--card-x',`${(x*5).toFixed(2)}px`);
+        surface.style.setProperty('--card-tilt',`${(x*.6).toFixed(2)}deg`);
+      },{passive:true});
+      card.addEventListener('pointerleave',()=>clearCard(card));
+    }
+  }
+  async function loadContent(){
+    if(mounted||assetsLoading||mobile.matches||!screenReady)return;
+    // Start no secondary resources during a current portrait-quality download.
+    const state=player?.loadingState;
+    if(state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
+    const template=section.querySelector('template');if(!template)return;
+    assetsLoading=true;section.dataset.glanceState='assets';section.dataset.assetsStartedAt=performance.now().toFixed(1);
+    section.dataset.contentPending='true';
+    const fragment=template.content.cloneNode(true);
+    for(const image of fragment.querySelectorAll('img'))image.loading='eager';
+    section.replaceChildren(fragment);mounted=true;
+    const images=[...section.querySelectorAll('img')];
+    const decoded=Promise.all(images.map(image=>image.decode().catch(()=>{image.style.visibility='hidden'})));
+    await Promise.race([decoded,new Promise(resolve=>setTimeout(resolve,10000))]);
+    contentReady=true;section.dataset.glanceState='ready';section.dataset.readyAt=performance.now().toFixed(1);
+    section.removeAttribute('data-content-pending');section.removeAttribute('aria-busy');section.inert=false;
+    watchContent();schedule();
+  }
+  function update(){
+    frame=0;
+    if(mobile.matches){intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose();ownsPose=false;appliedPose=null;return;}
+    if(screenReady)loadContent();
+    // Move the banner and header together instead of fading any glass ancestor.
+    const shift=screenReady&&!reduced.matches?Math.min(Math.max(0,scrollY),promo.getBoundingClientRect().height):0;
+    intro.style.setProperty('--intro-scroll-shift',`${-shift}px`);
+    const panelTop=section.getBoundingClientRect().top;
+    if(screenReady&&player&&!reduced.matches&&!document.hidden){
+      const rect=portrait.getBoundingClientRect();
+      const linear=Math.max(0,Math.min(1,(rect.bottom-panelTop)/(rect.height*.7)));
+      const progress=linear*linear*(3-2*linear);
+      section.dataset.headProgress=progress.toFixed(3);
+      if(progress>0||ownsPose){
+        if(progress!==appliedPose&&player.setDesktopCoverPose(progress)){appliedPose=progress;ownsPose=progress>0;}
+      }
+    }else if(reduced.matches){player?.clearDesktopCoverPose();ownsPose=false;appliedPose=null;}
+    const covered=panelTop<=0;
+    // Move focus before making the covered intro inert.
+    if(covered&&intro.contains(document.activeElement))section.querySelector('h2')?.focus({preventScroll:true});
+    intro.inert=covered;intro.toggleAttribute('data-covered',covered);
+    if(covered)intro.setAttribute('aria-hidden','true');else intro.removeAttribute('aria-hidden');
+  }
+  for(const event of ['scroll','resize','pageshow'])window.addEventListener(event,schedule,{passive:true});
+  window.addEventListener('pointerup',()=>{appliedPose=null;schedule();setTimeout(schedule,700)},{passive:true});
+  window.addEventListener('pointercancel',()=>{appliedPose=null;schedule()},{passive:true});
+  if(typeof ResizeObserver==='function'){const sizes=new ResizeObserver(schedule);for(const element of [promo,portrait,section])sizes.observe(element);}
+  mobile.addEventListener('change',()=>{appliedPose=null;schedule()});
+  reduced.addEventListener('change',()=>{
+    if(reduced.matches){
+      for(const animation of animations)animation.cancel();animations.clear();observer?.disconnect();
+      for(const e of section.querySelectorAll('[data-reveal-pending]'))e.removeAttribute('data-reveal-pending');
+      for(const card of section.querySelectorAll('.glance-card'))clearCard(card);
+    }
+    appliedPose=null;schedule();
+  });
+  document.addEventListener('visibilitychange',()=>{appliedPose=null;schedule()});
+  Promise.all([window.startScreenReady,window.portraitReady]).then(async()=>{
+    section.dataset.firstScreenAt=performance.now().toFixed(1);
+    player=window.portraitPlayer;
+    await player?.introFinished;
+    screenReady=true;section.dataset.introFinishedAt=performance.now().toFixed(1);
+    player?.subscribeLoading(state=>{
+      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;}
+      schedule();
+    });
+    schedule();
+  });
+  // The existing first-screen timeout has already released the page by this point.
+  setTimeout(()=>{if(!mounted&&!contentReady&&!player?.loadingState.loading){window.releaseGlanceFallback();schedule()}},30000);
+  schedule();
+}
