@@ -37,6 +37,11 @@
     {id:'work',color:'#0b9bf7',image:'assets/open-to-work.png?v=379829166b85',text:'Open to new design roles and exciting projects',mobileLine:'and exciting projects',cta:'Let’s Talk',subject:'Design role or project',gap:15},
     {id:'consulting',color:'#59bf61',image:'assets/consulting.png?v=c955eb126e6c',text:'Design consulting & mentoring for individuals and teams',mobileLine:'for individuals and teams',cta:'Book a Consultation',subject:'Design consulting',gap:23}
   ];
+  let mobilePromoResources;
+  window.preloadMobilePromoResources = () => mobilePromoResources ||= Promise.allSettled(variants.map(async variant => {
+    const image = new Image();image.decoding = 'async';image.fetchPriority = 'low';image.src = variant.image;
+    await decodeImage(image);
+  }));
   const variantAssets = new Map();
   const cacheVariant = (variant,image) => {
     const pending = Promise.race([decodeImage(image),new Promise(resolve => setTimeout(() => resolve(false),5000))]).then(ready => {
@@ -196,6 +201,14 @@
     image.classList.add('image-ready');
     return ready;
   }));
+  // A separate resource gate never changes the first screen's existing reveal deadlines.
+  Promise.allSettled([glassReady,visibleReady,document.fonts?.ready]).then(async () => {
+    if (window.mobileLayout.matches) {
+      await window.preloadMobilePromoResources();
+      await Promise.allSettled([...document.querySelectorAll('.intro-screen img')].map(decodeImage));
+    }
+    window.resolveFirstScreenResourcesReady(true);
+  });
   const imageDeadline = new Promise(resolve => setTimeout(() => {
     root.classList.remove('image-fades');
     resolve();
@@ -368,7 +381,9 @@ function mountGlanceSection(){
   const animations=new Set(),cardMotion=new Map();
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
+  let mobileResourcesReady=false,mobilePreparing=false,desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
+  const mobileStack=createMobileGlanceStack(section,mobile,reduced);
   const clearCard=card=>cardMotion.get(card)?.reset();
   function reveal(element,delay=0){
     if(element.dataset.revealed)return;
@@ -379,6 +394,9 @@ function mountGlanceSection(){
     animation.finished.then(()=>{element.removeAttribute('data-reveal-pending');animation.cancel();animations.delete(animation)},()=>animations.delete(animation));
   }
   function watchContent(){
+    if(mobile.matches){mobileStack.update();return;}
+    if(desktopWatching)return;
+    desktopWatching=true;
     const heading=section.querySelector('h2'),cards=[...section.querySelectorAll('.glance-card')];
     if(!reduced.matches&&typeof IntersectionObserver==='function'){
       observer=new IntersectionObserver(entries=>{
@@ -389,9 +407,11 @@ function mountGlanceSection(){
           reveal(element,index<0?0:60+index*200);
         }
       },{threshold:[.12,.22]});
-      for(const e of [heading,...cards]){e.dataset.revealPending='true';observer.observe(e);}
+      for(const e of [heading,...cards])if(!e.dataset.revealed){e.dataset.revealPending='true';observer.observe(e);}
     }else for(const e of [heading,...cards])reveal(e);
     for(const card of cards){
+      if(card.dataset.hoverBound)continue;
+      card.dataset.hoverBound='true';
       const surface=card.querySelector('.glance-card-surface');
       const properties=['--card-x','--card-y','--card-z','--card-rotate-x','--card-rotate-y'];
       const units=['px','px','px','deg','deg'],values=[0,0,0,0,0],velocity=[0,0,0,0,0];
@@ -436,12 +456,40 @@ function mountGlanceSection(){
       });
     }
   }
+  async function prepareMobileResources(){
+    if(mobilePreparing||mobileResourcesReady||!mobile.matches||!screenReady)return;
+    mobilePreparing=true;
+    try{
+      await window.firstScreenResourcesReady;
+      await window.preloadMobilePromoResources?.();
+      const icons=await window.featureIconsReady;
+      const encoded=await icons?.preloadEncoded();
+      await Promise.allSettled([...document.querySelectorAll('.intro-screen img')].map(image=>image.decode?.()));
+      // Let the shared queue release its final completed request before starting the PNG.
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+      if(!mobile.matches)return;
+      const state=player?.loadingState;
+      if(!reduced.matches&&state&&!state.error&&(state.loading||!state.ready||!state.allReady||state.activeDownloads))return;
+      const current=icons?.encodedState;
+      if(current&&!current.ready&&!current.skipped&&!current.error)return;
+      mobileResourcesReady=true;
+      section.dataset.firstResourcesAt=performance.now().toFixed(1);
+      section.dataset.resourceGeneration=String(state?.generation??0);
+      if(encoded?.error||state?.error)section.dataset.resourceFallback='true';
+    }finally{mobilePreparing=false;schedule();}
+  }
   async function loadContent(){
-    if(mounted||assetsLoading||mobile.matches||!screenReady)return;
+    if(mounted||assetsLoading||!screenReady)return;
+    if(mobile.matches&&mobileResourcesReady){
+      const encoded=window.featureIconPlayers?.encodedState;
+      if(encoded&&!encoded.ready&&!encoded.skipped&&!encoded.error)mobileResourcesReady=false;
+    }
+    if(mobile.matches&&!mobileResourcesReady){prepareMobileResources();return;}
     // Start no secondary resources during a current portrait-quality download.
     const state=player?.loadingState;
     if(state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
-    const template=section.querySelector('template');if(!template)return;
+    const template=section.querySelector('template');
+    if(!template){if(section.querySelector('.glance-inner')){mounted=true;contentReady=true;watchContent();}return;}
     assetsLoading=true;section.dataset.glanceState='assets';section.dataset.assetsStartedAt=performance.now().toFixed(1);
     section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
@@ -456,7 +504,15 @@ function mountGlanceSection(){
   }
   function update(){
     frame=0;
-    if(mobile.matches){intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;return;}
+    if(mobile.matches){
+      intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;
+      if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]'))e.removeAttribute('data-reveal-pending');desktopWatching=false;}
+      if(screenReady)loadContent();
+      if(contentReady)mobileStack.update();
+      return;
+    }
+    mobileStack.reset();
+    if(contentReady)watchContent();
     if(screenReady)loadContent();
     // Move the banner and header together instead of fading any glass ancestor.
     const shift=screenReady&&!reduced.matches?Math.min(Math.max(0,scrollY),promo.getBoundingClientRect().height):0;
@@ -497,12 +553,61 @@ function mountGlanceSection(){
     await player?.introFinished;
     screenReady=true;section.dataset.introFinishedAt=performance.now().toFixed(1);
     player?.subscribeLoading(state=>{
-      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;}
+      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;if(!mounted)mobileResourcesReady=false;}
       schedule();
     });
     schedule();
   });
   // The existing first-screen timeout has already released the page by this point.
-  setTimeout(()=>{if(!mounted&&!contentReady&&!player?.loadingState.loading){window.releaseGlanceFallback();schedule()}},30000);
+  setTimeout(()=>{if(!mobile.matches&&!mounted&&!contentReady&&!player?.loadingState.loading){window.releaseGlanceFallback();schedule()}},30000);
   schedule();
+}
+
+// Native scrolling drives a mobile stack; no scroll interception or timed card rotation.
+function createMobileGlanceStack(section,mobile,reduced){
+  let active=false,width=0,height=0,step=0;
+  const properties=['opacity','transform','visibility','pointer-events'];
+  function reset(){
+    if(!active)return;
+    active=false;width=0;height=0;
+    section.classList.remove('mobile-glance-stack');
+    for(const name of ['--glance-stage-height','--glance-travel'])section.style.removeProperty(name);
+    delete section.dataset.cardProgress;
+    for(const card of section.querySelectorAll('.glance-card')){
+      for(const name of properties)card.style.removeProperty(name);
+      card.removeAttribute('aria-hidden');card.inert=false;
+    }
+  }
+  function update(){
+    if(!mobile.matches||reduced.matches||innerHeight<480){reset();return;}
+    if(document.hidden||document.documentElement.classList.contains('mobile-menu-open'))return;
+    const cards=[...section.querySelectorAll('.glance-card')],inner=section.querySelector('.glance-inner'),grid=section.querySelector('.glance-grid');
+    if(!cards.length||!inner||!grid)return;
+    if(!active||width!==innerWidth||height!==innerHeight){
+      section.classList.add('mobile-glance-stack');active=true;width=innerWidth;height=innerHeight;
+      const stage=Math.ceil(inner.getBoundingClientRect().height);
+      // Short landscape screens keep the fully readable ordinary list.
+      if(stage>innerHeight){reset();return;}
+      step=Math.max(innerHeight*.7,grid.getBoundingClientRect().height*.9);
+      section.style.setProperty('--glance-stage-height',`${stage}px`);
+      section.style.setProperty('--glance-travel',`${step*(cards.length-1)}px`);
+    }
+    const progress=Math.max(0,Math.min(cards.length-1,-section.getBoundingClientRect().top/step));
+    const index=Math.min(cards.length-1,Math.floor(progress)),fraction=progress-index,eased=fraction*fraction*(3-2*fraction);
+    const entrance=inner.getBoundingClientRect().bottom-grid.getBoundingClientRect().top+cards[0].querySelector('img').offsetWidth*76/340+24;
+    section.dataset.cardProgress=progress.toFixed(4);
+    for(let i=0;i<cards.length;i++){
+      const current=i===index,next=i===index+1,shown=current||next;
+      const opacity=current?1-eased:next?1:0;
+      const y=current?-18*eased:next?entrance*(1-eased):entrance;
+      const scale=current?1-.08*eased:1;
+      cards[i].style.opacity=String(opacity);
+      cards[i].style.transform=`translateY(${y.toFixed(3)}px) scale(${scale.toFixed(5)})`;
+      cards[i].style.visibility=shown?'visible':'hidden';
+      cards[i].style.pointerEvents=i===Math.round(progress)?'auto':'none';
+      cards[i].inert=i!==Math.round(progress);
+      cards[i].setAttribute('aria-hidden',String(i!==Math.round(progress)));
+    }
+  }
+  return {update,reset};
 }

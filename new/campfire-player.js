@@ -35,11 +35,19 @@ function createIconQueue(portraitPlayer){
   return {enqueue,pump,get state(){return {activeDownloads:downloads,activeDecoders:decodes,queuedDownloads:network.length,queuedDecoders:decoders.length,gateOpen:ready()}},destroy(){destroyed=true;unsubscribe();flush()}};
 }
 export function mountFeatureIcons(configurations,{portraitPlayer,mobileLayout=null}={}){
-  if(!portraitPlayer?.subscribeLoading)return {players:{},destroy(){}};
+  if(!portraitPlayer?.subscribeLoading)return {players:{},get encodedState(){return {ready:false,skipped:true,error:'Portrait unavailable',players:{}}},preloadEncoded(){return Promise.resolve(this.encodedState)},destroy(){}};
   const shared=createIconQueue(portraitPlayer),players={};
   for(const c of configurations)players[c.name]=mountIcon(c.feature,{...c,portraitPlayer,shared,mobileLayout});
   const scrolling=mobileLayout?createMobileIconCoordinator(configurations,players,mobileLayout,portraitPlayer):null;
-  return {players,get state(){return {...shared.state,scrollActiveIcon:scrolling?.activeName||null}},destroy(){scrolling?.destroy();Object.values(players).forEach(p=>p.destroy());shared.destroy()}};
+  const encodedState=()=>{
+    const states=Object.fromEntries(Object.entries(players).map(([name,p])=>[name,p.encodedState||{ready:false,skipped:true,error:'Icon unavailable'}]));
+    const values=Object.values(states);
+    return {generation:portraitPlayer.loadingState.generation,ready:values.length>0&&values.every(s=>s.ready),skipped:!values.length||values.some(s=>s.skipped),paused:values.some(s=>s.paused),error:values.find(s=>s.error)?.error||'',players:states};
+  };
+  return {players,get state(){return {...shared.state,scrollActiveIcon:scrolling?.activeName||null}},get encodedState(){return encodedState()},async preloadEncoded(){
+    // A later quality/generation change invalidates earlier completions in this batch.
+    for(;;){await Promise.all(Object.values(players).map(p=>p.preloadEncoded?.()));const state=encodedState();if(state.ready||state.skipped||state.error)return state;}
+  },destroy(){scrolling?.destroy();Object.values(players).forEach(p=>p.destroy());shared.destroy()}};
 }
 function createMobileIconCoordinator(configurations,players,mobileLayout,portraitPlayer){
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'),cleanup=[];
@@ -135,6 +143,8 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   let avatarState=portraitPlayer.loadingState,gateOpen=false,hovered=false,focused=false,touchFocus=false,scrollActive=false,inView=false,destroyed=false,playing=false,returning=false;
   let raf=0,startedAt=0,pausedElapsed=null,displayedFrame=0,displayedKey=null,clock=0,draws=0,starts=0,resizeTimer=0,cycles=0;
   let staticPosterToken=0;
+  let preloadRequested=false,encodedError='',encodedErrorQuality='';
+  const preloadWaiters=new Set();
   const mobileMode=()=>!!mobileLayout?.matches;
   const activated=()=>mobileMode()?scrollActive:hovered||focused;
   const owner={priority:()=>activated()?0:inView?1:2};
@@ -142,13 +152,38 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   const listen=(target,name,fn,options)=>{target.addEventListener(name,fn,options);cleanup.push(()=>target.removeEventListener(name,fn,options));};
   // Keyboard focus remains available on a device whose primary pointer has no hover.
   const loadEligible=()=>!destroyed&&!media.matches&&(mobileMode()?scrollActive:hoverMedia.matches||focused)&&!document.hidden;
+  // This extra eligibility only downloads encoded packs; activation/decode retain their existing gates.
+  const networkEligible=()=>loadEligible()||(!destroyed&&mobileMode()&&preloadRequested&&!media.matches&&!document.hidden);
   const eligible=()=>loadEligible()&&inView;
-  const gated=()=>{const current=portraitPlayer.loadingState;return loadEligible()&&gateOpen&&current.generation===avatarState.generation&&avatarReady(current)};
-  const decodeGated=()=>gated()&&inView;
+  const gated=()=>{const current=portraitPlayer.loadingState;return networkEligible()&&gateOpen&&current.generation===avatarState.generation&&avatarReady(current)};
+  const decodeGated=()=>gated()&&loadEligible()&&inView;
   function chooseQuality(){
     if(navigator.connection?.saveData)return '120';
     const pixels=(art.getBoundingClientRect().width||120)*Math.max(1,devicePixelRatio||1);
     return pixels<=120?'120':pixels<=240?'240':'480';
+  }
+  function encodedState(){
+    const state=portraitPlayer.loadingState,key=chooseQuality(),set=sets.get(key);
+    const complete=!!set&&!set.failed&&set.completeChunks.size===set.chunks.length&&set.blobs.filter(Boolean).length===96;
+    const skipped=destroyed||!mobileMode()||media.matches,paused=document.hidden;
+    const error=state.error||(set?.failed?'Icon unavailable':encodedErrorQuality===key?encodedError:'');
+    return {generation:state.generation,quality:key,complete,ready:!skipped&&!paused&&!error&&complete&&avatarReady(state)&&state.generation===avatarState.generation,loading:job?.key===key,skipped,paused,error};
+  }
+  function settlePreload(){
+    if(!preloadWaiters.size)return;
+    const state=encodedState();
+    if(!state.ready&&!state.skipped&&!state.error)return;
+    preloadRequested=false;
+    for(const resolve of preloadWaiters)resolve(state);
+    preloadWaiters.clear();
+  }
+  function preloadEncoded(){
+    const state=encodedState();
+    if(state.ready||state.skipped||state.error)return Promise.resolve(state);
+    preloadRequested=true;
+    const pending=new Promise(resolve=>preloadWaiters.add(resolve));
+    loadSelected();settlePreload();
+    return pending;
   }
   function prepareImage(image){
     image.className=originalPoster.className;image.classList.add('image-ready');image.width=120;image.height=120;image.alt='';image.setAttribute('data-reveal','');
@@ -176,6 +211,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
     Object.assign(canvas.dataset,{quality:active?.key||'',requestedQuality:chooseQuality(),ready:String(!!active),frame:String(displayedFrame),
       decodedCacheCount:String([...cache.values()].filter(e=>e.resource).length),decodeWorkers:String(inFlight),drawCount:String(draws),startCount:String(starts),
       hovered:String(hovered),focused:String(focused),scrollActive:String(scrollActive),avatarGeneration:String(avatarState.generation),loadingGeneration:String(jobGeneration),encodedReadyCount:String(active?.blobs.filter(Boolean).length||0)});
+    settlePreload();
   }
   function closeResource(resource){try{resource?.dispose()}catch{}}
   function trimCache(){
@@ -277,6 +313,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   function fail(error){
     cancelJob();stop('static',true);canvas.dataset.error=error?.message||'Icon unavailable';
     if(active)active.failed=true;
+    settlePreload();
   }
   function tick(now){
     raf=0;if(!playing||!eligible()||!activated()){stop(!eligible()?'paused':'idle');return}
@@ -363,6 +400,8 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
         set.completeChunks.add(i);
       }
       check();
+      // Signal encoded completion before any optional visible raster work.
+      settlePreload();
       // Offscreen packs may finish downloading, but raster work waits for visibility.
       if(!decodeGated()){job=null;controller=null;diagnostics('offscreen');return}
       if(!set.image){
@@ -395,6 +434,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
       if(token!==jobGeneration)return;
       job=null;controller=null;
       if(error.name==='AbortError')return;
+      encodedError=error?.message||'Icon unavailable';encodedErrorQuality=key;
       const set=sets.get(key);if(set)set.failed=true;
       fail(error);
     }
@@ -409,7 +449,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   function environmentChanged(){
     updateStaticPoster();
     focused=!touchFocus&&feature.contains(document.activeElement);
-    if(!loadEligible()){
+    if(!networkEligible()){
       cancelJob();stop(media.matches?'reduced':document.hidden?'hidden':mobileMode()?'scroll-paused':'no-hover',media.matches||leave==='poster');suspendDecoding();
       if(media.matches){for(const e of cache.values())closeResource(e.resource);cache.clear()}
       diagnostics();
@@ -428,7 +468,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
     if(event.relatedTarget&&feature.contains(event.relatedTarget))return;
     focused=false;
     if(!activated()){if(leave==='freeze')stop();else returnToPoster()}
-    if(!loadEligible()){cancelJob();suspendDecoding()}
+    if(!networkEligible()){cancelJob();suspendDecoding()}
     diagnostics();shared.pump();
   });
   listen(media,'change',environmentChanged);listen(hoverMedia,'change',environmentChanged);listen(document,'visibilitychange',environmentChanged);
@@ -446,7 +486,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   updateStaticPoster();watchDensity();cleanup.push(()=>densityQuery.removeEventListener('change',densityChanged));
   cleanup.push(portraitPlayer.subscribeLoading(avatarChanged));
   diagnostics(media.matches?'reduced':!hoverMedia.matches?'no-hover':'waiting-avatar');
-  return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,gateOpen,avatarGeneration:avatarState.generation}},setScrollActive(value){
+  return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,gateOpen,avatarGeneration:avatarState.generation}},get encodedState(){return encodedState()},preloadEncoded,setScrollActive(value){
     const next=!!value;if(next===scrollActive)return;scrollActive=next;
     environmentChanged();shared.pump();
   },destroy(){

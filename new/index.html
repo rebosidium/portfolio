@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="f9a202d8e4c4">
+<html lang="en" data-build="e1d0d51a9f1d">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,11 +46,19 @@
     window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve});
     window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve});
     window.startScreenReady = new Promise(resolve => {window.resolveStartScreenReady = resolve});
+    window.firstScreenResourcesReady = new Promise(resolve => {window.resolveFirstScreenResourcesReady = resolve});
+    window.featureIconsReady = new Promise(resolve => {window.resolveFeatureIconsReady = resolve});
     window.releaseGlanceFallback = () => {
       const section = document.querySelector('.at-glance');
       const template = section?.querySelector('template');
-      if (!template || window.mobileLayout.matches) return;
-      section.replaceChildren(template.content.cloneNode(true));
+      if (!template) return;
+      const content = template.content.cloneNode(true);
+      if (window.mobileLayout.matches) {
+        // A failed app must not start secondary graphics ahead of the first-screen resources.
+        content.querySelectorAll('img,.glance-panel').forEach(element => element.remove());
+        section.classList.add('mobile-glance-text-fallback');
+      }
+      section.replaceChildren(content);
       section.removeAttribute('aria-busy');section.inert = false;section.dataset.glanceState = 'fallback';
     };
     window.shellReady = new Promise(resolve => {window.resolveShellReady = resolve});
@@ -81,11 +89,11 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=0a9a92befcf0">
-  <script type="module" src="portrait-boot.js?v=8d6ebc3a5f25" onerror="window.resolvePortraitReady(false)"></script>
+  <link rel="stylesheet" href="styles.css?v=f30b5cf45538">
+  <script type="module" src="portrait-boot.js?v=5bc0f06015d0" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=7daf9d3f148f" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
+  <script defer src="app.js?v=dd8cd198a2ba" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">
