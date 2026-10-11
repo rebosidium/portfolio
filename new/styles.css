@@ -89,9 +89,9 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 @media(max-width:1359px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
 .at-glance[data-content-pending] .glance-inner{visibility:hidden}
 .glance-card[data-reveal-pending],.at-glance h2[data-reveal-pending]{opacity:0;transform:translateY(28px);pointer-events:none}
-.glance-card-surface{transition:transform .45s cubic-bezier(.22,1,.36,1);transform:translate3d(var(--card-x,0px),var(--card-y,0px),var(--card-z,0px)) rotateX(var(--card-rotate-x,0deg)) rotateY(var(--card-rotate-y,0deg));transform-origin:50% 50%;transform-style:preserve-3d}
+.glance-card-surface{transform:translate3d(var(--card-x,0px),var(--card-y,0px),var(--card-z,0px)) rotateX(var(--card-rotate-x,0deg)) rotateY(var(--card-rotate-y,0deg));transform-origin:50% 50%;transform-style:preserve-3d}
 .glance-card-surface::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;background:#e9e3df;transform:translateZ(-2px);pointer-events:none;opacity:0;transition:opacity .45s var(--ease)}
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.glance-card:hover .glance-card-surface{--card-y:-7px;--card-z:8px}.glance-card:hover .glance-card-surface::before{opacity:1}}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.glance-card[data-tilting] .glance-card-surface::before{opacity:1}}
 /* Mobile/tablet layout is independent of the desktop height-fit calculations. */
 @media(max-width:1023px) and (pointer:coarse){
   /* Align the 28.8px dismiss icon with the 28px menu icon inside its 44px control. */

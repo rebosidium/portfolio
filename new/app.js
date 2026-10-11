@@ -365,16 +365,16 @@ function mountGlanceSection(){
   if(!section||!intro||!window.startScreenReady)return;
   const mobile=window.mobileLayout,reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const portrait=document.querySelector('.portrait'),promo=document.querySelector('.promo');
-  const animations=new Set();
+  const animations=new Set(),cardMotion=new Map();
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
-  const clearCard=card=>{const surface=card.querySelector('.glance-card-surface');for(const p of ['--card-x','--card-y','--card-rotate-x','--card-rotate-y'])surface.style.removeProperty(p)};
+  const clearCard=card=>cardMotion.get(card)?.reset();
   function reveal(element,delay=0){
     if(element.dataset.revealed)return;
     element.dataset.revealed='true';observer?.unobserve(element);
     if(reduced.matches||!element.animate){element.removeAttribute('data-reveal-pending');return;}
-    const animation=element.animate([{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'translateY(0)'}],{duration:1800,delay,easing:'cubic-bezier(.37,0,.63,1)',fill:'both'});
+    const animation=element.animate([{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'translateY(0)'}],{duration:1000,delay,easing:'cubic-bezier(.37,0,.63,1)',fill:'both'});
     animations.add(animation);
     animation.finished.then(()=>{element.removeAttribute('data-reveal-pending');animation.cancel();animations.delete(animation)},()=>animations.delete(animation));
   }
@@ -382,26 +382,58 @@ function mountGlanceSection(){
     const heading=section.querySelector('h2'),cards=[...section.querySelectorAll('.glance-card')];
     if(!reduced.matches&&typeof IntersectionObserver==='function'){
       observer=new IntersectionObserver(entries=>{
-        const visible=entries.filter(e=>e.isIntersecting&&e.intersectionRatio>=(e.target===heading ? 0.12 : 0.4)).map(e=>e.target);
+        const visible=entries.filter(e=>e.isIntersecting&&e.intersectionRatio>=(e.target===heading ? 0.12 : 0.22)).map(e=>e.target);
         const visibleCards=cards.filter(card=>visible.includes(card));
         for(const element of visible){
           const index=visibleCards.indexOf(element);
-          reveal(element,index<0?0:360+index*260);
+          reveal(element,index<0?0:60+index*200);
         }
-      },{threshold:[.12,.4]});
+      },{threshold:[.12,.22]});
       for(const e of [heading,...cards]){e.dataset.revealPending='true';observer.observe(e);}
     }else for(const e of [heading,...cards])reveal(e);
     for(const card of cards){
       const surface=card.querySelector('.glance-card-surface');
-      card.addEventListener('pointermove',event=>{
+      const properties=['--card-x','--card-y','--card-z','--card-rotate-x','--card-rotate-y'];
+      const units=['px','px','px','deg','deg'],values=[0,0,0,0,0],velocity=[0,0,0,0,0];
+      let target=[0,0,0,0,0],motionFrame=0,lastTime=0;
+      const reset=()=>{
+        cancelAnimationFrame(motionFrame);motionFrame=0;lastTime=0;
+        target.fill(0);values.fill(0);velocity.fill(0);
+        for(const property of properties)surface.style.removeProperty(property);
+        card.removeAttribute('data-tilting');
+      };
+      const tick=time=>{
+        motionFrame=0;
+        if(mobile.matches||reduced.matches||document.hidden){reset();return;}
+        const dt=Math.min((time-(lastTime||time-16.67))/1000,.032),omega=12,decay=Math.exp(-omega*dt);
+        lastTime=time;let unsettled=false;
+        // Critically damped motion starts with zero velocity and keeps it continuous
+        // when the pointer changes direction. Only run RAF while the surface moves.
+        for(let i=0;i<values.length;i++){
+          const distance=values[i]-target[i],spring=(velocity[i]+omega*distance)*dt;
+          values[i]=target[i]+(distance+spring)*decay;
+          velocity[i]=(velocity[i]-omega*spring)*decay;
+          if(Math.abs(values[i]-target[i])>.005||Math.abs(velocity[i])>.03)unsettled=true;
+          else{values[i]=target[i];velocity[i]=0;}
+          surface.style.setProperty(properties[i],values[i].toFixed(4)+units[i]);
+        }
+        if(unsettled)motionFrame=requestAnimationFrame(tick);
+        else{lastTime=0;if(target.every(value=>value===0))reset();}
+      };
+      const move=event=>{
         if(event.pointerType!=='mouse'||mobile.matches||reduced.matches)return;
         const rect=card.getBoundingClientRect(),x=Math.max(-1,Math.min(1,2*(event.clientX-rect.left)/rect.width-1));
         const y=Math.max(-1,Math.min(1,2*(event.clientY-rect.top)/rect.height-1));
-        surface.style.setProperty('--card-x',`${(x*3).toFixed(2)}px`);
-        surface.style.setProperty('--card-rotate-x',`${(-y*4.5).toFixed(2)}deg`);
-        surface.style.setProperty('--card-rotate-y',`${(x*6).toFixed(2)}deg`);
-      },{passive:true});
-      card.addEventListener('pointerleave',()=>clearCard(card));
+        target=[x*3,-7,8,-y*4.5,x*6];card.dataset.tilting='true';
+        if(!motionFrame)motionFrame=requestAnimationFrame(tick);
+      };
+      cardMotion.set(card,{reset});
+      card.addEventListener('pointerenter',move,{passive:true});
+      card.addEventListener('pointermove',move,{passive:true});
+      card.addEventListener('pointerleave',()=>{
+        target=[0,0,0,0,0];card.removeAttribute('data-tilting');
+        if(!motionFrame)motionFrame=requestAnimationFrame(tick);
+      });
     }
   }
   async function loadContent(){
@@ -449,7 +481,7 @@ function mountGlanceSection(){
   window.addEventListener('pointerup',()=>{appliedPose=null;schedule();setTimeout(schedule,700)},{passive:true});
   window.addEventListener('pointercancel',()=>{appliedPose=null;schedule()},{passive:true});
   if(typeof ResizeObserver==='function'){const sizes=new ResizeObserver(schedule);for(const element of [promo,portrait,section])sizes.observe(element);}
-  mobile.addEventListener('change',()=>{appliedPose=null;schedule()});
+  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
   reduced.addEventListener('change',()=>{
     if(reduced.matches){
       for(const animation of animations)animation.cancel();animations.clear();observer?.disconnect();
@@ -458,7 +490,7 @@ function mountGlanceSection(){
     }
     appliedPose=null;schedule();
   });
-  document.addEventListener('visibilitychange',()=>{appliedPose=null;schedule()});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
   Promise.all([window.startScreenReady,window.portraitReady]).then(async()=>{
     section.dataset.firstScreenAt=performance.now().toFixed(1);
     player=window.portraitPlayer;
