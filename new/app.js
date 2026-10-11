@@ -62,12 +62,19 @@
   window.mobileHeaderReady.then(() => {if (window.mobileLayout.matches) {bannerEntered = true;releaseShell();schedule();}});
   window.mobileLayout.addEventListener('change',() => {if (window.mobileLayout.matches && root.classList.contains('nav-pending')) settleShell();});
   const enhanceGlassButton = async () => {
+    const mobileMaterial = window.mobilePromoMaterialState;
+    const fallbackChosen = () => mobileMaterial?.settled && !mobileMaterial.ready;
+    let replacement, original, originalLabel;
+    const restore = () => {
+      if (!replacement?.isConnected) return;
+      replacement.replaceWith(original);
+      action = original;button = originalLabel;
+    };
     if (dismissed || action.closest('lg-button')) return;
     try {
-      // Keep the mobile native CTA in place until its entrance completes.
-      if (root.classList.contains('mobile-shell-pending')) await window.mobileHeaderReady;
+      // Prepare the material while the independent mobile shell enters.
       await import('./vendor/components.js?v=968d5372ad45');
-      if (dismissed || action.closest('lg-button')) return;
+      if (dismissed || action.closest('lg-button') || fallbackChosen()) return;
       if (transition?.isActive()) {setTimeout(enhanceGlassButton,100);return;}
       // Do not swap the fallback link underneath a pointer or keyboard focus.
       if (action.matches(':hover') || document.activeElement === action) {
@@ -91,6 +98,8 @@
       glass.className = 'promo-glass';
       for (const [name,value] of Object.entries({href:action.href,radius:'capsule',refraction:'6',chroma:'0',specular:'0',bezel:'.6'})) glass.setAttribute(name,value);
       glass.textContent = button.textContent;
+      original = action;originalLabel = button;
+      replacement = glass;
       const focused = document.activeElement === action;
       action.replaceWith(glass);
       action = glass.button;
@@ -98,8 +107,28 @@
       action.classList.add('promo-action');
       // Keep this pinned component's glass fixed instead of using its default press squish.
       glass.surface.setDelta = () => {};
+      if (mobileMaterial) {
+        mobileMaterial.restore = restore;
+        const prepared = new Promise(resolve => {
+          let painted = 0;
+          const check = () => {
+            if (fallbackChosen()) {resolve(false);return;}
+            // Blink's refractive map is decoded asynchronously; WebKit has a CSS surface.
+            const ready = glass.surface.mode === 'fallback' || !!glass.surface.glass?.filterId;
+            if (ready && ++painted >= 2) {resolve(true);return;}
+            requestAnimationFrame(check);
+          };
+          requestAnimationFrame(check);
+        });
+        if (!await Promise.race([prepared,window.mobilePromoMaterialReady])) {
+          restore();
+          return;
+        }
+        mobileMaterial.settle(true);
+      }
       if (focused) action.focus({preventScroll:true});
     } catch {
+      if (mobileMaterial) restore();
       // The original mail link and CSS glass remain usable if the optional module fails.
     }
   };
@@ -133,6 +162,7 @@
   });
   // Modulepreload starts the downloads in the head; mount the button before the intro.
   const glassReady = enhanceGlassButton().finally(() => {
+    window.mobilePromoMaterialState?.settle(false);
     clearTimeout(window.glassRevealFallback);
     root.classList.remove('glass-pending');
   });

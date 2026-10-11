@@ -792,7 +792,14 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // stage emits a bubbling loss on that child; the gesture is still active.
     if(event.type==='lostpointercapture'&&event.target!==stage)return;
     if(!drag||event.pointerId!==drag.id)return;
-    if(event.type!=='pointerup'){releaseDrag();stop();setStatus('Готово · выбранный ракурс');return}
+    if(event.type!=='pointerup'){
+      // Native mobile panning can cancel an already rotated touch before release.
+      const returnTouch=mobileLayout?.matches&&event.pointerType==='touch'&&drag.horizontal&&!media.matches&&!document.hidden;
+      releaseDrag();
+      if(returnTouch)returnToFront(0);
+      else{stop();setStatus('Готово · выбранный ракурс')}
+      return;
+    }
     if(drag.horizontal&&Number.isFinite(event.clientX)&&Number.isFinite(event.clientY))moveDrag(event);
     if(!drag)return;
     const now=performance.now(),first=drag.samples[0],last=drag.samples.at(-1),duration=last.time-first.time;

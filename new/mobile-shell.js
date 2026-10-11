@@ -4,6 +4,24 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   if (!mobile.matches) return;
   const root = document.documentElement;
+  // This gate exists before deferred app.js, including its failure/slow-load path.
+  const material = window.mobilePromoMaterialState = {settled:false,ready:false};
+  window.mobilePromoMaterialReady = new Promise(resolve => {
+    material.settle = ready => {
+      if (material.settled) return;
+      material.settled = true;
+      material.ready = ready;
+      // Restore a timed-out component before the entrance reads its visual nodes.
+      if (!ready) material.restore?.();
+      delete material.restore;
+      clearTimeout(material.deadline);
+      clearTimeout(window.glassRevealFallback);
+      root.classList.remove('glass-pending');
+      resolve(ready);
+    };
+    material.deadline = setTimeout(() => material.settle(false),1600);
+  });
+  clearTimeout(window.glassRevealFallback);
   const promo = document.querySelector('.promo');
   const close = promo.querySelector('.promo-close');
   const release = window.releaseMobileShell;
@@ -60,16 +78,24 @@
       animate(close,{opacity:0},{opacity:.4},650,160)
     ];
     root.classList.remove('mobile-promo-pending');
-    ctaTimer = setTimeout(() => {
-      const action = promo.querySelector('.promo-action');
-      const label = promo.querySelector('.promo-label,.lg-button__label');
-      const material = label.closest('.promo-button') || action;
-      // The material and filter stay opaque; fade the label and border separately.
-      animate(label,{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'},650);
-      animate(material,{borderColor:'rgba(255,255,255,0)'},{borderColor:'rgba(255,255,255,.4)'},650);
-      animate(action,{transform:'translateY(6px)'},{transform:'translateY(0)'},650);
-      root.classList.add('mobile-shell-ready');
-    },440);
+    const ctaEntrance = new Promise(resolve => {
+      ctaTimer = setTimeout(async () => {
+        await window.mobilePromoMaterialReady;
+        if (settled) {resolve();return;}
+        const action = promo.querySelector('.promo-action');
+        const label = promo.querySelector('.promo-label,.lg-button__label');
+        const surface = label.closest('.promo-button') || action;
+        // The material and filter stay opaque; fade the label and border separately.
+        const animations = [
+          animate(label,{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'},650),
+          animate(surface,{borderColor:'rgba(255,255,255,0)'},{borderColor:'rgba(255,255,255,.4)'},650),
+          animate(action,{transform:'translateY(6px)'},{transform:'translateY(0)'},650)
+        ];
+        root.classList.add('mobile-shell-ready');
+        await waitAnimations(animations);
+        resolve();
+      },440);
+    });
     await waitAnimations(bannerAnimations);
     if (settled) return;
     await window.mobileNavigationReady;
@@ -80,7 +106,7 @@
     ];
     root.classList.add('mobile-header-ready');
     root.classList.remove('mobile-shell-pending');
-    await waitAnimations(headerAnimations);
+    await Promise.all([waitAnimations(headerAnimations),ctaEntrance]);
   }).then(() => {
     finish();
   }).catch(finish);

@@ -93,6 +93,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .mobile-header-ready .header>.identity{opacity:1}
   .mobile-shell-pending .promo-action{visibility:hidden;pointer-events:none}
   .mobile-shell-ready .promo-action{visibility:visible;pointer-events:auto}
+  html.glass-pending .promo-action{visibility:hidden;pointer-events:none}
   html.mobile-menu-open{overflow:hidden}
   body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);width:100%}
   .header nav{display:none;position:fixed;inset:0;height:100dvh;min-height:100svh;padding:calc(80px + env(safe-area-inset-top)) 24px calc(80px + env(safe-area-inset-bottom));background:var(--canvas);border:0;border-radius:0;box-shadow:none;gap:24px;align-items:center;justify-content:safe center;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;z-index:2}
