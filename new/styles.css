@@ -82,7 +82,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-card{position:relative;min-width:0;min-height:400px;perspective:900px}
 .glance-card-surface{position:relative;min-height:400px;padding:240px 11px 27px 26px;background:var(--canvas);border-radius:24px;color:#000}
 .glance-card-companies{top:-4px}
-.glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%);width:280px;height:280px;object-fit:contain}
+.glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%) translate3d(var(--illustration-x,0px),var(--illustration-y,0px),var(--illustration-z,0px)) scale(var(--illustration-scale,1));width:280px;height:280px;object-fit:contain}
 .glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
 .glance-card-companies p{font-size:17px;line-height:23px}

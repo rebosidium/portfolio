@@ -445,9 +445,10 @@ function mountGlanceSection(){
       if(card.dataset.hoverBound)continue;
       card.dataset.hoverBound='true';
       const surface=card.querySelector('.glance-card-surface');
-      const properties=['--card-x','--card-y','--card-z','--card-rotate-x','--card-rotate-y'];
-      const units=['px','px','px','deg','deg'],values=[0,0,0,0,0],velocity=[0,0,0,0,0];
-      let target=[0,0,0,0,0],motionFrame=0,lastTime=0;
+      const properties=['--card-x','--card-y','--card-z','--card-rotate-x','--card-rotate-y','--illustration-x','--illustration-y','--illustration-z','--illustration-scale'];
+      const units=['px','px','px','deg','deg','px','px','px',''];
+      const values=properties.map(()=>0),velocity=properties.map(()=>0);
+      let target=properties.map(()=>0),motionFrame=0,lastTime=0;
       const reset=()=>{
         cancelAnimationFrame(motionFrame);motionFrame=0;lastTime=0;
         target.fill(0);values.fill(0);velocity.fill(0);
@@ -460,14 +461,16 @@ function mountGlanceSection(){
         const dt=Math.min((time-(lastTime||time-16.67))/1000,.032),omega=12,decay=Math.exp(-omega*dt);
         lastTime=time;let unsettled=false;
         // Critically damped motion starts with zero velocity and keeps it continuous
-        // when the pointer changes direction. Only run RAF while the surface moves.
+        // when the pointer changes direction. Artwork moves relative to the surface
+        // on the same clock, without changing the existing card targets or damping.
         for(let i=0;i<values.length;i++){
           const distance=values[i]-target[i],spring=(velocity[i]+omega*distance)*dt;
           values[i]=target[i]+(distance+spring)*decay;
           velocity[i]=(velocity[i]-omega*spring)*decay;
           if(Math.abs(values[i]-target[i])>.005||Math.abs(velocity[i])>.03)unsettled=true;
           else{values[i]=target[i];velocity[i]=0;}
-          surface.style.setProperty(properties[i],values[i].toFixed(4)+units[i]);
+          const value=properties[i]==='--illustration-scale'?1+values[i]/100:values[i];
+          surface.style.setProperty(properties[i],value.toFixed(4)+units[i]);
         }
         if(unsettled)motionFrame=requestAnimationFrame(tick);
         else{lastTime=0;if(target.every(value=>value===0))reset();}
@@ -476,14 +479,14 @@ function mountGlanceSection(){
         if(event.pointerType!=='mouse'||mobile.matches||reduced.matches)return;
         const rect=card.getBoundingClientRect(),x=Math.max(-1,Math.min(1,2*(event.clientX-rect.left)/rect.width-1));
         const y=Math.max(-1,Math.min(1,2*(event.clientY-rect.top)/rect.height-1));
-        target=[x*3,-7,8,-y*4.5,x*6];card.dataset.tilting='true';
+        target=[x*3,-7,8,-y*4.5,x*6,x*6,y*4-6,18,2.5];card.dataset.tilting='true';
         if(!motionFrame)motionFrame=requestAnimationFrame(tick);
       };
       cardMotion.set(card,{reset});
       card.addEventListener('pointerenter',move,{passive:true});
       card.addEventListener('pointermove',move,{passive:true});
       card.addEventListener('pointerleave',()=>{
-        target=[0,0,0,0,0];card.removeAttribute('data-tilting');
+        target.fill(0);card.removeAttribute('data-tilting');
         if(!motionFrame)motionFrame=requestAnimationFrame(tick);
       });
     }
