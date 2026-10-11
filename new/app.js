@@ -214,10 +214,11 @@
     resolve();
   },4000));
   cacheVariant(variants[index],illustration);
+  const mobileBannerOffscreen = () => window.mobileLayout.matches && promo.getBoundingClientRect().bottom < 0;
   const pause = () => {clearTimeout(timer); timer = undefined; rotationGeneration++;};
   const schedule = (delay = rotationDelay) => {
     pause();
-    if (!initialReady || !bannerEntered || dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) return;
+    if (!initialReady || !bannerEntered || dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement) || mobileBannerOffscreen()) return;
     const generation = rotationGeneration;
     timer = setTimeout(async () => {
       if (generation !== rotationGeneration) return;
@@ -226,7 +227,7 @@
       const ready = await preloadVariant(variants[next]);
       if (generation !== rotationGeneration) return;
       if (!ready) {schedule(); return;}
-      if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement)) {schedule(); return;}
+      if (dismissed || reduced.matches || document.hidden || hovered || promo.contains(document.activeElement) || mobileBannerOffscreen()) {schedule(); return;}
       if (window.gsap) {
         const started = performance.now();
         // Fading a backdrop-filter ancestor changes the sampled backdrop and flashes the rim.
@@ -273,6 +274,26 @@
       } else {index = next; apply(); schedule();}
     }, delay);
   };
+  // An offscreen mobile banner must not resize the page underneath a sticky card.
+  let bannerOffscreen = false;
+  const syncBannerVisibility = () => {
+    const offscreen = mobileBannerOffscreen();
+    if(offscreen === bannerOffscreen)return;
+    bannerOffscreen = offscreen;
+    if(offscreen){
+      pause();
+      if(transition){
+        transition.kill();rotationCleanup?.();
+        gsap.set([illustration,text,button],{clearProps:'transform,opacity'});
+        rotationCleanup=null;transition=null;apply();
+      }
+    }else schedule();
+  };
+  if(typeof IntersectionObserver === 'function'){
+    const bannerVisibility = new IntersectionObserver(syncBannerVisibility,{threshold:0});
+    bannerVisibility.observe(promo);
+  }else window.addEventListener('scroll',syncBannerVisibility,{passive:true});
+  window.mobileLayout.addEventListener('change',syncBannerVisibility);
   promo.addEventListener('pointerenter',event => {if(event.pointerType === 'touch') return;hovered = true; pause();});
   promo.addEventListener('pointerleave',() => {hovered = false; schedule();});
   promo.addEventListener('focusin',pause);
@@ -469,8 +490,13 @@ function mountGlanceSection(){
     const pixels=size*Math.max(1,devicePixelRatio||1);
     return (artworkCandidates.find(candidate=>candidate.width>=pixels)||artworkCandidates.at(-1))?.url;
   };
+  const currentMobileResourcesReady=()=>{
+    const state=player?.loadingState,encoded=window.featureIconPlayers?.encodedState;
+    if(!reduced.matches&&state&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return false;
+    return !encoded||encoded.ready||encoded.skipped||Boolean(encoded.error);
+  };
   function updateArtworkSize(){
-    if(mobile.matches&&!mobileResourcesReady)return;
+    if(mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))return;
     const images=[...section.querySelectorAll('.glance-illustration')],size=artworkSize(),url=artworkUrl(size);
     if(!images.length||!url||failedArtwork.has(url))return;
     if(images.every(image=>image.getAttribute('src')===url)){
@@ -486,7 +512,7 @@ function mountGlanceSection(){
     replacement.decode().then(()=>{
       if(swap!==artworkSwap)return;
       pendingArtwork='';
-      if((mobile.matches&&!mobileResourcesReady)||generation!==player?.loadingState.generation||artworkUrl(artworkSize())!==url){schedule();return;}
+      if((mobile.matches&&(!mobileResourcesReady||!currentMobileResourcesReady()))||generation!==player?.loadingState.generation||artworkUrl(artworkSize())!==url){schedule();return;}
       for(const image of images){image.sizes=artworkSize()+'px';image.src=url;}
     }).catch(()=>{if(swap===artworkSwap)pendingArtwork='';failedArtwork.add(url)});
   }
@@ -555,12 +581,19 @@ function mountGlanceSection(){
     const decoded=Promise.all(images.map(image=>image.decode().catch(()=>{image.style.visibility='hidden'})));
     await Promise.race([decoded,new Promise(resolve=>setTimeout(resolve,10000))]);
     contentReady=true;section.dataset.glanceState='ready';section.dataset.readyAt=performance.now().toFixed(1);
-    section.removeAttribute('aria-busy');section.removeAttribute('data-content-pending');section.inert=false;
-    warmedImages.length=0;watchContent();if(!mobile.matches)flushCards();schedule();
+    section.removeAttribute('aria-busy');warmedImages.length=0;
+    // A quality change during decode must not reveal or measure the hidden stack.
+    if(!mobile.matches||(mobileResourcesReady&&currentMobileResourcesReady())){
+      section.removeAttribute('data-content-pending');section.inert=false;
+      watchContent();if(!mobile.matches)flushCards();
+    }else mobileResourcesReady=false;
+    schedule();
   }
   function update(){
     frame=0;
     if(mobile.matches){
+      // Icon quality can change while the portrait remains in the same tier.
+      if(mobileResourcesReady&&!currentMobileResourcesReady())mobileResourcesReady=false;
       intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;
       if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]')){e.removeAttribute('data-reveal-pending');e.dataset.revealed='true';}flushCards=()=>{};desktopWatching=false;}
       if(screenReady&&!mobileResourcesReady)prepareMobileResources();
@@ -624,11 +657,12 @@ function mountGlanceSection(){
 
 // Native scrolling drives a mobile stack; no scroll interception or timed card rotation.
 function createMobileGlanceStack(section,mobile,reduced){
-  let active=false,width=0,height=0,step=0;
+  let active=false,width=0,step=0,entrance=0,failedWidth=0;
   const properties=['opacity','transform','visibility','pointer-events'];
   function reset(){
+    failedWidth=0;
     if(!active)return;
-    active=false;width=0;height=0;
+    active=false;width=0;step=0;entrance=0;
     section.classList.remove('mobile-glance-stack');
     for(const name of ['--glance-stage-height','--glance-travel'])section.style.removeProperty(name);
     delete section.dataset.cardProgress;
@@ -638,22 +672,35 @@ function createMobileGlanceStack(section,mobile,reduced){
     }
   }
   function update(){
-    if(!mobile.matches||reduced.matches||innerHeight<480){reset();return;}
+    if(!mobile.matches||reduced.matches){failedWidth=0;reset();return;}
+    if(failedWidth===innerWidth)return;
     if(document.hidden||document.documentElement.classList.contains('mobile-menu-open'))return;
     const cards=[...section.querySelectorAll('.glance-card')],inner=section.querySelector('.glance-inner'),grid=section.querySelector('.glance-grid');
     if(!cards.length||!inner||!grid)return;
-    if(!active||width!==innerWidth||height!==innerHeight){
-      section.classList.add('mobile-glance-stack');active=true;width=innerWidth;height=innerHeight;
+    if(!active||width!==innerWidth){
+      section.classList.add('mobile-glance-stack');active=true;width=innerWidth;
+      const probe=document.createElement('span');
+      probe.setAttribute('aria-hidden','true');
+      probe.style.cssText='position:absolute;width:0;height:100svh;visibility:hidden;pointer-events:none';
+      inner.append(probe);
+      const smallViewport=probe.getBoundingClientRect().height||innerHeight;
+      probe.remove();
+      const padding=parseFloat(getComputedStyle(inner).paddingBottom)||0;
+      const contentHeight=grid.offsetTop+grid.offsetHeight+padding;
+      // Fit against the smallest stable viewport, independently of the URL bar.
+      // Cache list fallback too, so it cannot switch during the same scroll.
+      if(smallViewport<480||contentHeight>smallViewport){const failed=width;reset();failedWidth=failed;return;}
+      failedWidth=0;
       const stage=Math.ceil(inner.getBoundingClientRect().height);
-      // Short landscape screens keep the fully readable ordinary list.
-      if(stage>innerHeight){reset();return;}
-      step=Math.max(innerHeight*.7,grid.getBoundingClientRect().height*.9);
+      // Large viewport units keep Safari's toolbar from changing the scroll span.
+      // Cache the entrance too, so reverse scrolling follows exactly the same path.
+      step=Math.max(stage*.7,grid.offsetHeight*.9);
+      entrance=stage-grid.offsetTop+cards[0].querySelector('img').offsetWidth*76/340+24;
       section.style.setProperty('--glance-stage-height',`${stage}px`);
       section.style.setProperty('--glance-travel',`${step*(cards.length-1)}px`);
     }
     const progress=Math.max(0,Math.min(cards.length-1,-section.getBoundingClientRect().top/step));
     const index=Math.min(cards.length-1,Math.floor(progress)),fraction=progress-index,eased=fraction*fraction*(3-2*fraction);
-    const entrance=inner.getBoundingClientRect().bottom-grid.getBoundingClientRect().top+cards[0].querySelector('img').offsetWidth*76/340+24;
     section.dataset.cardProgress=progress.toFixed(4);
     for(let i=0;i<cards.length;i++){
       const current=i===index,next=i===index+1,shown=current||next;
