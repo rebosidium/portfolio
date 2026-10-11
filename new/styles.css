@@ -79,15 +79,15 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-inner{position:relative;max-width:1440px;margin:auto;padding:0 var(--gutter) 133px}
 .at-glance h2{height:200px;margin:0;display:grid;place-items:center;font-family:Lora,Georgia,serif;font-weight:500;font-size:48px;line-height:1.4;text-align:center;color:var(--ink)}
 .glance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,306px));justify-content:center;gap:24px;margin-top:29px}
-.glance-card{position:relative;min-width:0;min-height:400px;perspective:900px}
-.glance-card-surface{position:relative;min-height:400px;padding:240px 11px 27px 26px;background:var(--canvas);border-radius:24px;color:#000}
+.glance-card{position:relative;min-width:0;min-height:360px;perspective:900px}
+.glance-card-surface{position:relative;min-height:360px;height:100%;padding:208px 18.5px 27px;background:var(--canvas);border-radius:24px;color:#000}
 .glance-card-companies{top:-4px}
 .glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%) translate3d(var(--illustration-x,0px),var(--illustration-y,0px),var(--illustration-z,0px)) scale(var(--illustration-scale,1));width:224px;height:224px;object-fit:contain}
-.glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
+.glance-card p{margin:0 auto;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;text-align:center;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
 .glance-card-companies p{font-size:17px;line-height:23px}
 @media(min-width:1024px) and (max-width:1359px){
-  .glance-card-surface{height:100%;padding-top:min(240px,calc(100% - 40px));padding-inline:18px}
+  .glance-card-surface{height:100%;padding-top:min(208px,calc(100% - 72px));padding-inline:18px}
   .glance-illustration{width:min(224px,80%);height:auto;aspect-ratio:1}
 }
 @media(max-width:1023px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
