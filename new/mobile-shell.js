@@ -2,7 +2,7 @@
 (() => {
   const mobile = window.mobileLayout;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  if (!mobile.matches) return;
+  if (!mobile.matches || window.mobileShellExpired || document.querySelector('.promo').hidden) return;
   const root = document.documentElement;
   // This gate exists before deferred app.js, including its failure/slow-load path.
   const material = window.mobilePromoMaterialState = {settled:false,ready:false};
@@ -50,7 +50,8 @@
       else close.blur();
     };
     close.addEventListener('click',dismiss);
-    window.releaseMobilePromoClose = () => close.removeEventListener('click',dismiss);
+    const releaseEarlyClose = window.releaseMobilePromoClose;
+    window.releaseMobilePromoClose = () => {releaseEarlyClose?.();close.removeEventListener('click',dismiss);};
   }
   const bounded = (promise,ms) => Promise.race([promise,new Promise(resolve => setTimeout(resolve,ms))]);
   const ease = 'cubic-bezier(.22,.61,.36,1)';

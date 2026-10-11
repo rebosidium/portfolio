@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="722b1da86ee1">
+<html lang="en" data-build="d064ee303b0c">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,10 +33,12 @@
     window.mobileLayout = matchMedia('(max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve});
     window.mobileHeaderReady = Promise.resolve();
+    window.mobileShellExpired = false;
     if (window.mobileLayout.matches) {
       window.mobileHeaderReady = new Promise(resolve => {window.resolveMobileHeaderReady = resolve});
       document.documentElement.classList.add('mobile-shell-pending','mobile-promo-pending');
       window.releaseMobileShell = () => {
+        window.mobileShellExpired = true;
         document.documentElement.classList.add('mobile-shell-ready','mobile-header-ready');
         document.documentElement.classList.remove('mobile-shell-pending','mobile-promo-pending');
         window.resolveMobileHeaderReady();
@@ -89,11 +91,11 @@
       window.pageRevealFallback = setTimeout(window.releasePageFallback,21000);
     } else window.releaseShellFallback();
   </script>
-  <link rel="stylesheet" href="styles.css?v=b13aaae45f67">
+  <link rel="stylesheet" href="styles.css?v=e872e1cca05a">
   <script type="module" src="portrait-boot.js?v=5bc0f06015d0" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
   <script defer fetchpriority="low" src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="vendor/SplitText.min.js?v=419f7027a5f0"></script>
-  <script defer src="app.js?v=13c79a791442" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
+  <script defer src="app.js?v=137e77749c79" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
   <script defer fetchpriority="low" src="updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">
@@ -165,7 +167,78 @@
     </template>
   </section>
   </main>
-  <script fetchpriority="high" src="mobile-nav.js?v=76a948b5ebf0"></script>
-  <script fetchpriority="high" src="mobile-shell.js?v=b95e75011719"></script>
+  <script data-mobile-nav="mobile-nav.js?v=76a948b5ebf0" data-mobile-shell="mobile-shell.js?v=8af31c7a006f">
+    (() => {
+      const urls = document.currentScript.dataset;
+      const mobile = window.mobileLayout;
+      const root = document.documentElement;
+      const promo = document.querySelector('.promo');
+      const close = promo.querySelector('.promo-close');
+      const nav = document.querySelector('.header nav');
+      const toggle = document.querySelector('.menu-toggle');
+      let navigation, navigationLoaded = false, navigationTimer, bootstrapTimer, finishBootstrap, navigationFocus;
+      document.addEventListener('focusin',event => {if (!navigationLoaded) navigationFocus = nav.contains(event.target) ? event.target : null;});
+      // Dynamic ordered scripts do not hold the parser, portrait module or desktop app.
+      const load = (url,onLoad) => new Promise(resolve => {
+        const script = document.createElement('script');
+        script.async = false;script.fetchPriority = 'high';script.src = url;
+        script.onload = () => {onLoad?.();resolve(true);};
+        script.onerror = () => resolve(false);
+        document.head.append(script);
+      });
+      const navigationFallback = () => {
+        const moveFocus = mobile.matches && document.activeElement === toggle;
+        if (!navigationLoaded) root.classList.add('mobile-navigation-fallback');
+        if (moveFocus && !navigationLoaded) nav.querySelector('a').focus({preventScroll:true});
+        window.resolveMobileNavigationReady();
+      };
+      const prepareNavigation = () => navigation ||= (() => {
+        navigationTimer = setTimeout(navigationFallback,3000);
+        return load(urls.mobileNav,() => {
+          navigationLoaded = true;clearTimeout(navigationTimer);
+          const moveFocus = mobile.matches && root.classList.contains('mobile-navigation-fallback') && nav.contains(document.activeElement);
+          root.classList.remove('mobile-navigation-fallback');
+          if (moveFocus) toggle.focus({preventScroll:true});
+        }).then(ready => {if (!ready) {clearTimeout(navigationTimer);navigationFallback();}return ready;});
+      })();
+      const releaseBootstrap = () => {
+        clearTimeout(bootstrapTimer);
+        window.releaseMobileShell?.();
+        window.mobilePromoMaterialState?.settle(false);
+        window.mobilePromoMaterialState ||= {settled:true,ready:false,settle(){}};
+        window.mobilePromoMaterialReady ||= Promise.resolve(false);
+        clearTimeout(window.glassRevealFallback);root.classList.remove('glass-pending');
+        finishBootstrap?.();
+      };
+      const dismiss = event => {
+        if (window.promoControlsReady) return;
+        promo.hidden = true;root.style.setProperty('--promo-space','0px');
+        releaseBootstrap();
+        if (event.detail === 0) document.querySelector('.identity').focus({preventScroll:true});
+        else close.blur();
+      };
+      window.mobileBootstrapReady = Promise.resolve();
+      if (mobile.matches) {
+        close.addEventListener('click',dismiss);
+        window.releaseMobilePromoClose = () => close.removeEventListener('click',dismiss);
+        window.mobileBootstrapReady = new Promise(resolve => {finishBootstrap = resolve;});
+        bootstrapTimer = setTimeout(releaseBootstrap,3000);
+        const navReady = prepareNavigation();
+        const shellReady = load(urls.mobileShell);
+        Promise.all([navReady,shellReady]).then(([,ready]) => {
+          if (!ready || window.mobileShellExpired) releaseBootstrap();
+          else {clearTimeout(bootstrapTimer);finishBootstrap();}
+        });
+      }
+      mobile.addEventListener('change',() => {
+        if (mobile.matches) {
+          const moveFocus = !navigationLoaded && navigationFocus;
+          prepareNavigation();window.releaseShellFallback();
+          if (moveFocus) (root.classList.contains('mobile-navigation-fallback') ? nav.querySelector('a') : toggle).focus({preventScroll:true});
+        }
+        else if (finishBootstrap) releaseBootstrap();
+      });
+    })();
+  </script>
 </body>
 </html>

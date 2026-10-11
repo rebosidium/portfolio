@@ -153,6 +153,11 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .header nav a.mobile-only{display:flex}
   .header nav a:after{display:none}
   .header nav a:focus-visible{outline-offset:0;border-radius:8px}
+  /* Keep ordinary links usable if the optional mobile navigation cannot load. */
+  .mobile-navigation-fallback .header{height:auto;min-height:86px;flex-wrap:wrap;padding-bottom:16px;gap:8px}
+  .mobile-navigation-fallback .menu-toggle{display:none}
+  .mobile-navigation-fallback .header nav{display:flex;position:static;inset:auto;width:100%;height:auto;min-height:0;padding:0;background:none;flex-direction:row;flex-wrap:wrap;gap:8px 16px;justify-content:flex-start;overflow:visible;z-index:auto}
+  .mobile-navigation-fallback .header nav a{min-height:44px;padding:4px 0;font-size:16px}
   .hero{width:100%;max-width:600px;padding:0 var(--gutter);gap:25px;transition:none}
   .portrait{transition:none}
   h1{font-size:clamp(26px,8vw,34px);line-height:1.4;transition:none;overflow-wrap:break-word}

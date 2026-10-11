@@ -1,4 +1,6 @@
-(() => {
+(async () => {
+  // Mobile material is initialized before the app captures its state; desktop never waits.
+  if (window.mobileLayout.matches) await window.mobileBootstrapReady;
   mountGlanceSection();
   window.promoControlsReady = true;
   window.releaseMobilePromoClose?.();
