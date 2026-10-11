@@ -11,6 +11,15 @@
   const close = document.querySelector('.promo-close');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
+  const syncGlassBackground = () => {
+    const surface = action.closest('lg-button')?.surface;
+    if (!surface) return;
+    // Give the existing material a local backdrop underneath the button, without
+    // painting over its optical layer, tint, border or translucent base fill.
+    const color = getComputedStyle(promo).backgroundColor;
+    const host = action.closest('lg-button');
+    if (host.style.getPropertyValue('--promo-glass-backdrop') !== color) host.style.setProperty('--promo-glass-backdrop',color);
+  };
   const decodeImage = image => {
     if (image.decode) return image.decode().then(() => true,() => false);
     if (image.complete) return Promise.resolve(image.naturalWidth > 0);
@@ -106,6 +115,20 @@
       action = glass.button;
       button = glass.querySelector('.lg-button__label');
       action.classList.add('promo-action');
+      syncGlassBackground();
+      // The independent mobile entrance uses WAAPI; mirror it only until it settles.
+      if (window.mobileLayout.matches) {
+        let frame = 0, finished = false;
+        const syncEntrance = () => {
+          if (finished || dismissed || !glass.isConnected) return;
+          syncGlassBackground();
+          frame = requestAnimationFrame(syncEntrance);
+        };
+        syncEntrance();
+        window.mobileHeaderReady.finally(() => {
+          finished = true;cancelAnimationFrame(frame);syncGlassBackground();
+        });
+      }
       // Keep this pinned component's glass fixed instead of using its default press squish.
       glass.surface.setDelta = () => {};
       if (mobileMaterial) {
@@ -154,6 +177,7 @@
     button.textContent = v.cta;
     action.href = `mailto:rebosidium@gmail.com?subject=${encodeURIComponent(v.subject)}`;
     promo.dataset.variant = v.id;
+    syncGlassBackground();
   };
   apply();
   window.mobileLayout.addEventListener('change',() => {
@@ -200,7 +224,7 @@
           transition = null;rotationCleanup = null;
           if (timer === undefined) schedule(Math.max(0,rotationDelay - (performance.now() - started)));
         }});
-        transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut'},0)
+        transition.to(promo,{backgroundColor:variants[next].color,duration:.58,ease:'power2.inOut',onUpdate:syncGlassBackground},0)
           .to(changingContent,{y:-8,opacity:0,duration:.22,ease:'power2.in'},0).call(() => {
             index = next;
             apply(false);
@@ -345,12 +369,12 @@ function mountGlanceSection(){
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
-  const clearCard=card=>{const surface=card.querySelector('.glance-card-surface');for(const p of ['--card-x','--card-y','--card-tilt'])surface.style.removeProperty(p)};
+  const clearCard=card=>{const surface=card.querySelector('.glance-card-surface');for(const p of ['--card-x','--card-y','--card-rotate-x','--card-rotate-y'])surface.style.removeProperty(p)};
   function reveal(element,delay=0){
     if(element.dataset.revealed)return;
     element.dataset.revealed='true';observer?.unobserve(element);
     if(reduced.matches||!element.animate){element.removeAttribute('data-reveal-pending');return;}
-    const animation=element.animate([{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'translateY(0)'}],{duration:1050,delay,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+    const animation=element.animate([{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'translateY(0)'}],{duration:1800,delay,easing:'cubic-bezier(.37,0,.63,1)',fill:'both'});
     animations.add(animation);
     animation.finished.then(()=>{element.removeAttribute('data-reveal-pending');animation.cancel();animations.delete(animation)},()=>animations.delete(animation));
   }
@@ -358,12 +382,13 @@ function mountGlanceSection(){
     const heading=section.querySelector('h2'),cards=[...section.querySelectorAll('.glance-card')];
     if(!reduced.matches&&typeof IntersectionObserver==='function'){
       observer=new IntersectionObserver(entries=>{
-        const visible=entries.filter(e=>e.isIntersecting).map(e=>e.target);
+        const visible=entries.filter(e=>e.isIntersecting&&e.intersectionRatio>=(e.target===heading ? 0.12 : 0.4)).map(e=>e.target);
+        const visibleCards=cards.filter(card=>visible.includes(card));
         for(const element of visible){
-          const index=cards.indexOf(element);
-          reveal(element,index<0?0:140+(innerWidth>=1360?index:index%2)*170);
+          const index=visibleCards.indexOf(element);
+          reveal(element,index<0?0:360+index*260);
         }
-      },{threshold:.12});
+      },{threshold:[.12,.4]});
       for(const e of [heading,...cards]){e.dataset.revealPending='true';observer.observe(e);}
     }else for(const e of [heading,...cards])reveal(e);
     for(const card of cards){
@@ -371,8 +396,10 @@ function mountGlanceSection(){
       card.addEventListener('pointermove',event=>{
         if(event.pointerType!=='mouse'||mobile.matches||reduced.matches)return;
         const rect=card.getBoundingClientRect(),x=Math.max(-1,Math.min(1,2*(event.clientX-rect.left)/rect.width-1));
-        surface.style.setProperty('--card-x',`${(x*5).toFixed(2)}px`);
-        surface.style.setProperty('--card-tilt',`${(x*.6).toFixed(2)}deg`);
+        const y=Math.max(-1,Math.min(1,2*(event.clientY-rect.top)/rect.height-1));
+        surface.style.setProperty('--card-x',`${(x*3).toFixed(2)}px`);
+        surface.style.setProperty('--card-rotate-x',`${(-y*4.5).toFixed(2)}deg`);
+        surface.style.setProperty('--card-rotate-y',`${(x*6).toFixed(2)}deg`);
       },{passive:true});
       card.addEventListener('pointerleave',()=>clearCard(card));
     }
@@ -397,7 +424,7 @@ function mountGlanceSection(){
   }
   function update(){
     frame=0;
-    if(mobile.matches){intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose();ownsPose=false;appliedPose=null;return;}
+    if(mobile.matches){intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;return;}
     if(screenReady)loadContent();
     // Move the banner and header together instead of fading any glass ancestor.
     const shift=screenReady&&!reduced.matches?Math.min(Math.max(0,scrollY),promo.getBoundingClientRect().height):0;
@@ -409,9 +436,9 @@ function mountGlanceSection(){
       const progress=linear*linear*(3-2*linear);
       section.dataset.headProgress=progress.toFixed(3);
       if(progress>0||ownsPose){
-        if(progress!==appliedPose&&player.setDesktopCoverPose(progress)){appliedPose=progress;ownsPose=progress>0;}
+        if(progress!==appliedPose&&player.setDesktopCoverPose?.(progress)){appliedPose=progress;ownsPose=progress>0;}
       }
-    }else if(reduced.matches){player?.clearDesktopCoverPose();ownsPose=false;appliedPose=null;}
+    }else if(reduced.matches){player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;}
     const covered=panelTop<=0;
     // Move focus before making the covered intro inert.
     if(covered&&intro.contains(document.activeElement))section.querySelector('h2')?.focus({preventScroll:true});
