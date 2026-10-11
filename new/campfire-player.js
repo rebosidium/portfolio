@@ -148,7 +148,8 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   const mobileMode=()=>!!mobileLayout?.matches;
   const activated=()=>mobileMode()?scrollActive:hovered||focused;
   const owner={priority:()=>activated()?0:inView?1:2};
-  const wrap=index=>((index%96)+96)%96;
+  const frameCount=()=>manifest?.frames||96,frameRate=()=>manifest?.fps||24;
+  const wrap=index=>((index%frameCount())+frameCount())%frameCount();
   const listen=(target,name,fn,options)=>{target.addEventListener(name,fn,options);cleanup.push(()=>target.removeEventListener(name,fn,options));};
   // Keyboard focus remains available on a device whose primary pointer has no hover.
   const loadEligible=()=>!destroyed&&!media.matches&&(mobileMode()?scrollActive:hoverMedia.matches||focused)&&!document.hidden;
@@ -164,7 +165,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   }
   function encodedState(){
     const state=portraitPlayer.loadingState,key=chooseQuality(),set=sets.get(key);
-    const complete=!!set&&!set.failed&&set.completeChunks.size===set.chunks.length&&set.blobs.filter(Boolean).length===96;
+    const complete=!!set&&!set.failed&&set.completeChunks.size===set.chunks.length&&set.blobs.filter(Boolean).length===frameCount();
     const skipped=destroyed||!mobileMode()||media.matches,paused=document.hidden;
     const error=state.error||(set?.failed?'Icon unavailable':encodedErrorQuality===key?encodedError:'');
     return {generation:state.generation,quality:key,complete,ready:!skipped&&!paused&&!error&&complete&&avatarReady(state)&&state.generation===avatarState.generation,loading:job?.key===key,skipped,paused,error};
@@ -209,7 +210,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   function diagnostics(mode){
     if(mode)canvas.dataset.mode=mode;
     Object.assign(canvas.dataset,{quality:active?.key||'',requestedQuality:chooseQuality(),ready:String(!!active),frame:String(displayedFrame),
-      decodedCacheCount:String([...cache.values()].filter(e=>e.resource).length),decodeWorkers:String(inFlight),drawCount:String(draws),startCount:String(starts),
+      decodedCacheCount:String([...cache.values()].filter(e=>e.resource).length),decodeWorkers:String(inFlight),drawCount:String(draws),startCount:String(starts),frameCount:String(frameCount()),frameRate:String(frameRate()),
       hovered:String(hovered),focused:String(focused),scrollActive:String(scrollActive),avatarGeneration:String(avatarState.generation),loadingGeneration:String(jobGeneration),encodedReadyCount:String(active?.blobs.filter(Boolean).length||0)});
     settlePreload();
   }
@@ -274,7 +275,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   function stop(mode='idle',showPoster=false){
     playing=false;returning=false;cancelAnimationFrame(raf);raf=0;
     if(showPoster){pausedElapsed=null;art.classList.remove(renderedClass)}
-    else if(leave==='freeze'&&displayedKey)pausedElapsed=displayedFrame*1000/24;
+    else if(leave==='freeze'&&displayedKey)pausedElapsed=displayedFrame*1000/frameRate();
     diagnostics(mode);
   }
   function suspendDecoding(){
@@ -304,7 +305,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   }
   function pauseForAvatar(){
     if(returning)stop('waiting-avatar',true);
-    if(playing)pausedElapsed=displayedFrame*1000/24;
+    if(playing)pausedElapsed=displayedFrame*1000/frameRate();
     playing=false;returning=false;cancelAnimationFrame(raf);raf=0;
     // Retain the visible pose during an avatar/quality upgrade, without decoder work.
     suspendDecoding();
@@ -332,7 +333,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   }
   function start(){
     if(playing||!activated()||!eligible()||!gated()||!active||active.key!==chooseQuality()||active.failed||avatarState.error)return;
-    const resumed=pausedElapsed!==null,index=resumed?Math.round(pausedElapsed*manifest.fps/1000)%96:0;
+    const resumed=pausedElapsed!==null,index=resumed?wrap(Math.round(pausedElapsed*manifest.fps/1000)):0;
     if(!draw(active,index)){
       requestDecode(active,index,0).then(()=>{if(activated()&&decodeGated())start()},error=>{if(error.name!=='AbortError')fail(error)});return;
     }
@@ -345,7 +346,8 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   }
   function validate(data,key){
     const value=data.variants?.[key];
-    if(data.id!==id||data.frames!==96||data.fps!==24||data.duration_seconds!==4||data.background!=='transparent'||!value||value.size?.[0]!==Number(key)||value.size?.[1]!==Number(key)||!Array.isArray(value.chunks))throw new Error('Invalid icon manifest');
+    const supportedLoop=(data.frames===96&&data.fps===24)||(data.frames===77&&data.fps===19.25);
+    if(data.id!==id||!supportedLoop||data.duration_seconds!==4||data.background!=='transparent'||!value||value.size?.[0]!==Number(key)||value.size?.[1]!==Number(key)||!Array.isArray(value.chunks))throw new Error('Invalid icon manifest');
     if(data.initial_index!==0||data.loop!==true||!new RegExp('^assets/'+prefix+'-poster-'+key+'\\.webp\\?v=[a-f0-9]{12}$').test(value.poster))throw new Error('Invalid icon poster');
     const seen=new Set(),files=new Set();
     for(const chunk of value.chunks){
@@ -353,11 +355,11 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
       files.add(chunk.file);
       let end=0;
       for(const frame of chunk.frames){
-        if(!Number.isInteger(frame.index)||frame.index<0||frame.index>=96||seen.has(frame.index)||!Number.isSafeInteger(frame.offset)||!Number.isSafeInteger(frame.length)||frame.offset<end||frame.length<=0||frame.offset+frame.length>chunk.bytes)throw new Error('Invalid icon frame');
+        if(!Number.isInteger(frame.index)||frame.index<0||frame.index>=data.frames||seen.has(frame.index)||!Number.isSafeInteger(frame.offset)||!Number.isSafeInteger(frame.length)||frame.offset<end||frame.length<=0||frame.offset+frame.length>chunk.bytes)throw new Error('Invalid icon frame');
         seen.add(frame.index);end=frame.offset+frame.length;
       }
     }
-    if(seen.size!==96||value.encoded_bytes!==value.chunks.reduce((sum,c)=>sum+c.bytes,0))throw new Error('Incomplete icon pack');
+    if(seen.size!==data.frames||value.encoded_bytes!==value.chunks.reduce((sum,c)=>sum+c.bytes,0))throw new Error('Incomplete icon pack');
     return value;
   }
   function unpack(bytes,chunk,set){
@@ -391,7 +393,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
       const all=await portraitPlayer.allFramesReady;check();if(!all.ready||all.generation!==avatarGeneration)throw cancelled();
       if(!manifest)manifest=await get(manifestURL,true);
       let set=sets.get(key);
-      if(!set){const value=validate(manifest,key);set={...value,key,blobs:new Array(96),completeChunks:new Set(),image:null,posterURL:null,failed:false};sets.set(key,set)}
+      if(!set){const value=validate(manifest,key);set={...value,key,blobs:new Array(manifest.frames),completeChunks:new Set(),image:null,posterURL:null,failed:false};sets.set(key,set)}
       if(set.failed)throw new Error('Icon unavailable');
       for(let i=0;i<set.chunks.length;i++){
         if(set.completeChunks.has(i))continue;
@@ -412,13 +414,13 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
         if(!decodeGated()){image.removeAttribute('src');throw cancelled()}
         set.image=image;
       }
-      const index=pausedElapsed!==null?Math.round(pausedElapsed*manifest.fps/1000)%96:0;
+      const index=pausedElapsed!==null?wrap(Math.round(pausedElapsed*manifest.fps/1000)):0;
       // Idle icons decode only the quality poster, not a window of every icon's frames.
       if(activated()||art.classList.contains(renderedClass)){
         work.protectedKey=`${key}:${index}`;work.preparing=new Set(Array.from({length:LOOKAHEAD+1},(_,i)=>`${key}:${wrap(index+i)}`));
         await Promise.all(Array.from({length:LOOKAHEAD+1},(_,i)=>requestDecode(set,index+i,i)));check();
       }
-      const replacementIndex=pausedElapsed!==null?Math.round(pausedElapsed*manifest.fps/1000)%96:0;
+      const replacementIndex=pausedElapsed!==null?wrap(Math.round(pausedElapsed*manifest.fps/1000)):0;
       work.protectedKey=`${key}:${replacementIndex}`;
       if(art.classList.contains(renderedClass)){await requestDecode(set,replacementIndex,0);check()}
       check();if(!decodeGated())throw cancelled();
@@ -486,7 +488,7 @@ function mountIcon(feature,{portraitPlayer,shared,mobileLayout=null,manifestURL,
   updateStaticPoster();watchDensity();cleanup.push(()=>densityQuery.removeEventListener('change',densityChanged));
   cleanup.push(portraitPlayer.subscribeLoading(avatarChanged));
   diagnostics(media.matches?'reduced':!hoverMedia.matches?'no-hover':'waiting-avatar');
-  return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,gateOpen,avatarGeneration:avatarState.generation}},get encodedState(){return encodedState()},preloadEncoded,setScrollActive(value){
+  return {get state(){return {quality:active?.key||null,hovered,focused,scrollActive,playing,returning,frame:displayedFrame,frames:frameCount(),fps:frameRate(),gateOpen,avatarGeneration:avatarState.generation}},get encodedState(){return encodedState()},preloadEncoded,setScrollActive(value){
     const next=!!value;if(next===scrollActive)return;scrollActive=next;
     environmentChanged();shared.pump();
   },destroy(){
