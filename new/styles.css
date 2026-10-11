@@ -103,7 +103,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .at-glance{display:block;min-height:0;--glance-card-width:min(400px,calc(100vw - 40px))}
   .at-glance[data-glance-state="waiting"],.at-glance[data-content-pending]{display:none}
   .glance-inner{max-width:440px;padding:0 20px calc(var(--glance-card-width) * .16)}
-  .at-glance h2{height:min(170px,38.636vw,18svh);font-size:34px}
+  .at-glance h2{height:calc(min(170px,38.636vw,18svh) * 1.5 - .7em);font-size:34px}
   .glance-grid{grid-template-columns:minmax(0,1fr);gap:93px;margin-top:calc(var(--glance-card-width) * .1)}
   .glance-card,.glance-card-surface{min-height:calc(var(--glance-card-width) * 1.1575)}
   .glance-card-companies{top:0}
