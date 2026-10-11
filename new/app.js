@@ -667,14 +667,14 @@ function mountGlanceSection(){
 
 // Native scrolling drives a mobile stack; no scroll interception or timed card rotation.
 function createMobileGlanceStack(section,mobile,reduced){
-  let active=false,width=0,step=0,entrance=0,failedWidth=0;
+  let active=false,width=0,step=0,entrance=0,overflow=0,failedWidth=0;
   const properties=['opacity','transform','visibility','pointer-events'];
   function reset(){
     failedWidth=0;
     if(!active)return;
-    active=false;width=0;step=0;entrance=0;
-    section.classList.remove('mobile-glance-stack','mobile-glance-compact-heading');
-    for(const name of ['--glance-stage-height','--glance-travel'])section.style.removeProperty(name);
+    active=false;width=0;step=0;entrance=0;overflow=0;
+    section.classList.remove('mobile-glance-stack');
+    for(const name of ['--glance-stage-height','--glance-travel','--glance-sticky-offset'])section.style.removeProperty(name);
     delete section.dataset.cardProgress;
     for(const card of section.querySelectorAll('.glance-card')){
       for(const name of properties)card.style.removeProperty(name);
@@ -688,7 +688,6 @@ function createMobileGlanceStack(section,mobile,reduced){
     const cards=[...section.querySelectorAll('.glance-card')],inner=section.querySelector('.glance-inner'),grid=section.querySelector('.glance-grid');
     if(!cards.length||!inner||!grid)return;
     if(!active||width!==innerWidth){
-      section.classList.remove('mobile-glance-compact-heading');
       section.classList.add('mobile-glance-stack');active=true;width=innerWidth;
       const probe=document.createElement('span');
       probe.setAttribute('aria-hidden','true');
@@ -697,17 +696,17 @@ function createMobileGlanceStack(section,mobile,reduced){
       const smallViewport=probe.getBoundingClientRect().height||innerHeight;
       probe.remove();
       const padding=parseFloat(getComputedStyle(inner).paddingBottom)||0;
-      let contentHeight=grid.offsetTop+grid.offsetHeight+padding;
-      // Extra heading space must not disable the stack on smaller phones.
-      // Use its previous spacing only when the enlarged heading cannot fit.
-      if(smallViewport>=480&&contentHeight>smallViewport){
-        section.classList.add('mobile-glance-compact-heading');
-        contentHeight=grid.offsetTop+grid.offsetHeight+padding;
-      }
+      const contentHeight=grid.offsetTop+grid.offsetHeight+padding;
+      // Keep all heading space. Let an oversized heading scroll naturally before
+      // pinning the cards, rather than shrinking its gaps or disabling the stack.
+      const artworkTop=cards[0].querySelector('img').offsetTop;
+      const cardHeight=grid.offsetHeight+padding+Math.max(0,-artworkTop);
       // Fit against the smallest stable viewport, independently of the URL bar.
       // Cache list fallback too, so it cannot switch during the same scroll.
-      if(smallViewport<480||contentHeight>smallViewport){const failed=width;reset();failedWidth=failed;return;}
+      if(smallViewport<480||cardHeight>smallViewport){const failed=width;reset();failedWidth=failed;return;}
       failedWidth=0;
+      overflow=Math.max(0,contentHeight-smallViewport);
+      section.style.setProperty('--glance-sticky-offset',`${-overflow}px`);
       const stage=Math.ceil(inner.getBoundingClientRect().height);
       // Large viewport units keep Safari's toolbar from changing the scroll span.
       // Cache the entrance too, so reverse scrolling follows exactly the same path.
@@ -716,7 +715,7 @@ function createMobileGlanceStack(section,mobile,reduced){
       section.style.setProperty('--glance-stage-height',`${stage}px`);
       section.style.setProperty('--glance-travel',`${step*(cards.length-1)}px`);
     }
-    const progress=Math.max(0,Math.min(cards.length-1,-section.getBoundingClientRect().top/step));
+    const progress=Math.max(0,Math.min(cards.length-1,(-section.getBoundingClientRect().top-overflow)/step));
     const index=Math.min(cards.length-1,Math.floor(progress)),fraction=progress-index,eased=fraction*fraction*(3-2*fraction);
     section.dataset.cardProgress=progress.toFixed(4);
     for(let i=0;i<cards.length;i++){

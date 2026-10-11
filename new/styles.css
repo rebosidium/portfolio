@@ -111,8 +111,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .glance-illustration{top:calc(var(--glance-card-width) * -.19);left:6.5%;width:85%;height:auto;transform:none}
   .at-glance .glance-card p{max-width:none;font-size:clamp(18px,5vw,22px);line-height:1.4;text-align:center}
   .mobile-glance-stack{height:calc(max(100svh,var(--glance-stage-height)) + var(--glance-travel))}
-  .mobile-glance-stack .glance-inner{position:sticky;top:0;min-height:100lvh;overflow:visible}
-  .mobile-glance-stack.mobile-glance-compact-heading h2{height:min(170px,38.636vw,18svh)}
+  .mobile-glance-stack .glance-inner{position:sticky;top:var(--glance-sticky-offset,0px);min-height:100lvh;overflow:visible}
   .mobile-glance-stack .glance-grid{gap:0}
   .mobile-glance-stack .glance-card{grid-area:1 / 1;will-change:transform,opacity;transform-origin:50% 50%}
   .mobile-glance-text-fallback .glance-card,.mobile-glance-text-fallback .glance-card-surface{min-height:0}
