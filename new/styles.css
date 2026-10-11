@@ -86,7 +86,11 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
 .glance-card-companies p{font-size:17px;line-height:23px}
-@media(max-width:1359px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
+@media(min-width:1024px) and (max-width:1359px){
+  .glance-card-surface{height:100%;padding-top:min(240px,calc(100% - 40px));padding-inline:18px}
+  .glance-illustration{width:min(280px,100%);height:auto;aspect-ratio:1}
+}
+@media(max-width:1023px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
 .at-glance[data-content-pending] .glance-inner{visibility:hidden}
 .glance-card[data-reveal-pending],.at-glance h2[data-reveal-pending]{opacity:0;transform:translateY(28px);pointer-events:none}
 .glance-card-surface{transform:translate3d(var(--card-x,0px),var(--card-y,0px),var(--card-z,0px)) rotateX(var(--card-rotate-x,0deg)) rotateY(var(--card-rotate-y,0deg));transform-origin:50% 50%;transform-style:preserve-3d}
