@@ -433,7 +433,9 @@ function mountGlanceSection(){
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
   let assetsPrepared=false,flushCards=()=>{},artworkSwap=0,pendingArtwork='',preparedArtwork='';
   const artworkLoads=new Map();let panelImage;
-  const failedArtwork=new Set(),artworkCandidates=(section.querySelector('template')?.content.querySelector('.glance-illustration')?.srcset||'').split(',').map(candidate=>{const [url,width]=candidate.trim().split(/\s+/);return {url,width:parseInt(width,10)}}).filter(candidate=>candidate.url&&candidate.width).sort((a,b)=>a.width-b.width);
+  const failedArtwork=new Set(),artworkSources=[...section.querySelector('template')?.content.querySelectorAll('.glance-illustration')||[]];
+  const artworkKey=image=>image.dataset.artwork||'nature';
+  const artworkCandidates=new Map(artworkSources.map(image=>[artworkKey(image),(image.srcset||'').split(',').map(candidate=>{const [url,width]=candidate.trim().split(/\s+/);return {url,width:parseInt(width,10)}}).filter(candidate=>candidate.url&&candidate.width).sort((a,b)=>a.width-b.width)]));
   let desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const mobileStack=createMobileGlanceStack(section,mobile,reduced);
@@ -519,9 +521,10 @@ function mountGlanceSection(){
     }
   }
   const artworkSize=()=>mobile.matches?Math.min(400,innerWidth-40)*.85:280;
-  const artworkUrl=size=>{
+  const artworkUrl=(size,key='nature')=>{
     const pixels=size*Math.max(1,devicePixelRatio||1);
-    return (artworkCandidates.find(candidate=>candidate.width>=pixels)||artworkCandidates.at(-1))?.url;
+    const candidates=artworkCandidates.get(key)||[];
+    return (candidates.find(candidate=>candidate.width>=pixels)||candidates.at(-1))?.url;
   };
   const warmArtwork=url=>{
     if(!artworkLoads.has(url)){
@@ -533,35 +536,38 @@ function mountGlanceSection(){
     return artworkLoads.get(url).ready;
   };
   function updateArtworkSize(){
-    const images=[...section.querySelectorAll('.glance-illustration')],size=artworkSize(),url=artworkUrl(size);
-    if(!images.length||!url||failedArtwork.has(url))return;
-    if(images.every(image=>image.getAttribute('src')===url)){
-      for(const image of images)if(image.sizes!==size+'px')image.sizes=size+'px';
+    const size=artworkSize(),targets=[...section.querySelectorAll('.glance-illustration')].map(image=>({image,url:artworkUrl(size,artworkKey(image))})).filter(({url})=>url&&!failedArtwork.has(url));
+    if(!targets.length)return;
+    if(targets.every(({image,url})=>image.getAttribute('src')===url)){
+      for(const {image} of targets)if(image.sizes!==size+'px')image.sizes=size+'px';
       return;
     }
-    if(pendingArtwork===url)return;
+    const signature=targets.map(({url})=>url).join('|');
+    if(pendingArtwork===signature)return;
     const swap=++artworkSwap;
-    pendingArtwork=url;
+    pendingArtwork=signature;
     // Static artwork is independent of animation generations. Keep the current
-    // bitmap until this one selected low-priority replacement has decoded.
-    warmArtwork(url).then(()=>{
+    // bitmap until each selected low-priority replacement has decoded. A failed
+    // company illustration must not prevent the other cards from upgrading.
+    Promise.all([...new Set(targets.map(({url})=>url))].map(url=>warmArtwork(url).then(()=>url,()=>null))).then(loaded=>{
       if(swap!==artworkSwap)return;
       pendingArtwork='';
-      if(artworkUrl(artworkSize())!==url){schedule();return;}
-      for(const image of images){image.sizes=artworkSize()+'px';image.src=url;}
-    }).catch(()=>{if(swap===artworkSwap)pendingArtwork='';failedArtwork.add(url)});
+      for(const {image,url} of targets){
+        if(artworkUrl(artworkSize(),artworkKey(image))!==url){schedule();continue;}
+        if(loaded.includes(url)){image.sizes=artworkSize()+'px';image.src=url;image.style.removeProperty('visibility');}
+      }
+    });
   }
   function prepareAssets(){
-    const source=section.querySelector('template')?.content.querySelector('.glance-illustration');
-    if(!source)return;
+    if(!artworkSources.length)return;
     if(!assetsPrepared)section.dataset.assetsStartedAt=performance.now().toFixed(1);
     assetsPrepared=true;
-    // One shared Q94 bitmap starts after the initial banner image, alongside
+    // One selected Q94 bitmap per illustration starts after the banner, alongside
     // the high-priority portrait. It never joins either animation/reveal gate.
-    const url=artworkUrl(artworkSize())||source.src;
-    if(preparedArtwork!==url){
-      preparedArtwork=url;
-      warmArtwork(url).then(()=>{section.dataset.artworkReadyAt=performance.now().toFixed(1)},()=>{});
+    const urls=[...new Set(artworkSources.map(source=>artworkUrl(artworkSize(),artworkKey(source))||source.src))],signature=urls.join('|');
+    if(preparedArtwork!==signature){
+      preparedArtwork=signature;
+      Promise.all(urls.map(warmArtwork)).then(()=>{section.dataset.artworkReadyAt=performance.now().toFixed(1)},()=>{});
     }
     if(!panelImage){panelImage=new Image();panelImage.fetchPriority='low';panelImage.src='assets/glance-panel.svg?v=aaa98db3584e';}
   }
@@ -573,9 +579,9 @@ function mountGlanceSection(){
     if(!section.dataset.assetsStartedAt)section.dataset.assetsStartedAt=performance.now().toFixed(1);
     if(mobile.matches)section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
-    // Lock one selected URL before mounting; all four cards share its cache.
+    // Lock one selected URL per illustration before mounting; repeated art shares its cache.
     for(const image of fragment.querySelectorAll('.glance-illustration')){
-      image.removeAttribute('srcset');image.sizes=artworkSize()+'px';image.src=artworkUrl(artworkSize())||image.src;
+      image.removeAttribute('srcset');image.sizes=artworkSize()+'px';image.src=artworkUrl(artworkSize(),artworkKey(image))||image.src;
     }
     for(const image of fragment.querySelectorAll('img'))image.loading='eager';
     // Mount the stable panel/title without waiting for image IO. Pending cards
