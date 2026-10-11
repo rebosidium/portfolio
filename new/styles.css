@@ -73,7 +73,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .intro-screen{position:sticky;top:0;z-index:0;min-height:calc(100svh - 2px);padding-bottom:85px}
 .intro-screen{transform:translateY(var(--intro-scroll-shift,0px))}
 .intro-screen[data-covered]{visibility:hidden}
-.at-glance{position:relative;z-index:1;min-height:762px;overflow-anchor:none}
+.at-glance{position:relative;z-index:1;min-height:762px;overflow-anchor:none;background:#fff;border-radius:60px 60px 0 0}
 /* Nine-slice the original Figma panel, keeping its 60px circular corners intact. */
 .glance-panel{position:absolute;inset:0;pointer-events:none;border:60px solid transparent;border-image-source:url('assets/glance-panel.svg?v=aaa98db3584e');border-image-slice:60 fill;border-image-width:60px;border-image-repeat:stretch}
 .glance-inner{position:relative;max-width:1440px;margin:auto;padding:0 var(--gutter) 133px}

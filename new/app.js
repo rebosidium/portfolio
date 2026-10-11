@@ -381,6 +381,7 @@ function mountGlanceSection(){
   const animations=new Set(),cardMotion=new Map();
   let frame=0,screenReady=false,player=null,mounted=false,assetsLoading=false,contentReady=false,observer=null;
   let ownsPose=false,appliedPose=null,lastGeneration=-1;
+  let assetsPrepared=false,flushCards=()=>{};const warmedImages=[];
   let mobileResourcesReady=false,mobilePreparing=false,desktopWatching=false;
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const mobileStack=createMobileGlanceStack(section,mobile,reduced);
@@ -399,13 +400,19 @@ function mountGlanceSection(){
     desktopWatching=true;
     const heading=section.querySelector('h2'),cards=[...section.querySelectorAll('.glance-card')];
     if(!reduced.matches&&typeof IntersectionObserver==='function'){
+      const visibleCards=new Set();
+      flushCards=()=>{
+        if(!contentReady)return;
+        const waiting=cards.filter(card=>visibleCards.has(card)&&!card.dataset.revealed);
+        waiting.forEach((card,index)=>reveal(card,60+index*200));
+      };
       observer=new IntersectionObserver(entries=>{
-        const visible=entries.filter(e=>e.isIntersecting&&e.intersectionRatio>=(e.target===heading ? 0.12 : 0.22)).map(e=>e.target);
-        const visibleCards=cards.filter(card=>visible.includes(card));
-        for(const element of visible){
-          const index=visibleCards.indexOf(element);
-          reveal(element,index<0?0:60+index*200);
+        for(const entry of entries){
+          const visible=entry.isIntersecting&&entry.intersectionRatio>=(entry.target===heading ? .12 : .22);
+          if(entry.target===heading){if(visible)reveal(heading);}
+          else if(visible)visibleCards.add(entry.target);else visibleCards.delete(entry.target);
         }
+        flushCards();
       },{threshold:[.12,.22]});
       for(const e of [heading,...cards])if(!e.dataset.revealed){e.dataset.revealPending='true';observer.observe(e);}
     }else for(const e of [heading,...cards])reveal(e);
@@ -456,6 +463,24 @@ function mountGlanceSection(){
       });
     }
   }
+  function updateArtworkSize(){
+    if(mobile.matches&&!mobileResourcesReady)return;
+    const size=mobile.matches?Math.min(400,innerWidth-40)*.85:280;
+    for(const image of section.querySelectorAll('.glance-illustration'))if(image.sizes!==size+'px')image.sizes=size+'px';
+  }
+  function prepareAssets(){
+    if(assetsPrepared||mobile.matches)return;
+    const source=section.querySelector('template')?.content.querySelector('.glance-illustration');
+    if(!source)return;
+    assetsPrepared=true;section.dataset.assetsStartedAt=performance.now().toFixed(1);
+    // Start one responsive, low-priority image after the portrait's welcome frames
+    // are prepared. The four cards reuse the same browser-selected cached resource.
+    const image=new Image();image.fetchPriority='low';image.decoding='async';
+    if(source.sizes)image.sizes=source.sizes;
+    if(source.srcset)image.srcset=source.srcset;
+    image.src=source.src;image.decode().catch(()=>{});warmedImages.push(image);
+    const panel=new Image();panel.fetchPriority='low';panel.src='assets/glance-panel.svg?v=aaa98db3584e';warmedImages.push(panel);
+  }
   async function prepareMobileResources(){
     if(mobilePreparing||mobileResourcesReady||!mobile.matches||!screenReady)return;
     mobilePreparing=true;
@@ -465,7 +490,7 @@ function mountGlanceSection(){
       const icons=await window.featureIconsReady;
       const encoded=await icons?.preloadEncoded();
       await Promise.allSettled([...document.querySelectorAll('.intro-screen img')].map(image=>image.decode?.()));
-      // Let the shared queue release its final completed request before starting the PNG.
+      // Let the shared queue release its final completed request before secondary artwork.
       await new Promise(resolve=>requestAnimationFrame(resolve));
       if(!mobile.matches)return;
       const state=player?.loadingState;
@@ -487,32 +512,40 @@ function mountGlanceSection(){
     if(mobile.matches&&!mobileResourcesReady){prepareMobileResources();return;}
     // Start no secondary resources during a current portrait-quality download.
     const state=player?.loadingState;
-    if(state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
+    if(mobile.matches&&state&&!reduced.matches&&!state.error&&(!state.ready||!state.allReady||state.activeDownloads))return;
     const template=section.querySelector('template');
     if(!template){if(section.querySelector('.glance-inner')){mounted=true;contentReady=true;watchContent();}return;}
-    assetsLoading=true;section.dataset.glanceState='assets';section.dataset.assetsStartedAt=performance.now().toFixed(1);
-    section.dataset.contentPending='true';
+    prepareAssets();assetsLoading=true;section.dataset.glanceState='assets';
+    if(!section.dataset.assetsStartedAt)section.dataset.assetsStartedAt=performance.now().toFixed(1);
+    if(mobile.matches)section.dataset.contentPending='true';
     const fragment=template.content.cloneNode(true);
     for(const image of fragment.querySelectorAll('img'))image.loading='eager';
-    section.replaceChildren(fragment);mounted=true;
+    // Mount the stable panel/title without waiting for image IO. Pending cards
+    // reveal in their usual order once the illustrations have decoded.
+    if(mobile.matches)for(const image of fragment.querySelectorAll('.glance-illustration'))image.sizes=(Math.min(400,innerWidth-40)*.85)+'px';
+    if(!mobile.matches&&!reduced.matches&&typeof IntersectionObserver==='function')
+      for(const element of fragment.querySelectorAll('h2,.glance-card'))element.dataset.revealPending='true';
+    section.replaceChildren(fragment);mounted=true;section.inert=mobile.matches;
+    section.dataset.mountedAt=performance.now().toFixed(1);if(!mobile.matches)watchContent();schedule();
     const images=[...section.querySelectorAll('img')];
     const decoded=Promise.all(images.map(image=>image.decode().catch(()=>{image.style.visibility='hidden'})));
     await Promise.race([decoded,new Promise(resolve=>setTimeout(resolve,10000))]);
     contentReady=true;section.dataset.glanceState='ready';section.dataset.readyAt=performance.now().toFixed(1);
-    section.removeAttribute('data-content-pending');section.removeAttribute('aria-busy');section.inert=false;
-    watchContent();schedule();
+    section.removeAttribute('aria-busy');section.removeAttribute('data-content-pending');section.inert=false;
+    warmedImages.length=0;watchContent();if(!mobile.matches)flushCards();schedule();
   }
   function update(){
     frame=0;
     if(mobile.matches){
       intro.style.removeProperty('--intro-scroll-shift');intro.inert=false;intro.removeAttribute('data-covered');intro.removeAttribute('aria-hidden');player?.clearDesktopCoverPose?.();ownsPose=false;appliedPose=null;
-      if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]'))e.removeAttribute('data-reveal-pending');desktopWatching=false;}
+      if(desktopWatching){observer?.disconnect();for(const animation of animations)animation.cancel();animations.clear();for(const e of section.querySelectorAll('[data-reveal-pending]')){e.removeAttribute('data-reveal-pending');e.dataset.revealed='true';}flushCards=()=>{};desktopWatching=false;}
+      if(screenReady&&!mobileResourcesReady)prepareMobileResources();
       if(screenReady)loadContent();
-      if(contentReady)mobileStack.update();
+      if(contentReady&&mobileResourcesReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();mobileStack.update();}
       return;
     }
     mobileStack.reset();
-    if(contentReady)watchContent();
+    if(contentReady){section.removeAttribute('data-content-pending');section.inert=false;updateArtworkSize();watchContent();}
     if(screenReady)loadContent();
     // Move the banner and header together instead of fading any glass ancestor.
     const shift=screenReady&&!reduced.matches?Math.min(Math.max(0,scrollY),promo.getBoundingClientRect().height):0;
@@ -537,23 +570,25 @@ function mountGlanceSection(){
   window.addEventListener('pointerup',()=>{appliedPose=null;schedule();setTimeout(schedule,700)},{passive:true});
   window.addEventListener('pointercancel',()=>{appliedPose=null;schedule()},{passive:true});
   if(typeof ResizeObserver==='function'){const sizes=new ResizeObserver(schedule);for(const element of [promo,portrait,section])sizes.observe(element);}
-  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
+  mobile.addEventListener('change',()=>{for(const card of cardMotion.keys())clearCard(card);mobileResourcesReady=false;if(mobile.matches&&mounted)section.dataset.contentPending='true';appliedPose=null;schedule()});
   reduced.addEventListener('change',()=>{
     if(reduced.matches){
       for(const animation of animations)animation.cancel();animations.clear();observer?.disconnect();
-      for(const e of section.querySelectorAll('[data-reveal-pending]'))e.removeAttribute('data-reveal-pending');
+      for(const e of section.querySelectorAll('[data-reveal-pending]')){e.removeAttribute('data-reveal-pending');e.dataset.revealed='true';}
+      flushCards=()=>{};
       for(const card of section.querySelectorAll('.glance-card'))clearCard(card);
     }
     appliedPose=null;schedule();
   });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)for(const card of cardMotion.keys())clearCard(card);appliedPose=null;schedule()});
+  window.portraitReady.then(()=>{player=window.portraitPlayer;prepareAssets()});
   Promise.all([window.startScreenReady,window.portraitReady]).then(async()=>{
     section.dataset.firstScreenAt=performance.now().toFixed(1);
     player=window.portraitPlayer;
     await player?.introFinished;
     screenReady=true;section.dataset.introFinishedAt=performance.now().toFixed(1);
     player?.subscribeLoading(state=>{
-      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;if(!mounted)mobileResourcesReady=false;}
+      if(lastGeneration!==state.generation||!state.ready){lastGeneration=state.generation;appliedPose=null;mobileResourcesReady=false;}
       schedule();
     });
     schedule();
