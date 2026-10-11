@@ -520,7 +520,7 @@ function mountGlanceSection(){
       });
     }
   }
-  const artworkSize=()=>mobile.matches?Math.min(400,innerWidth-40)*.85:280;
+  const artworkSize=()=>mobile.matches?Math.min(400,innerWidth-40)*.68:224;
   const artworkUrl=(size,key='nature')=>{
     const pixels=size*Math.max(1,devicePixelRatio||1);
     const candidates=artworkCandidates.get(key)||[];
@@ -711,7 +711,7 @@ function createMobileGlanceStack(section,mobile,reduced){
       // Large viewport units keep Safari's toolbar from changing the scroll span.
       // Cache the entrance too, so reverse scrolling follows exactly the same path.
       step=Math.max(stage*.7,grid.offsetHeight*.9);
-      entrance=stage-grid.offsetTop+cards[0].querySelector('img').offsetWidth*76/340+24;
+      entrance=stage-grid.offsetTop+Math.max(0,-cards[0].querySelector('img').offsetTop)+24;
       section.style.setProperty('--glance-stage-height',`${stage}px`);
       section.style.setProperty('--glance-travel',`${step*(cards.length-1)}px`);
     }

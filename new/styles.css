@@ -82,13 +82,13 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .glance-card{position:relative;min-width:0;min-height:400px;perspective:900px}
 .glance-card-surface{position:relative;min-height:400px;padding:240px 11px 27px 26px;background:var(--canvas);border-radius:24px;color:#000}
 .glance-card-companies{top:-4px}
-.glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%) translate3d(var(--illustration-x,0px),var(--illustration-y,0px),var(--illustration-z,0px)) scale(var(--illustration-scale,1));width:280px;height:280px;object-fit:contain}
+.glance-illustration{position:absolute;top:-52px;left:50%;transform:translateX(-50%) translate3d(var(--illustration-x,0px),var(--illustration-y,0px),var(--illustration-z,0px)) scale(var(--illustration-scale,1));width:224px;height:224px;object-fit:contain}
 .glance-card p{margin:0;width:100%;max-width:269px;font-size:18px;font-weight:500;line-height:25px;overflow-wrap:break-word}
 .glance-card strong{font-weight:700}
 .glance-card-companies p{font-size:17px;line-height:23px}
 @media(min-width:1024px) and (max-width:1359px){
   .glance-card-surface{height:100%;padding-top:min(240px,calc(100% - 40px));padding-inline:18px}
-  .glance-illustration{width:min(280px,100%);height:auto;aspect-ratio:1}
+  .glance-illustration{width:min(224px,80%);height:auto;aspect-ratio:1}
 }
 @media(max-width:1023px){.at-glance{min-height:1262px}.glance-grid{grid-template-columns:repeat(2,306px);row-gap:100px}}
 .at-glance[data-content-pending] .glance-inner{visibility:hidden}
@@ -112,7 +112,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .glance-card,.glance-card-surface{min-height:calc(var(--glance-card-width) * 1.1575)}
   .glance-card-companies{top:0}
   .glance-card-surface{height:100%;padding:calc(var(--glance-card-width) * .65) 26px 27px;transform:none;transition:none}
-  .glance-illustration{top:calc(var(--glance-card-width) * -.19);left:6.5%;width:85%;height:auto;transform:none}
+  .glance-illustration{top:calc(var(--glance-card-width) * -.19);left:15%;width:68%;height:auto;transform:none}
   .at-glance .glance-card p{max-width:none;font-size:clamp(18px,5vw,22px);line-height:1.4;text-align:center}
   .mobile-glance-stack{height:calc(max(100svh,var(--glance-stage-height)) + var(--glance-travel))}
   .mobile-glance-stack .glance-inner{position:sticky;top:var(--glance-sticky-offset,0px);min-height:100lvh;overflow:visible}
