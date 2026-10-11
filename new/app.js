@@ -35,9 +35,9 @@
     root.classList.remove('motion-pending');
   };
   const variants = [
-    {id:'audit',color:'#8e6dd0',image:'assets/audit.png?v=47213b1faa6f',text:'Find opportunities to improve your product with a design audit',cta:'Book an Audit',subject:'Design audit',gap:15},
-    {id:'work',color:'#0b9bf7',image:'assets/open-to-work.png?v=379829166b85',text:'Open to new design roles and exciting projects',mobileLine:'and exciting projects',cta:'Let’s Talk',subject:'Design role or project',gap:15},
-    {id:'consulting',color:'#59bf61',image:'assets/consulting.png?v=c955eb126e6c',text:'Design consulting & mentoring for individuals and teams',mobileLine:'for individuals and teams',cta:'Book a Consultation',subject:'Design consulting',gap:23}
+    {id:'audit',color:'#8e6dd0',image:'assets/audit.png?v=1ad2e1e55429',text:'Find opportunities to improve your product with a design audit',cta:'Book an Audit',subject:'Design audit',gap:15},
+    {id:'work',color:'#0b9bf7',image:'assets/open-to-work.png?v=192adc9190e3',text:'Open to new design roles and exciting projects',mobileLine:'and exciting projects',cta:'Let’s Talk',subject:'Design role or project',gap:15},
+    {id:'consulting',color:'#59bf61',image:'assets/consulting.png?v=ace28e945cd9',text:'Design consulting & mentoring for individuals and teams',mobileLine:'for individuals and teams',cta:'Book a Consultation',subject:'Design consulting',gap:23}
   ];
   let mobilePromoResources;
   window.preloadMobilePromoResources = () => mobilePromoResources ||= Promise.allSettled(variants.map(async variant => {
