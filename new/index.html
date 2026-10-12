@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="107a6a8449a9">
+<html lang="en" data-build="95e73ba76dca">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -61,8 +61,8 @@
     window.portraitAndroid = /Android/i.test(navigator.userAgent)
       && matchMedia('(pointer: coarse)').matches;
     window.portraitModuleURL = window.portraitAndroid
-      ? '/new/portrait-spin-android.js?v=ddffcb425386'
-      : '/new/portrait-spin.js?v=c02d38248226';
+      ? '/new/portrait-spin-android.js?v=1b3998c88cbf'
+      : '/new/portrait-spin.js?v=65ea00150436';
     const portraitPreload = document.createElement('link');
     portraitPreload.rel = 'modulepreload';
     portraitPreload.href = window.portraitModuleURL;
@@ -138,7 +138,7 @@
     .features .feature-art{display:flex;align-items:center;justify-content:center}
     .features .feature-art>img{width:80%;height:80%;object-fit:contain}
   </style>
-  <script type="module" src="/new/portrait-boot.js?v=ba32c211e545" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
+  <script type="module" src="/new/portrait-boot.js?v=8b3df330cc63" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
   <script defer fetchpriority="low" src="/new/vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="/new/vendor/SplitText.min.js?v=419f7027a5f0"></script>
   <script defer src="/new/ready-promos.js?v=406e1483835b"></script>
