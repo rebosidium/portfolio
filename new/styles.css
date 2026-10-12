@@ -193,8 +193,8 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .experience h2{height:200px;margin:0;display:grid;place-items:center;font-family:Lora,Georgia,serif;font-weight:500;font-size:48px;line-height:1.4;text-align:center;color:var(--ink)}
 .experience-heading-mobile{display:none}
 .experience-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px}
-.experience-card{min-width:0;min-height:814px;padding-bottom:48px;display:flex;flex-direction:column;gap:49px;color:#080c0d}
-.experience-cover{width:100%;aspect-ratio:416 / 427;flex:none;background:#e9dfd9;border-radius:24px}
+.experience-card{min-width:0;min-height:605px;padding-bottom:48px;display:flex;flex-direction:column;gap:28px;color:#080c0d}
+.experience-cover{width:100%;height:250px;flex:none;background:#e9dfd9;border-radius:24px}
 .experience-copy{display:flex;flex-direction:column;gap:14px}
 .experience-copy h3,.experience-copy p{margin:0;overflow-wrap:break-word}
 .experience-copy h3{font-size:34px;font-weight:600;line-height:normal}
@@ -207,8 +207,8 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .experience-heading-desktop{display:none}
   .experience-heading-mobile{display:block}
   .experience-grid{grid-template-columns:minmax(0,1fr)}
-  .experience-card{min-height:539px;gap:44px;padding-bottom:47px}
-  .experience-cover{aspect-ratio:400 / 246}
+  .experience-card{min-height:539px;gap:28px;padding-bottom:47px}
+  .experience-cover{height:auto;aspect-ratio:400 / 246}
   .experience-copy{gap:8px}
   .experience-copy h3{font-size:26px}
   .experience-meta,.experience-description{font-size:18px}
