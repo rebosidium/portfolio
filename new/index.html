@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="8102fd17fff2">
+<html lang="en" data-build="34e568e42a80">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -20,6 +20,15 @@
         capture_exceptions: false,
         enable_recording_console_log: false,
         disable_surveys: true,
+        before_send: event => {
+          if (event?.properties) Object.assign(event.properties, {
+            layout: matchMedia('(max-width: 1023px) and (pointer: coarse)').matches ? 'mobile' : 'desktop',
+            site_path: '/new/', site_build: document.documentElement.dataset.build,
+            analytics_version: 1,
+            analytics_test: new URLSearchParams(location.search).get('analytics_test') === '1'
+          });
+          return event;
+        },
         session_recording: {
           maskAllInputs: true,
           recordCrossOriginIframes: false,
@@ -144,6 +153,7 @@
   <script defer src="/new/ready-promos.js?v=406e1483835b"></script>
   <script defer fetchpriority="low" src="/new/feature-reveal.js?v=a85d3154e326"></script>
   <script defer src="/new/app.js?v=b6f2b809f3fc" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
+  <script defer fetchpriority="low" src="/new/analytics.js?v=7d5db6403264"></script>
   <script defer fetchpriority="low" src="/new/updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">
@@ -161,11 +171,11 @@
     <a class="identity" href="/new/">Dmitry Rybalka</a>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false"><img class="menu-icon" src="/new/assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="/new/assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
     <nav id="main-navigation" aria-label="Main navigation">
-      <a href="/#experience">Work</a>
-      <a href="mailto:rebosidium@gmail.com">Email</a>
-      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer">Resume</a>
-      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+      <a data-analytics-link="work" href="/#experience">Work</a>
+      <a data-analytics-link="email" href="mailto:rebosidium@gmail.com">Email</a>
+      <a data-analytics-link="linkedin" href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a data-analytics-link="resume" href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer">Resume</a>
+      <a class="mobile-only" data-analytics-link="telegram" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
   <div class="intro-content">
@@ -186,25 +196,25 @@
     <div class="glance-inner">
       <h2 id="glance-title" tabindex="-1" data-node-id="124:499">At a glance</h2>
       <div class="glance-grid">
-        <article class="glance-card glance-card-companies" data-node-id="120:116">
+        <article class="glance-card glance-card-companies" data-analytics-card="companies" data-node-id="120:116">
           <div class="glance-card-surface">
           <img class="glance-illustration" data-artwork="badge" src="/new/assets/flat-badge.webp?v=8e0783c702b7" srcset="/new/assets/flat-badge.webp?v=8e0783c702b7 1200w" sizes="280px" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p>Worked with <strong>Yandex, Raiffeisen Group, Larixon Classifieds, Medesk,</strong> and <strong>GdeMaterial,</strong> among others — designing products for millions of users</p>
           </div>
         </article>
-        <article class="glance-card" data-node-id="120:119">
+        <article class="glance-card" data-analytics-card="ai_tools" data-node-id="120:119">
           <div class="glance-card-surface">
           <img class="glance-illustration" data-artwork="robot" src="/new/assets/flat-robot.webp?v=2a2df34b9156" srcset="/new/assets/flat-robot.webp?v=2a2df34b9156 1200w" sizes="280px" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p>AI tools in the workflow — <strong>ChatGPT, Claude, OpenRouter,</strong> and <strong>Higgsfield</strong> — support research, creative exploration, and automation</p>
           </div>
         </article>
-        <article class="glance-card" data-node-id="120:122">
+        <article class="glance-card" data-analytics-card="industries" data-node-id="120:122">
           <div class="glance-card-surface">
           <img class="glance-illustration" data-artwork="briefcase" src="/new/assets/flat-briefcase.webp?v=0e04aa619c29" srcset="/new/assets/flat-briefcase.webp?v=0e04aa619c29 1200w" sizes="280px" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p>Designed B2B and B2C products across <strong>fintech, marketplaces, classifieds, healthtech,</strong> and leasing</p>
           </div>
         </article>
-        <article class="glance-card" data-node-id="120:125">
+        <article class="glance-card" data-analytics-card="geography" data-node-id="120:125">
           <div class="glance-card-surface">
           <img class="glance-illustration" data-artwork="satellite" src="/new/assets/flat-satellite.webp?v=8b5bcebc3b61" srcset="/new/assets/flat-satellite.webp?v=8b5bcebc3b61 1200w" sizes="280px" width="280" height="280" loading="lazy" fetchpriority="low" decoding="async" alt="">
           <p>International projects span <strong>Russia, Cyprus, Mongolia, the US, the UK, and Tajikistan,</strong> and include a healthcare platform used in 35 countries</p>
