@@ -197,7 +197,7 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
 .experience-cover{width:100%;aspect-ratio:416 / 427;flex:none;background:#e9dfd9;border-radius:24px}
 .experience-copy{display:flex;flex-direction:column;gap:14px}
 .experience-copy h3,.experience-copy p{margin:0;overflow-wrap:break-word}
-.experience-copy h3{font-size:24px;font-weight:600;line-height:normal}
+.experience-copy h3{font-size:34px;font-weight:600;line-height:normal}
 .experience-meta{display:flex;flex-wrap:wrap;column-gap:6px;font-size:18px;font-weight:500;line-height:1.4;color:rgba(8,12,13,.5)}
 .experience-meta span:last-child{white-space:nowrap}
 .experience-description{font-size:18px;font-weight:500;line-height:1.4}
@@ -210,6 +210,6 @@ h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:clamp(40px,calc(48px
   .experience-card{min-height:539px;gap:44px;padding-bottom:47px}
   .experience-cover{aspect-ratio:400 / 246}
   .experience-copy{gap:8px}
-  .experience-copy h3{font-size:18px}
+  .experience-copy h3{font-size:26px}
   .experience-meta,.experience-description{font-size:18px}
 }
