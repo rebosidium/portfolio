@@ -1,5 +1,0 @@
-.promo.ready-promos{isolation:isolate}
-.ready-promo{position:absolute;inset:0;height:64px;opacity:.001;pointer-events:none}
-.ready-promo:not([inert]){pointer-events:auto}
-.ready-promos .promo-glass::before{content:none}
-.ready-promos .promo-close{z-index:4}
