@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="fb02e8a04cd3">
+<html lang="en" data-build="8e5ac7faa6dd">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,19 @@
   <link rel="preload" as="font" href="/new/assets/lora-medium.ttf?v=9bfe70fd1d70" type="font/ttf" crossorigin>
   <link rel="modulepreload" href="/new/vendor/components.js?v=968d5372ad45">
   <link rel="modulepreload" href="/new/vendor/liquid-glass.js">
-  <link rel="modulepreload" href="/new/portrait-spin.js?v=c02d38248226">
+  <script>
+    // A coarse Android pointer alone receives the proven Redmi player.
+    // iPhone/iPad and desktop keep the existing /new/ module, including its quality.
+    window.testPortraitAndroid = /Android/i.test(navigator.userAgent)
+      && matchMedia('(pointer: coarse)').matches;
+    window.testPortraitModuleURL = window.testPortraitAndroid
+      ? '/test/portrait-spin.js?v=ddffcb425386'
+      : '/new/portrait-spin.js?v=c02d38248226';
+    const portraitPreload = document.createElement('link');
+    portraitPreload.rel = 'modulepreload';
+    portraitPreload.href = window.testPortraitModuleURL;
+    document.head.append(portraitPreload);
+  </script>
   <link rel="preload" as="fetch" href="/new/assets/seedance-manifest.json?v=c6815470ab3d" crossorigin>
   <script>
     window.mobileLayout = matchMedia('(max-width: 1023px) and (pointer: coarse)');
@@ -97,7 +109,7 @@
     .features .feature-art{display:flex;align-items:center;justify-content:center}
     .features .feature-art>img{width:80%;height:80%;object-fit:contain}
   </style>
-  <script type="module" src="/test/portrait-boot.js?v=44331e53d50d" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
+  <script type="module" src="/test/portrait-boot.js?v=fe0bf279c272" onerror="window.resolvePortraitReady(false);window.resolveFeatureIconsReady(null)"></script>
   <script defer fetchpriority="low" src="/new/vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer fetchpriority="low" src="/new/vendor/SplitText.min.js?v=419f7027a5f0"></script>
   <script defer src="/new/ready-promos.js?v=406e1483835b"></script>

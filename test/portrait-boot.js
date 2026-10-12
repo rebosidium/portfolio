@@ -1,4 +1,8 @@
-import {mountSeedancePortrait} from '/new/portrait-spin.js?v=c02d38248226';
+const originalPlayerURL = '/new/portrait-spin.js?v=c02d38248226';
+// Preload and execution share the same decision. A failed Android module falls
+// back to the original player without leaving the page's readiness gate pending.
+const {mountSeedancePortrait} = await import(window.testPortraitModuleURL || originalPlayerURL)
+  .catch(() => import(originalPlayerURL));
 
 // This module starts independently of GSAP, LiquidGlass and the other page images.
 const player=mountSeedancePortrait(document.querySelector('.portrait'),{interaction:'cursor',manifestURL:'/new/assets/seedance-manifest.json?v=c6815470ab3d',mobileLayout:window.mobileLayout});
