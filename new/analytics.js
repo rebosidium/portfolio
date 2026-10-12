@@ -2,21 +2,69 @@
   'use strict';
   // Optional observer: never participates in the page's startup promises.
   if (!['dmitryrybalka.com', 'www.dmitryrybalka.com'].includes(location.hostname)
-    || !/^\/new(?:\/|$)/.test(location.pathname)
-    || typeof posthogTrackingEnabled === 'undefined' || !posthogTrackingEnabled
-    || !window.posthog?.capture) return;
+    || !/^\/new(?:\/|$)/.test(location.pathname)) return;
+  const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
+    && typeof window.posthog?.capture === 'function';
+  const clarityActive = typeof clarityTrackingEnabled !== 'undefined' && clarityTrackingEnabled
+    && typeof window.clarity === 'function';
+  if (!posthogActive && !clarityActive) return;
 
   const mobile = window.mobileLayout || matchMedia('(max-width: 1023px) and (pointer: coarse)');
   const qa = new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: '/new/',
     site_build: document.documentElement.dataset.build, analytics_version: 1, analytics_test: qa});
+  const clarityCall = (...args) => {
+    try {window.clarity(...args); return true;}
+    catch {return false; /* Each provider stays independent of the page and the other SDK. */}
+  };
+  const clarityTags = new Set();
+  const clarityTag = (key, value) => {
+    const text = String(value), pair = key + ':' + text;
+    if (!clarityTags.has(pair) && clarityCall('set', key, text)) clarityTags.add(pair);
+  };
+  const syncClarityContext = properties => {
+    if (!clarityActive) return;
+    for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test'])
+      clarityTag(key, properties[key]);
+    clarityTag('clarity_events_version', 1);
+  };
+  // Clarity tags belong to a session, not to an individual event. Encode the
+  // bounded action dimensions in event names so rotating variants cannot mix.
+  const clarityEvent = (name, properties) => {
+    if (['promo_viewed', 'promo_clicked', 'promo_dismissed'].includes(name)
+      && ['audit', 'work', 'consulting'].includes(properties.variant)) return name + '_' + properties.variant;
+    if (name === 'contact_clicked' && ['email', 'telegram'].includes(properties.channel)
+      && ['promo', 'desktop_navigation', 'mobile_menu'].includes(properties.placement)) {
+      const suffix = properties.placement === 'promo' && ['audit', 'work', 'consulting'].includes(properties.variant)
+        ? '_' + properties.variant : '';
+      return name + '_' + properties.channel + '_' + properties.placement + suffix;
+    }
+    if (name === 'menu_link_clicked' && ['work', 'email', 'linkedin', 'resume', 'telegram'].includes(properties.destination))
+      return name + '_' + properties.destination;
+    if (name === 'card_viewed' && ['companies', 'ai_tools', 'industries', 'geography'].includes(properties.card))
+      return name + '_' + properties.card;
+    if (name === 'section_viewed' && properties.section === 'at_glance') return name + '_at_glance';
+    return name;
+  };
   const capture = (name, properties = {}, immediate = false) => {
-    try {
-      window.posthog.capture(name, {...context(), ...properties},
+    const common = context();
+    if (posthogActive) try {
+      window.posthog.capture(name, {...common, ...properties},
         immediate ? {transport: 'sendBeacon', send_instantly: true} : undefined);
     } catch { /* Tracking cannot interrupt navigation or animation. */ }
+    if (clarityActive) {
+      syncClarityContext(common);
+      if (name === 'first_screen_ready') {
+        clarityTag('first_screen_mode', properties.ready_mode);
+        clarityTag('first_screen_band', properties.ready_ms < 3000 ? 'under_3s'
+          : properties.ready_ms <= 6000 ? '3_to_6s' : 'over_6s');
+      }
+      clarityCall('event', clarityEvent(name, properties));
+    }
   };
+  syncClarityContext(context());
+  mobile.addEventListener?.('change', () => syncClarityContext(context()));
   const promo = document.querySelector('.promo');
   const variant = element => element?.closest('.ready-promo')?.dataset.variant
     || promo?.dataset.variant || (['audit', 'work', 'consulting'].includes(new URLSearchParams(location.search).get('banner'))

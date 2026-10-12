@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="34e568e42a80">
+<html lang="en" data-build="897d505dfa27">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -46,8 +46,9 @@
   <meta name="description" content="15+ years of hands-on product design, AI-assisted prototyping and design leadership.">
   <base href="/new/">
   <script type="text/javascript" data-analytics="microsoft-clarity">
-    // Keep local previews and automated QA out of the production project.
-    if (['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname)) {
+    // Local previews do not track. Production QA is tagged by analytics.js.
+    const clarityTrackingEnabled = true;
+    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && /^\/new(?:\/|$)/.test(location.pathname)) {
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -153,7 +154,7 @@
   <script defer src="/new/ready-promos.js?v=406e1483835b"></script>
   <script defer fetchpriority="low" src="/new/feature-reveal.js?v=a85d3154e326"></script>
   <script defer src="/new/app.js?v=b6f2b809f3fc" onerror="window.portraitReady.then(() => {window.releasePageFallback();window.releaseGlanceFallback()})"></script>
-  <script defer fetchpriority="low" src="/new/analytics.js?v=7d5db6403264"></script>
+  <script defer fetchpriority="low" src="/new/analytics.js?v=8f80c0e4197d"></script>
   <script defer fetchpriority="low" src="/new/updates.js?v=18acb038ef35"></script>
 </head>
 <body class="with-glance">
