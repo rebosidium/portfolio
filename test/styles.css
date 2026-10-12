@@ -1,0 +1,22 @@
+/* Flat illustration cards: match Figma 134:398 / 139:747 while retaining motion. */
+.glance-inner{padding-bottom:111px}
+.glance-grid{margin-top:75px}
+.glance-card{--flat-art-size:280px;min-height:376px}
+.glance-card-companies{top:0}
+.glance-card-surface{min-height:376px;padding:calc(var(--flat-art-size) * .6321428571 + 27px) 26px 27px}
+.glance-illustration{width:var(--flat-art-size);height:var(--flat-art-size);top:calc(var(--flat-art-size) * -.3678571429)}
+.glance-card p,.glance-card-companies p{max-width:none;font-size:18px;line-height:1.4}
+@media(min-width:1024px){
+  .glance-card{--flat-art-size:min(280px,calc((min(1440px,100vw) - var(--gutter) * 2 - 72px) / 4 - 26px))}
+}
+@media(max-width:1023px) and (pointer:coarse){
+  .at-glance{--flat-heading-height:calc(min(170px,38.636vw,18svh) * 1.5 - 23.8px)}
+  .glance-inner{padding-bottom:calc(var(--glance-card-width) * .16)}
+  /* Keep the approved +50% heading air; retain the design's 30px glyph→art gap. */
+  .glance-grid{margin-top:calc(var(--glance-card-width) * .2725 - var(--flat-heading-height) / 2 + 53.8px)}
+  .glance-card,.glance-card-surface{min-height:calc(var(--glance-card-width) * 1.16)}
+  .glance-card-surface{padding:calc(var(--glance-card-width) * .7275 - 32px) 26px 27px}
+  .glance-illustration{top:calc(var(--glance-card-width) * -.2725);left:26px;width:calc(100% - 52px);height:auto}
+  .at-glance .glance-card p{font-size:clamp(18px,5vw,22px);line-height:1.4}
+  .mobile-glance-text-fallback .glance-card-surface{padding:26px;min-height:0}
+}
