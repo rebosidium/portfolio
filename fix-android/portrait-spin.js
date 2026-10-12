@@ -20,7 +20,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   const coarsePointer=window.matchMedia('(pointer: coarse)');
-  canvas.dataset.variant='touch-responsive';
+  canvas.dataset.variant='touch-responsive-raw-bitmap';
   const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
   const FOLLOW_MAX_ANGLE=49,FOLLOW_DAMPING_MS=95,FOLLOW_DEAD_ZONE=8,FOLLOW_SOFT_RADIUS=1.5;
   let cursorPoint=null,followVisible=true,followPaused=false;
@@ -160,6 +160,12 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   async function decodeBlob(blob,size){
     if(typeof createImageBitmap==='function'){
+      // Touch keeps the original decoded bitmap; resize only when drawing it.
+      // The fully prepared welcome turn and desktop decoder remain unchanged.
+      if(decodeLimited()&&introConsumed&&!introFrames.size){
+        const bitmap=await createImageBitmap(blob);
+        return {drawable:bitmap,width:bitmap.width,height:bitmap.height,dispose:()=>bitmap.close()};
+      }
       let bitmap;
       try{bitmap=await createImageBitmap(blob,{resizeWidth:size[0],resizeHeight:size[1],resizeQuality:'high'})}
       catch{bitmap=await createImageBitmap(blob)}
@@ -311,6 +317,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(canvas.width!==renderSize[0]||canvas.height!==renderSize[1]){canvas.width=renderSize[0];canvas.height=renderSize[1]}
     const resource=entry.resource,scale=Math.min(canvas.width/resource.width,canvas.height/resource.height);
     const w=resource.width*scale,h=resource.height*scale;
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
     ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(resource.drawable,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
     stage.classList.add('portrait-rendered');canvas.dataset.posterDrawn='true';
     displayedIndex=entry.index;entry.used=++clock;selectionAngle=wrap(angle,360);
