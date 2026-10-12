@@ -12,6 +12,7 @@
   let desiredOpen = false;
   let transition = null;
   let navigationFocus = null;
+  let pendingAnchor = null;
   document.addEventListener('focusin',event => {navigationFocus = header.contains(event.target) ? event.target : null;});
   const clearAnimation = () => {
     for (const element of [nav,...links,toggle]) {
@@ -48,6 +49,13 @@
       scrollPosition = null;
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
       window.portraitPlayer?.returnFromMenu?.();
+      if (pendingAnchor) {
+        const {target,hash} = pendingAnchor;
+        pendingAnchor = null;
+        history.pushState(null,'',hash);
+        target.scrollIntoView();
+        target.querySelector('[tabindex="-1"]')?.focus({preventScroll:true});
+      }
     }
   };
   const setOpen = (open,returnFocus = false,instant = false) => {
@@ -93,7 +101,16 @@
     }
   };
   toggle.addEventListener('click',() => setOpen(!desiredOpen,true));
-  nav.addEventListener('click',event => {if (event.target.closest('a')) setOpen(false,true);});
+  nav.addEventListener('click',event => {
+    const link = event.target.closest('a');
+    if (!link) return;
+    const target = link.hash && link.origin === location.origin && link.pathname === location.pathname ? document.getElementById(link.hash.slice(1)) : null;
+    if (target && desiredOpen && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      pendingAnchor = {target,hash:link.hash};
+    }
+    setOpen(false,true);
+  });
   document.addEventListener('pointerdown',event => {if (!header.contains(event.target)) setOpen(false);});
   document.addEventListener('keydown',event => {
     if (toggle.getAttribute('aria-expanded') !== 'true') return;
