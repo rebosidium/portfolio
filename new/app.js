@@ -668,7 +668,7 @@ function mountGlanceSection(){
 // Native scrolling drives a mobile stack; no scroll interception or timed card rotation.
 function createMobileGlanceStack(section,mobile,reduced){
   let active=false,width=0,step=0,entrance=0,overflow=0,failedWidth=0;
-  const properties=['opacity','transform','visibility','pointer-events'];
+  const properties=['opacity','transform','visibility','pointer-events','--glance-art-scale'];
   function reset(){
     failedWidth=0;
     if(!active)return;
@@ -723,6 +723,8 @@ function createMobileGlanceStack(section,mobile,reduced){
       const opacity=current?1-eased:next?1:0;
       const y=current?-18*eased:next?entrance*(1-eased):entrance;
       const scale=current?1-.08*eased:1;
+      // Follow the same reversible scroll easing as the outgoing card's fade.
+      cards[i].style.setProperty('--glance-art-scale',(current?1-.1*eased:i<index?.9:1).toFixed(5));
       cards[i].style.opacity=String(opacity);
       cards[i].style.transform=`translateY(${y.toFixed(3)}px) scale(${scale.toFixed(5)})`;
       cards[i].style.visibility=shown?'visible':'hidden';
