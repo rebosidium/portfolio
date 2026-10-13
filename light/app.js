@@ -143,10 +143,13 @@
     const workLink = document.querySelector('.header nav a[href="#selected-works"]');
     const heading = document.querySelector('#works-title');
     const workCard = document.querySelector('.work-card');
-    const parts = [...document.querySelectorAll('#works-title,.work-copy > h3,.work-meta,.work-description,.work-details')];
-    const artwork = document.querySelector('.work-artwork');
-    const image = artwork.querySelector('.work-image');
-    const imageError = artwork.querySelector('.work-image-error');
+    const panels = [...document.querySelectorAll('.works-screen')].map(element => ({
+      element,card:element.querySelector('.work-card'),
+      parts:[...element.querySelectorAll('h2,.work-heading > h3,.work-meta,.work-description,.work-details')],
+      artwork:element.querySelector('.work-artwork'),image:element.querySelector('.work-image'),
+      imageError:element.querySelector('.work-image-error'),imageReady:false,imageFailed:false,imagePending:null,imageTween:null,artworkStartedAt:0,descriptionStartedAt:0,start:0,height:0
+    }));
+    const parts = panels.flatMap(panel => panel.parts);
     // Mobile browser toolbars resize visualViewport during a gesture. Keep scene
     // geometry tied to the stable small viewport; real window resizes still update it.
     const viewportProbe = document.createElement('div');
@@ -158,9 +161,9 @@
     const sceneOffset = () => mobile.matches ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
-    let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
+    let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY;
-    let imageReady = false,imageFailed = false,focusAtEnd = false,parked = false,resizeWheelUntil = 0;
+    let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
       else for (const element of Array.isArray(elements) ? elements : [elements]) {
@@ -177,38 +180,107 @@
       const tween = gsap.to(pending,{autoAlpha:1,y:0,duration:.7,stagger:.07,delay,ease:'power2.out',onComplete:() => partTweens.delete(tween)});
       partTweens.add(tween);
     }
-    function revealArtwork() {
-      if ((!enhanced && !mobileOverlap) || (!mobileOverlap && progress <= 0) || (!imageReady && !imageFailed) || revealed.has(artwork)) return;
+    function revealArtwork(panel = panels[0]) {
+      const {artwork,imageReady,imageFailed} = panel;
+      if ((!enhanced && !mobileOverlap) || (!mobileOverlap && (progress <= 0 || panel !== panels[0])) || (!imageReady && !imageFailed) || revealed.has(artwork)) return;
       const bounds = artwork.getBoundingClientRect();
       if (mobileOverlap) {
         if (document.hidden || root.classList.contains('mobile-menu-open')) return;
         const viewport = window.visualViewport;
         const top = viewport?.offsetTop || 0,bottom = top + (viewport?.height || height);
+        // A direct link/fast gesture may have already passed the image. Restore it
+        // offscreen so the following copy can appear without waiting for a new pass.
+        if (bounds.bottom<=top) {revealed.add(artwork);panel.artworkStartedAt=performance.now()-1150;set(artwork,{autoAlpha:1,y:0});return;}
         const visible = Math.min(bounds.bottom,bottom) - Math.max(bounds.top,top);
         if (visible < Math.min(bounds.height * .12,48)) return;
       } else if (bounds.top >= height * .94) return;
       revealed.add(artwork);
+      panel.artworkStartedAt = performance.now();
       if (!window.gsap || document.hidden) {set(artwork,{autoAlpha:1,y:0});return;}
-      imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:mobileOverlap ? 1.15 : .8,ease:mobileOverlap ? 'sine.inOut' : 'power2.out'});
+      panel.imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:mobileOverlap ? 1.15 : .8,ease:mobileOverlap ? 'sine.inOut' : 'power2.out'});
     }
-    function loadImage(eager = false) {
+    function loadImage(eager = false,panel = panels[0]) {
+      const {artwork,image,imageError} = panel;
       if (eager) image.loading = 'eager';
-      if (imagePending) return imagePending;
-      artwork.dataset.imageState = 'loading';image.src = image.dataset.src;
-      const ready = image.decode ? image.decode() : new Promise((resolve,reject) => {
-        image.addEventListener('load',resolve,{once:true});image.addEventListener('error',reject,{once:true});
+      if (panel.imagePending) return panel.imagePending;
+      artwork.dataset.imageState = 'loading';
+      const loaded = new Promise((resolve,reject) => {
+        const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
+        const onLoad = () => {clear();resolve();};
+        const onError = () => {clear();reject(new Error('Work preview unavailable'));};
+        image.addEventListener('load',onLoad);image.addEventListener('error',onError);
+        image.src=image.dataset.src;
+        if (image.complete && image.naturalWidth>0) onLoad();
       });
-      imagePending = ready.then(() => {
-        imageReady = true;artwork.dataset.imageState = 'ready';revealArtwork();
+      // WebKit may reject decode() before a lazy image starts its request. Decode
+      // after the real load event; keep a successfully loaded preview on decode-only errors.
+      const ready = loaded.then(()=>image.decode?.().catch(error=>{if (!image.naturalWidth) throw error;}));
+      panel.imagePending = ready.then(() => {
+        panel.imageReady = true;artwork.dataset.imageState = 'ready';revealArtwork(panel);scheduleScroll();
       }).catch(() => {
-        imageFailed = true;artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');imageError.hidden = false;revealArtwork();
+        panel.imageFailed = true;artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');imageError.hidden = false;revealArtwork(panel);scheduleScroll();
       });
-      return imagePending;
+      return panel.imagePending;
     }
     function resetReveals() {
-      partTweens.forEach(tween => tween.kill());partTweens.clear();imageTween?.kill();revealed.clear();
+      partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel => panel.imageTween?.kill());revealed.clear();
       set(parts,{autoAlpha:0,y:14});
-      set(artwork,{autoAlpha:0,y:mobile.matches ? 0 : 14});
+      set(panels.map(panel => panel.artwork),{autoAlpha:0,y:mobile.matches ? 0 : 14});
+      panels.forEach(panel=>{panel.artworkStartedAt=0;panel.descriptionStartedAt=0;});
+    }
+    function cardMiddleInPanel(panel) {
+      let middle = panel.card.offsetHeight / 2;
+      for (let element=panel.card;element && element!==panel.element;element=element.offsetParent) middle += element.offsetTop;
+      return middle;
+    }
+    function measureWorkPanels(base) {
+      let start = base + intro.offsetHeight;
+      panels.forEach((panel,index) => {
+        panel.start = start;panel.height = parseFloat(getComputedStyle(panel.element).height) || panel.element.offsetHeight;start += panel.height;
+        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,height-panel.height)}px`);
+        panel.element.style.setProperty('--work-layer',String(index+2));
+      });
+    }
+    function readingPose(y,previousHeight) {
+      for (let index=1;index<panels.length;index++) {
+        const start = panels[index].start;
+        if (y>=start-previousHeight && y<start) return {index,cover:(y-start+previousHeight)/previousHeight};
+      }
+      for (let index=panels.length-1;index>=0;index--) {
+        if (y>=panels[index].start) return {index,offset:y-panels[index].start};
+      }
+      return null;
+    }
+    function paintWorkPanels() {
+      let visibleIndex = 0,backgroundIndex = 0;
+      panels.forEach((panel,index) => {
+        const next = panels[index+1];
+        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+height)/height)) : 0;
+        // Sticky layout supplies the movement; scroll only controls the outgoing layer.
+        set(panel.element,{autoAlpha:1-covering,scale:1-.025*covering,y:0});
+        panel.element.inert = covering>=.999;
+        panel.element.setAttribute('aria-hidden',String(covering>=.999));
+        panel.element.style.pointerEvents = covering>=.999 ? 'none' : 'auto';
+        panel.element.dataset.coverProgress = covering.toFixed(4);
+        if (mobilePaintedY>=panel.start-height/2) visibleIndex=index;
+        if (mobilePaintedY>=panel.start) backgroundIndex=index;
+        const bounds = panel.element.getBoundingClientRect();
+        if (bounds.top<height && bounds.bottom>0 && covering<.999) {
+          loadImage(true,panel);
+          const sectionTitle=panel.element.querySelector('h2'),cardTitle=panel.element.querySelector('h3'),meta=panel.element.querySelector('.work-meta');
+          if (sectionTitle && sectionTitle.getBoundingClientRect().top<height*.9) reveal([sectionTitle]);
+          if (cardTitle.getBoundingClientRect().top<height*.9) reveal([cardTitle,meta]);
+          revealArtwork(panel);
+          const description=panel.element.querySelector('.work-description'),button=panel.element.querySelector('.work-details');
+          if (revealed.has(panel.artwork) && description.getBoundingClientRect().top<height*.94 && !revealed.has(description)) {
+            const delay=Math.max(0,(panel.artworkStartedAt+420-performance.now())/1000);
+            panel.descriptionStartedAt=performance.now()+delay*1000;reveal([description],delay);
+          }
+          if (revealed.has(description) && button.getBoundingClientRect().top<height*.97) reveal([button],Math.max(0,(panel.descriptionStartedAt+140-performance.now())/1000));
+        }
+      });
+      root.dataset.workSceneIndex = String(visibleIndex);
+      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F9F5F5';
     }
     function parkPortrait() {
       if (!parked && enhanced && progress >= .999) parked = !!window.portraitPlayer?.setDesktopCoverPose?.(0);
@@ -237,11 +309,16 @@
       root.dataset.sceneState = !started || complete ? 'settled' : 'overlap';
       const worksVisible = mobileOverlap ? works.getBoundingClientRect().top < (window.visualViewport?.offsetTop || 0) + height : started;
       if (!started) releasePortrait();
-      if (!worksVisible) {if (revealed.size) resetReveals();}
+      if (mobileOverlap) {
+        paintWorkPanels();
+        if (!worksVisible && revealed.size) resetReveals();
+        if (!started) document.body.style.removeProperty('background-color');
+        if (complete && focusAtEnd) {focusAtEnd=false;heading.focus({preventScroll:true});}
+      } else if (!worksVisible) {if (revealed.size) resetReveals();}
       else {
         loadImage(true);
         if (heading.getBoundingClientRect().top < height * .9) reveal([parts[0]]);
-        if (document.querySelector('.work-card').getBoundingClientRect().top < height * .88) reveal(parts.slice(1));
+        if (workCard.getBoundingClientRect().top < height * .88) reveal(panels[0].parts.slice(1));
         revealArtwork();
         if (complete) {
           if (!mobileOverlap) parkPortrait();
@@ -251,15 +328,19 @@
       if (mobileOverlap) window.dispatchEvent(new Event('mobile:scene-painted'));
     }
     function nativeLayout() {
-      scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();imageTween?.kill();revealed.clear();releasePortrait();
+      scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel=>panel.imageTween?.kill());revealed.clear();releasePortrait();
       root.classList.remove('scene-enhanced','mobile-overlap');enhanced = false;mobileOverlap = false;
-      for (const element of [intro,works,...parts,artwork]) {
+      for (const element of [intro,...panels.map(panel=>panel.element),...parts,...panels.map(panel=>panel.artwork)]) {
         if (window.gsap) gsap.set(element,{clearProps:'transform,opacity,visibility'});
         else {element.style.removeProperty('transform');element.style.removeProperty('opacity');element.style.removeProperty('visibility');}
       }
-      intro.inert = false;works.inert = false;intro.removeAttribute('aria-hidden');works.removeAttribute('aria-hidden');
-      intro.style.removeProperty('pointer-events');works.style.removeProperty('pointer-events');
-      root.dataset.sceneState = 'native';if (!mobile.matches) loadImage();
+      for (const element of [intro,...panels.map(panel=>panel.element)]) {
+        element.inert=false;element.removeAttribute('aria-hidden');element.style.removeProperty('pointer-events');
+      }
+      document.body.style.removeProperty('background-color');
+      root.dataset.sceneState = 'native';
+      if (mobile.matches && portraitIntroFinished) panels.forEach(panel=>loadImage(false,panel));
+      else if (!mobile.matches) loadImage();
     }
     function measureViewport() {
       resizeFrame = 0;
@@ -270,6 +351,8 @@
       // Browsers can clamp scrollY before resize fires; preserve the last painted reading pose.
       const viewportChanged = wasMobile && (Math.abs(oldHeight - nextHeight) > .5 || Math.abs(viewportOffset - offset) > .5 || viewportWidth !== window.innerWidth);
       const previousY = viewportChanged ? mobilePaintedY : currentY;
+      const previousPose = wasMobile && oldHeight>0 ? readingPose(previousY,oldHeight) : null;
+      const previousPanels = panels.map(panel=>({start:panel.start,height:panel.height}));
       const oldProgress = wasMobile ? Math.max(0,Math.min(1,(previousY - oldStart) / Math.max(1,oldTravel)))
         : !wasEnhanced && oldHeight > 0 ? Number(works.getBoundingClientRect().top <= oldHeight * .5) : progress;
       progress = oldProgress;
@@ -291,17 +374,25 @@
         mobileTravel = Math.max(1,Math.min(height,height / 2 + introHeight - buttonCenter));
         const read = Math.max(0,introHeight - mobileTravel);
         mobileStart = currentY + flow.getBoundingClientRect().top + read - offset;
-        const cardMiddle = workCard.getBoundingClientRect().top - works.getBoundingClientRect().top + workCard.offsetHeight / 2;
+        measureWorkPanels(currentY+flow.getBoundingClientRect().top);
+        const panelsChanged = panels.some((panel,index)=>Math.abs(panel.start-previousPanels[index].start)>.5 || Math.abs(panel.height-previousPanels[index].height)>.5);
+        const cardMiddle = cardMiddleInPanel(panels[0]);
         mobileRecedeStart = Math.min(1,Math.max(0,(mobileTravel + cardMiddle - height) / mobileTravel));
         root.style.setProperty('--mobile-intro-top',`${offset - read}px`);
         root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneStart = mobileStart.toFixed(1);root.dataset.sceneTravel = mobileTravel.toFixed(1);
         root.dataset.sceneRest = '0';root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
-        if (!wasMobile && (oldProgress > 0 || location.hash === '#selected-works')) {
+        if (!wasMobile && oldProgress>0 && (wasEnhanced || location.hash==='#selected-works' && currentY<mobileStart)) {
           window.scrollTo(0,mobileStart + mobileTravel * (location.hash === '#selected-works' ? 1 : oldProgress));
-        } else if (wasMobile && (viewportChanged || Math.abs(oldStart - mobileStart) > .5 || Math.abs(oldTravel - mobileTravel) > .5)) {
+        } else if (wasMobile && (viewportChanged || panelsChanged || Math.abs(oldStart - mobileStart) > .5 || Math.abs(oldTravel - mobileTravel) > .5)) {
           // Keep the panel progress or the already-read Works offset across browser chrome changes.
           if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + mobileTravel * oldProgress);
-          else if (oldProgress >= 1) window.scrollTo(0,mobileStart + mobileTravel + Math.max(0,previousY - oldStart - oldTravel));
+          else if (oldProgress >= 1) {
+            const destination = previousPose ? 'cover' in previousPose
+              ? panels[previousPose.index].start-height+height*previousPose.cover
+              : panels[previousPose.index].start+previousPose.offset
+              : mobileStart+mobileTravel+Math.max(0,previousY-oldStart-oldTravel);
+            window.scrollTo(0,destination);
+          }
         }
         paintScene();return;
       }
@@ -309,7 +400,8 @@
       if (!fits) {
         const showWorks = oldProgress >= .5 || location.hash === '#selected-works';
         if (enhanced || mobileOverlap) {
-          nativeLayout();window.scrollTo(0,showWorks ? works.offsetTop : wasMobile ? Math.min(currentY,Math.max(0,intro.offsetHeight - height)) : 0);
+          const keepMobileReading = mobileOverlap && mobile.matches;
+          nativeLayout();window.scrollTo(0,keepMobileReading ? currentY : showWorks ? works.offsetTop : wasMobile ? Math.min(currentY,Math.max(0,intro.offsetHeight - height)) : 0);
         }
         else if (!root.dataset.sceneState) nativeLayout();
         root.dataset.sceneView = showWorks ? 'works' : 'intro';
@@ -357,7 +449,10 @@
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open') || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       event.preventDefault();if (location.hash !== '#selected-works') history.pushState(null,'','#selected-works');goToWorks(true);
     });
-    works.addEventListener('focusin',event => {if ((enhanced || mobileOverlap) && progress < .999 && event.target !== heading) goToWorks();});
+    panels.forEach(panel=>panel.element.addEventListener('focusin',event => {
+      if ((enhanced || mobileOverlap) && progress<.999 && event.target!==heading && panel===panels[0]) goToWorks();
+      else if (mobileOverlap) scheduleScroll();
+    }));
     const syncLocation = () => {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
       if (location.hash === '#selected-works') goToWorks(true);
@@ -377,14 +472,18 @@
     mobile.addEventListener('change',measureViewport);
     document.addEventListener('visibilitychange',() => {
       if (document.hidden) {
-        scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();imageTween?.kill();
+        scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel=>panel.imageTween?.kill());
         set([...revealed],{autoAlpha:1,y:0});
       } else scheduleMeasure();
     });
-    if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);observer.observe(works);}
+    if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);panels.forEach(panel=>observer.observe(panel.element));}
     document.fonts?.ready.then(scheduleMeasure);
     Promise.resolve(window.mobileNavigationReady).then(scheduleMeasure);
-    Promise.resolve(window.portraitReady).then(() => window.portraitPlayer?.introFinished).then(() => {parkPortrait();loadImage();});
+    Promise.resolve(window.portraitReady).then(() => window.portraitPlayer?.introFinished).then(() => {
+      portraitIntroFinished = true;
+      parkPortrait();
+      if (mobile.matches && !mobileOverlap) panels.forEach(panel=>loadImage(false,panel));else loadImage();
+    });
     measureViewport();
   }
 
