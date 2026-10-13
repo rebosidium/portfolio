@@ -149,7 +149,8 @@
     const imageError = artwork.querySelector('.work-image-error');
     const revealed = new Set(),partTweens = new Set();
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
-    let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
+    let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
+    let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY;
     let imageReady = false,imageFailed = false,focusAtEnd = false,parked = false,resizeWheelUntil = 0;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
@@ -168,7 +169,7 @@
       partTweens.add(tween);
     }
     function revealArtwork() {
-      if ((!enhanced && !mobileOverlap) || progress <= 0 || (!imageReady && !imageFailed) || artwork.getBoundingClientRect().top >= height * .94 || revealed.has(artwork)) return;
+      if ((!enhanced && !mobileOverlap) || (!mobileOverlap && progress <= 0) || (!imageReady && !imageFailed) || artwork.getBoundingClientRect().top >= height * .94 || revealed.has(artwork)) return;
       revealed.add(artwork);
       if (!window.gsap || document.hidden) {set(artwork,{autoAlpha:1,y:0});return;}
       imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:.8,ease:'power2.out'});
@@ -199,7 +200,7 @@
     }
     function paintScene() {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
-      if (mobileOverlap) progress = Math.max(0,Math.min(1,(window.scrollY - mobileStart) / Math.max(1,height)));
+      if (mobileOverlap) {mobilePaintedY = window.scrollY;progress = Math.max(0,Math.min(1,(mobilePaintedY - mobileStart) / Math.max(1,mobileTravel)));}
       else {
         const maximum = Math.max(1,Math.min(travel,document.documentElement.scrollHeight - document.documentElement.clientHeight));
         progress = Math.max(0,Math.min(1,window.scrollY / maximum));
@@ -216,7 +217,9 @@
       root.dataset.sceneView = started ? 'works' : 'intro';
       root.dataset.sceneProgress = progress.toFixed(4);
       root.dataset.sceneState = !started || complete ? 'settled' : 'overlap';
-      if (!started) {if (revealed.size) resetReveals();releasePortrait();}
+      const worksVisible = mobileOverlap ? works.getBoundingClientRect().top < (window.visualViewport?.offsetTop || 0) + height : started;
+      if (!started) releasePortrait();
+      if (!worksVisible) {if (revealed.size) resetReveals();}
       else {
         loadImage(true);
         if (heading.getBoundingClientRect().top < height * .9) reveal([parts[0]]);
@@ -246,12 +249,16 @@
       const viewport = window.visualViewport;
       const nextHeight = viewport?.height || window.innerHeight;
       const offset = viewport?.offsetTop || 0;
-      const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,currentY = window.scrollY;
-      const oldProgress = wasMobile ? Math.max(0,Math.min(1,(currentY - oldStart) / Math.max(1,oldHeight)))
+      const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,currentY = window.scrollY;
+      // Browsers can clamp scrollY before resize fires; preserve the last painted reading pose.
+      const viewportChanged = wasMobile && (Math.abs(oldHeight - nextHeight) > .5 || Math.abs(viewportOffset - offset) > .5 || viewportWidth !== window.innerWidth);
+      const previousY = viewportChanged ? mobilePaintedY : currentY;
+      const oldProgress = wasMobile ? Math.max(0,Math.min(1,(previousY - oldStart) / Math.max(1,oldTravel)))
         : !wasEnhanced && oldHeight > 0 ? Number(works.getBoundingClientRect().top <= oldHeight * .5) : progress;
       progress = oldProgress;
       const contentHeight = hero.offsetHeight,headerTop = nextHeight < 480 ? 16 : 43;
       height = nextHeight;travel = Math.max(1,Math.round(height * .85));
+      viewportOffset = offset;viewportWidth = window.innerWidth;
       root.style.setProperty('--scene-height',`${height}px`);root.style.setProperty('--scene-offset',`${offset}px`);
       root.style.setProperty('--scroll-travel',`${travel}px`);root.style.setProperty('--intro-content-height',`${contentHeight}px`);
       root.style.setProperty('--header-top',`${headerTop}px`);
@@ -259,23 +266,25 @@
       root.dataset.sceneHeight = height.toFixed(1);root.dataset.sceneOffset = offset.toFixed(1);stage.dataset.viewportHeight = height.toFixed(1);
       if (mobile.matches && !reduced.matches && window.gsap && root.dataset.mobileNavReady === 'true') {
         if (!wasMobile) {nativeLayout();mobileOverlap = true;root.classList.add('mobile-overlap');resetReveals();}
-        // Let the CTA scroll toward the middle before the foreground can cover it.
-        const rest = Math.round(Math.min(height * .42,Math.max(height * .28,workCard.offsetHeight / 2)));
-        root.style.setProperty('--mobile-intro-rest',`${rest}px`);
         const introHeight = intro.offsetHeight;
-        const read = Math.max(0,introHeight - height);
-        mobileStart = currentY + flow.getBoundingClientRect().top + read;
+        // Read naturally until the CTA reaches mid-window, with Works already visible below.
+        // Offset geometry ignores the intro/entrance transforms and includes copy fallback content.
+        let buttonCenter = agentButton.offsetHeight / 2;
+        for (let element = agentButton;element && element !== intro;element = element.offsetParent) buttonCenter += element.offsetTop;
+        mobileTravel = Math.max(1,Math.min(height,height / 2 + introHeight - buttonCenter));
+        const read = Math.max(0,introHeight - mobileTravel);
+        mobileStart = currentY + flow.getBoundingClientRect().top + read - offset;
         const cardMiddle = workCard.getBoundingClientRect().top - works.getBoundingClientRect().top + workCard.offsetHeight / 2;
-        mobileRecedeStart = Math.min(1,Math.max(0,cardMiddle / height));
+        mobileRecedeStart = Math.min(1,Math.max(0,(mobileTravel + cardMiddle - height) / mobileTravel));
         root.style.setProperty('--mobile-intro-top',`${offset - read}px`);
-        root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneTravel = height.toFixed(1);
-        root.dataset.sceneRest = String(rest);root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
+        root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneStart = mobileStart.toFixed(1);root.dataset.sceneTravel = mobileTravel.toFixed(1);
+        root.dataset.sceneRest = '0';root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
         if (!wasMobile && (oldProgress > 0 || location.hash === '#selected-works')) {
-          window.scrollTo(0,mobileStart + height * (location.hash === '#selected-works' ? 1 : oldProgress));
-        } else if (wasMobile && (Math.abs(oldHeight - height) > .5 || Math.abs(oldStart - mobileStart) > .5)) {
+          window.scrollTo(0,mobileStart + mobileTravel * (location.hash === '#selected-works' ? 1 : oldProgress));
+        } else if (wasMobile && (viewportChanged || Math.abs(oldStart - mobileStart) > .5 || Math.abs(oldTravel - mobileTravel) > .5)) {
           // Keep the panel progress or the already-read Works offset across browser chrome changes.
-          if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + height * oldProgress);
-          else if (oldProgress >= 1) window.scrollTo(0,mobileStart + height + Math.max(0,currentY - oldStart - oldHeight));
+          if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + mobileTravel * oldProgress);
+          else if (oldProgress >= 1) window.scrollTo(0,mobileStart + mobileTravel + Math.max(0,previousY - oldStart - oldTravel));
         }
         paintScene();return;
       }
@@ -301,7 +310,7 @@
     function readScroll() {
       scrollFrame = 0;
       const currentHeight = window.visualViewport?.height || window.innerHeight;
-      if (Math.abs(currentHeight - height) > .5) {if (resizeFrame) cancelAnimationFrame(resizeFrame);measureViewport();}
+      if (Math.abs(currentHeight - height) > .5 || Math.abs((window.visualViewport?.offsetTop || 0) - viewportOffset) > .5) {if (resizeFrame) cancelAnimationFrame(resizeFrame);measureViewport();}
       else paintScene();
     }
     function scheduleScroll() {if (!scrollFrame) scrollFrame = requestAnimationFrame(readScroll);}
@@ -309,7 +318,7 @@
       if (!enhanced && !mobileOverlap) return;
       loadImage(true);focusAtEnd = focus;
       scrollTween?.kill();
-      const destination = mobileOverlap ? mobileStart + height : travel;
+      const destination = mobileOverlap ? mobileStart + mobileTravel : travel;
       if (!window.gsap) {window.scrollTo(0,destination);paintScene();return;}
       const proxy = {y:window.scrollY};
       scrollTween = gsap.to(proxy,{y:destination,duration:1.05,ease:'power2.inOut',onUpdate:() => {window.scrollTo(0,proxy.y);paintScene();},onComplete:() => {paintScene();if (focusAtEnd) {focusAtEnd = false;heading.focus({preventScroll:true});}}});
