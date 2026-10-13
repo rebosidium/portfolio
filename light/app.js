@@ -199,9 +199,10 @@
       const started = progress > .001,complete = progress >= .999;
       set(intro,{autoAlpha:complete ? 0 : 1 - .62 * progress,scale:1 - .045 * progress,y:-18 * progress});
       set(works,{autoAlpha:started ? 1 : 0,y:height * (1 - progress)});
-      intro.inert = started;works.inert = !started;
-      intro.setAttribute('aria-hidden',String(started));works.setAttribute('aria-hidden',String(!started));
-      intro.style.pointerEvents = started ? 'none' : 'auto';works.style.pointerEvents = started ? 'auto' : 'none';
+      // The foreground panel intercepts covered areas; exposed controls stay usable.
+      intro.inert = complete;works.inert = !started;
+      intro.setAttribute('aria-hidden',String(complete));works.setAttribute('aria-hidden',String(!started));
+      intro.style.pointerEvents = complete ? 'none' : 'auto';works.style.pointerEvents = started ? 'auto' : 'none';
       root.dataset.sceneView = started ? 'works' : 'intro';
       root.dataset.sceneProgress = progress.toFixed(4);
       root.dataset.sceneState = !started || complete ? 'settled' : 'overlap';
