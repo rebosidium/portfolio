@@ -44,12 +44,15 @@
     iconInstantFrame = 0;
     delete toggle.dataset.iconInstant;
     if (toggle.dataset.menuIcon === iconTarget && !iconSwapTimer) return;
+    // Reparenting the open header resets CSS transitions; commit the current pose first.
+    void getComputedStyle(toggle.querySelector('.menu-icon')).opacity;
+    void getComputedStyle(toggle.querySelector('.menu-close-icon')).opacity;
     // Hide the outgoing glyph completely before allowing the new one to appear.
     toggle.dataset.menuIcon = 'switching';
     if (!iconSwapTimer) iconSwapTimer = setTimeout(() => {
       iconSwapTimer = null;
       toggle.dataset.menuIcon = iconTarget;
-    },110);
+    },250);
   };
   const headerGeometry = ['--menu-header-top','--menu-header-left','--menu-header-right','--menu-header-height','--menu-identity-left','--menu-identity-top','--menu-identity-scale','--menu-identity-opacity','--menu-toggle-top','--menu-toggle-right','--menu-toggle-width','--menu-toggle-height','--menu-icon-scale'];
   const mountMenuHeader = () => {
@@ -157,7 +160,6 @@
     // Reopening cancels the Work navigation attached to an abandoned close.
     if (open) pendingAnchor = null;
     desiredOpen = open;
-    setIcon(open,instant);
     transition?.kill();
     transition = null;
     const animate = window.gsap && !reduced.matches && mobile.matches && !instant;
@@ -167,6 +169,7 @@
       const wasVisible = header.classList.contains('menu-open');
       nav.inert = false;
       setVisible(true);
+      setIcon(true,instant);
       if (returnFocus) toggle.focus({preventScroll:true});
       if (!animate) {clearAnimation();return;}
       gsap.killTweensOf(links);
@@ -185,7 +188,8 @@
         clearAnimation();
         setVisible(false,returnFocus);
       };
-      if (!animate) {finish();return;}
+      if (!animate) {finish();setIcon(false,instant);return;}
+      setIcon(false,instant);
       nav.inert = true;
       window.portraitPlayer?.prepareMenuPose?.();
       // Let every link leave in reverse order before fading the full-screen panel.
