@@ -21,6 +21,36 @@
   let pendingAnchor = null;
   let headerMarker = null;
   let scrollbarWidth = 0;
+  let iconTarget = 'menu';
+  let iconSwapTimer = null;
+  let iconInstantFrame = 0;
+  const settleIcon = () => {
+    clearTimeout(iconSwapTimer);
+    iconSwapTimer = null;
+    cancelAnimationFrame(iconInstantFrame);
+    toggle.dataset.iconInstant = 'true';
+    toggle.dataset.menuIcon = iconTarget;
+    // Commit both visibility gates before restoring their normal transitions.
+    void getComputedStyle(toggle.querySelector('.menu-icon')).opacity;
+    iconInstantFrame = requestAnimationFrame(() => {
+      delete toggle.dataset.iconInstant;
+      iconInstantFrame = 0;
+    });
+  };
+  const setIcon = (open,instant = false) => {
+    iconTarget = open ? 'close' : 'menu';
+    if (instant || reduced.matches || !mobile.matches || document.hidden) {settleIcon();return;}
+    cancelAnimationFrame(iconInstantFrame);
+    iconInstantFrame = 0;
+    delete toggle.dataset.iconInstant;
+    if (toggle.dataset.menuIcon === iconTarget && !iconSwapTimer) return;
+    // Hide the outgoing glyph completely before allowing the new one to appear.
+    toggle.dataset.menuIcon = 'switching';
+    if (!iconSwapTimer) iconSwapTimer = setTimeout(() => {
+      iconSwapTimer = null;
+      toggle.dataset.menuIcon = iconTarget;
+    },110);
+  };
   const headerGeometry = ['--menu-header-top','--menu-header-left','--menu-header-right','--menu-header-height','--menu-identity-left','--menu-identity-top','--menu-identity-scale','--menu-identity-opacity','--menu-toggle-top','--menu-toggle-right','--menu-toggle-width','--menu-toggle-height','--menu-icon-scale'];
   const mountMenuHeader = () => {
     const rect = header.getBoundingClientRect();
@@ -117,6 +147,7 @@
     transition?.kill();
     transition = null;
     nav.inert = false;
+    settleIcon();
     clearAnimation();
     if (!desiredOpen) setVisible(false,true);
   };
@@ -126,6 +157,7 @@
     // Reopening cancels the Work navigation attached to an abandoned close.
     if (open) pendingAnchor = null;
     desiredOpen = open;
+    setIcon(open,instant);
     transition?.kill();
     transition = null;
     const animate = window.gsap && !reduced.matches && mobile.matches && !instant;
@@ -201,16 +233,22 @@
     if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links[0].focus({preventScroll:true});
   });
   reduced.addEventListener('change',() => {
-    if (reduced.matches && transition) settleTransition();
+    if (reduced.matches) {
+      settleIcon();
+      if (transition) settleTransition();
+    }
   });
   window.addEventListener('resize',() => {
     updateLockedWidth();
+    settleIcon();
     if (transition) settleTransition();
   },{passive:true});
+  document.addEventListener('visibilitychange',() => {if (document.hidden) settleIcon();});
   const moveFocus = mobile.matches && root.classList.contains('mobile-navigation-fallback') && nav.contains(document.activeElement);
   clearTimeout(window.mobileNavigationDeadline);
   root.classList.remove('mobile-navigation-fallback');
   root.dataset.mobileNavReady = 'true';
+  setIcon(false,true);
   if (moveFocus) toggle.focus({preventScroll:true});
   window.resolveMobileNavigationReady?.(true);
 })();

@@ -142,13 +142,14 @@
     const hero = document.querySelector('.hero');
     const workLink = document.querySelector('.header nav a[href="#selected-works"]');
     const heading = document.querySelector('#works-title');
+    const workCard = document.querySelector('.work-card');
     const parts = [...document.querySelectorAll('#works-title,.work-copy > h3,.work-meta,.work-description,.work-details')];
     const artwork = document.querySelector('.work-artwork');
     const image = artwork.querySelector('.work-image');
     const imageError = artwork.querySelector('.work-image-error');
     const revealed = new Set(),partTweens = new Set();
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
-    let enhanced = false,mobileOverlap = false,mobileStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
+    let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
     let imageReady = false,imageFailed = false,focusAtEnd = false,parked = false,resizeWheelUntil = 0;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
@@ -204,7 +205,9 @@
         progress = Math.max(0,Math.min(1,window.scrollY / maximum));
       }
       const started = progress > .001,complete = progress >= .999;
-      set(intro,{autoAlpha:complete ? 0 : 1 - .62 * progress,scale:1 - .045 * progress,y:-18 * progress});
+      const recede = mobileOverlap ? mobileRecedeStart >= 1 ? 0 : Math.max(0,Math.min(1,(progress - mobileRecedeStart) / (1 - mobileRecedeStart))) : progress;
+      set(intro,{autoAlpha:complete ? 0 : 1 - .62 * recede,scale:1 - .045 * recede,y:-18 * recede});
+      if (mobileOverlap) root.dataset.sceneRecedeProgress = recede.toFixed(4);
       if (!mobileOverlap) set(works,{autoAlpha:started ? 1 : 0,y:height * (1 - progress)});
       // The foreground panel intercepts covered areas; exposed controls stay usable.
       intro.inert = complete;works.inert = !mobileOverlap && !started;
@@ -256,11 +259,17 @@
       root.dataset.sceneHeight = height.toFixed(1);root.dataset.sceneOffset = offset.toFixed(1);stage.dataset.viewportHeight = height.toFixed(1);
       if (mobile.matches && !reduced.matches && window.gsap && root.dataset.mobileNavReady === 'true') {
         if (!wasMobile) {nativeLayout();mobileOverlap = true;root.classList.add('mobile-overlap');resetReveals();}
+        // Let the CTA scroll toward the middle before the foreground can cover it.
+        const rest = Math.round(Math.min(height * .42,Math.max(height * .28,workCard.offsetHeight / 2)));
+        root.style.setProperty('--mobile-intro-rest',`${rest}px`);
         const introHeight = intro.offsetHeight;
         const read = Math.max(0,introHeight - height);
         mobileStart = currentY + flow.getBoundingClientRect().top + read;
+        const cardMiddle = workCard.getBoundingClientRect().top - works.getBoundingClientRect().top + workCard.offsetHeight / 2;
+        mobileRecedeStart = Math.min(1,Math.max(0,cardMiddle / height));
         root.style.setProperty('--mobile-intro-top',`${offset - read}px`);
         root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneTravel = height.toFixed(1);
+        root.dataset.sceneRest = String(rest);root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
         if (!wasMobile && (oldProgress > 0 || location.hash === '#selected-works')) {
           window.scrollTo(0,mobileStart + height * (location.hash === '#selected-works' ? 1 : oldProgress));
         } else if (wasMobile && (Math.abs(oldHeight - height) > .5 || Math.abs(oldStart - mobileStart) > .5)) {
