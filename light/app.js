@@ -218,9 +218,12 @@
       if (!window.gsap || document.hidden) {set(artwork,{autoAlpha:1,y:0});return;}
       panel.imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:mobileOverlap ? 1.15 : .8,ease:mobileOverlap ? 'sine.inOut' : 'power2.out'});
     }
-    function loadImage(eager = false,panel = panels[0]) {
+    function loadImage(eager = false,panel = panels[0],priority = eager ? 'high' : 'low') {
       const {artwork,image,imageError} = panel;
       if (eager) image.loading = 'eager';
+      // Warm desktop previews independently of the portrait. When their card
+      // enters view, promote even an already pending request before returning.
+      if (!mobile.matches && (eager || !panel.imagePending)) image.fetchPriority = priority;
       if (panel.imagePending) return panel.imagePending;
       artwork.dataset.imageState = 'loading';
       const loaded = new Promise((resolve,reject) => {
@@ -349,7 +352,13 @@
       if (!parked) return;parked = false;window.portraitPlayer?.clearDesktopCoverPose?.();
     }
     function paintScene() {
-      if (!enhanced && !mobileOverlap) {nativePaintedPose=nativeWorkPose(window.scrollY);syncAvailability();return;}
+      if (!enhanced && !mobileOverlap) {
+        if (!mobile.matches) panels.forEach(panel=>{
+          const bounds=panel.element.getBoundingClientRect();
+          if (bounds.top<height && bounds.bottom>0) loadImage(true,panel);
+        });
+        nativePaintedPose=nativeWorkPose(window.scrollY);syncAvailability();return;
+      }
       if (root.classList.contains('mobile-menu-open')) {syncAvailability();return;}
       if (mobileOverlap) {mobilePaintedY = window.scrollY;progress = Math.max(0,Math.min(1,(mobilePaintedY - mobileStart) / Math.max(1,mobileTravel)));}
       else {
@@ -399,13 +408,13 @@
       }
       document.body.style.removeProperty('background-color');
       root.dataset.sceneState = 'native';
-      if (portraitIntroFinished) panels.forEach(panel=>loadImage(false,panel));
-      else if (!mobile.matches) loadImage();
+      if (!mobile.matches || portraitIntroFinished) panels.forEach(panel=>loadImage(false,panel));
       syncAvailability();
     }
     function measureViewport() {
       resizeFrame = 0;
       if (root.classList.contains('mobile-menu-open')) return;
+      if (!mobile.matches && !panels[0].imagePending) loadImage(true,panels[0],'auto');
       const nextHeight = sceneHeight();
       const offset = sceneOffset();
       const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,oldDesktopTravel=travel,currentY = window.scrollY;
