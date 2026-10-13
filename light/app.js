@@ -112,8 +112,8 @@
       cancelMotion();waving = true;
       // Preserve each current hover pose through its delay; repeated clicks keep
       // the same wave alive while the independent copy handler runs normally.
-      animations = icons.map((icon,index) => icon.animate([frame(from[index]),frame(-7),frame(0)],{
-        duration:640,delay:index * 90,fill:'both'
+      animations = icons.map((icon,index) => icon.animate([frame(from[index]),frame(-9),frame(0)],{
+        duration:500,delay:index * 70,fill:'both'
       }));
       whenFinished(animations,() => {waving = false;startHover();});
     }
