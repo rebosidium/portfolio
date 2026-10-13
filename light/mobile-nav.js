@@ -12,6 +12,12 @@
   }
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  // innerWidth rounds fractional CSS pixels on some Android screens.
+  const widthProbe = document.createElement('div');
+  widthProbe.setAttribute('aria-hidden','true');
+  widthProbe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:0;visibility:hidden;pointer-events:none;contain:strict';
+  document.body.append(widthProbe);
+  const layoutWidth = () => widthProbe.getBoundingClientRect().width || innerWidth;
   const background = [document.querySelector('.intro-content'),document.querySelector('.works-screen'),header.querySelector('.identity')].filter(Boolean);
   let scrollPosition = null;
   let inertBefore = [];
@@ -65,7 +71,7 @@
     const values = {
       '--menu-header-top':`${rect.top}px`,
       '--menu-header-left':`${rect.left}px`,
-      '--menu-header-right':`${innerWidth-rect.right}px`,
+      '--menu-header-right':`${layoutWidth()-rect.right}px`,
       '--menu-header-height':`${rect.height}px`,
       '--menu-identity-left':`${name ? name.left-rect.left : 0}px`,
       '--menu-identity-top':`${name ? name.top-rect.top : 8}px`,
@@ -89,7 +95,7 @@
     headerGeometry.forEach(property => header.style.removeProperty(property));
   };
   const updateLockedWidth = () => {
-    if (scrollPosition) document.body.style.setProperty('--menu-page-width',`${Math.max(0,innerWidth-scrollbarWidth)}px`);
+    if (scrollPosition) document.body.style.setProperty('--menu-page-width',`${Math.max(0,layoutWidth()-scrollbarWidth)}px`);
   };
   document.addEventListener('focusin',event => {navigationFocus = header.contains(event.target) ? event.target : null;});
   const clearAnimation = () => {
@@ -105,7 +111,7 @@
     if (expanded === wasOpen) return;
     if (expanded) {
       scrollPosition = {x:scrollX,y:scrollY};
-      scrollbarWidth = Math.max(0,innerWidth-root.clientWidth);
+      scrollbarWidth = Math.max(0,layoutWidth()-document.body.getBoundingClientRect().width);
       document.body.style.setProperty('--menu-scroll-y',`${-scrollPosition.y}px`);
       updateLockedWidth();
       mountMenuHeader();
