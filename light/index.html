@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="cb732a073a11">
+<html lang="en" data-build="175b729fd93b">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,11 +16,18 @@
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
   <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=c6815470ab3d" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=c1297d5c07b6">
+  <link rel="stylesheet" href="styles.css?v=de07997019f4">
   <script>
+    window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+    window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
+    window.releaseMobileNavigation = () => {
+      document.documentElement.classList.add('mobile-navigation-fallback');
+      window.resolveMobileNavigationReady(false);
+    };
+    window.mobileNavigationDeadline = setTimeout(window.releaseMobileNavigation,3000);
     window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
-      ? '/light/portrait-spin-android.js?v=1b3998c88cbf'
-      : '/light/portrait-spin.js?v=65ea00150436';
+      ? '/light/portrait-spin-android.js?v=50690c87c7bd'
+      : '/light/portrait-spin.js?v=d68eae9bf82a';
     const portraitPreload = document.createElement('link');
     portraitPreload.rel = 'modulepreload';
     portraitPreload.href = window.portraitModuleURL;
@@ -29,13 +36,13 @@
     window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve;});
     window.releaseNavigationFallback = () => {
       document.documentElement.classList.remove('nav-pending');
-      document.dispatchEvent(new Event('light:navigation-fallback'));
+      document.dispatchEvent(new Event('mobile:navigation-fallback'));
     };
     window.releasePageFallback = () => {
       window.releaseNavigationFallback();
       document.documentElement.classList.remove('motion-pending');
       window.resolvePortraitReveal(false);
-      document.dispatchEvent(new Event('light:page-fallback'));
+      document.dispatchEvent(new Event('mobile:page-fallback'));
     };
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('nav-pending','motion-pending');
@@ -43,22 +50,25 @@
       window.pageDeadline = setTimeout(window.releasePageFallback,21000);
     }
   </script>
-  <script type="module" src="portrait-boot.js?v=e1779a86533a" onerror="window.resolvePortraitReady(false)"></script>
+  <script type="module" src="portrait-boot.js?v=3e5ba6df0a84" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=3524773b672d" onerror="window.releasePageFallback()"></script>
-  <script defer src="updates.js?v=042831bb7f03"></script>
+  <script defer src="app.js?v=a18692f4aa9e" onerror="window.releasePageFallback()"></script>
+  <script defer src="mobile-nav.js?v=019370d5d5e1" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="updates.js?v=64c87e417052"></script>
 </head>
 <body data-node-id="159:729">
   <main class="scene-flow">
   <div class="scene-stage">
   <div class="intro-screen" data-scene="intro">
-  <header class="header">
-    <a class="name" href="/light/" data-node-id="159:898">Dmitry Rybalka</a>
-    <nav aria-label="Main navigation" data-node-id="159:890">
+  <header class="header" role="banner">
+    <a class="name identity" href="/light/" data-node-id="159:898">Dmitry Rybalka</a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205"><img class="menu-icon" src="assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
+    <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
       <a href="#selected-works" data-node-id="159:892">Work</a>
       <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
       <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
       <a href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer" data-node-id="159:896">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
   <div class="intro-content">
@@ -77,8 +87,8 @@
         <button class="agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
           <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied">Copied!</span></span>
           <span class="agent-button-logos" aria-hidden="true" data-node-id="162:2414">
-            <img src="assets/agent-claude.svg?v=71f8fdd6a434" width="24" height="24" alt="" decoding="async" data-node-id="162:2416">
-            <img src="assets/agent-openai.svg?v=31468b4210b6" width="24" height="24" alt="" decoding="async" data-node-id="162:2418">
+            <picture><source media="(max-width: 767px), (max-width: 1023px) and (pointer: coarse)" srcset="assets/agent-claude-mobile.svg?v=6288fbeeec9d"><img src="assets/agent-claude.svg?v=71f8fdd6a434" width="24" height="24" alt="" decoding="async" data-node-id="162:2416"></picture>
+            <picture><source media="(max-width: 767px), (max-width: 1023px) and (pointer: coarse)" srcset="assets/agent-openai-mobile.svg?v=5834bb228e92"><img src="assets/agent-openai.svg?v=31468b4210b6" width="24" height="24" alt="" decoding="async" data-node-id="162:2418"></picture>
             <img src="assets/agent-cursor.svg?v=75923db2c8ef" width="24" height="24" alt="" decoding="async" data-node-id="162:2421">
             <img src="assets/agent-opencode.svg?v=969356479a7b" width="24" height="24" alt="" decoding="async" data-node-id="162:2424">
           </span>

@@ -1,7 +1,7 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
-export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35} = {}) {
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -864,14 +864,14 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
     turn:setMobileScrollPose,clear:clearMobileScrollPose,subscribeLoading,
     canRetry:()=>ready&&startupSettled&&!preparing&&!drag
-  },mobileLayout,media,mobileScrollStart));
+  },mobileLayout,media,mobileScrollStart,mobileCoverTop));
   if(media.matches){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
   return {ready:startupReady,introFinished,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }
 
 // Mobile scroll owns only its requested pose; manual rotation and menu spring win.
-function mountMobilePortraitScroll(stage,player,mobile,reduced,start){
+function mountMobilePortraitScroll(stage,player,mobile,reduced,start,coverTop){
   const cleanup=[],root=document.documentElement;
   let raf=0,destroyed=false,pageReady=!window.portraitReveal,lastY=scrollY,direction=0;
   let owned=false,desired=0,applied=null,fresh=true,initial=true,ready=false;
@@ -883,7 +883,11 @@ function mountMobilePortraitScroll(stage,player,mobile,reduced,start){
     raf=0;if(destroyed||!pageReady||!mobile.matches||reduced.matches||document.hidden||root.classList.contains('mobile-menu-open'))return;
     const rect=stage.getBoundingClientRect(),top=window.visualViewport?.offsetTop||0;
     // Keep the endpoint at 85% hidden; each route can opt into an earlier start.
-    const hidden=rect.height>0?(top-rect.top)/rect.height:0;
+    const boundary=typeof coverTop==='function'?coverTop():null;
+    const hidden=rect.height>0?(Number.isFinite(boundary)
+      // The foreground can hide the bottom while the viewport hides the top.
+      ?Math.min(1,Math.max(0,(top-rect.top)/rect.height)+Math.max(0,(rect.bottom-boundary)/rect.height))
+      :(top-rect.top)/rect.height):0;
     const progress=Math.max(0,Math.min(1,(hidden-start)/(.85-start)));
     const next=progress*progress*(3-2*progress);
     if(owned||(direction!==0||initial&&scrollY>0)&&next>0){desired=next;owned=true}
@@ -893,6 +897,7 @@ function mountMobilePortraitScroll(stage,player,mobile,reduced,start){
     else if(player.canRetry())schedule();
   }
   listen(window,'scroll',()=>{const delta=scrollY-lastY;if(Math.abs(delta)>1){direction=Math.sign(delta);lastY=scrollY;schedule()}});
+  listen(window,'mobile:scene-painted',schedule);
   listen(window,'resize',schedule);listen(window.visualViewport,'resize',schedule);
   listen(window.visualViewport,'scroll',schedule);
   listen(window,'pointerup',schedule);listen(window,'pointercancel',schedule);

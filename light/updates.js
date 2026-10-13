@@ -36,7 +36,7 @@
     // The URL also protects a stale HTML reload when sessionStorage is unavailable.
     if (entryVersion === version && withinCooldown(entryRefresh, now)) return true;
     try {
-      return withinCooldown(Number(window.sessionStorage.getItem(`portfolio:update-at:${version}`)), now);
+      return withinCooldown(Number(window.sessionStorage.getItem(`portfolio:light:update-at:${version}`)), now);
     } catch (_) {
       return false;
     }
@@ -45,7 +45,7 @@
   function rememberRefresh(version, now) {
     attempts.set(version, now);
     try {
-      window.sessionStorage.setItem(`portfolio:update-at:${version}`, String(now));
+      window.sessionStorage.setItem(`portfolio:light:update-at:${version}`, String(now));
     } catch (_) {
       // In-memory and URL guards still work without storage access.
     }
