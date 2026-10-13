@@ -77,7 +77,8 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .agent-button-logos img{display:block;flex:none}
 .agent-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px;overflow:hidden}
 .agent-logo-copilot img{position:absolute;width:132.35%;height:132.35%;max-width:none;left:-17.65%;top:-17.65%}
-.agent-button:hover,.work-details:hover{background:#f7f7f6;border-color:rgba(0,0,0,.2)}
+.work-details:hover{background:#f7f7f6;border-color:rgba(0,0,0,.2)}
+@media(min-width:768px) and (hover:hover) and (pointer:fine){.agent-button:hover{background:#f7f7f6;border-color:rgba(0,0,0,.2)}}
 .agent-button:active,.work-details:active{background:#eff0ed}
 .agent-button:focus-visible,.work-details:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:100px}
 .agent-copy-fallback{display:flex;flex-direction:column;gap:8px;width:100%;font-size:14px;line-height:22px;letter-spacing:normal;word-spacing:normal}
