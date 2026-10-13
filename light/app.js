@@ -2,7 +2,6 @@
   'use strict';
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
   const agentButton = document.querySelector('.agent-button');
-  const agentLabel = agentButton.querySelector('.agent-button-label');
   const agentStatus = document.querySelector('#agent-copy-status');
   const manualCopy = document.querySelector('.agent-copy-fallback');
   const promptField = document.querySelector('#agent-prompt');
@@ -51,11 +50,11 @@
     if (!copied) copied = copyWithSelection();
     if (copied) {
       manualCopy.hidden = true;
-      agentLabel.textContent = 'Copied!';
+      agentButton.classList.add('is-copied');
       agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
-      copyFeedback = setTimeout(() => {agentLabel.textContent = 'Brief your AI';},2200);
+      copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
     } else {
-      agentLabel.textContent = 'Brief your AI';
+      agentButton.classList.remove('is-copied');
       manualCopy.hidden = false;
       agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
       promptField.focus({preventScroll:true});
