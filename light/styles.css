@@ -18,7 +18,7 @@ main{min-height:100svh;display:grid;align-items:center;padding:120px var(--gutte
 .portrait[data-spin-ready]{cursor:grab}
 .portrait.dragging{cursor:grabbing}
 .portrait:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
-.introduction{display:flex;flex-direction:column;gap:20px;flex:none;width:624px;font-size:18px;font-weight:500;line-height:32px;letter-spacing:.18px;text-wrap:wrap}
+.introduction{display:flex;flex-direction:column;gap:20px;flex:none;width:624px;font-size:18px;font-weight:500;line-height:32px;letter-spacing:normal;word-spacing:2px;text-wrap:wrap}
 .introduction h1,.introduction p{margin:0;font-size:inherit;line-height:inherit}
 .introduction h1{font-weight:700}
 .introduction .summary{width:602px}
