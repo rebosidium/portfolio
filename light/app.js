@@ -178,10 +178,18 @@
       partTweens.add(tween);
     }
     function revealArtwork() {
-      if ((!enhanced && !mobileOverlap) || (!mobileOverlap && progress <= 0) || (!imageReady && !imageFailed) || artwork.getBoundingClientRect().top >= height * .94 || revealed.has(artwork)) return;
+      if ((!enhanced && !mobileOverlap) || (!mobileOverlap && progress <= 0) || (!imageReady && !imageFailed) || revealed.has(artwork)) return;
+      const bounds = artwork.getBoundingClientRect();
+      if (mobileOverlap) {
+        if (document.hidden || root.classList.contains('mobile-menu-open')) return;
+        const viewport = window.visualViewport;
+        const top = viewport?.offsetTop || 0,bottom = top + (viewport?.height || height);
+        const visible = Math.min(bounds.bottom,bottom) - Math.max(bounds.top,top);
+        if (visible < Math.min(bounds.height * .12,48)) return;
+      } else if (bounds.top >= height * .94) return;
       revealed.add(artwork);
       if (!window.gsap || document.hidden) {set(artwork,{autoAlpha:1,y:0});return;}
-      imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:.8,ease:'power2.out'});
+      imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:mobileOverlap ? 1.15 : .8,ease:mobileOverlap ? 'sine.inOut' : 'power2.out'});
     }
     function loadImage(eager = false) {
       if (eager) image.loading = 'eager';
@@ -199,7 +207,8 @@
     }
     function resetReveals() {
       partTweens.forEach(tween => tween.kill());partTweens.clear();imageTween?.kill();revealed.clear();
-      set([...parts,artwork],{autoAlpha:0,y:14});
+      set(parts,{autoAlpha:0,y:14});
+      set(artwork,{autoAlpha:0,y:mobile.matches ? 0 : 14});
     }
     function parkPortrait() {
       if (!parked && enhanced && progress >= .999) parked = !!window.portraitPlayer?.setDesktopCoverPose?.(0);
