@@ -6,6 +6,7 @@ a{color:inherit;text-decoration:none}
 a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:2px}
 .header{position:absolute;inset:var(--header-top) 0 auto;width:var(--content-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:18px;line-height:25px;font-weight:600}
 .header nav{display:flex;align-items:center;gap:32px}
+.header nav a.mobile-only{display:none}
 .menu-toggle{display:none}
 .header a{position:relative;display:block}
 .header .name{word-spacing:1px}
@@ -79,21 +80,27 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
   body{min-width:0}
-  .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto 20px;width:auto;max-width:none;margin:0;font-size:20px;line-height:28px;z-index:3}
-  .menu-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;transition:opacity .45s var(--ease)}
-  .menu-toggle img{display:block;width:28px;height:28px}
-  .menu-toggle .menu-close-icon{display:none}
+  .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto 20px;width:auto;max-width:none;min-height:44px;margin:0;font-size:20px;line-height:28px;z-index:3}
+  .menu-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer}
+  .menu-toggle img{display:block;grid-area:1 / 1;width:28px;height:28px;pointer-events:none;transition:opacity .18s ease,transform .22s var(--ease)}
+  .menu-toggle .menu-icon{opacity:1;transform:rotate(0deg) scale(1)}
+  .menu-toggle .menu-close-icon{opacity:0;transform:rotate(-45deg) scale(.85)}
   .menu-toggle:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:8px}
   .header.menu-animating .menu-toggle{transition:none}
   .nav-pending .menu-toggle{opacity:0}
   html.mobile-menu-open{overflow:hidden}
-  body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);width:100%}
+  body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);width:var(--menu-page-width,100%)}
   .header nav{display:none;position:fixed;inset:0;height:100dvh;min-height:100svh;padding:calc(80px + env(safe-area-inset-top)) 24px calc(80px + env(safe-area-inset-bottom));background:var(--canvas);gap:24px;align-items:center;justify-content:safe center;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;z-index:2}
   .header.menu-open nav{display:flex}
-  .header.menu-open .menu-toggle{position:fixed;top:calc(23px + env(safe-area-inset-top));right:10px;z-index:3}
-  .header.menu-open .menu-icon{display:none}
-  .header.menu-open .menu-close-icon{display:block}
+  /* The open header is temporarily outside the transformed scene, at its measured pose. */
+  .header.menu-open{position:fixed;inset:auto var(--menu-header-right,10px) auto var(--menu-header-left,20px);top:var(--menu-header-top,23px);width:auto;height:var(--menu-header-height,44px);min-height:var(--menu-header-height,44px);z-index:10}
+  .header.menu-open>.identity{position:absolute;left:var(--menu-identity-left,0px);top:var(--menu-identity-top,8px);opacity:var(--menu-identity-opacity,1)!important;transform:scale(var(--menu-identity-scale,1))!important;transform-origin:top left}
+  .header.menu-open .menu-toggle{position:absolute;top:var(--menu-toggle-top,0px);right:var(--menu-toggle-right,0px);width:var(--menu-toggle-width,44px);height:var(--menu-toggle-height,44px);margin:0;transform:none!important;z-index:3}
+  .header.menu-open .menu-toggle img{width:calc(28px * var(--menu-icon-scale,1));height:calc(28px * var(--menu-icon-scale,1))}
+  .header.menu-open:not(.menu-closing) .menu-icon{opacity:0;transform:rotate(45deg) scale(.85)}
+  .header.menu-open:not(.menu-closing) .menu-close-icon{opacity:1;transform:rotate(0deg) scale(1)}
   .header nav a{display:flex;align-items:center;justify-content:center;min-height:64px;padding:8px 16px;font-size:clamp(32px,10vw,48px);line-height:1.15;text-align:center}
+  .header nav a.mobile-only{display:flex}
   .header nav a::after{display:none}
   .header nav a:focus-visible{outline-offset:0;border-radius:8px}
   html:not([data-mobile-nav-ready="true"]) .header{flex-wrap:wrap;gap:8px;right:20px}
@@ -116,6 +123,10 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
   .work-copy .work-meta{font-size:16px;line-height:24px;flex-wrap:wrap}
   .work-meta span:first-child,.work-meta span:nth-child(2){width:auto}
   .work-artwork{width:100%;height:auto;aspect-ratio:544 / 294}
+  .mobile-overlap .scene-stage{isolation:isolate}
+  .mobile-overlap .intro-screen{position:sticky;top:var(--mobile-intro-top);z-index:1;transform-origin:center bottom}
+  .mobile-overlap .works-screen{position:relative;z-index:2}
+  .mobile-overlap[data-scene-view="works"] body{background:#f8f8f8}
 }
 @media(max-width:359px) and (pointer:coarse){.agent-button{padding-inline:20px}}
-@media(prefers-reduced-motion:reduce){.menu-toggle{transition:none}.nav-pending .menu-toggle{opacity:1}}
+@media(prefers-reduced-motion:reduce){.menu-toggle,.menu-toggle img{transition:none}.nav-pending .menu-toggle{opacity:1}}

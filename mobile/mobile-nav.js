@@ -19,13 +19,52 @@
   let transition = null;
   let navigationFocus = null;
   let pendingAnchor = null;
+  let headerMarker = null;
+  let scrollbarWidth = 0;
+  const headerGeometry = ['--menu-header-top','--menu-header-left','--menu-header-right','--menu-header-height','--menu-identity-left','--menu-identity-top','--menu-identity-scale','--menu-identity-opacity','--menu-toggle-top','--menu-toggle-right','--menu-toggle-width','--menu-toggle-height','--menu-icon-scale'];
+  const mountMenuHeader = () => {
+    const rect = header.getBoundingClientRect();
+    const button = toggle.getBoundingClientRect();
+    const identity = header.querySelector('.identity');
+    const name = identity?.getBoundingClientRect();
+    let nameOpacity = 1;
+    for (let element=identity;element;element=element.parentElement) nameOpacity *= Number(getComputedStyle(element).opacity);
+    const values = {
+      '--menu-header-top':`${rect.top}px`,
+      '--menu-header-left':`${rect.left}px`,
+      '--menu-header-right':`${innerWidth-rect.right}px`,
+      '--menu-header-height':`${rect.height}px`,
+      '--menu-identity-left':`${name ? name.left-rect.left : 0}px`,
+      '--menu-identity-top':`${name ? name.top-rect.top : 8}px`,
+      '--menu-identity-scale':String(name && identity.offsetHeight ? name.height/identity.offsetHeight : 1),
+      '--menu-identity-opacity':String(nameOpacity),
+      '--menu-toggle-top':`${button.top-rect.top}px`,
+      '--menu-toggle-right':`${rect.right-button.right}px`,
+      '--menu-toggle-width':`${button.width}px`,
+      '--menu-toggle-height':`${button.height}px`,
+      '--menu-icon-scale':String(button.width/44)
+    };
+    for (const [property,value] of Object.entries(values)) header.style.setProperty(property,value);
+    // A scene transform would otherwise make the fixed panel use the scene as its viewport.
+    headerMarker = document.createComment('Mobile menu header position');
+    header.before(headerMarker);
+    document.body.append(header);
+  };
+  const restoreMenuHeader = () => {
+    headerMarker?.replaceWith(header);
+    headerMarker = null;
+    headerGeometry.forEach(property => header.style.removeProperty(property));
+  };
+  const updateLockedWidth = () => {
+    if (scrollPosition) document.body.style.setProperty('--menu-page-width',`${Math.max(0,innerWidth-scrollbarWidth)}px`);
+  };
   document.addEventListener('focusin',event => {navigationFocus = header.contains(event.target) ? event.target : null;});
   const clearAnimation = () => {
     for (const element of [nav,...links,toggle]) {
       element.style.removeProperty('opacity');
       element.style.removeProperty('transform');
     }
-    header.classList.remove('menu-animating');
+    header.classList.remove('menu-animating','menu-closing');
   };
   const setVisible = (open,returnFocus = false) => {
     const expanded = mobile.matches && open;
@@ -33,7 +72,10 @@
     if (expanded === wasOpen) return;
     if (expanded) {
       scrollPosition = {x:scrollX,y:scrollY};
+      scrollbarWidth = Math.max(0,innerWidth-root.clientWidth);
       document.body.style.setProperty('--menu-scroll-y',`${-scrollPosition.y}px`);
+      updateLockedWidth();
+      mountMenuHeader();
       inertBefore = background.map(element => element.inert);
       background.forEach(element => {element.inert = true;});
       header.setAttribute('role','dialog');
@@ -46,11 +88,13 @@
     toggle.setAttribute('aria-expanded',String(expanded));
     toggle.setAttribute('aria-label',expanded ? 'Close menu' : 'Open menu');
     if (!expanded) {
+      restoreMenuHeader();
       background.forEach((element,index) => {element.inert = inertBefore[index];});
       header.setAttribute('role','banner');
       header.removeAttribute('aria-modal');
       header.removeAttribute('aria-label');
       document.body.style.removeProperty('--menu-scroll-y');
+      document.body.style.removeProperty('--menu-page-width');
       if (scrollPosition) window.scrollTo(scrollPosition.x,scrollPosition.y);
       scrollPosition = null;
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
@@ -59,8 +103,12 @@
         const {target,hash} = pendingAnchor;
         pendingAnchor = null;
         if (location.hash !== hash) history.pushState(null,'',hash);
-        target.scrollIntoView();
-        (target.querySelector('#works-title') || target.querySelector('[tabindex="-1"]'))?.focus({preventScroll:true});
+        const navigation = new CustomEvent('mobile:work-navigation',{detail:{target,hash},cancelable:true});
+        window.dispatchEvent(navigation);
+        if (!navigation.defaultPrevented) {
+          target.scrollIntoView();
+          (target.querySelector('#works-title') || target.querySelector('[tabindex="-1"]'))?.focus({preventScroll:true});
+        }
       }
       window.dispatchEvent(new Event('mobile:menu-closed'));
     }
@@ -75,15 +123,17 @@
   const setOpen = (open,returnFocus = false,instant = false) => {
     open = mobile.matches && open;
     if (desiredOpen === open) return;
+    // Reopening cancels the Work navigation attached to an abandoned close.
+    if (open) pendingAnchor = null;
     desiredOpen = open;
     transition?.kill();
     transition = null;
     const animate = window.gsap && !reduced.matches && mobile.matches && !instant;
+    header.classList.toggle('menu-closing',!open && !!animate);
     if (animate) header.classList.add('menu-animating');
     if (open) {
       const wasVisible = header.classList.contains('menu-open');
       nav.inert = false;
-      if (animate && !wasVisible) gsap.set(toggle,{opacity:0});
       setVisible(true);
       if (returnFocus) toggle.focus({preventScroll:true});
       if (!animate) {clearAnimation();return;}
@@ -94,7 +144,6 @@
       }
       transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
         .to(nav,{opacity:1,duration:.28,ease:'power2.out'},0)
-        .to(toggle,{opacity:1,duration:.16,ease:'power2.out'},0)
         .to(links,{opacity:1,y:0,duration:.32,stagger:.055,ease:'power3.out'},.07);
     } else {
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
@@ -110,9 +159,8 @@
       // Let every link leave in reverse order before fading the full-screen panel.
       transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
         .to(links,{opacity:0,y:12,duration:.24,stagger:{each:.055,from:'end'},ease:'power3.in'},0)
-        .to([nav,toggle],{opacity:0,duration:.28,ease:'power2.inOut'})
-        .call(() => {nav.inert = false;setVisible(false,returnFocus);})
-        .to(toggle,{opacity:1,duration:.18,ease:'power2.out',clearProps:'opacity'});
+        .to(nav,{opacity:0,duration:.28,ease:'power2.inOut'})
+        .call(() => {nav.inert = false;setVisible(false,returnFocus);});
     }
   };
   toggle.addEventListener('click',() => setOpen(!desiredOpen,true));
@@ -150,12 +198,13 @@
     desiredOpen = true; // Force immediate cleanup even during an unfinished close.
     setOpen(false,false,true);
     if (mobile.matches && focusedLink) toggle.focus({preventScroll:true});
-    if (!mobile.matches && focusedToggle) links[0].focus({preventScroll:true});
+    if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links[0].focus({preventScroll:true});
   });
   reduced.addEventListener('change',() => {
     if (reduced.matches && transition) settleTransition();
   });
   window.addEventListener('resize',() => {
+    updateLockedWidth();
     if (transition) settleTransition();
   },{passive:true});
   const moveFocus = mobile.matches && root.classList.contains('mobile-navigation-fallback') && nav.contains(document.activeElement);

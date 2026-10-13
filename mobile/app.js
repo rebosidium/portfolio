@@ -68,7 +68,7 @@
   const mobile = window.mobileLayout;
   const navigation = mobile.matches
     ? [...document.querySelectorAll('.header > .identity,.menu-toggle')]
-    : [...document.querySelectorAll('.header > a,.header nav a')];
+    : [...document.querySelectorAll('.header > a,.header nav a:not(.mobile-only)')];
   const portrait = document.querySelector('.portrait');
   const copy = [...document.querySelectorAll('.introduction > h1,.introduction > p,.agent-button')];
   let menuTimeline,heroTimeline,resolveMenu,heroStarted = false;
@@ -138,6 +138,7 @@
     const intro = document.querySelector('.intro-screen');
     const works = document.querySelector('.works-screen');
     const stage = document.querySelector('.scene-stage');
+    const flow = document.querySelector('.scene-flow');
     const hero = document.querySelector('.hero');
     const workLink = document.querySelector('.header nav a[href="#selected-works"]');
     const heading = document.querySelector('#works-title');
@@ -147,7 +148,7 @@
     const imageError = artwork.querySelector('.work-image-error');
     const revealed = new Set(),partTweens = new Set();
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
-    let enhanced = false,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
+    let enhanced = false,mobileOverlap = false,mobileStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween,imageTween,imagePending;
     let imageReady = false,imageFailed = false,focusAtEnd = false,parked = false,resizeWheelUntil = 0;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
@@ -166,7 +167,7 @@
       partTweens.add(tween);
     }
     function revealArtwork() {
-      if (!enhanced || progress <= 0 || (!imageReady && !imageFailed) || artwork.getBoundingClientRect().top >= height * .94 || revealed.has(artwork)) return;
+      if ((!enhanced && !mobileOverlap) || progress <= 0 || (!imageReady && !imageFailed) || artwork.getBoundingClientRect().top >= height * .94 || revealed.has(artwork)) return;
       revealed.add(artwork);
       if (!window.gsap || document.hidden) {set(artwork,{autoAlpha:1,y:0});return;}
       imageTween = gsap.to(artwork,{autoAlpha:1,y:0,duration:.8,ease:'power2.out'});
@@ -196,16 +197,19 @@
       if (!parked) return;parked = false;window.portraitPlayer?.clearDesktopCoverPose?.();
     }
     function paintScene() {
-      if (!enhanced) return;
-      const maximum = Math.max(1,Math.min(travel,document.documentElement.scrollHeight - document.documentElement.clientHeight));
-      progress = Math.max(0,Math.min(1,window.scrollY / maximum));
+      if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
+      if (mobileOverlap) progress = Math.max(0,Math.min(1,(window.scrollY - mobileStart) / Math.max(1,height)));
+      else {
+        const maximum = Math.max(1,Math.min(travel,document.documentElement.scrollHeight - document.documentElement.clientHeight));
+        progress = Math.max(0,Math.min(1,window.scrollY / maximum));
+      }
       const started = progress > .001,complete = progress >= .999;
       set(intro,{autoAlpha:complete ? 0 : 1 - .62 * progress,scale:1 - .045 * progress,y:-18 * progress});
-      set(works,{autoAlpha:started ? 1 : 0,y:height * (1 - progress)});
+      if (!mobileOverlap) set(works,{autoAlpha:started ? 1 : 0,y:height * (1 - progress)});
       // The foreground panel intercepts covered areas; exposed controls stay usable.
-      intro.inert = complete;works.inert = !started;
-      intro.setAttribute('aria-hidden',String(complete));works.setAttribute('aria-hidden',String(!started));
-      intro.style.pointerEvents = complete ? 'none' : 'auto';works.style.pointerEvents = started ? 'auto' : 'none';
+      intro.inert = complete;works.inert = !mobileOverlap && !started;
+      intro.setAttribute('aria-hidden',String(complete));works.setAttribute('aria-hidden',String(!mobileOverlap && !started));
+      intro.style.pointerEvents = complete ? 'none' : 'auto';works.style.pointerEvents = mobileOverlap || started ? 'auto' : 'none';
       root.dataset.sceneView = started ? 'works' : 'intro';
       root.dataset.sceneProgress = progress.toFixed(4);
       root.dataset.sceneState = !started || complete ? 'settled' : 'overlap';
@@ -216,14 +220,15 @@
         if (document.querySelector('.work-card').getBoundingClientRect().top < height * .88) reveal(parts.slice(1));
         revealArtwork();
         if (complete) {
-          parkPortrait();
+          if (!mobileOverlap) parkPortrait();
           if (focusAtEnd) {focusAtEnd = false;heading.focus({preventScroll:true});}
         } else releasePortrait();
       }
+      if (mobileOverlap) window.dispatchEvent(new Event('mobile:scene-painted'));
     }
     function nativeLayout() {
       scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();imageTween?.kill();revealed.clear();releasePortrait();
-      root.classList.remove('scene-enhanced');enhanced = false;
+      root.classList.remove('scene-enhanced','mobile-overlap');enhanced = false;mobileOverlap = false;
       for (const element of [intro,works,...parts,artwork]) {
         if (window.gsap) gsap.set(element,{clearProps:'transform,opacity,visibility'});
         else {element.style.removeProperty('transform');element.style.removeProperty('opacity');element.style.removeProperty('visibility');}
@@ -234,11 +239,13 @@
     }
     function measureViewport() {
       resizeFrame = 0;
+      if (root.classList.contains('mobile-menu-open')) return;
       const viewport = window.visualViewport;
       const nextHeight = viewport?.height || window.innerHeight;
       const offset = viewport?.offsetTop || 0;
-      const oldHeight = height,wasEnhanced = enhanced;
-      const oldProgress = !wasEnhanced && oldHeight > 0 ? Number(works.getBoundingClientRect().top <= oldHeight * .5) : progress;
+      const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,currentY = window.scrollY;
+      const oldProgress = wasMobile ? Math.max(0,Math.min(1,(currentY - oldStart) / Math.max(1,oldHeight)))
+        : !wasEnhanced && oldHeight > 0 ? Number(works.getBoundingClientRect().top <= oldHeight * .5) : progress;
       progress = oldProgress;
       const contentHeight = hero.offsetHeight,headerTop = nextHeight < 480 ? 16 : 43;
       height = nextHeight;travel = Math.max(1,Math.round(height * .85));
@@ -247,13 +254,32 @@
       root.style.setProperty('--header-top',`${headerTop}px`);
       root.style.setProperty('--intro-shift',`${Math.max(0,headerTop + 41 - (height - contentHeight)/2)}px`);
       root.dataset.sceneHeight = height.toFixed(1);root.dataset.sceneOffset = offset.toFixed(1);stage.dataset.viewportHeight = height.toFixed(1);
+      if (mobile.matches && !reduced.matches && window.gsap && root.dataset.mobileNavReady === 'true') {
+        if (!wasMobile) {nativeLayout();mobileOverlap = true;root.classList.add('mobile-overlap');resetReveals();}
+        const introHeight = intro.offsetHeight;
+        const read = Math.max(0,introHeight - height);
+        mobileStart = currentY + flow.getBoundingClientRect().top + read;
+        root.style.setProperty('--mobile-intro-top',`${offset - read}px`);
+        root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneTravel = height.toFixed(1);
+        if (!wasMobile && (oldProgress > 0 || location.hash === '#selected-works')) {
+          window.scrollTo(0,mobileStart + height * (location.hash === '#selected-works' ? 1 : oldProgress));
+        } else if (wasMobile && (Math.abs(oldHeight - height) > .5 || Math.abs(oldStart - mobileStart) > .5)) {
+          // Keep the panel progress or the already-read Works offset across browser chrome changes.
+          if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + height * oldProgress);
+          else if (oldProgress >= 1) window.scrollTo(0,mobileStart + height + Math.max(0,currentY - oldStart - oldHeight));
+        }
+        paintScene();return;
+      }
       const fits = height >= contentHeight + headerTop + 53 && !reduced.matches && !mobile.matches;
       if (!fits) {
         const showWorks = oldProgress >= .5 || location.hash === '#selected-works';
-        if (enhanced) {nativeLayout();window.scrollTo(0,showWorks ? works.offsetTop : 0);}
+        if (enhanced || mobileOverlap) {
+          nativeLayout();window.scrollTo(0,showWorks ? works.offsetTop : wasMobile ? Math.min(currentY,Math.max(0,intro.offsetHeight - height)) : 0);
+        }
         else if (!root.dataset.sceneState) nativeLayout();
         root.dataset.sceneView = showWorks ? 'works' : 'intro';
       } else {
+        if (mobileOverlap) nativeLayout();
         if (!enhanced) {enhanced = true;root.classList.add('scene-enhanced');resetReveals();}
         if (!wasEnhanced || Math.abs(oldHeight - height) > .5) {
           scrollTween?.kill();window.scrollTo(0,Math.round(travel * oldProgress));
@@ -271,12 +297,13 @@
     }
     function scheduleScroll() {if (!scrollFrame) scrollFrame = requestAnimationFrame(readScroll);}
     function goToWorks(focus = false) {
-      if (!enhanced) return;
+      if (!enhanced && !mobileOverlap) return;
       loadImage(true);focusAtEnd = focus;
       scrollTween?.kill();
-      if (!window.gsap) {window.scrollTo(0,travel);paintScene();return;}
+      const destination = mobileOverlap ? mobileStart + height : travel;
+      if (!window.gsap) {window.scrollTo(0,destination);paintScene();return;}
       const proxy = {y:window.scrollY};
-      scrollTween = gsap.to(proxy,{y:travel,duration:1.05,ease:'power2.inOut',onUpdate:() => {window.scrollTo(0,proxy.y);paintScene();},onComplete:() => {paintScene();if (focusAtEnd) {focusAtEnd = false;heading.focus({preventScroll:true});}}});
+      scrollTween = gsap.to(proxy,{y:destination,duration:1.05,ease:'power2.inOut',onUpdate:() => {window.scrollTo(0,proxy.y);paintScene();},onComplete:() => {paintScene();if (focusAtEnd) {focusAtEnd = false;heading.focus({preventScroll:true});}}});
     }
     function stopAutoScroll() {
       scrollTween?.kill();focusAtEnd = false;
@@ -292,12 +319,12 @@
       window.scrollBy(0,event.deltaY * units);paintScene();
     }
     workLink.addEventListener('click',event => {
-      if (!enhanced || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+      if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open') || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       event.preventDefault();if (location.hash !== '#selected-works') history.pushState(null,'','#selected-works');goToWorks(true);
     });
-    works.addEventListener('focusin',event => {if (enhanced && progress < .999 && event.target !== heading) goToWorks();});
+    works.addEventListener('focusin',event => {if ((enhanced || mobileOverlap) && progress < .999 && event.target !== heading) goToWorks();});
     const syncLocation = () => {
-      if (!enhanced) return;
+      if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
       if (location.hash === '#selected-works') goToWorks(true);
       else {scrollTween?.kill();window.scrollTo(0,0);paintScene();document.querySelector('.header > .name').focus({preventScroll:true});}
     };
@@ -305,6 +332,10 @@
     window.addEventListener('keydown',event => {if (['PageUp','PageDown','ArrowUp','ArrowDown','Home','End',' '].includes(event.key)) stopAutoScroll();});
     window.addEventListener('scroll',scheduleScroll,{passive:true});window.addEventListener('resize',measureViewport,{passive:true});
     window.addEventListener('mobile:menu-closed',scheduleMeasure);
+    window.addEventListener('mobile:work-navigation',event => {
+      if (!mobileOverlap || event.detail?.target !== works) return;
+      event.preventDefault();measureViewport();goToWorks(true);
+    });
     window.visualViewport?.addEventListener('resize',measureViewport,{passive:true});window.visualViewport?.addEventListener('scroll',scheduleMeasure,{passive:true});
     window.addEventListener('popstate',syncLocation);window.addEventListener('hashchange',syncLocation);window.addEventListener('pageshow',scheduleMeasure);
     reduced.addEventListener('change',measureViewport);
@@ -315,8 +346,9 @@
         set([...revealed],{autoAlpha:1,y:0});
       } else scheduleMeasure();
     });
-    if (typeof ResizeObserver === 'function') new ResizeObserver(scheduleMeasure).observe(hero);
+    if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);observer.observe(works);}
     document.fonts?.ready.then(scheduleMeasure);
+    Promise.resolve(window.mobileNavigationReady).then(scheduleMeasure);
     Promise.resolve(window.portraitReady).then(() => window.portraitPlayer?.introFinished).then(() => {parkPortrait();loadImage();});
     measureViewport();
   }
