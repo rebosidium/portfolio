@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" data-build="dc3b54a3c845">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" href="assets/favicon-32.png?v=418c2f22aafd" sizes="32x32">
+  <link rel="icon" type="image/png" href="assets/favicon-16.png?v=a50154754ffd" sizes="16x16">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <link rel="manifest" href="assets/site.webmanifest?v=31665d589142">
+  <title>Dmitry Rybalka — Product Design & Design Leadership</title>
+  <meta name="description" content="Product designer and design lead. Clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.">
+  <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
+  <link rel="preload" as="fetch" href="assets/seedance-manifest.json?v=c6815470ab3d" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=7d8d62b39d98">
+  <script>
+    window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+    window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
+    window.releaseMobileNavigation = () => {
+      document.documentElement.classList.add('mobile-navigation-fallback');
+      window.resolveMobileNavigationReady(false);
+    };
+    window.mobileNavigationDeadline = setTimeout(window.releaseMobileNavigation,3000);
+    window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
+      ? '/mobile/portrait-spin-android.js?v=1b3998c88cbf'
+      : '/mobile/portrait-spin.js?v=65ea00150436';
+    const portraitPreload = document.createElement('link');
+    portraitPreload.rel = 'modulepreload';
+    portraitPreload.href = window.portraitModuleURL;
+    document.head.append(portraitPreload);
+    window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve;});
+    window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve;});
+    window.releaseNavigationFallback = () => {
+      document.documentElement.classList.remove('nav-pending');
+      document.dispatchEvent(new Event('mobile:navigation-fallback'));
+    };
+    window.releasePageFallback = () => {
+      window.releaseNavigationFallback();
+      document.documentElement.classList.remove('motion-pending');
+      window.resolvePortraitReveal(false);
+      document.dispatchEvent(new Event('mobile:page-fallback'));
+    };
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('nav-pending','motion-pending');
+      window.navigationDeadline = setTimeout(window.releaseNavigationFallback,6500);
+      window.pageDeadline = setTimeout(window.releasePageFallback,21000);
+    }
+  </script>
+  <script type="module" src="portrait-boot.js?v=303035663bbe" onerror="window.resolvePortraitReady(false)"></script>
+  <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
+  <script defer src="app.js?v=88bb9a9970f1" onerror="window.releasePageFallback()"></script>
+  <script defer src="mobile-nav.js?v=99bf63573efc" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="updates.js?v=02702653c6cd"></script>
+</head>
+<body data-node-id="159:729">
+  <main class="scene-flow">
+  <div class="scene-stage">
+  <div class="intro-screen" data-scene="intro">
+  <header class="header" role="banner">
+    <a class="name identity" href="/mobile/" data-node-id="159:898">Dmitry Rybalka</a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205"><img class="menu-icon" src="assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
+    <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
+      <a href="#selected-works" data-node-id="159:892">Work</a>
+      <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
+      <a href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer" data-node-id="159:896">Resume</a>
+    </nav>
+  </header>
+  <div class="intro-content">
+    <section class="hero" aria-labelledby="greeting" data-node-id="159:1060">
+      <div class="portrait" role="img" aria-label="Dmitry Rybalka" data-node-id="159:847">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcset="assets/portrait-front.webp?v=b288f612539c">
+          <img src="assets/portrait-start.webp?v=c93a9a36c801" width="270" height="270" fetchpriority="high" loading="eager" decoding="async" alt="" aria-hidden="true" draggable="false">
+        </picture>
+        <canvas width="270" height="270" aria-hidden="true"></canvas>
+      </div>
+      <div class="introduction" data-node-id="159:2150">
+        <h1 id="greeting" data-node-id="159:854">Hello, Everyone</h1>
+        <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
+        <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
+        <button class="agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied">Copied!</span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="162:2414">
+            <picture><source media="(max-width: 767px), (max-width: 1023px) and (pointer: coarse)" srcset="assets/agent-claude-mobile.svg?v=6288fbeeec9d"><img src="assets/agent-claude.svg?v=71f8fdd6a434" width="24" height="24" alt="" decoding="async" data-node-id="162:2416"></picture>
+            <picture><source media="(max-width: 767px), (max-width: 1023px) and (pointer: coarse)" srcset="assets/agent-openai-mobile.svg?v=5834bb228e92"><img src="assets/agent-openai.svg?v=31468b4210b6" width="24" height="24" alt="" decoding="async" data-node-id="162:2418"></picture>
+            <img src="assets/agent-cursor.svg?v=75923db2c8ef" width="24" height="24" alt="" decoding="async" data-node-id="162:2421">
+            <img src="assets/agent-opencode.svg?v=969356479a7b" width="24" height="24" alt="" decoding="async" data-node-id="162:2424">
+          </span>
+        </button>
+        <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="agent-prompt">Copy this prompt and paste it into your AI chat.</label>
+          <textarea id="agent-prompt" readonly rows="3" spellcheck="false"></textarea>
+        </div>
+        <noscript><style>.agent-button{display:none}</style><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </section>
+  </div>
+  </div>
+  <section class="works-screen" id="selected-works" aria-labelledby="works-title" data-scene="works" data-node-id="162:2545">
+    <h2 id="works-title" tabindex="-1" data-node-id="162:2491">Selected Works</h2>
+    <div class="works-body">
+      <article class="work-card" aria-labelledby="larixon-title" data-node-id="162:2544">
+        <div class="work-copy" data-node-id="162:2526">
+          <h3 id="larixon-title" data-node-id="162:2519">Larixon Classifieds</h3>
+          <p class="work-meta" data-node-id="162:2520"><span data-node-id="162:2521">Classifieds</span><span aria-hidden="true" data-node-id="162:2546">·</span><span data-node-id="162:2523">Aug. 2025 — Present</span></p>
+          <p class="work-description" data-node-id="162:2524">International classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad &amp; Tobago, and Jamaica, serving 5M+ MAU.</p>
+          <a class="work-details" href="https://dmitryrybalka.com/#larixon" data-node-id="162:2541"><span data-node-id="162:2542">More Details</span></a>
+        </div>
+        <div class="work-artwork" data-node-id="162:2516">
+          <img class="work-image" data-src="assets/work-larixon-bazaraki.png?v=13e8d5e1c813" width="1753" height="4096" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki.png?v=13e8d5e1c813" width="1753" height="4096" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  </div>
+  </main>
+</body>
+</html>
