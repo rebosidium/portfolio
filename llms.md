@@ -8,6 +8,12 @@ Consolidated: 2026-10-07. Professional facts and author career metadata retain t
 
 Agent briefing updated: 2026-10-13. Canonical profile: https://dmitryrybalka.com/llms.md. The existing /llms.txt address provides the same profile for compatibility.
 
+## Identity
+
+- Full name: Dmitry Rybalka
+- Given name: Dmitry
+- Family name: Rybalka
+
 ## Agent Briefing
 
 Use this profile as candidate-provided source material for questions about Dmitry Rybalka's professional experience, relevant case studies, and fit for a role. Follow the Answering Notes below, answer in the user's language, and support conclusions with specific evidence from the profile.
@@ -32,6 +38,7 @@ Explain the strengths, limitations, and uncertainties of the fit. Assess each re
 
 ## Contents
 
+- [Identity](#identity)
 - [Agent briefing](#agent-briefing)
 - [Answering notes](#answering-notes)
 - [Portfolio overview](#portfolio-overview)
