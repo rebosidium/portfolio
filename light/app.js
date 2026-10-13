@@ -183,7 +183,12 @@
     menuTimeline = gsap.timeline({onComplete:settleMenu});
     menuTimeline.to(navigation,{y:0,opacity:1,duration:1.05,stagger:.07,delay:.14,ease:'power2.out',clearProps:'transform,opacity'});
   });
-  Promise.all([menuReady,window.portraitReady,posterReady,fontDeadline]).then(([_,portraitReady]) => {
+  // Desktop reveals the small first-frame image and copy before the turn buffer.
+  // The boot module still waits for both the reveal and prepared welcome frames.
+  const heroPortraitReady = mobile.matches ? window.portraitReady : Promise.resolve(true);
+  Promise.all([menuReady,heroPortraitReady,posterReady,fontDeadline]).then(async ([_,portraitReady]) => {
+    // A window resized into mobile before its entrance keeps the mobile gate.
+    if (mobile.matches) portraitReady = await window.portraitReady;
     if (heroStarted) return;
     heroStarted = true;
     stamp('heroStartedAt');
@@ -236,7 +241,7 @@
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY,desktopPaintedY = window.scrollY,initialLocationHandled = false,nativePaintedPose = null,pendingMobileWorkStep = null;
-    let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false;
+    let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
       else for (const element of Array.isArray(elements) ? elements : [elements]) {
@@ -315,6 +320,13 @@
         panel.imageFailed = true;artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');imageError.hidden = false;revealArtwork(panel);scheduleScroll();
       });
       return panel.imagePending;
+    }
+    function warmDesktopPreviews() {
+      if (mobile.matches || !portraitPrepared || document.hidden) return;
+      // Background screenshots yield to the complete welcome-frame buffer.
+      // A visible card or an explicit Work action still loads immediately.
+      if (!enhanced && !mobileOverlap) panels.forEach(panel=>loadImage(false,panel));
+      else if (!panels[0].imagePending) loadImage(true,panels[0],'low');
     }
     function resetReveals() {
       partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel => panel.imageTween?.kill());revealed.clear();
@@ -480,13 +492,13 @@
       }
       document.body.style.removeProperty('background-color');
       root.dataset.sceneState = 'native';
-      if (!mobile.matches || portraitIntroFinished) panels.forEach(panel=>loadImage(false,panel));
+      if ((!mobile.matches && portraitPrepared) || portraitIntroFinished) panels.forEach(panel=>loadImage(false,panel));
       syncAvailability();
     }
     function measureViewport() {
       resizeFrame = 0;
       if (root.classList.contains('mobile-menu-open')) return;
-      if (!mobile.matches && !panels[0].imagePending) loadImage(true,panels[0],'auto');
+      warmDesktopPreviews();
       const nextHeight = sceneHeight();
       const offset = sceneOffset();
       const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,oldDesktopTravel=travel,currentY = window.scrollY;
@@ -658,7 +670,10 @@
     if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);panels.forEach(panel=>observer.observe(panel.element));}
     document.fonts?.ready.then(scheduleMeasure);
     Promise.resolve(window.mobileNavigationReady).then(scheduleMeasure);
-    Promise.resolve(window.portraitReady).then(() => window.portraitPlayer?.introFinished).then(() => {
+    Promise.resolve(window.portraitReady).then(() => {
+      portraitPrepared = true;warmDesktopPreviews();
+      return window.portraitPlayer?.introFinished;
+    }).then(() => {
       portraitIntroFinished = true;
       parkPortrait();
       if (!enhanced && !mobileOverlap) panels.forEach(panel=>loadImage(false,panel));else loadImage();
