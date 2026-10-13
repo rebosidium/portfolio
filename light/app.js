@@ -1,10 +1,74 @@
 (() => {
   'use strict';
+  const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
+  const agentButton = document.querySelector('.agent-button');
+  const agentLabel = agentButton.querySelector('.agent-button-label');
+  const agentStatus = document.querySelector('#agent-copy-status');
+  const manualCopy = document.querySelector('.agent-copy-fallback');
+  const promptField = document.querySelector('#agent-prompt');
+  promptField.value = agentPrompt;
+  let copying = false,copyFeedback;
+  function copyWithSelection() {
+    const previousFocus = document.activeElement;
+    const selection = document.getSelection();
+    const previousRanges = Array.from({length:selection?.rangeCount || 0},(_,index) => selection.getRangeAt(index).cloneRange());
+    const field = document.createElement('textarea');
+    field.value = agentPrompt;
+    field.readOnly = true;
+    field.style.cssText = 'position:fixed;left:-9999px;top:0;font-size:16px';
+    document.body.append(field);
+    let copied = false;
+    try {
+      field.focus({preventScroll:true});
+      field.select();
+      copied = document.execCommand('copy');
+    } catch (_) {
+      copied = false;
+    } finally {
+      field.remove();
+      previousFocus?.focus({preventScroll:true});
+      if (selection) {
+        selection.removeAllRanges();
+        previousRanges.forEach(range => selection.addRange(range));
+      }
+    }
+    return copied;
+  }
+  agentButton.addEventListener('click',async () => {
+    if (copying) return;
+    copying = true;
+    agentButton.setAttribute('aria-busy','true');
+    clearTimeout(copyFeedback);
+    let copied = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(agentPrompt);
+        copied = true;
+      }
+    } catch (_) {
+      copied = false;
+    }
+    if (!copied) copied = copyWithSelection();
+    if (copied) {
+      manualCopy.hidden = true;
+      agentLabel.textContent = 'Copied!';
+      agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
+      copyFeedback = setTimeout(() => {agentLabel.textContent = 'Brief your AI';},2200);
+    } else {
+      agentLabel.textContent = 'Brief your AI';
+      manualCopy.hidden = false;
+      agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
+      promptField.focus({preventScroll:true});
+      promptField.select();
+    }
+    agentButton.setAttribute('aria-busy','false');
+    copying = false;
+  });
   const root = document.documentElement;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const navigation = [...document.querySelectorAll('.header > a,.header nav a')];
   const portrait = document.querySelector('.portrait');
-  const copy = [...document.querySelector('.introduction').children];
+  const copy = [...document.querySelectorAll('.introduction > h1,.introduction > p,.agent-button')];
   let menuTimeline,heroTimeline,resolveMenu,heroStarted = false;
   const menuReady = new Promise(resolve => {resolveMenu = resolve;});
   const stamp = name => {root.dataset[name] = performance.now().toFixed(1);};
