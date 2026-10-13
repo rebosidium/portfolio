@@ -8,7 +8,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .header nav{display:flex;align-items:center;gap:32px}
 .header a{position:relative;display:block}
 .header .name{word-spacing:1px}
-.header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
+.header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:rgba(0,0,0,.12);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .header nav a:hover::after,.header nav a:focus-visible::after{transform:scaleX(1);transform-origin:left}
 .scene-flow{overflow-anchor:none}
 .scene-stage{position:relative}
