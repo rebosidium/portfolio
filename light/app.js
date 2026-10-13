@@ -111,7 +111,12 @@
     menuTimeline = gsap.timeline({onComplete:settleMenu});
     menuTimeline.to(navigation,{y:0,opacity:1,duration:1.05,stagger:.07,delay:.14,ease:'power2.out',clearProps:'transform,opacity'});
   });
-  Promise.all([menuReady,window.portraitReady,posterReady,fontDeadline]).then(([_,portraitReady]) => {
+  // Desktop reveals the small first-frame image and copy before the turn buffer.
+  // The boot module still waits for both the reveal and prepared welcome frames.
+  const heroPortraitReady = mobile.matches ? window.portraitReady : Promise.resolve(true);
+  Promise.all([menuReady,heroPortraitReady,posterReady,fontDeadline]).then(async ([_,portraitReady]) => {
+    // A window resized into mobile before its entrance keeps the mobile gate.
+    if (mobile.matches) portraitReady = await window.portraitReady;
     if (heroStarted) return;
     heroStarted = true;
     stamp('heroStartedAt');
