@@ -80,7 +80,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
   body{min-width:0}
-  .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto 20px;width:auto;max-width:none;min-height:44px;margin:0;font-size:20px;line-height:28px;z-index:3}
+  .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto 20px;width:auto;max-width:none;min-height:44px;margin:0;font-size:18px;line-height:28px;z-index:3}
   .menu-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
   .menu-toggle img{display:block;grid-area:1 / 1;width:28px;height:28px;pointer-events:none;opacity:0;visibility:hidden;transform:scale(.9285714286);transition:opacity .22s ease-in-out,transform .22s ease-in-out,visibility 0s linear .22s}
   .menu-toggle:not([data-menu-icon]) .menu-icon,.menu-toggle[data-menu-icon="menu"] .menu-icon,.menu-toggle[data-menu-icon="close"] .menu-close-icon{opacity:1;visibility:visible;transform:scale(1);transition:opacity .22s ease-in-out,transform .22s ease-in-out,visibility 0s linear}
@@ -110,7 +110,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
   .intro-content{min-height:var(--scene-height);display:block;padding:calc(95px + env(safe-area-inset-top)) 0 calc(64px + env(safe-area-inset-bottom))}
   .hero{top:0;width:calc(100% - 40px);max-width:600px;flex-direction:column;gap:49px;align-items:center}
   .portrait{width:247px;height:247px}
-  .introduction{width:100%;font-size:20px;line-height:32px;text-wrap:pretty;overflow-wrap:break-word}
+  .introduction{width:100%;font-size:18px;line-height:32px;text-wrap:pretty;overflow-wrap:break-word}
   .introduction h1{line-height:36px}
   .introduction .summary{width:100%}
   .agent-button{margin-top:8px}
@@ -118,7 +118,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
   .works-screen h2{width:calc(100% - 40px);font-size:24px;line-height:43.2px}
   .works-body{padding:0}
   .work-card{width:calc(100% - 40px);max-width:600px;flex-direction:column;align-items:stretch;gap:32px}
-  .work-copy{width:100%;font-size:20px;line-height:32px}
+  .work-copy{width:100%;font-size:18px;line-height:32px}
   .work-copy .work-meta{font-size:16px;line-height:24px;flex-wrap:wrap}
   .work-meta span:first-child,.work-meta span:nth-child(2){width:auto}
   .work-artwork{width:100%;height:auto;aspect-ratio:544 / 294}
