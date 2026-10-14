@@ -415,7 +415,7 @@
         }
       });
       root.dataset.workSceneIndex = String(visibleIndex);
-      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F9F5F5';
+      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F5F5F7';
       paintFooter(footerCover);
     }
     function paintDesktopPanels() {
@@ -440,7 +440,7 @@
       });
       root.dataset.workSceneIndex=String(visibleIndex);
       if (overlapping) root.dataset.sceneState='overlap';
-      if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F9F5F5';
+      if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F5F5F7';
       else document.body.style.removeProperty('background-color');
       paintFooter(footerCover,true);
     }
