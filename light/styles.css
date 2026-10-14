@@ -176,7 +176,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .footer .agent-copy-fallback textarea:focus-visible{outline-color:currentColor}
 @media(hover:hover) and (pointer:fine){.footer-agent-button:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.5)}}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
-  .footer{--footer-group-gap:clamp(8px,calc((var(--scene-height) - 360px) * .2142857143),60px);--footer-copy-height:87px;--footer-center-shift:clamp(0px,calc((var(--scene-height) - 480px) * .1515625),48.5px)}
+  .footer{height:100dvh;--footer-group-gap:clamp(8px,calc((var(--scene-height) - 360px) * .2142857143),60px);--footer-copy-height:87px;--footer-center-shift:clamp(0px,calc((var(--scene-height) - 480px) * .1515625),48.5px)}
   .footer-content{max-width:400px}
   .footer-description{min-height:87px}
   .footer-links{font-size:22px;letter-spacing:.22px}
