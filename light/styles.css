@@ -161,8 +161,8 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .footer-content{display:flex;flex-direction:column;align-items:center;flex:none;gap:var(--footer-group-gap);width:calc(100% - 40px);max-width:464px;padding-bottom:env(safe-area-inset-bottom)}
 .footer-description{width:100%;min-height:58px;margin:0;font-size:18px;font-weight:500;line-height:1.6;letter-spacing:.18px;text-align:center;text-wrap:pretty;overflow-wrap:break-word}
 .footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:35px;gap:28px 8px;width:100%;font-size:26px;font-weight:500;line-height:1.6;letter-spacing:.26px;text-align:center}
-.footer-links a{position:relative;justify-self:stretch}
-.footer-links a::after{content:'';position:absolute;bottom:-5px;left:25%;width:50%;height:1px;background:rgba(255,255,255,.34);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
+.footer-links a{position:relative;justify-self:center}
+.footer-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:rgba(255,255,255,.34);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .footer-links a:hover::after,.footer-links a:focus-visible::after{transform:scaleX(1);transform-origin:left}
 .footer-agent{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
 .footer-agent-button{align-self:center;height:54px;margin:0;padding:10px 24px;border-color:rgba(255,255,255,.34);color:inherit;word-spacing:normal}
