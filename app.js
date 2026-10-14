@@ -364,8 +364,12 @@
     function measureWorkPanels(base) {
       let start = base + intro.offsetHeight;
       panels.forEach((panel,index) => {
-        panel.start = start;panel.height = parseFloat(getComputedStyle(panel.element).height) || panel.element.offsetHeight;start += panel.height;
-        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,height-panel.height)}px`);
+        const style = getComputedStyle(panel.element);
+        panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
+        // Fullscreen work surfaces stay pinned at the top even with browser
+        // controls visible. Only genuinely taller content needs a reading offset.
+        const screenHeight = Math.max(height,parseFloat(style.minHeight) || 0);
+        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,screenHeight-panel.height)}px`);
         panel.element.style.setProperty('--work-layer',String(index+2));
       });
       footerStart = start;

@@ -133,7 +133,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
   .introduction .summary{width:100%}
   .agent-button,.work-details{height:54px;padding-top:10px;padding-bottom:10px}
   .agent-button{margin-top:8px;padding-inline:clamp(8px,calc((100vw - 303px) / 2),24px)}
-  .works-screen{min-height:var(--scene-height);grid-template-rows:140px minmax(0,1fr);padding:0;gap:0}
+  .works-screen{min-height:100lvh;grid-template-rows:140px minmax(0,1fr);padding:0;gap:0}
   .work-screen-followup{grid-template-rows:minmax(0,1fr)}
   .works-screen h2{width:calc(100% - 40px);font-size:24px;line-height:43.2px}
   .works-body{padding:32px 0 calc(32px + var(--scene-safe-bottom,env(safe-area-inset-bottom)));align-items:center}
