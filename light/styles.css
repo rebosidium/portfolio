@@ -152,7 +152,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 @media(prefers-reduced-motion:reduce){.menu-toggle,.menu-toggle img{transition:none!important}.nav-pending .menu-toggle{opacity:1}}
 @media(prefers-reduced-motion:reduce){.work-availability img{animation:none;opacity:1}}
 
-.footer{--footer-heading-height:clamp(48px,calc((var(--scene-height) - 440px) * .24 + 80px),140px);--footer-group-gap:clamp(8px,calc((var(--scene-height) - 440px) * .14),42px);--footer-copy-height:58px;--footer-center-shift:0px;--footer-content-height:calc(var(--footer-copy-height) + 98px + 54px + var(--footer-group-gap) * 2);position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:max(8px,calc((var(--scene-height) - var(--footer-content-height)) / 2 + var(--footer-center-shift) - var(--footer-heading-height)));height:var(--scene-height);min-height:0;overflow:auto;border-radius:40px 40px 0 0;background:#0f0f0f;color:#fff}
+.footer{--footer-heading-height:clamp(48px,calc((var(--scene-height) - 440px) * .24 + 80px),140px);--footer-group-gap:clamp(8px,calc((var(--scene-height) - 440px) * .14),42px);--footer-copy-height:58px;--footer-center-shift:0px;--footer-content-height:calc(var(--footer-copy-height) + 98px + 54px + var(--footer-group-gap) * 2);position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:max(8px,calc((var(--scene-height) - var(--footer-content-height)) / 2 + var(--footer-center-shift) - var(--footer-heading-height)));height:var(--scene-height);min-height:0;overflow:auto;border-radius:var(--footer-radius,40px) var(--footer-radius,40px) 0 0;background:#1d1d1f;color:#fff}
 .scene-enhanced .footer{position:absolute;inset:0;visibility:hidden;opacity:0;pointer-events:none}
 .mobile-overlap .footer{position:sticky;top:0}
 .footer-native-overlap .works-screen:last-of-type{position:sticky;top:var(--footer-last-top,0px)}
@@ -172,7 +172,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .footer-agent-button .agent-button-copied>img{filter:brightness(0) invert(1)}
 .footer-agent-button:active{background:rgba(255,255,255,.08)}
 .footer-agent-button:focus-visible{outline-color:currentColor}
-.footer .agent-copy-fallback textarea{border-color:rgba(255,255,255,.34);background:#0f0f0f;color:inherit}
+.footer .agent-copy-fallback textarea{border-color:rgba(255,255,255,.34);background:#1d1d1f;color:inherit}
 .footer .agent-copy-fallback textarea:focus-visible{outline-color:currentColor}
 @media(hover:hover) and (pointer:fine){.footer-agent-button:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.5)}}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){

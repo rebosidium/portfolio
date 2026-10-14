@@ -375,7 +375,12 @@
       }
       return null;
     }
+    function paintFooterCorners(cover) {
+      const flatten = Math.max(0,Math.min(1,(cover-.75)/.25));
+      footer.style.setProperty('--footer-radius',`${40*(1-flatten*flatten*(3-2*flatten))}px`);
+    }
     function paintFooter(cover,desktop = false) {
+      paintFooterCorners(cover);
       set(footer,{autoAlpha:desktop && cover<=0 ? 0 : 1,y:desktop ? height*(1-cover) : 0});
       footer.inert = cover<=.001;
       footer.setAttribute('aria-hidden',String(footer.inert));
@@ -471,9 +476,11 @@
     }
     function paintScene() {
       if (!enhanced && !mobileOverlap) {
+        footerStart=window.scrollY+footer.getBoundingClientRect().top;
+        const cover=Math.max(0,Math.min(1,(window.scrollY-footerStart+height)/height));
+        paintFooterCorners(cover);
         if(root.classList.contains('footer-native-overlap')) {
-          footerStart=window.scrollY+footer.getBoundingClientRect().top;
-          const cover=Math.max(0,Math.min(1,(window.scrollY-footerStart+height)/height)),last=panels[panels.length-1].element;
+          const last=panels[panels.length-1].element;
           set(last,{autoAlpha:1-cover,scale:1-.025*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
           root.dataset.footerProgress=cover.toFixed(4);root.dataset.footerStart=footerStart.toFixed(1);
         }
