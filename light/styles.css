@@ -160,7 +160,7 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .footer h2:focus{outline:none}
 .footer-content{display:flex;flex-direction:column;align-items:center;flex:none;gap:var(--footer-group-gap);width:calc(100% - 40px);max-width:464px;padding-bottom:env(safe-area-inset-bottom)}
 .footer-description{width:100%;min-height:58px;margin:0;font-size:18px;font-weight:500;line-height:1.6;letter-spacing:.18px;text-align:center;text-wrap:pretty;overflow-wrap:break-word}
-.footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:35px;gap:28px 8px;width:100%;font-size:26px;font-weight:500;line-height:1.6;letter-spacing:.26px;text-align:center}
+.footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:35px;gap:28px 8px;width:100%;font-size:18px;font-weight:600;line-height:1.6;letter-spacing:.18px;text-align:center}
 .footer-links a{position:relative;justify-self:center}
 .footer-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:rgba(255,255,255,.34);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .footer-links a:hover::after,.footer-links a:focus-visible::after{transform:scaleX(1);transform-origin:left}
@@ -179,7 +179,6 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
   .footer{height:100dvh;--footer-group-gap:clamp(8px,calc((var(--scene-height) - 360px) * .2142857143),60px);--footer-copy-height:87px;--footer-center-shift:clamp(0px,calc((var(--scene-height) - 480px) * .1515625),48.5px)}
   .footer-content{max-width:400px}
   .footer-description{min-height:87px}
-  .footer-links{font-size:22px;letter-spacing:.22px}
 }
 @media(max-width:348px){.footer-agent-button{padding-inline:clamp(8px,calc((100vw - 301px) / 2),24px)}}
 @media(prefers-reduced-motion:reduce){.footer-links a::after{transition:none}}
