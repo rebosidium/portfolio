@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="d5ba6db4bc1f">
+<html lang="en" data-build="b163377638d7">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=dbab6529ad36">
+  <link rel="stylesheet" href="styles.css?v=c09c61a16d7c">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -50,10 +50,10 @@
       window.pageDeadline = setTimeout(window.releasePageFallback,21000);
     }
   </script>
-  <script type="module" src="portrait-boot.js?v=3e5ba6df0a84" onerror="window.resolvePortraitReady(false)"></script>
+  <script type="module" src="portrait-boot.js?v=f057bf2ff42d" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=dfcb1c844fbc" onerror="window.releasePageFallback()"></script>
-  <script defer src="mobile-nav.js?v=ebb5adeed300" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="app.js?v=2423a259156e" onerror="window.releasePageFallback()"></script>
+  <script defer src="mobile-nav.js?v=8aa5c95c8e0f" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=64c87e417052"></script></template>
   <script>
     (() => {
@@ -76,7 +76,7 @@
         armed = true;
         let pageLoaded = document.readyState === 'complete',portraitSettled = false,previewSettled = false,unsubscribe;
         let decodedPreview = '',previewDecoding = false;
-        const preview = document.querySelector('#selected-works .work-image');
+        const preview = document.querySelector('.works-screen .work-image');
         const cleanup = () => {
           unsubscribe?.();
           window.removeEventListener('load',pageReady);
@@ -176,13 +176,15 @@
     </section>
   </div>
   </div>
-  <section class="works-screen" data-work-surface="gray" id="selected-works" aria-labelledby="works-title" data-scene="works" data-node-id="162:2545">
+  <section class="works-heading-screen" id="selected-works" aria-labelledby="works-title">
     <h2 id="works-title" tabindex="-1" data-node-id="162:2491">Selected Works</h2>
+  </section>
+  <section class="works-screen" data-work-surface="gray" id="selected-work-1" aria-labelledby="larixon-title" data-scene="works" data-node-id="162:2545">
     <div class="works-body">
       <article class="work-card" aria-labelledby="larixon-title" data-node-id="162:2544">
         <div class="work-copy" data-node-id="162:2526">
           <div class="work-heading">
-          <h3 id="larixon-title" data-node-id="162:2519">Larixon Classifieds</h3>
+          <h3 id="larixon-title" tabindex="-1" data-node-id="162:2519">Larixon Classifieds</h3>
           <p class="work-meta" data-node-id="162:2520"><span data-node-id="162:2521">Classifieds</span><span aria-hidden="true" data-node-id="162:2546">·</span><span data-node-id="162:2523">Aug. 2025 — Present</span></p>
           </div>
           <p class="work-description" data-node-id="162:2524">International classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad &amp; Tobago, and Jamaica, serving 5M+ MAU.</p>

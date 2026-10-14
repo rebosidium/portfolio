@@ -213,7 +213,7 @@
   mountScenes();
   function mountScenes() {
     const intro = document.querySelector('.intro-screen');
-    const works = document.querySelector('.works-screen');
+    const works = document.querySelector('.works-heading-screen');
     const stage = document.querySelector('.scene-stage');
     const flow = document.querySelector('.scene-flow');
     const hero = document.querySelector('.hero');
@@ -227,7 +227,7 @@
       artwork:element.querySelector('.work-artwork'),image:element.querySelector('.work-image'),
       imageError:element.querySelector('.work-image-error'),imageReady:false,imageFailed:false,imagePending:null,imageTween:null,artworkStartedAt:0,descriptionStartedAt:0,start:0,height:0
     }));
-    const parts = panels.flatMap(panel => panel.parts);
+    const parts = [heading,...panels.flatMap(panel => panel.parts)];
     let resolveFirstPreview;
     const firstPreviewReady = new Promise(resolve => {resolveFirstPreview = resolve;});
     if (!mobile.matches) window.deferSiteUpdates(firstPreviewReady);
@@ -241,10 +241,10 @@
     const sceneHeight = () => mobile.matches ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => mobile.matches ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
-    let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
+    let height = 0,travel = 1,bandHeight = 0,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY,desktopPaintedY = window.scrollY,initialLocationHandled = false,nativePaintedPose = null,pendingMobileWorkStep = null;
-    let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false;
+    let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false,pendingMobileHeading = null;
     const set = (elements,values) => {
       if (window.gsap) gsap.set(elements,values);
       else for (const element of Array.isArray(elements) ? elements : [elements]) {
@@ -254,9 +254,9 @@
       }
     };
     function focusWhenReady() {
-      if (!focusAtEnd || scrollTween?.isActive()) return;
+      if (!focusAtEnd || scrollTween?.isActive() || root.classList.contains('mobile-menu-open')) return;
       const target=focusAtEnd===true ? heading : focusAtEnd;
-      if (getComputedStyle(target).visibility==='hidden' || +getComputedStyle(target).opacity<.99 || target.closest('.works-screen')?.inert) return;
+      if (getComputedStyle(target).visibility==='hidden' || +getComputedStyle(target).opacity<.99 || target.closest('.works-screen,.works-heading-screen')?.inert) return;
       focusAtEnd=false;target.focus({preventScroll:true});
     }
     function syncAvailability() {
@@ -345,14 +345,17 @@
       return middle;
     }
     function measureWorkPanels(base) {
-      let start = base + intro.offsetHeight;
+      let start = base + intro.offsetHeight + bandHeight;
       panels.forEach((panel,index) => {
         panel.start = start;panel.height = parseFloat(getComputedStyle(panel.element).height) || panel.element.offsetHeight;start += panel.height;
         panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,height-panel.height)}px`);
-        panel.element.style.setProperty('--work-layer',String(index+2));
+        panel.element.style.setProperty('--work-layer',String(index+3));
       });
     }
     function readingPose(y,previousHeight) {
+      if (y>=panels[0].start-bandHeight && y<panels[0].start) {
+        return {index:0,offset:y-panels[0].start,heading:(y-panels[0].start+bandHeight)/Math.max(1,bandHeight)};
+      }
       for (let index=1;index<panels.length;index++) {
         const start = panels[index].start;
         if (y>=start-previousHeight && y<start) return {index,cover:(y-start+previousHeight)/previousHeight};
@@ -364,6 +367,8 @@
     }
     function paintWorkPanels() {
       let visibleIndex = 0,backgroundIndex = 0;
+      const titleBounds = works.getBoundingClientRect();
+      if (titleBounds.bottom>0 && titleBounds.top<height*.9) reveal([heading]);
       panels.forEach((panel,index) => {
         const next = panels[index+1];
         const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+height)/height)) : 0;
@@ -395,11 +400,16 @@
     }
     function paintDesktopPanels() {
       let visibleIndex=0,backgroundIndex=0,overlapping=false;
+      const lift=Math.max(0,Math.min(bandHeight,desktopPaintedY-travel));
+      set(works,{autoAlpha:progress>0 ? 1 : 0,y:height*(1-progress)-lift});
+      const titleBounds=works.getBoundingClientRect();
+      if (progress>0 && titleBounds.bottom>0 && titleBounds.top<height*.9) reveal([heading]);
+      if (lift>0 && lift<bandHeight) overlapping=true;
       panels.forEach((panel,index)=>{
-        const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
-        const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : 0;
+        const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-bandHeight-(index-1)*height)/height));
+        const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-bandHeight-index*height)/height)) : 0;
         const visible=entering>0 && covering<.999;
-        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering),scale:1-.025*covering});
+        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering)+(index===0 ? bandHeight-lift : 0),scale:1-.025*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
         panel.element.dataset.coverProgress=covering.toFixed(4);
         if (entering>=.5) visibleIndex=index;
@@ -419,20 +429,27 @@
     }
     function nativeWorkPose(y) {
       const starts=panels.map(panel=>y+panel.element.getBoundingClientRect().top);
+      const titleStart=y+works.getBoundingClientRect().top;
+      if (y>=titleStart && y<starts[0]) return {step:(y-starts[0])/Math.max(1,height),heading:(y-titleStart)/Math.max(1,starts[0]-titleStart)};
       for(let index=panels.length-1;index>=0;index--) {
         if(y>=starts[index])return {step:index+(y-starts[index])/(parseFloat(getComputedStyle(panels[index].element).height)||height)};
       }
-      return {intro:Math.max(0,Math.min(1,1-(starts[0]-y)/Math.max(1,height)))};
+      return {intro:Math.max(0,Math.min(1,1-(titleStart-y)/Math.max(1,height)))};
     }
-    function nativeDestination(step) {
-      const index=Math.min(panels.length-1,Math.floor(step)),panel=panels[index];
+    function nativeDestination(step,titlePhase) {
+      if (step<0) {
+        const start=works.getBoundingClientRect().top+window.scrollY;
+        return start+bandHeight*(titlePhase ?? Math.max(0,Math.min(1,1+step*height/Math.max(1,bandHeight))));
+      }
+      const index=Math.max(0,Math.min(panels.length-1,Math.floor(step))),panel=panels[index];
       return panel.element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panel.element).height);
     }
     function handleInitialLocation() {
       if (initialLocationHandled || mobile.matches && root.dataset.mobileNavReady!=='true') return;
       const index=panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
+      const title=location.hash==='#selected-works';
       initialLocationHandled=true;
-      if(index>=0){if(enhanced||mobileOverlap)goToWorks(false,index);else loadImage(false,panels[index]);}
+      if(title||index>=0){if(enhanced||mobileOverlap)goToWorks(false,title ? 0 : index,title);else loadImage(false,panels[title ? 0 : index]);}
     }
     function parkPortrait() {
       if (!parked && enhanced && progress >= .999) parked = !!window.portraitPlayer?.setDesktopCoverPose?.(0);
@@ -488,11 +505,11 @@
     function nativeLayout() {
       scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel=>panel.imageTween?.kill());revealed.clear();releasePortrait();
       root.classList.remove('scene-enhanced','mobile-overlap');enhanced = false;mobileOverlap = false;
-      for (const element of [intro,...panels.map(panel=>panel.element),...parts,...panels.map(panel=>panel.artwork)]) {
+      for (const element of [intro,works,...panels.map(panel=>panel.element),...parts,...panels.map(panel=>panel.artwork)]) {
         if (window.gsap) gsap.set(element,{clearProps:'transform,opacity,visibility'});
         else {element.style.removeProperty('transform');element.style.removeProperty('opacity');element.style.removeProperty('visibility');}
       }
-      for (const element of [intro,...panels.map(panel=>panel.element)]) {
+      for (const element of [intro,works,...panels.map(panel=>panel.element)]) {
         element.inert=false;element.removeAttribute('aria-hidden');element.style.removeProperty('pointer-events');
       }
       document.body.style.removeProperty('background-color');
@@ -506,7 +523,7 @@
       warmDesktopPreviews();
       const nextHeight = sceneHeight();
       const offset = sceneOffset();
-      const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,oldDesktopTravel=travel,currentY = window.scrollY;
+      const oldHeight = height,oldBandHeight = bandHeight,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,oldDesktopTravel=travel,currentY = window.scrollY;
       // Browsers can clamp scrollY before resize fires; preserve the last painted reading pose.
       const viewportChanged = wasMobile && (Math.abs(oldHeight - nextHeight) > .5 || Math.abs(viewportOffset - offset) > .5 || viewportWidth !== window.innerWidth);
       const previousY = viewportChanged ? mobilePaintedY : currentY;
@@ -514,15 +531,16 @@
       const previousPanels = panels.map(panel=>({start:panel.start,height:panel.height}));
       const desktopViewportChanged=wasEnhanced && (Math.abs(oldHeight-nextHeight)>.5 || Math.abs(viewportOffset-offset)>.5 || viewportWidth!==window.innerWidth);
       const oldDesktopY=desktopViewportChanged ? desktopPaintedY : currentY;
-      const oldDesktopStep=wasEnhanced && oldHeight>0 && oldDesktopY>=oldDesktopTravel ? Math.max(0,(oldDesktopY-oldDesktopTravel)/oldHeight) : null;
+      const oldDesktopStep=wasEnhanced && oldHeight>0 && oldDesktopY>=oldDesktopTravel ? (oldDesktopY-oldDesktopTravel-oldBandHeight)/oldHeight : null;
+      const oldDesktopHeading=oldDesktopStep!==null && oldDesktopStep<0 ? (oldDesktopY-oldDesktopTravel)/Math.max(1,oldBandHeight) : null;
       const nativeViewportChanged=Math.abs(oldHeight-nextHeight)>.5 || viewportWidth!==window.innerWidth || Math.abs(viewportOffset-offset)>.5;
       const nativePose=!wasEnhanced && !wasMobile && oldHeight>0 ? nativeViewportChanged && nativePaintedPose ? nativePaintedPose : nativeWorkPose(currentY) : null;
       // Mobile navigation initializes asynchronously at the breakpoint. Retain
       // the work position across its temporary native header/layout phase.
       if(mobile.matches && root.dataset.mobileNavReady!=='true') {
         const step=oldDesktopStep ?? nativePose?.step;
-        if(step!==undefined && step!==null)pendingMobileWorkStep=step;
-      } else if(!mobile.matches)pendingMobileWorkStep=null;
+        if(step!==undefined && step!==null){pendingMobileWorkStep=step;pendingMobileHeading=oldDesktopHeading ?? nativePose?.heading ?? null;}
+      } else if(!mobile.matches){pendingMobileWorkStep=null;pendingMobileHeading=null;}
       const oldProgress = wasMobile ? Math.max(0,Math.min(1,(previousY - oldStart) / Math.max(1,oldTravel)))
         : wasEnhanced ? Math.max(0,Math.min(1,oldDesktopY/oldDesktopTravel)) : !wasEnhanced && oldHeight > 0 ? Number(works.getBoundingClientRect().top <= oldHeight * .5) : progress;
       progress = oldProgress;
@@ -531,10 +549,17 @@
       viewportOffset = offset;viewportWidth = window.innerWidth;
       root.style.setProperty('--scene-height',`${height}px`);root.style.setProperty('--scene-offset',`${offset}px`);
       root.style.setProperty('--scroll-travel',`${travel}px`);root.style.setProperty('--intro-content-height',`${contentHeight}px`);
-      root.style.setProperty('--work-stack-travel',`${(panels.length-1)*height}px`);
+      // Measure the natural band independently of the previous enhanced height.
+      const previousBandStyle=works.style.height;
+      works.style.height=mobile.matches ? '140px' : 'clamp(76px,calc(var(--scene-height) * .2),140px)';
+      bandHeight=parseFloat(getComputedStyle(works).height) || works.offsetHeight;
+      root.style.setProperty('--works-heading-height',`${bandHeight}px`);
+      works.style.height=previousBandStyle;
+      root.style.setProperty('--work-stack-travel',`${bandHeight+(panels.length-1)*height}px`);
       root.style.setProperty('--header-top',`${headerTop}px`);
       root.style.setProperty('--intro-shift',`${Math.max(0,headerTop + 41 - (height - contentHeight)/2)}px`);
       root.dataset.sceneHeight = height.toFixed(1);root.dataset.sceneOffset = offset.toFixed(1);stage.dataset.viewportHeight = height.toFixed(1);
+      root.dataset.workHeadingHeight = bandHeight.toFixed(1);
       if (mobile.matches && !reduced.matches && window.gsap && root.dataset.mobileNavReady === 'true') {
         if (!wasMobile) {nativeLayout();mobileOverlap = true;root.classList.add('mobile-overlap');resetReveals();}
         const introHeight = intro.offsetHeight;
@@ -547,16 +572,19 @@
         mobileStart = currentY + flow.getBoundingClientRect().top + read - offset;
         measureWorkPanels(currentY+flow.getBoundingClientRect().top);
         const panelsChanged = panels.some((panel,index)=>Math.abs(panel.start-previousPanels[index].start)>.5 || Math.abs(panel.height-previousPanels[index].height)>.5);
-        const cardMiddle = cardMiddleInPanel(panels[0]);
+        const cardMiddle = bandHeight+cardMiddleInPanel(panels[0]);
         mobileRecedeStart = Math.min(1,Math.max(0,(mobileTravel + cardMiddle - height) / mobileTravel));
         root.style.setProperty('--mobile-intro-top',`${offset - read}px`);
         root.dataset.sceneRead = read.toFixed(1);root.dataset.sceneStart = mobileStart.toFixed(1);root.dataset.sceneTravel = mobileTravel.toFixed(1);
         root.dataset.sceneRest = '0';root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
         const previousWorkStep=pendingMobileWorkStep ?? oldDesktopStep ?? nativePose?.step;
+        const previousHeading=pendingMobileHeading ?? oldDesktopHeading ?? nativePose?.heading;
         if (previousWorkStep!==undefined && previousWorkStep!==null && !wasMobile) {
-          const index=Math.min(panels.length-1,Math.floor(previousWorkStep)),fraction=previousWorkStep-index;
-          window.scrollTo(0,fraction>0 && index<panels.length-1 ? panels[index+1].start-height+height*fraction : panels[index].start);
-          pendingMobileWorkStep=null;
+          const index=Math.max(0,Math.min(panels.length-1,Math.floor(previousWorkStep))),fraction=previousWorkStep-index;
+          const destination=previousWorkStep<0 ? panels[0].start-bandHeight+bandHeight*(previousHeading ?? Math.max(0,Math.min(1,1+previousWorkStep*oldHeight/Math.max(1,oldBandHeight))))
+            : fraction>0 && index<panels.length-1 ? panels[index+1].start-height+height*fraction : panels[index].start;
+          window.scrollTo(0,destination);
+          pendingMobileWorkStep=null;pendingMobileHeading=null;
         } else if (!wasMobile && oldProgress>0 && (wasEnhanced || location.hash==='#selected-works' && currentY<mobileStart)) {
           window.scrollTo(0,mobileStart + mobileTravel * (location.hash === '#selected-works' ? 1 : oldProgress));
         } else if (wasMobile && (viewportChanged || panelsChanged || Math.abs(oldStart - mobileStart) > .5 || Math.abs(oldTravel - mobileTravel) > .5)) {
@@ -565,15 +593,14 @@
           else if (oldProgress >= 1) {
             const destination = previousPose ? 'cover' in previousPose
               ? panels[previousPose.index].start-height+height*previousPose.cover
-              : panels[previousPose.index].start+previousPose.offset
+              : panels[previousPose.index].start+(previousPose.heading!==undefined ? bandHeight*(previousPose.heading-1) : previousPose.offset)
               : mobileStart+mobileTravel+Math.max(0,previousY-oldStart-oldTravel);
             window.scrollTo(0,destination);
           }
         }
         paintScene();handleInitialLocation();return;
       }
-      const titleHeight=Math.min(140,Math.max(76,height*.2));
-      const worksFit=panels.every((panel,index)=>panel.card.offsetHeight+(index===0 ? titleHeight+40 : 0)<=height);
+      const worksFit=panels.every(panel=>panel.card.offsetHeight<=height);
       const fits = height >= contentHeight + headerTop + 53 && worksFit && !reduced.matches && !mobile.matches && !!window.gsap;
       if (!fits) {
         const showWorks = oldProgress >= .5 || location.hash === '#selected-works';
@@ -581,28 +608,33 @@
           const keepMobileReading = mobileOverlap && mobile.matches;
           nativeLayout();
           if(wasEnhanced && !mobile.matches) {
-            const step=oldDesktopStep,index=step===null ? 0 : Math.min(panels.length-1,Math.floor(step));
-            const destination=step===null ? intro.offsetHeight-Math.max(0,height*(1-oldProgress)) : panels[index].element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panels[index].element).height);
+            const step=oldDesktopStep;
+            const destination=step===null ? intro.offsetHeight-Math.max(0,height*(1-oldProgress)) : nativeDestination(step,oldDesktopHeading);
             window.scrollTo(0,oldProgress>0 ? destination : 0);
           } else if(wasEnhanced && mobile.matches && oldDesktopStep!==null) {
-            window.scrollTo(0,nativeDestination(oldDesktopStep));
+            window.scrollTo(0,nativeDestination(oldDesktopStep,oldDesktopHeading));
           } else if(wasMobile && !mobile.matches && previousPose) {
             const panel=panels[previousPose.index],start=panel.element.getBoundingClientRect().top+window.scrollY;
-            window.scrollTo(0,'cover' in previousPose ? start-height+height*previousPose.cover : start+Math.min(previousPose.offset,Math.max(0,parseFloat(getComputedStyle(panel.element).height)-height)));
+            window.scrollTo(0,'cover' in previousPose ? start-height+height*previousPose.cover : previousPose.heading!==undefined ? nativeDestination(-1,previousPose.heading) : start+Math.min(previousPose.offset,Math.max(0,parseFloat(getComputedStyle(panel.element).height)-height)));
           } else window.scrollTo(0,keepMobileReading ? currentY : showWorks ? works.offsetTop : wasMobile ? Math.min(currentY,Math.max(0,intro.offsetHeight - height)) : 0);
         }
         else if (!root.dataset.sceneState) nativeLayout();
-        if(!wasEnhanced && !wasMobile && nativeViewportChanged && nativePose?.step!==undefined)window.scrollTo(0,nativeDestination(nativePose.step));
+        if(!wasEnhanced && !wasMobile && nativeViewportChanged && nativePose?.step!==undefined)window.scrollTo(0,nativeDestination(nativePose.step,nativePose.heading));
         root.dataset.sceneView = showWorks ? 'works' : 'intro';
         nativePaintedPose=nativeWorkPose(window.scrollY);
       } else {
         if (mobileOverlap) nativeLayout();
         if (!enhanced) {enhanced = true;root.classList.add('scene-enhanced');resetReveals();}
-        panels.forEach((panel,index)=>{panel.start=travel+index*height;panel.height=height;panel.element.style.setProperty('--work-layer',String(index+2));});
-        if (!wasEnhanced || desktopViewportChanged) {
+        panels.forEach((panel,index)=>{panel.start=travel+bandHeight+index*height;panel.height=height;panel.element.style.setProperty('--work-layer',String(index+3));});
+        if (!wasEnhanced || desktopViewportChanged || Math.abs(oldBandHeight-bandHeight)>.5) {
           scrollTween?.kill();
           const workStep=oldDesktopStep!==null ? oldDesktopStep : previousPose ? 'cover' in previousPose ? previousPose.index-1+previousPose.cover : previousPose.index+previousPose.offset/Math.max(1,oldHeight) : nativePose?.step;
-          window.scrollTo(0,workStep!==undefined && workStep!==null ? travel+Math.min(panels.length-1,workStep)*height : travel*(nativePose?.intro ?? oldProgress));
+          const titlePhase=oldDesktopHeading ?? previousPose?.heading ?? nativePose?.heading;
+          const destination=workStep!==undefined && workStep!==null ? workStep<0
+            ? travel+bandHeight*(titlePhase ?? Math.max(0,Math.min(1,1+workStep*oldHeight/Math.max(1,oldBandHeight))))
+            : travel+bandHeight+Math.min(panels.length-1,workStep)*height
+            : travel*(nativePose?.intro ?? oldProgress);
+          window.scrollTo(0,destination);
           if (wasEnhanced) resizeWheelUntil = performance.now() + 80;
         }
         paintScene();
@@ -617,11 +649,11 @@
       else paintScene();
     }
     function scheduleScroll() {if (!scrollFrame) scrollFrame = requestAnimationFrame(readScroll);}
-    function goToWorks(focus = false,index = 0) {
+    function goToWorks(focus = false,index = 0,title = false) {
       if (!enhanced && !mobileOverlap) return;
-      loadImage(true,panels[index]);focusAtEnd = focus ? panels[index].focusTarget : false;
+      loadImage(true,panels[index]);focusAtEnd = focus ? title ? heading : panels[index].focusTarget : false;
       scrollTween?.kill();
-      const destination = mobileOverlap ? index===0 ? mobileStart+mobileTravel : panels[index].start : travel+index*height;
+      const destination = title ? mobileOverlap ? mobileStart+mobileTravel : travel : panels[index].start;
       if (!window.gsap) {window.scrollTo(0,destination);paintScene();return;}
       const proxy = {y:window.scrollY};
       scrollTween = gsap.to(proxy,{y:destination,duration:1.05,ease:'power2.inOut',onUpdate:() => {window.scrollTo(0,proxy.y);paintScene();},onComplete:() => {scrollTween=null;paintScene();focusWhenReady();}});
@@ -641,7 +673,7 @@
     }
     workLink.addEventListener('click',event => {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open') || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
-      event.preventDefault();if (location.hash !== '#selected-works') history.pushState(null,'','#selected-works');goToWorks(true);
+      event.preventDefault();if (location.hash !== '#selected-works') history.pushState(null,'','#selected-works');goToWorks(true,0,true);
     });
     panels.forEach(panel=>panel.element.addEventListener('focusin',event => {
       if ((enhanced || mobileOverlap) && progress<.999 && event.target!==heading && panel===panels[0]) goToWorks();
@@ -650,7 +682,8 @@
     const syncLocation = () => {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
       const index=panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
-      if (index>=0) goToWorks(true,index);
+      if (location.hash==='#selected-works') goToWorks(true,0,true);
+      else if (index>=0) goToWorks(true,index);
       else {scrollTween?.kill();window.scrollTo(0,0);paintScene();document.querySelector('.header > .name').focus({preventScroll:true});}
     };
     window.addEventListener('wheel',onWheel,{passive:false});window.addEventListener('touchstart',stopAutoScroll,{passive:true});
@@ -658,8 +691,11 @@
     window.addEventListener('scroll',scheduleScroll,{passive:true});window.addEventListener('resize',measureViewport,{passive:true});
     window.addEventListener('mobile:menu-closed',scheduleMeasure);
     window.addEventListener('mobile:work-navigation',event => {
-      if (!mobileOverlap || event.detail?.target !== works) return;
-      event.preventDefault();measureViewport();goToWorks(true);
+      if (!mobileOverlap) return;
+      const title=event.detail?.target===works;
+      const index=panels.findIndex(panel=>panel.element===event.detail?.target);
+      if (!title && index<0) return;
+      event.preventDefault();measureViewport();goToWorks(true,title ? 0 : index,title);
     });
     window.visualViewport?.addEventListener('resize',measureViewport,{passive:true});window.visualViewport?.addEventListener('scroll',scheduleMeasure,{passive:true});
     window.addEventListener('popstate',syncLocation);window.addEventListener('hashchange',syncLocation);window.addEventListener('pageshow',scheduleMeasure);
@@ -672,7 +708,7 @@
         syncAvailability();
       } else scheduleMeasure();
     });
-    if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);panels.forEach(panel=>observer.observe(panel.element));}
+    if (typeof ResizeObserver === 'function') {const observer = new ResizeObserver(scheduleMeasure);observer.observe(hero);observer.observe(works);panels.forEach(panel=>observer.observe(panel.element));}
     document.fonts?.ready.then(scheduleMeasure);
     Promise.resolve(window.mobileNavigationReady).then(scheduleMeasure);
     Promise.resolve(window.portraitReady).then(() => {
