@@ -6,7 +6,7 @@ try {
     interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=c6815470ab3d',
     mobileLayout:window.mobileLayout,mobileScrollStart:.28,
     mobileCoverTop:() => document.documentElement.classList.contains('mobile-overlap')
-      ? document.querySelector('.works-heading-screen')?.getBoundingClientRect().top ?? null : null
+      ? document.querySelector('.works-screen')?.getBoundingClientRect().top ?? null : null
   });
   window.portraitPlayer = player;
   player.ready.then(window.resolvePortraitReady,() => window.resolvePortraitReady(false));
