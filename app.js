@@ -376,7 +376,7 @@
         // Longer copy can still scroll naturally until its actions are readable.
         let titleTop = 0;
         for (let element=panel.element.querySelector('h3');element && element!==panel.element;element=element.offsetParent) titleTop += element.offsetTop;
-        const titleRest = parseFloat(getComputedStyle(panel.element).getPropertyValue('--work-title-rest')) || 60;
+        const titleRest = parseFloat(getComputedStyle(panel.element).getPropertyValue('--work-title-rest')) || 40;
         panel.element.style.setProperty('--work-read-travel',`${Math.max(0,titleTop-titleRest)}px`);
         const style = getComputedStyle(panel.element);
         panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
