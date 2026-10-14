@@ -235,6 +235,8 @@
       artwork:element.querySelector('.work-artwork'),image:element.querySelector('.work-image'),
       imageError:element.querySelector('.work-image-error'),imageReady:false,imageFailed:false,imagePending:null,imageTween:null,artworkStartedAt:0,descriptionStartedAt:0,start:0,height:0
     }));
+    // Keep the final surface above every work layer as the portfolio grows.
+    footer.style.setProperty('--footer-layer',String(panels.length+2));
     const parts = panels.flatMap(panel => panel.parts);
     let resolveFirstPreview;
     const firstPreviewReady = new Promise(resolve => {resolveFirstPreview = resolve;});
@@ -311,6 +313,10 @@
     }
     function loadImage(eager = false,panel = panels[0],priority = eager ? 'high' : 'low') {
       const {artwork,image,imageError} = panel;
+      if (!image) {
+        panel.imageReady = true;artwork.dataset.imageState = 'placeholder';revealArtwork(panel);
+        return panel.imagePending ||= Promise.resolve();
+      }
       if (eager) image.loading = 'eager';
       // Warm desktop previews independently of the portrait. When their card
       // enters view, promote even an already pending request before returning.
