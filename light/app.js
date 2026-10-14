@@ -1,73 +1,79 @@
 (() => {
   'use strict';
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
-  const agentButton = document.querySelector('.agent-button');
-  const agentStatus = document.querySelector('#agent-copy-status');
-  const manualCopy = document.querySelector('.agent-copy-fallback');
-  const promptField = document.querySelector('#agent-prompt');
-  promptField.value = agentPrompt;
-  let copying = false,copyFeedback;
-  function copyWithSelection() {
-    const previousFocus = document.activeElement;
-    const selection = document.getSelection();
-    const previousRanges = Array.from({length:selection?.rangeCount || 0},(_,index) => selection.getRangeAt(index).cloneRange());
-    const field = document.createElement('textarea');
-    field.value = agentPrompt;
-    field.readOnly = true;
-    field.style.cssText = 'position:fixed;left:-9999px;top:0;font-size:16px';
-    document.body.append(field);
-    let copied = false;
-    try {
-      field.focus({preventScroll:true});
-      field.select();
-      copied = document.execCommand('copy');
-    } catch (_) {
-      copied = false;
-    } finally {
-      field.remove();
-      previousFocus?.focus({preventScroll:true});
-      if (selection) {
-        selection.removeAllRanges();
-        previousRanges.forEach(range => selection.addRange(range));
+  const agentButtons = [...document.querySelectorAll('.agent-button')];
+  const agentButton = document.querySelector('.introduction .agent-button');
+  agentButtons.forEach(mountAgentCopy);
+  function mountAgentCopy(agentButton) {
+    const control = agentButton.closest('[data-agent-control]');
+    const agentStatus = control.querySelector('[role="status"]');
+    const manualCopy = control.querySelector('.agent-copy-fallback');
+    const promptField = manualCopy.querySelector('textarea');
+    promptField.value = agentPrompt;
+    let copying = false,copyFeedback;
+    function copyWithSelection() {
+      const previousFocus = document.activeElement;
+      const selection = document.getSelection();
+      const previousRanges = Array.from({length:selection?.rangeCount || 0},(_,index) => selection.getRangeAt(index).cloneRange());
+      const field = document.createElement('textarea');
+      field.value = agentPrompt;
+      field.readOnly = true;
+      field.style.cssText = 'position:fixed;left:-9999px;top:0;font-size:16px';
+      document.body.append(field);
+      let copied = false;
+      try {
+        field.focus({preventScroll:true});
+        field.select();
+        copied = document.execCommand('copy');
+      } catch (_) {
+        copied = false;
+      } finally {
+        field.remove();
+        previousFocus?.focus({preventScroll:true});
+        if (selection) {
+          selection.removeAllRanges();
+          previousRanges.forEach(range => selection.addRange(range));
+        }
       }
+      return copied;
     }
-    return copied;
+    agentButton.addEventListener('click',async () => {
+      if (copying) return;
+      copying = true;
+      agentButton.setAttribute('aria-busy','true');
+      clearTimeout(copyFeedback);
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(agentPrompt);
+          copied = true;
+        }
+      } catch (_) {
+        copied = false;
+      }
+      if (!copied) copied = copyWithSelection();
+      if (copied) {
+        manualCopy.hidden = true;
+        agentButton.classList.add('is-copied');
+        agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
+        copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
+      } else {
+        agentButton.classList.remove('is-copied');
+        manualCopy.hidden = false;
+        agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
+        promptField.focus({preventScroll:true});
+        promptField.select();
+        if(control.closest('.footer'))promptField.scrollIntoView({block:'nearest',inline:'nearest'});
+      }
+      agentButton.setAttribute('aria-busy','false');
+      copying = false;
+    });
   }
-  agentButton.addEventListener('click',async () => {
-    if (copying) return;
-    copying = true;
-    agentButton.setAttribute('aria-busy','true');
-    clearTimeout(copyFeedback);
-    let copied = false;
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(agentPrompt);
-        copied = true;
-      }
-    } catch (_) {
-      copied = false;
-    }
-    if (!copied) copied = copyWithSelection();
-    if (copied) {
-      manualCopy.hidden = true;
-      agentButton.classList.add('is-copied');
-      agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
-      copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
-    } else {
-      agentButton.classList.remove('is-copied');
-      manualCopy.hidden = false;
-      agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
-      promptField.focus({preventScroll:true});
-      promptField.select();
-    }
-    agentButton.setAttribute('aria-busy','false');
-    copying = false;
-  });
   const root = document.documentElement;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = window.mobileLayout;
-  mountAgentIconMotion();
-  function mountAgentIconMotion() {
+  agentButtons.forEach(mountAgentIconMotion);
+  function mountAgentIconMotion(agentButton) {
     // Move direct children so Copilot travels with its clipping wrapper.
     const icons = [...agentButton.querySelector('.agent-button-logos').children];
     if (!icons.length || icons.some(icon => typeof icon.animate !== 'function')) return;
@@ -142,7 +148,7 @@
     ? [...document.querySelectorAll('.header > .identity,.menu-toggle')]
     : [...document.querySelectorAll('.header > a,.header nav a:not(.mobile-only)')];
   const portrait = document.querySelector('.portrait');
-  const copy = [...document.querySelectorAll('.introduction > h1,.introduction > p,.agent-button')];
+  const copy = [...document.querySelectorAll('.introduction > h1,.introduction > p,.introduction .agent-button')];
   let menuTimeline,heroTimeline,resolveMenu,heroStarted = false;
   const menuReady = new Promise(resolve => {resolveMenu = resolve;});
   const stamp = name => {root.dataset[name] = performance.now().toFixed(1);};
@@ -214,6 +220,8 @@
   function mountScenes() {
     const intro = document.querySelector('.intro-screen');
     const works = document.querySelector('.works-screen');
+    const footer = document.querySelector('.footer');
+    const footerTitle = footer.querySelector('h2');
     const stage = document.querySelector('.scene-stage');
     const flow = document.querySelector('.scene-flow');
     const hero = document.querySelector('.hero');
@@ -244,7 +252,7 @@
     const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
-    let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
+    let height = 0,travel = 1,footerStart = 0,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY,desktopPaintedY = window.scrollY,initialLocationHandled = false,nativePaintedPose = null,pendingMobileWorkStep = null;
     let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false;
@@ -259,7 +267,7 @@
     function focusWhenReady() {
       if (!focusAtEnd || scrollTween?.isActive()) return;
       const target=focusAtEnd===true ? heading : focusAtEnd;
-      if (getComputedStyle(target).visibility==='hidden' || +getComputedStyle(target).opacity<.99 || target.closest('.works-screen')?.inert) return;
+      if (getComputedStyle(target).visibility==='hidden' || +getComputedStyle(target).opacity<.99 || target.closest('.works-screen,.footer')?.inert) return;
       focusAtEnd=false;target.focus({preventScroll:true});
     }
     function syncAvailability() {
@@ -354,22 +362,35 @@
         panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,height-panel.height)}px`);
         panel.element.style.setProperty('--work-layer',String(index+2));
       });
+      footerStart = start;
     }
+    const readingPanel = index => index===panels.length ? {element:footer,start:footerStart,height} : panels[index];
     function readingPose(y,previousHeight) {
-      for (let index=1;index<panels.length;index++) {
-        const start = panels[index].start;
+      for (let index=1;index<=panels.length;index++) {
+        const start = readingPanel(index).start;
         if (y>=start-previousHeight && y<start) return {index,cover:(y-start+previousHeight)/previousHeight};
       }
-      for (let index=panels.length-1;index>=0;index--) {
-        if (y>=panels[index].start) return {index,offset:y-panels[index].start};
+      for (let index=panels.length;index>=0;index--) {
+        if (y>=readingPanel(index).start) return {index,offset:y-readingPanel(index).start};
       }
       return null;
     }
+    function paintFooter(cover,desktop = false) {
+      set(footer,{autoAlpha:desktop && cover<=0 ? 0 : 1,y:desktop ? height*(1-cover) : 0});
+      footer.inert = cover<=.001;
+      footer.setAttribute('aria-hidden',String(footer.inert));
+      footer.style.pointerEvents = footer.inert ? 'none' : 'auto';
+      root.dataset.footerProgress = cover.toFixed(4);
+      root.dataset.footerStart = footerStart.toFixed(1);
+      if (cover>0 && cover<1) root.dataset.sceneState='overlap';
+      if (cover>=.999) root.dataset.sceneView='footer';
+    }
     function paintWorkPanels() {
       let visibleIndex = 0,backgroundIndex = 0;
+      const footerCover = Math.max(0,Math.min(1,(mobilePaintedY-footerStart+height)/height));
       panels.forEach((panel,index) => {
         const next = panels[index+1];
-        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+height)/height)) : 0;
+        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+height)/height)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
         set(panel.element,{autoAlpha:1-covering,scale:1-.025*covering,y:0});
         panel.element.inert = covering>=.999;
@@ -395,12 +416,14 @@
       });
       root.dataset.workSceneIndex = String(visibleIndex);
       document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F9F5F5';
+      paintFooter(footerCover);
     }
     function paintDesktopPanels() {
       let visibleIndex=0,backgroundIndex=0,overlapping=false;
+      const footerCover = Math.max(0,Math.min(1,(desktopPaintedY-footerStart+height)/height));
       panels.forEach((panel,index)=>{
         const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
-        const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : 0;
+        const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : footerCover;
         const visible=entering>0 && covering<.999;
         set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering),scale:1-.025*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
@@ -419,23 +442,26 @@
       if (overlapping) root.dataset.sceneState='overlap';
       if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F9F5F5';
       else document.body.style.removeProperty('background-color');
+      paintFooter(footerCover,true);
     }
     function nativeWorkPose(y) {
-      const starts=panels.map(panel=>y+panel.element.getBoundingClientRect().top);
-      for(let index=panels.length-1;index>=0;index--) {
-        if(y>=starts[index])return {step:index+(y-starts[index])/(parseFloat(getComputedStyle(panels[index].element).height)||height)};
+      const starts=[...panels.map(panel=>y+panel.element.getBoundingClientRect().top),y+footer.getBoundingClientRect().top];
+      if(root.classList.contains('footer-native-overlap') && y>=starts[panels.length]-height)return {step:panels.length-1+Math.max(0,Math.min(1,(y-starts[panels.length]+height)/height))};
+      for(let index=panels.length;index>=0;index--) {
+        if(y>=starts[index])return {step:index+(y-starts[index])/(parseFloat(getComputedStyle(readingPanel(index).element).height)||height)};
       }
       return {intro:Math.max(0,Math.min(1,1-(starts[0]-y)/Math.max(1,height)))};
     }
     function nativeDestination(step) {
-      const index=Math.min(panels.length-1,Math.floor(step)),panel=panels[index];
+      if(root.classList.contains('footer-native-overlap') && step>=panels.length-1)return footer.getBoundingClientRect().top+window.scrollY-height+(step-panels.length+1)*height;
+      const index=Math.min(panels.length,Math.floor(step)),panel=readingPanel(index);
       return panel.element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panel.element).height);
     }
     function handleInitialLocation() {
       if (initialLocationHandled || mobile.matches && root.dataset.mobileNavReady!=='true') return;
-      const index=panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
+      const index=location.hash==='#contact' ? panels.length : panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
       initialLocationHandled=true;
-      if(index>=0){if(enhanced||mobileOverlap)goToWorks(false,index);else loadImage(false,panels[index]);}
+      if(index>=0){if(enhanced||mobileOverlap)goToWorks(false,index);else if(index<panels.length)loadImage(false,panels[index]);}
     }
     function parkPortrait() {
       if (!parked && enhanced && progress >= .999) parked = !!window.portraitPlayer?.setDesktopCoverPose?.(0);
@@ -445,6 +471,12 @@
     }
     function paintScene() {
       if (!enhanced && !mobileOverlap) {
+        if(root.classList.contains('footer-native-overlap')) {
+          footerStart=window.scrollY+footer.getBoundingClientRect().top;
+          const cover=Math.max(0,Math.min(1,(window.scrollY-footerStart+height)/height)),last=panels[panels.length-1].element;
+          set(last,{autoAlpha:1-cover,scale:1-.025*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
+          root.dataset.footerProgress=cover.toFixed(4);root.dataset.footerStart=footerStart.toFixed(1);
+        }
         if (!mobile.matches) panels.forEach(panel=>{
           const bounds=panel.element.getBoundingClientRect();
           if (bounds.top<height && bounds.bottom>0) loadImage(true,panel);
@@ -490,12 +522,12 @@
     }
     function nativeLayout() {
       scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel=>panel.imageTween?.kill());revealed.clear();releasePortrait();
-      root.classList.remove('scene-enhanced','mobile-overlap');enhanced = false;mobileOverlap = false;
-      for (const element of [intro,...panels.map(panel=>panel.element),...parts,...panels.map(panel=>panel.artwork)]) {
+      root.classList.remove('scene-enhanced','mobile-overlap','footer-native-overlap');enhanced = false;mobileOverlap = false;
+      for (const element of [intro,footer,...panels.map(panel=>panel.element),...parts,...panels.map(panel=>panel.artwork)]) {
         if (window.gsap) gsap.set(element,{clearProps:'transform,opacity,visibility'});
         else {element.style.removeProperty('transform');element.style.removeProperty('opacity');element.style.removeProperty('visibility');}
       }
-      for (const element of [intro,...panels.map(panel=>panel.element)]) {
+      for (const element of [intro,footer,...panels.map(panel=>panel.element)]) {
         element.inert=false;element.removeAttribute('aria-hidden');element.style.removeProperty('pointer-events');
       }
       document.body.style.removeProperty('background-color');
@@ -535,10 +567,12 @@
       root.style.setProperty('--scene-height',`${height}px`);root.style.setProperty('--scene-offset',`${offset}px`);
       root.style.setProperty('--scroll-travel',`${travel}px`);root.style.setProperty('--intro-content-height',`${contentHeight}px`);
       root.style.setProperty('--work-stack-travel',`${(panels.length-1)*height}px`);
+      root.style.setProperty('--footer-travel',`${height}px`);
       root.style.setProperty('--header-top',`${headerTop}px`);
       root.style.setProperty('--intro-shift',`${Math.max(0,headerTop + 41 - (height - contentHeight)/2)}px`);
       root.dataset.sceneHeight = height.toFixed(1);root.dataset.sceneOffset = offset.toFixed(1);stage.dataset.viewportHeight = height.toFixed(1);
       if (mobile.matches && !reduced.matches && window.gsap && root.dataset.mobileNavReady === 'true') {
+        root.classList.remove('footer-native-overlap');
         if (!wasMobile) {nativeLayout();mobileOverlap = true;root.classList.add('mobile-overlap');resetReveals();}
         const introHeight = intro.offsetHeight;
         // Read naturally until the CTA reaches mid-window, with Works already visible below.
@@ -557,8 +591,8 @@
         root.dataset.sceneRest = '0';root.dataset.sceneRecedeStart = mobileRecedeStart.toFixed(4);
         const previousWorkStep=pendingMobileWorkStep ?? oldDesktopStep ?? nativePose?.step;
         if (previousWorkStep!==undefined && previousWorkStep!==null && !wasMobile) {
-          const index=Math.min(panels.length-1,Math.floor(previousWorkStep)),fraction=previousWorkStep-index;
-          window.scrollTo(0,fraction>0 && index<panels.length-1 ? panels[index+1].start-height+height*fraction : panels[index].start);
+          const index=Math.min(panels.length,Math.floor(previousWorkStep)),fraction=previousWorkStep-index;
+          window.scrollTo(0,fraction>0 && index<panels.length ? readingPanel(index+1).start-height+height*fraction : readingPanel(index).start);
           pendingMobileWorkStep=null;
         } else if (!wasMobile && oldProgress>0 && (wasEnhanced || location.hash==='#selected-works' && currentY<mobileStart)) {
           window.scrollTo(0,mobileStart + mobileTravel * (location.hash === '#selected-works' ? 1 : oldProgress));
@@ -567,8 +601,8 @@
           if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + mobileTravel * oldProgress);
           else if (oldProgress >= 1) {
             const destination = previousPose ? 'cover' in previousPose
-              ? panels[previousPose.index].start-height+height*previousPose.cover
-              : panels[previousPose.index].start+previousPose.offset
+              ? readingPanel(previousPose.index).start-height+height*previousPose.cover
+              : readingPanel(previousPose.index).start+previousPose.offset
               : mobileStart+mobileTravel+Math.max(0,previousY-oldStart-oldTravel);
             window.scrollTo(0,destination);
           }
@@ -583,29 +617,36 @@
         if (enhanced || mobileOverlap) {
           const keepMobileReading = mobileOverlap && mobile.matches;
           nativeLayout();
+          root.classList.toggle('footer-native-overlap',!mobile.matches && !reduced.matches);
+          root.style.setProperty('--footer-last-top',`${Math.min(0,height-panels[panels.length-1].element.offsetHeight)}px`);
           if(wasEnhanced && !mobile.matches) {
-            const step=oldDesktopStep,index=step===null ? 0 : Math.min(panels.length-1,Math.floor(step));
-            const destination=step===null ? intro.offsetHeight-Math.max(0,height*(1-oldProgress)) : panels[index].element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panels[index].element).height);
+            const step=oldDesktopStep,index=step===null ? 0 : Math.min(panels.length,Math.floor(step)),panel=readingPanel(index);
+            const destination=step===null ? intro.offsetHeight-Math.max(0,height*(1-oldProgress)) : step>=panels.length-1 && root.classList.contains('footer-native-overlap') ? nativeDestination(step) : panel.element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panel.element).height);
             window.scrollTo(0,oldProgress>0 ? destination : 0);
           } else if(wasEnhanced && mobile.matches && oldDesktopStep!==null) {
             window.scrollTo(0,nativeDestination(oldDesktopStep));
           } else if(wasMobile && !mobile.matches && previousPose) {
-            const panel=panels[previousPose.index],start=panel.element.getBoundingClientRect().top+window.scrollY;
+            const panel=readingPanel(previousPose.index),start=panel.element.getBoundingClientRect().top+window.scrollY;
             window.scrollTo(0,'cover' in previousPose ? start-height+height*previousPose.cover : start+Math.min(previousPose.offset,Math.max(0,parseFloat(getComputedStyle(panel.element).height)-height)));
           } else window.scrollTo(0,keepMobileReading ? currentY : showWorks ? works.offsetTop : wasMobile ? Math.min(currentY,Math.max(0,intro.offsetHeight - height)) : 0);
         }
         else if (!root.dataset.sceneState) nativeLayout();
+        root.classList.toggle('footer-native-overlap',!mobile.matches && !reduced.matches);
+        root.style.setProperty('--footer-last-top',`${Math.min(0,height-panels[panels.length-1].element.offsetHeight)}px`);
         if(!wasEnhanced && !wasMobile && nativeViewportChanged && nativePose?.step!==undefined)window.scrollTo(0,nativeDestination(nativePose.step));
         root.dataset.sceneView = showWorks ? 'works' : 'intro';
         nativePaintedPose=nativeWorkPose(window.scrollY);
+        paintScene();
       } else {
+        root.classList.remove('footer-native-overlap');
         if (mobileOverlap) nativeLayout();
         if (!enhanced) {enhanced = true;root.classList.add('scene-enhanced');resetReveals();}
         panels.forEach((panel,index)=>{panel.start=travel+index*height;panel.height=height;panel.element.style.setProperty('--work-layer',String(index+2));});
+        footerStart = travel+panels.length*height;
         if (!wasEnhanced || desktopViewportChanged) {
           scrollTween?.kill();
           const workStep=oldDesktopStep!==null ? oldDesktopStep : previousPose ? 'cover' in previousPose ? previousPose.index-1+previousPose.cover : previousPose.index+previousPose.offset/Math.max(1,oldHeight) : nativePose?.step;
-          window.scrollTo(0,workStep!==undefined && workStep!==null ? travel+Math.min(panels.length-1,workStep)*height : travel*(nativePose?.intro ?? oldProgress));
+          window.scrollTo(0,workStep!==undefined && workStep!==null ? travel+Math.min(panels.length,workStep)*height : travel*(nativePose?.intro ?? oldProgress));
           if (wasEnhanced) resizeWheelUntil = performance.now() + 80;
         }
         paintScene();
@@ -621,10 +662,13 @@
     }
     function scheduleScroll() {if (!scrollFrame) scrollFrame = requestAnimationFrame(readScroll);}
     function goToWorks(focus = false,index = 0) {
-      if (!enhanced && !mobileOverlap) return;
-      loadImage(true,panels[index]);focusAtEnd = focus ? panels[index].focusTarget : false;
+      if(index<panels.length)loadImage(true,panels[index]);
+      focusAtEnd = focus ? index===panels.length ? footerTitle : panels[index].focusTarget : false;
+      if (!enhanced && !mobileOverlap) {
+        window.scrollTo(0,nativeDestination(index));paintScene();focusWhenReady();return;
+      }
       scrollTween?.kill();
-      const destination = mobileOverlap ? index===0 ? mobileStart+mobileTravel : panels[index].start : travel+index*height;
+      const destination = mobileOverlap ? index===0 ? mobileStart+mobileTravel : readingPanel(index).start : travel+index*height;
       if (!window.gsap) {window.scrollTo(0,destination);paintScene();return;}
       const proxy = {y:window.scrollY};
       scrollTween = gsap.to(proxy,{y:destination,duration:1.05,ease:'power2.inOut',onUpdate:() => {window.scrollTo(0,proxy.y);paintScene();},onComplete:() => {scrollTween=null;paintScene();focusWhenReady();}});
@@ -650,9 +694,21 @@
       if ((enhanced || mobileOverlap) && progress<.999 && event.target!==heading && panel===panels[0]) goToWorks();
       else if (mobileOverlap || enhanced) scheduleScroll();
     }));
+    // Continue keyboard reading into the final screen even while it is parked
+    // below the sticky stage. Reverse Tab restores the last work's link.
+    const lastWorkLink=panels[panels.length-1].element.querySelector('.work-details');
+    const firstFooterLink=footer.querySelector('.footer-links a');
+    lastWorkLink.addEventListener('keydown',event=>{
+      if(event.key!=='Tab' || event.shiftKey || (!enhanced && !mobileOverlap && !root.classList.contains('footer-native-overlap')))return;
+      event.preventDefault();goToWorks(true,panels.length);
+    });
+    firstFooterLink.addEventListener('keydown',event=>{
+      if(event.key!=='Tab' || !event.shiftKey || (!enhanced && !mobileOverlap && !root.classList.contains('footer-native-overlap')))return;
+      event.preventDefault();goToWorks(false,panels.length-1);focusAtEnd=lastWorkLink;focusWhenReady();
+    });
     const syncLocation = () => {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open')) return;
-      const index=panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
+      const index=location.hash==='#contact' ? panels.length : panels.findIndex(panel=>`#${panel.element.id}`===location.hash);
       if (index>=0) goToWorks(true,index);
       else {scrollTween?.kill();window.scrollTo(0,0);paintScene();document.querySelector('.header > .name').focus({preventScroll:true});}
     };

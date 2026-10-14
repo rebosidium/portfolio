@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="8f2d87cc7d5e">
+<html lang="en" data-build="dfbba0936c70">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=fbeb28026e45">
+  <link rel="stylesheet" href="styles.css?v=771d0a258ff9">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -52,8 +52,8 @@
   </script>
   <script type="module" src="portrait-boot.js?v=3e5ba6df0a84" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=9bd9838f870b" onerror="window.releasePageFallback()"></script>
-  <script defer src="mobile-nav.js?v=ebb5adeed300" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="app.js?v=39d627fa4674" onerror="window.releasePageFallback()"></script>
+  <script defer src="mobile-nav.js?v=cc097c99cee4" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=64c87e417052"></script></template>
   <script>
     (() => {
@@ -152,7 +152,7 @@
         </picture>
         <canvas width="270" height="270" aria-hidden="true"></canvas>
       </div>
-      <div class="introduction" data-node-id="159:2150">
+      <div class="introduction" data-agent-control data-node-id="159:2150">
         <h1 id="greeting" data-node-id="159:854">Hello, Everyone</h1>
         <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
         <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
@@ -237,6 +237,36 @@
       </article>
     </div>
   </section>
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
+    <h2 id="footer-title" tabindex="-1" data-node-id="182:2736">Let’s Talk</h2>
+    <div class="footer-content" data-node-id="187:419">
+      <p class="footer-description" data-node-id="187:420">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Contact links" data-node-id="187:421">
+        <a href="mailto:rebosidium@gmail.com" data-node-id="187:422">Email</a>
+        <a href="https://drive.google.com/file/d/1VArw9pdUKWWhDVvFf0uImHN-0UP8Lc2E/view" target="_blank" rel="noopener noreferrer" data-node-id="187:423">Resume</a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="187:424">LinkedIn</a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425">Telegram</a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button footer-agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="187:427"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="async" loading="lazy"><span>Copied!</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="187:428">
+            <img src="assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:430">
+            <img src="assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:432">
+            <img src="assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:434">
+            <span class="footer-logo-copilot" data-node-id="187:438"><img src="assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="async" loading="lazy" data-node-id="187:439"></span>
+            <img src="assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:442">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt and paste it into your AI chat.</label>
+          <textarea id="footer-agent-prompt" readonly rows="3" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+  </footer>
   </div>
   </main>
 </body>
