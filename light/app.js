@@ -247,7 +247,7 @@
     const viewportProbe = document.createElement('div');
     viewportProbe.className = 'scene-viewport-probe';
     viewportProbe.setAttribute('aria-hidden','true');
-    viewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none;contain:strict';
+    viewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);visibility:hidden;pointer-events:none;contain:strict';
     document.body.append(viewportProbe);
     const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
@@ -381,7 +381,7 @@
     }
     function paintFooter(cover,desktop = false) {
       paintFooterCorners(cover);
-      set(footer,{autoAlpha:desktop && cover<=0 ? 0 : 1,y:desktop ? height*(1-cover) : 0});
+      if (desktop) set(footer,{autoAlpha:cover<=0 ? 0 : 1,y:height*(1-cover)});
       footer.inert = cover<=.001;
       footer.setAttribute('aria-hidden',String(footer.inert));
       footer.style.pointerEvents = footer.inert ? 'none' : 'auto';
@@ -548,6 +548,13 @@
       warmDesktopPreviews();
       const nextHeight = sceneHeight();
       const offset = sceneOffset();
+      // iOS also animates safe-area insets with its toolbars. Cache them with
+      // the stable scene size so card heights cannot move during a swipe.
+      if (stableViewport() && (Math.abs(nextHeight-height)>.5 || viewportWidth!==window.innerWidth)) {
+        const insets = getComputedStyle(viewportProbe);
+        root.style.setProperty('--scene-safe-top',insets.paddingTop);
+        root.style.setProperty('--scene-safe-bottom',insets.paddingBottom);
+      }
       const oldHeight = height,wasEnhanced = enhanced,wasMobile = mobileOverlap,oldStart = mobileStart,oldTravel = mobileTravel,oldDesktopTravel=travel,currentY = window.scrollY;
       // Browsers can clamp scrollY before resize fires; preserve the last painted reading pose.
       const viewportChanged = wasMobile && (Math.abs(oldHeight - nextHeight) > .5 || Math.abs(viewportOffset - offset) > .5 || viewportWidth !== window.innerWidth);
@@ -661,6 +668,14 @@
       handleInitialLocation();
     }
     function scheduleMeasure() {if (!resizeFrame) resizeFrame = requestAnimationFrame(measureViewport);}
+    function onViewportResize() {
+      // Browser toolbars resize the visual viewport while the touch scene stays
+      // at 100svh. Leave its layout alone until the scene dimensions change.
+      if (stableViewport() && viewportWidth === window.innerWidth && Math.abs(sceneHeight()-height)<=.5 && Math.abs(sceneOffset()-viewportOffset)<=.5) {
+        scheduleScroll();return;
+      }
+      scheduleMeasure();
+    }
     function readScroll() {
       scrollFrame = 0;
       const currentHeight = sceneHeight();
@@ -721,13 +736,13 @@
     };
     window.addEventListener('wheel',onWheel,{passive:false});window.addEventListener('touchstart',stopAutoScroll,{passive:true});
     window.addEventListener('keydown',event => {if (['PageUp','PageDown','ArrowUp','ArrowDown','Home','End',' '].includes(event.key)) stopAutoScroll();});
-    window.addEventListener('scroll',scheduleScroll,{passive:true});window.addEventListener('resize',measureViewport,{passive:true});
+    window.addEventListener('scroll',scheduleScroll,{passive:true});window.addEventListener('resize',onViewportResize,{passive:true});
     window.addEventListener('mobile:menu-closed',scheduleMeasure);
     window.addEventListener('mobile:work-navigation',event => {
       if (!mobileOverlap || event.detail?.target !== works) return;
       event.preventDefault();measureViewport();goToWorks(true);
     });
-    window.visualViewport?.addEventListener('resize',measureViewport,{passive:true});window.visualViewport?.addEventListener('scroll',scheduleMeasure,{passive:true});
+    window.visualViewport?.addEventListener('resize',onViewportResize,{passive:true});window.visualViewport?.addEventListener('scroll',onViewportResize,{passive:true});
     window.addEventListener('popstate',syncLocation);window.addEventListener('hashchange',syncLocation);window.addEventListener('pageshow',scheduleMeasure);
     reduced.addEventListener('change',measureViewport);
     mobile.addEventListener('change',measureViewport);
