@@ -68,12 +68,13 @@ a:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:
 .mobile-menu-open .work-availability img{animation-play-state:paused}
 @keyframes availability-pulse{0%,100%{opacity:.4}50%{opacity:1}}
 .agent-button-label{position:relative;flex:none;width:105px;text-align:left}
-.agent-button-label>span{display:block;transition:opacity .2s ease}
-.agent-button-label>.agent-button-copied{position:absolute;inset:0 auto 0 -6px;display:flex;align-items:center;gap:8px;width:109px;opacity:0}
+.agent-button-label>span{display:block;transition:opacity .32s cubic-bezier(.4,0,.2,1);transition-delay:var(--agent-label-delay,0s)}
+.agent-button-idle{--agent-label-delay:.36s}
+.agent-button-label>.agent-button-copied{position:absolute;inset:0 auto 0 -6px;display:flex;align-items:center;gap:8px;width:109px;opacity:0;--agent-label-delay:0s}
 .agent-button-copied>img{display:block;flex:none;width:24px;height:24px}
 .agent-button-copied>span{flex:none;width:77px}
-.agent-button.is-copied .agent-button-idle{opacity:0}
-.agent-button.is-copied .agent-button-copied{opacity:1}
+.agent-button.is-copied .agent-button-idle{opacity:0;--agent-label-delay:0s}
+.agent-button.is-copied .agent-button-copied{opacity:1;--agent-label-delay:.36s}
 .agent-button-logos{display:flex;align-items:center;gap:6px;flex:none}
 .agent-button-logos picture{display:block;flex:none}
 .agent-button-logos img{display:block;flex:none}
