@@ -251,10 +251,15 @@
     viewportProbe.setAttribute('aria-hidden','true');
     viewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);visibility:hidden;pointer-events:none;contain:strict';
     document.body.append(viewportProbe);
+    const workViewportProbe = document.createElement('div');
+    workViewportProbe.className = 'work-viewport-probe';
+    workViewportProbe.setAttribute('aria-hidden','true');
+    workViewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:var(--work-screen-height,100lvh);visibility:hidden;pointer-events:none;contain:strict';
+    document.body.append(workViewportProbe);
     const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
-    let height = 0,travel = 1,footerStart = 0,progress = location.hash === '#selected-works' ? 1 : 0;
+    let height = 0,workHeight = 0,travel = 1,footerStart = 0,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY,desktopPaintedY = window.scrollY,initialLocationHandled = false,nativePaintedPose = null,pendingMobileWorkStep = null;
     let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false;
@@ -289,7 +294,7 @@
       if (!pending.length) return;
       pending.forEach(element => revealed.add(element));
       if (!window.gsap || document.hidden) {set(pending,{autoAlpha:1,y:0});return;}
-      const tween = gsap.to(pending,{autoAlpha:1,y:0,duration:.7,stagger:.07,delay,ease:'power2.out',onComplete:() => {partTweens.delete(tween);focusWhenReady();}});
+      const tween = gsap.to(pending,{autoAlpha:1,y:0,duration:.7,stagger:.07,delay,ease:'power2.out',onComplete:() => {partTweens.delete(tween);focusWhenReady();if(mobileOverlap)scheduleScroll();}});
       partTweens.add(tween);
     }
     function revealArtwork(panel = panels[0]) {
@@ -300,11 +305,12 @@
         if (document.hidden || root.classList.contains('mobile-menu-open')) return;
         const viewport = window.visualViewport;
         const top = viewport?.offsetTop || 0,bottom = top + (viewport?.height || height);
-        // A direct link/fast gesture may have already passed the image. Restore it
-        // offscreen so the following copy can appear without waiting for a new pass.
-        if (bounds.bottom<=top) {revealed.add(artwork);panel.artworkStartedAt=performance.now()-1150;set(artwork,{autoAlpha:1,y:0});return;}
+        // A direct link/fast gesture may leave only the trailing edge above the
+        // copy. Restore that passed image so its visibility gate cannot stall text.
+        const threshold = Math.min(bounds.height * .12,48);
+        if (bounds.top<top && bounds.bottom<=top+threshold) {revealed.add(artwork);panel.artworkStartedAt=performance.now()-1150;set(artwork,{autoAlpha:1,y:0});return;}
         const visible = Math.min(bounds.bottom,bottom) - Math.max(bounds.top,top);
-        if (visible < Math.min(bounds.height * .12,48)) return;
+        if (visible < threshold) return;
       } else if (bounds.top >= height * .94) return;
       revealed.add(artwork);
       panel.artworkStartedAt = performance.now();
@@ -362,14 +368,19 @@
       return middle;
     }
     function measureWorkPanels(base) {
+      workHeight = workViewportProbe.getBoundingClientRect().height || height;
+      root.dataset.workViewportHeight = workHeight.toFixed(1);
       let start = base + intro.offsetHeight;
       panels.forEach((panel,index) => {
+        // Keep a full screen of content and the requested space above its title.
+        // Longer copy can still scroll naturally until its actions are readable.
+        let titleTop = 0;
+        for (let element=panel.element.querySelector('h3');element && element!==panel.element;element=element.offsetParent) titleTop += element.offsetTop;
+        const titleRest = parseFloat(getComputedStyle(panel.element).getPropertyValue('--work-title-rest')) || 60;
+        panel.element.style.setProperty('--work-read-travel',`${Math.max(0,titleTop-titleRest)}px`);
         const style = getComputedStyle(panel.element);
         panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
-        // Fullscreen work surfaces stay pinned at the top even with browser
-        // controls visible. Only genuinely taller content needs a reading offset.
-        const screenHeight = Math.max(height,parseFloat(style.minHeight) || 0);
-        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,screenHeight-panel.height)}px`);
+        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,workHeight-panel.height)}px`);
         panel.element.style.setProperty('--work-layer',String(index+2));
       });
       footerStart = start;
@@ -402,31 +413,32 @@
     }
     function paintWorkPanels() {
       let visibleIndex = 0,backgroundIndex = 0;
-      const footerCover = Math.max(0,Math.min(1,(mobilePaintedY-footerStart+height)/height));
+      const viewport = window.visualViewport,visibleTop = viewport?.offsetTop || 0,visibleHeight = viewport?.height || height,visibleBottom = visibleTop+visibleHeight;
+      const footerCover = Math.max(0,Math.min(1,(mobilePaintedY-footerStart+workHeight)/workHeight));
       panels.forEach((panel,index) => {
         const next = panels[index+1];
-        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+height)/height)) : footerCover;
+        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
         set(panel.element,{autoAlpha:1-covering,scale:1-.025*covering,y:0});
         panel.element.inert = covering>=.999;
         panel.element.setAttribute('aria-hidden',String(covering>=.999));
         panel.element.style.pointerEvents = covering>=.999 ? 'none' : 'auto';
         panel.element.dataset.coverProgress = covering.toFixed(4);
-        if (mobilePaintedY>=panel.start-height/2) visibleIndex=index;
+        if (mobilePaintedY>=panel.start-workHeight/2) visibleIndex=index;
         if (mobilePaintedY>=panel.start) backgroundIndex=index;
         const bounds = panel.element.getBoundingClientRect();
-        if (bounds.top<height && bounds.bottom>0 && covering<.999) {
+        if (bounds.top<visibleBottom && bounds.bottom>visibleTop && covering<.999) {
           loadImage(true,panel);
           const sectionTitle=panel.element.querySelector('h2'),cardTitle=panel.element.querySelector('h3'),meta=panel.element.querySelector('.work-meta');
-          if (sectionTitle && sectionTitle.getBoundingClientRect().top<height*.9) reveal([sectionTitle]);
-          if (cardTitle.getBoundingClientRect().top<height*.9) reveal([cardTitle,meta]);
+          if (sectionTitle && sectionTitle.getBoundingClientRect().top<visibleTop+visibleHeight*.9) reveal([sectionTitle]);
+          if (cardTitle.getBoundingClientRect().top<visibleTop+visibleHeight*.9) reveal([cardTitle,meta]);
           revealArtwork(panel);
           const description=panel.element.querySelector('.work-description'),button=panel.actions || panel.element.querySelector('.work-details');
-          if (revealed.has(panel.artwork) && description.getBoundingClientRect().top<height*.94 && !revealed.has(description)) {
+          if (revealed.has(panel.artwork) && description.getBoundingClientRect().top<visibleTop+visibleHeight*.94 && !revealed.has(description)) {
             const delay=Math.max(0,(panel.artworkStartedAt+420-performance.now())/1000);
             panel.descriptionStartedAt=performance.now()+delay*1000;reveal([description],delay);
           }
-          if (revealed.has(description) && button.getBoundingClientRect().top<height*.97) reveal([button],Math.max(0,(panel.descriptionStartedAt+140-performance.now())/1000));
+          if (revealed.has(description) && button.getBoundingClientRect().top<visibleBottom) reveal([button],Math.max(0,(panel.descriptionStartedAt+140-performance.now())/1000));
         }
       });
       root.dataset.workSceneIndex = String(visibleIndex);
@@ -518,7 +530,7 @@
       root.dataset.sceneView = started ? 'works' : 'intro';
       root.dataset.sceneProgress = progress.toFixed(4);
       root.dataset.sceneState = !started || complete ? 'settled' : 'overlap';
-      const worksVisible = mobileOverlap ? works.getBoundingClientRect().top < (window.visualViewport?.offsetTop || 0) + height : started;
+      const worksVisible = mobileOverlap ? works.getBoundingClientRect().top < (window.visualViewport?.offsetTop || 0) + (window.visualViewport?.height || height) : started;
       if (!started) releasePortrait();
       if (mobileOverlap) {
         paintWorkPanels();
@@ -569,7 +581,7 @@
       // Browsers can clamp scrollY before resize fires; preserve the last painted reading pose.
       const viewportChanged = wasMobile && (Math.abs(oldHeight - nextHeight) > .5 || Math.abs(viewportOffset - offset) > .5 || viewportWidth !== window.innerWidth);
       const previousY = viewportChanged ? mobilePaintedY : currentY;
-      const previousPose = wasMobile && oldHeight>0 ? readingPose(previousY,oldHeight) : null;
+      const previousPose = wasMobile && oldHeight>0 ? readingPose(previousY,workHeight || oldHeight) : null;
       const previousPanels = panels.map(panel=>({start:panel.start,height:panel.height}));
       const desktopViewportChanged=wasEnhanced && (Math.abs(oldHeight-nextHeight)>.5 || Math.abs(viewportOffset-offset)>.5 || viewportWidth!==window.innerWidth);
       const oldDesktopY=desktopViewportChanged ? desktopPaintedY : currentY;
@@ -616,7 +628,7 @@
         const previousWorkStep=pendingMobileWorkStep ?? oldDesktopStep ?? nativePose?.step;
         if (previousWorkStep!==undefined && previousWorkStep!==null && !wasMobile) {
           const index=Math.min(panels.length,Math.floor(previousWorkStep)),fraction=previousWorkStep-index;
-          window.scrollTo(0,fraction>0 && index<panels.length ? readingPanel(index+1).start-height+height*fraction : readingPanel(index).start);
+          window.scrollTo(0,fraction>0 && index<panels.length ? readingPanel(index+1).start-workHeight+workHeight*fraction : readingPanel(index).start);
           pendingMobileWorkStep=null;
         } else if (!wasMobile && oldProgress>0 && (wasEnhanced || location.hash==='#selected-works' && currentY<mobileStart)) {
           window.scrollTo(0,mobileStart + mobileTravel * (location.hash === '#selected-works' ? 1 : oldProgress));
@@ -625,7 +637,7 @@
           if (oldProgress > 0 && oldProgress < 1) window.scrollTo(0,mobileStart + mobileTravel * oldProgress);
           else if (oldProgress >= 1) {
             const destination = previousPose ? 'cover' in previousPose
-              ? readingPanel(previousPose.index).start-height+height*previousPose.cover
+              ? readingPanel(previousPose.index).start-workHeight+workHeight*previousPose.cover
               : readingPanel(previousPose.index).start+previousPose.offset
               : mobileStart+mobileTravel+Math.max(0,previousY-oldStart-oldTravel);
             window.scrollTo(0,destination);
