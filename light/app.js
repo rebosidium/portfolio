@@ -231,15 +231,18 @@
     let resolveFirstPreview;
     const firstPreviewReady = new Promise(resolve => {resolveFirstPreview = resolve;});
     if (!mobile.matches) window.deferSiteUpdates(firstPreviewReady);
-    // Mobile browser toolbars resize visualViewport during a gesture. Keep scene
-    // geometry tied to the stable small viewport; real window resizes still update it.
+    // Touch browser toolbars and rubberbanding change visualViewport during a
+    // gesture, including wide tablets using the desktop layout. Keep their scene
+    // geometry stable; actual window/orientation changes still update the probe.
+    const touchViewport = matchMedia('(pointer: coarse)');
+    const stableViewport = () => mobile.matches || touchViewport.matches;
     const viewportProbe = document.createElement('div');
     viewportProbe.className = 'scene-viewport-probe';
     viewportProbe.setAttribute('aria-hidden','true');
     viewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none;contain:strict';
     document.body.append(viewportProbe);
-    const sceneHeight = () => mobile.matches ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
-    const sceneOffset = () => mobile.matches ? 0 : window.visualViewport?.offsetTop || 0;
+    const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
+    const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
     let height = 0,travel = 1,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
@@ -665,6 +668,7 @@
     window.addEventListener('popstate',syncLocation);window.addEventListener('hashchange',syncLocation);window.addEventListener('pageshow',scheduleMeasure);
     reduced.addEventListener('change',measureViewport);
     mobile.addEventListener('change',measureViewport);
+    touchViewport.addEventListener('change',measureViewport);
     document.addEventListener('visibilitychange',() => {
       if (document.hidden) {
         scrollTween?.kill();partTweens.forEach(tween => tween.kill());partTweens.clear();panels.forEach(panel=>panel.imageTween?.kill());
