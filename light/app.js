@@ -228,6 +228,9 @@
       imageError:element.querySelector('.work-image-error'),imageReady:false,imageFailed:false,imagePending:null,imageTween:null,artworkStartedAt:0,descriptionStartedAt:0,start:0,height:0
     }));
     const parts = panels.flatMap(panel => panel.parts);
+    let resolveFirstPreview;
+    const firstPreviewReady = new Promise(resolve => {resolveFirstPreview = resolve;});
+    if (!mobile.matches) window.deferSiteUpdates(firstPreviewReady);
     // Mobile browser toolbars resize visualViewport during a gesture. Keep scene
     // geometry tied to the stable small viewport; real window resizes still update it.
     const viewportProbe = document.createElement('div');
@@ -308,6 +311,7 @@
         const onLoad = () => {clear();resolve();};
         const onError = () => {clear();reject(new Error('Work preview unavailable'));};
         image.addEventListener('load',onLoad);image.addEventListener('error',onError);
+        if (image.dataset.srcset) image.srcset=image.dataset.srcset;
         image.src=image.dataset.src;
         if (image.complete && image.naturalWidth>0) onLoad();
       });
@@ -319,13 +323,14 @@
       }).catch(() => {
         panel.imageFailed = true;artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');imageError.hidden = false;revealArtwork(panel);scheduleScroll();
       });
+      if (panel === panels[0]) panel.imagePending.then(resolveFirstPreview);
       return panel.imagePending;
     }
     function warmDesktopPreviews() {
       if (mobile.matches || !portraitPrepared || document.hidden) return;
       // Background screenshots yield to the complete welcome-frame buffer.
       // A visible card or an explicit Work action still loads immediately.
-      if (!enhanced && !mobileOverlap) panels.forEach(panel=>loadImage(false,panel));
+      if (!enhanced && !mobileOverlap) panels.forEach((panel,index)=>loadImage(index===0,panel,'low'));
       else if (!panels[0].imagePending) loadImage(true,panels[0],'low');
     }
     function resetReveals() {

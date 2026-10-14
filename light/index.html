@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="7637c144a33f">
+<html lang="en" data-build="c9d351cb5840">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=e1471368b341">
+  <link rel="stylesheet" href="styles.css?v=d60f77f1f3dc">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -42,6 +42,7 @@
       document.documentElement.classList.remove('motion-pending');
       window.resolvePortraitReveal(false);
       document.dispatchEvent(new Event('mobile:page-fallback'));
+      window.deferSiteUpdates?.();
     };
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('nav-pending','motion-pending');
@@ -51,9 +52,81 @@
   </script>
   <script type="module" src="portrait-boot.js?v=3e5ba6df0a84" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=5ff24a7be11f" onerror="window.releasePageFallback()"></script>
+  <script defer src="app.js?v=dfcb1c844fbc" onerror="window.releasePageFallback()"></script>
   <script defer src="mobile-nav.js?v=ebb5adeed300" onerror="window.releaseMobileNavigation()"></script>
-  <script defer src="updates.js?v=64c87e417052"></script>
+  <template id="updates-source"><script src="updates.js?v=64c87e417052"></script></template>
+  <script>
+    (() => {
+      let started = false,armed = false;
+      const root = document.documentElement;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const load = () => {
+        if (started) return;
+        started = true;
+        const script = document.createElement('script');
+        script.src = document.querySelector('#updates-source').content.querySelector('script').src;
+        script.fetchPriority = window.mobileLayout.matches ? 'high' : 'low';
+        root.dataset.updatesRequestedAt = performance.now().toFixed(1);
+        script.addEventListener('load',() => {root.dataset.updatesLoadedAt = performance.now().toFixed(1);});
+        document.head.append(script);
+      };
+      window.deferSiteUpdates = (previewReady = Promise.resolve()) => {
+        if (started || armed) return;
+        if (window.mobileLayout.matches) {load();return;}
+        armed = true;
+        let pageLoaded = document.readyState === 'complete',portraitSettled = false,previewSettled = false,unsubscribe;
+        let decodedPreview = '',previewDecoding = false;
+        const preview = document.querySelector('#selected-works .work-image');
+        const cleanup = () => {
+          unsubscribe?.();
+          window.removeEventListener('load',pageReady);
+          window.removeEventListener('resize',check);
+          preview?.removeEventListener('load',check);
+          preview?.removeEventListener('error',check);
+          document.removeEventListener('visibilitychange',check);
+          reduced.removeEventListener('change',check);
+          window.mobileLayout.removeEventListener('change',check);
+        };
+        const check = () => {
+          if (started || document.hidden) return;
+          if (window.mobileLayout.matches) {cleanup();load();return;}
+          if (!pageLoaded || !portraitSettled || !previewSettled) return;
+          const state = window.portraitPlayer?.loadingState;
+          const complete = state?.ready && state.allReady && state.quality === state.desiredQuality && state.activeDownloads === 0;
+          const terminal = !state || state.error || (!state.loading && !state.ready && state.activeDownloads === 0);
+          if (!complete && !terminal && !reduced.matches) return;
+          if (preview && !preview.complete) return;
+          const source = preview?.currentSrc;
+          if (preview?.naturalWidth && decodedPreview !== source) {
+            if (previewDecoding) return;
+            previewDecoding = true;
+            preview.decode().catch(() => {}).then(() => {
+              previewDecoding = false;
+              if (preview.complete && preview.currentSrc === source) decodedPreview = source;
+              check();
+            });
+            return;
+          }
+          cleanup();load();
+        };
+        const pageReady = () => {pageLoaded = true;check();};
+        window.addEventListener('load',pageReady);
+        window.addEventListener('resize',check);
+        preview?.addEventListener('load',check);
+        preview?.addEventListener('error',check);
+        document.addEventListener('visibilitychange',check);
+        reduced.addEventListener('change',check);
+        window.mobileLayout.addEventListener('change',check);
+        Promise.resolve(previewReady).then(() => {previewSettled = true;check();},() => {previewSettled = true;check();});
+        window.portraitReady.then(() => {
+          portraitSettled = true;
+          unsubscribe = window.portraitPlayer?.subscribeLoading(() => queueMicrotask(check));
+          check();
+        });
+      };
+      if (window.mobileLayout.matches) load();
+    })();
+  </script>
 </head>
 <body data-node-id="159:729">
   <main class="scene-flow">
@@ -84,13 +157,13 @@
         <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
         <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
         <button class="agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
-          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied">Copied!</span></span>
+          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied" data-node-id="187:312"><img src="assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="async"><span data-node-id="187:292">Copied!</span></span></span>
           <span class="agent-button-logos" aria-hidden="true" data-node-id="182:2717">
             <img src="assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="async" data-node-id="182:2719">
             <img src="assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="async" data-node-id="182:2721">
             <img src="assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="async" data-node-id="182:2793">
             <img src="assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="async" data-node-id="182:2818">
-            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/brief-copilot.png?v=98a5ebda1f77" width="24" height="24" alt="" decoding="async"></span>
+            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/brief-copilot.svg?v=c0bca2c1012a" width="24" height="24" alt="" decoding="async"></span>
           </span>
         </button>
         <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
@@ -119,9 +192,9 @@
           </div>
         </div>
         <div class="work-artwork" data-node-id="162:2516">
-          <img class="work-image" data-src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
+          <img class="work-image" data-src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" data-srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
           <p class="work-image-error" hidden>Preview unavailable</p>
-          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
+          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
         </div>
       </article>
     </div>
@@ -138,9 +211,9 @@
           <a class="work-details" href="https://dmitryrybalka.com/#larixon"><span>More Details</span></a>
         </div>
         <div class="work-artwork">
-          <img class="work-image" data-src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
+          <img class="work-image" data-src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" data-srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
           <p class="work-image-error" hidden>Preview unavailable</p>
-          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
+          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
         </div>
       </article>
     </div>
@@ -157,9 +230,9 @@
           <a class="work-details" href="https://dmitryrybalka.com/#larixon"><span>More Details</span></a>
         </div>
         <div class="work-artwork">
-          <img class="work-image" data-src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
+          <img class="work-image" data-src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" data-srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Bazaraki marketplace interface">
           <p class="work-image-error" hidden>Preview unavailable</p>
-          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki.webp?v=02e2b672dc88" width="1753" height="4096" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
+          <noscript><style>.work-image{display:none}</style><img src="assets/work-larixon-bazaraki-544.png?v=d01faeba304f" srcset="assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Bazaraki marketplace interface"></noscript>
         </div>
       </article>
     </div>
