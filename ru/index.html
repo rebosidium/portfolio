@@ -22,10 +22,13 @@
   <meta property="og:title" content="Дмитрий Рыбалка — продуктовый дизайнер и дизайн-лид">
   <meta property="og:description" content="Превращаю сложные рабочие процессы и бизнес-требования в понятные и удобные продукты. Финтех, маркетплейсы, B2B, HealthTech и дизайн-системы.">
   <meta property="og:url" content="https://dmitryrybalka.com/ru/">
-  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="image" href="/assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="/assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
   <link rel="stylesheet" href="/styles.css?v=1d28f66d2ff3">
+  <!-- Load after the shared local face so Cyrillic and Latin use Manrope at every weight. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&amp;display=swap">
   <style>
     /* Locale-only adjustments; the English layout and shared assets stay intact. */
     html:lang(ru) .work-copy .work-meta{flex-wrap:wrap;row-gap:4px}
