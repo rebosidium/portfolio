@@ -1,8 +1,9 @@
 (() => {
   'use strict';
-  // Optional observers never participate in the homepage's startup promises.
+  // Optional observers never participate in either page's startup promises.
   if (!['dmitryrybalka.com', 'www.dmitryrybalka.com'].includes(location.hostname)
-    || !['/', '/index.html'].includes(location.pathname)) return;
+    || !['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) return;
+  const sitePath = location.pathname.startsWith('/about') ? '/about/' : '/';
   const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
     && typeof window.posthog?.capture === 'function';
   const clarityActive = typeof clarityTrackingEnabled !== 'undefined' && clarityTrackingEnabled
@@ -11,7 +12,7 @@
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const qa = new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
-    viewport_width: Math.round(innerWidth), site_path: '/',
+    viewport_width: Math.round(innerWidth), site_path: sitePath,
     site_build: document.documentElement.dataset.build, analytics_version: 2, analytics_test: qa});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
@@ -80,6 +81,11 @@
       const properties = {...common, placement: briefing.closest('.footer') ? 'footer' : 'hero'};
       pendingCopies.set(briefing, properties);
       capture('briefing_clicked', properties);
+      return;
+    }
+    const back = sitePath === '/about/' && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
+    if (back) {
+      capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
       return;
     }
     const link = target.closest('.header nav a, .footer-links a');
@@ -157,10 +163,12 @@
     const hit = document.elementFromPoint(x, y);
     return hit === element || element.contains(hit);
   };
+  const sections = {'works-title': 'selected_works', 'footer-title': 'contact',
+    'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away'};
   const identify = element => {
     const work = element.closest('[data-analytics-work]')?.dataset.analyticsWork;
     return workNames.includes(work) ? ['work_viewed', {work}]
-      : ['section_viewed', {section: element.id === 'works-title' ? 'selected_works' : 'contact'}];
+      : ['section_viewed', {section: sections[element.id]}];
   };
   const tick = () => {
     timer = null;
@@ -184,7 +192,7 @@
       }
       schedule();
     }, {threshold: [.5]});
-    document.querySelectorAll('[data-analytics-work] .work-heading h3, #works-title, #footer-title').forEach(element => observer.observe(element));
+    document.querySelectorAll('[data-analytics-work] .work-heading h3, #works-title, #footer-title, #design-title, #people-title, #away-title').forEach(element => observer.observe(element));
   }
   document.addEventListener('visibilitychange', () => {
     clearDrag();

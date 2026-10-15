@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-build="9e91f85ac6b6">
+<html lang="en" data-build="25bc0e2a61ba">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
-    // Production homepage only; previews and retired NEW stay untracked.
+    // Production HOME/About only; previews and retired NEW stay untracked.
     const posthogTrackingEnabled = true;
-    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html'].includes(location.pathname)) {
+    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
       !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
       posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
         api_host: 'https://us.i.posthog.com',
@@ -23,7 +23,7 @@
         before_send: event => {
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
-            site_path: '/', site_build: document.documentElement.dataset.build,
+            site_path: location.pathname.startsWith('/about') ? '/about/' : '/', site_build: document.documentElement.dataset.build,
             analytics_version: 2,
             analytics_test: new URLSearchParams(location.search).get('analytics_test') === '1'
           });
@@ -42,7 +42,7 @@
   <script type="text/javascript" data-analytics="microsoft-clarity">
     // Local previews do not track. Production QA is tagged by analytics.js.
     const clarityTrackingEnabled = true;
-    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html'].includes(location.pathname)) {
+    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -103,7 +103,7 @@
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=dbfb65b6506a" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=17e76ba07f74"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=1726aa4d022e"></script>
   <script defer src="mobile-nav.js?v=5b57f95ee98b" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
