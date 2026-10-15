@@ -1,5 +1,9 @@
 /* About-specific composition. Shared typography and controls live in site-ui.css. */
 .about-page{min-width:0}
+.about-page>.header:not(.menu-open){z-index:1}
+.reading-viewport-probe{position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none;contain:strict}
+.reading-footer-overlap .about-main{position:sticky;top:var(--reading-sticky-top);z-index:0;min-height:var(--reading-viewport-height);transform-origin:center bottom}
+html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscroll-behavior-y:none}
 .about-main{width:var(--width-page);margin:0 auto;padding-top:107px;padding-bottom:86px}
 .about-title-row{display:grid;grid-template-columns:120px minmax(0,var(--width-prose)) 120px;gap:var(--space-10);align-items:center;margin-bottom:35px}
 .about-title{display:flex;align-items:center;gap:var(--space-4);min-height:64px}
@@ -19,11 +23,6 @@
 .about-sections{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections section{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections h2{display:flex;align-items:center;min-height:60px;margin:0;font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body)}
-.about-page .footer{--scene-height:740px;--footer-heading-height:138px;--footer-group-gap:60px;--footer-copy-height:68px;--footer-top-space:103px;--footer-radius:var(--radius-panel);height:auto;min-height:740px;overflow:visible;padding-bottom:100px}
-.about-page .footer-content{gap:60px}
-.about-page .footer-description{min-height:68px}
-.about-page .footer-links{grid-auto-rows:29px;margin-top:5px}
-.about-page .footer-agent{margin-top:31px}
 @media(max-width:983px) and (min-width:768px) and (pointer:fine){
   .about-main{width:calc(100% - 40px)}
   .about-title-row{grid-template-columns:120px minmax(0,1fr);gap:var(--space-10)}
@@ -44,11 +43,6 @@
   .about-photo-placeholder{height:222px;margin-bottom:var(--space-7)}
   .about-sections,.about-sections section{gap:var(--space-5)}
   .about-sections h2{min-height:0}
-  .about-page .footer{--scene-height:800px;--footer-heading-height:140px;--footer-top-space:129px;--footer-group-gap:60px;min-height:800px;padding-top:0;padding-bottom:100px}
-  .about-page .footer-inner{position:static;min-height:0}
-  .about-page .footer-description{min-height:87px}
-  .about-page .footer-links{margin-top:3px}
-  .about-page .footer-agent{margin-top:9px}
   html:not([data-mobile-nav-ready="true"]) .about-main{padding-top:200px}
 }
 @media(max-width:359px){

@@ -31,7 +31,18 @@
     const manualCopy = control.querySelector('.agent-copy-fallback');
     const promptField = manualCopy.querySelector('textarea');
     promptField.value = agentPrompt;
-    let copying = false,copyFeedback;
+    let copying = false,copyFeedback,copyGeneration = 0;
+    // The component showcase changes state on the mounted control. Invalidate
+    // older real copy work without remounting its production event handlers.
+    agentButton.addEventListener('portfolio:agent-preview-reset',() => {
+      copyGeneration++;
+      clearTimeout(copyFeedback);
+      copying = false;
+      agentButton.setAttribute('aria-busy','false');
+      agentButton.classList.remove('is-copied');
+      manualCopy.hidden = true;
+      agentStatus.textContent = 'Copies a prompt to paste into your AI chat.';
+    });
     function copyWithSelection() {
       const previousFocus = document.activeElement;
       const selection = document.getSelection();
@@ -60,6 +71,7 @@
     }
     agentButton.addEventListener('click',async () => {
       if (copying) return;
+      const generation = ++copyGeneration;
       copying = true;
       agentButton.setAttribute('aria-busy','true');
       clearTimeout(copyFeedback);
@@ -73,6 +85,7 @@
       } catch (_) {
         copied = false;
       }
+      if (generation !== copyGeneration) return;
       if (!copied) copied = copyWithSelection();
       if (copied) {
         manualCopy.hidden = true;
@@ -145,6 +158,9 @@
       }));
       whenFinished(animations,() => {waving = false;startHover();});
     }
+    agentButton.addEventListener('portfolio:agent-preview-reset',() => {
+      cancelMotion();waving = false;hovering = false;
+    });
     agentButton.addEventListener('pointerenter',event => {
       if (event.pointerType === 'touch') return;
       hovering = true;startHover();
