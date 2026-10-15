@@ -3,6 +3,28 @@
   /* shared:controls:start */
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
   const agentButtons = [...document.querySelectorAll('.agent-button')];
+  const agentIconReadiness = new WeakMap();
+  function prepareAgentIcons(button) {
+    if (agentIconReadiness.has(button)) return agentIconReadiness.get(button);
+    // Decode the actual mounted SVGs, including the hidden Copied check. The
+    // same fingerprinted URLs also warm the browser's ordinary image cache.
+    const images = [...button.querySelectorAll('img')];
+    const ready = Promise.allSettled(images.map(image => {
+      image.loading = 'eager';
+      return image.decode();
+    })).then(() => {
+      button.dataset.agentIconsReady = String(images.every(image => image.complete && image.naturalWidth > 0));
+    });
+    agentIconReadiness.set(button,ready);
+    return ready;
+  }
+  for (const button of agentButtons) {
+    if (button.dataset.agentTheme === 'dark' && window.portraitReveal) {
+      // HOME keeps the approved portrait's first-screen priority. Warm the
+      // footer well before it scrolls into view, without awaiting it in hero.
+      Promise.resolve(window.portraitReveal).then(() => prepareAgentIcons(button));
+    } else prepareAgentIcons(button);
+  }
   agentButtons.forEach(mountAgentCopy);
   function mountAgentCopy(agentButton) {
     const control = agentButton.closest('[data-agent-control]');
@@ -42,6 +64,7 @@
       copying = true;
       agentButton.setAttribute('aria-busy','true');
       clearTimeout(copyFeedback);
+      prepareAgentIcons(agentButton);
       let copied = false;
       try {
         if (navigator.clipboard?.writeText) {

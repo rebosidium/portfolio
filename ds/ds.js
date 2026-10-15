@@ -7,8 +7,8 @@
   document.querySelector('#icon-count').textContent=`${icons.length} current icons · ${icons.reduce((count,icon)=>count+icon.variants.length,0)} used variants`;
   for(const icon of icons){
     const card=document.createElement('article');card.className='ds-icon-card';card.dataset.icon=icon.id;
-    const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${variant.id}">${variant.html}</div><span>${variant.id} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}</div>`).join('');
-    card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div><code>renderIcon('${icon.id}')</code>`;
+    const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${variant.id}">${variant.html}</div><span>${variant.id} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}<code>renderIcon('${icon.id}', {variant: '${variant.id}'})</code></div>`).join('');
+    card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div>`;
     document.querySelector(`#${icon.group}-icons`).append(card);
   }
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
@@ -43,6 +43,8 @@
     const available=mode==='mobile'&&item.example.mobileStates?item.example.mobileStates:item.example.states;
     if(!available.includes(item.state))item.state=available[0];
     item.switch.replaceChildren();
+    item.switch.hidden=!!item.example.liveOnly;
+    if(item.example.liveOnly)return;
     for(const state of available){
       const button=document.createElement('button');button.type='button';button.textContent=labels[state]||state;button.dataset.state=state;
       button.setAttribute('aria-pressed',String(item.state===state));

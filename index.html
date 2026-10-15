@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="c7b7c36e4f00">
+<html lang="en" data-build="400f2312ea2d">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -64,7 +64,15 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="assets/site-ui.css?v=3756a9058305">
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check.svg?v=c9e39ddf31b8" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/agent-claude-mobile.svg?v=6288fbeeec9d" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-openai.svg?v=2168aa4465c9" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-copilot.svg?v=c0bca2c1012a" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="assets/site-ui.css?v=9b2634f86dec">
   <link rel="stylesheet" href="styles.css?v=cd457ff8505a">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
@@ -102,7 +110,7 @@
   </script>
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=dbfb65b6506a" onerror="window.releasePageFallback()"></script>
+  <script defer src="app.js?v=50532382b25b" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="analytics.js?v=1726aa4d022e"></script>
   <script defer src="mobile-nav.js?v=5b57f95ee98b" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
@@ -232,14 +240,15 @@
         <h1 id="greeting" data-node-id="159:854">Hello, Everyone</h1>
         <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
         <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
-        <button class="agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
-          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied" data-node-id="187:312"><img src="assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="async"><span data-node-id="187:292">Copied!</span></span></span>
+        <!-- shared:brief-light:start -->
+<button class="agent-button agent-button--light" data-agent-theme="light" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied" data-node-id="187:312"><img src="assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"><span data-node-id="187:292">Copied!</span></span></span>
           <span class="agent-button-logos" aria-hidden="true" data-node-id="182:2717">
-            <img src="assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="async" data-node-id="182:2719">
-            <img src="assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="async" data-node-id="182:2721">
-            <img src="assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="async" data-node-id="182:2793">
-            <img src="assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="async" data-node-id="182:2818">
-            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/brief-copilot.svg?v=c0bca2c1012a" width="24" height="24" alt="" decoding="async"></span>
+            <img src="assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2719">
+            <img src="assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2721">
+            <img src="assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2793">
+            <img src="assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2818">
+            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/brief-copilot.svg?v=c0bca2c1012a" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"></span>
           </span>
         </button>
         <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
@@ -248,6 +257,7 @@
           <textarea id="agent-prompt" readonly rows="3" spellcheck="false"></textarea>
         </div>
         <noscript><style>.agent-button{display:none}</style><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+  <!-- shared:brief-light:end -->
       </div>
     </section>
   </div>
@@ -398,14 +408,14 @@
         <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425"><span class="footer-link-label">Telegram</span></a>
       </nav>
       <div class="footer-agent" data-agent-control>
-        <button class="agent-button footer-agent-button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
           <span class="agent-button-label" aria-hidden="true" data-node-id="187:427"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied!</span></span></span>
           <span class="agent-button-logos" aria-hidden="true" data-node-id="187:428">
-            <img src="assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:430">
-            <img src="assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:432">
-            <img src="assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:434">
-            <span class="footer-logo-copilot" data-node-id="187:438"><img src="assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="async" loading="lazy" data-node-id="187:439"></span>
-            <img src="assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="async" loading="lazy" data-node-id="187:442">
+            <img src="assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:430">
+            <img src="assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:432">
+            <img src="assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:434">
+            <span class="footer-logo-copilot" data-node-id="187:438"><img src="assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:439"></span>
+            <img src="assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:442">
           </span>
         </button>
         <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>

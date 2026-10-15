@@ -63,7 +63,7 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outl
 .header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:var(--border-subtle);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .header nav a:is(:hover,[data-ui-state="hover"])::after,.header nav a:is(:focus-visible,[data-ui-state="focus"])::after{transform:scaleX(1);transform-origin:left}
 .agent-button,.work-details{appearance:none;align-self:flex-start;display:inline-flex;align-items:center;gap:12px;height:50px;margin-top:4px;padding:8px 24px;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:transparent;color:var(--ink);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:.18px;word-spacing:1px;white-space:nowrap;cursor:pointer;transition:background-color .18s ease,border-color .18s ease}
-.agent-button{--agent-hover-background:var(--color-hover);--agent-hover-border:var(--border-strong);--agent-pressed-background:var(--color-pressed)}
+.agent-button--light{--agent-hover-background:var(--color-hover);--agent-hover-border:var(--border-strong);--agent-pressed-background:var(--color-pressed)}
 .work-details{width:158px;margin-top:0;justify-content:center;word-spacing:normal}
 .work-details span{width:108px}
 .work-details:disabled,.work-details:disabled:is(:hover,[data-ui-state="hover"]),.work-details:disabled:is(:active,[data-ui-state="pressed"]){color:var(--color-disabled);background:transparent;border-color:var(--border-subtle);cursor:default}
