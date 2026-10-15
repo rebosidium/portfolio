@@ -3,6 +3,7 @@
   const pageNames=routes=>routes.map(route=>route==='/'?'Homepage':'About').join(' · ');
   const versionLabel=release=>release.version;
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
+  document.querySelector('#ds-release-detail').textContent='Design system · '+manifest.designSystem.release+' · Semantic release + automatic source revision';
   document.querySelector('#token-version').textContent='Shared tokens · '+manifest.tokens.version;
   for(const example of examples){
     const row=document.createElement('tr');
