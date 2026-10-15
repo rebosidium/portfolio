@@ -11,6 +11,8 @@
   if (!urls.length) return;
   let fontsReady = false,idle = null,controller = null,retryTimer = null,attempts = 0;
   const done = new Set();
+  const prepared = new Map();
+  const maxBytes = 1024 * 1024;
   const status = value => {root.dataset.resumePrefetch = value;};
   status('waiting');
 
@@ -43,11 +45,14 @@
     status('loading');
     root.dataset.resumePrefetchStartedAt = performance.now().toFixed(1);
     try {
-      // Consume the complete response so normal PDF navigation can reuse the
-      // browser's HTTP cache. Keep the original link and native PDF viewer.
+      // Native browser downloads may bypass the HTTP cache. Keep this small
+      // prepared PDF so a user click can save it without another HTTP request.
       const response = await fetch(url,{priority:'low',cache:'default',credentials:'same-origin',signal:active.signal});
       if (!response.ok || !response.headers.get('content-type')?.includes('application/pdf')) throw new Error('PDF unavailable');
-      await response.arrayBuffer();
+      if (Number(response.headers.get('content-length')) > maxBytes) {attempts=2;throw new Error('PDF exceeds background budget');}
+      const blob = await response.blob();
+      if (blob.size > maxBytes) {attempts=2;throw new Error('PDF exceeds background budget');}
+      prepared.set(url,URL.createObjectURL(blob));
       done.add(url);attempts = 0;
       root.dataset.resumePrefetchReadyAt = performance.now().toFixed(1);
       status(done.size === urls.length ? 'ready' : 'waiting');
@@ -81,7 +86,10 @@
   window.addEventListener('online',check);
   window.addEventListener('offline',check);
   window.addEventListener('pageshow',check);
-  window.addEventListener('pagehide',() => {cancelIdle();controller?.abort();});
+  window.addEventListener('pagehide',event => {
+    cancelIdle();controller?.abort();
+    if (!event.persisted) {prepared.forEach(url=>URL.revokeObjectURL(url));prepared.clear();}
+  });
   connection?.addEventListener('change',check);
   reduced.addEventListener('change',check);
   document.addEventListener('pointerover',event => {
@@ -91,6 +99,18 @@
   document.addEventListener('focusin',event => {
     if (!event.target.closest?.('a[data-background-prefetch]') || !ready()) return;
     cancelIdle();run();
+  });
+  document.addEventListener('click',event => {
+    const link = event.target.closest?.('a[data-background-prefetch]');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const url = prepared.get(link.href);
+    if (!url) return; // The ordinary HTTP download remains available immediately.
+    event.preventDefault();
+    const download = document.createElement('a');
+    download.href = url;
+    download.download = link.download || 'Dmitry-Rybalka-Resume-EN.pdf';
+    download.hidden = true;
+    document.body.append(download);download.click();download.remove();
   });
   Promise.resolve(document.fonts?.ready).then(() => {fontsReady = true;check();});
 })();
