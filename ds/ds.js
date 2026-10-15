@@ -32,12 +32,12 @@
     window.DSCode?.attach({triggerParent:section.querySelector('.ds-section-heading'),panelParent:section,kind:'foundation',id,label});
   }
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
-  for(const [name,label] of [['height-control','Compact control'],['height-control-spacious','Spacious control'],['size-target','Menu target'],['focus-width','Focus outline'],['focus-offset-control','Control focus offset'],['duration-control','Control feedback'],['duration-underline','Link underline'],['overlap-recede','Outgoing surface recession'],['overlap-flatten-start','Corner flattening begins']]){
+  for(const [name,label] of [['width-brief','Manual copy width'],['height-brief-field','Manual prompt minimum height'],['gap-brief-manual','Manual copy gap'],['height-control','Compact control'],['height-control-spacious','Spacious control'],['size-target','Menu target'],['focus-width','Focus outline'],['focus-offset-control','Control focus offset'],['duration-control','Control feedback'],['duration-underline','Link underline'],['overlap-recede','Outgoing surface recession'],['overlap-flatten-start','Corner flattening begins']]){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=label;value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }
   const colors=[['color-canvas','Canvas'],['color-ink','Ink'],['color-surface','Work surface'],['color-placeholder','Photo slot'],['color-inverse','Footer']];
   document.querySelector('#palette-grid').innerHTML=colors.map(([key,label])=>`<article class="ds-color"><div class="ds-color-swatch" style="background:var(--${key})"></div><div class="ds-color-info"><strong>${label}</strong><span>${tokens[key]}</span><span>--${key}</span></div></article>`).join('');
-  const stateColors=[['border-subtle','Light border','border'],['border-strong','Light hover / field border','border'],['border-inverse','Dark border','border','dark'],['border-inverse-hover','Dark hover border','border','dark'],['color-muted','Secondary text'],['color-disabled','Disabled text'],['color-hover','Light hover surface'],['color-pressed','Light pressed surface'],['color-inverse-hover','Dark hover surface','fill','dark'],['color-inverse-pressed','Dark pressed surface','fill','dark']];
+  const stateColors=[['border-subtle','Light border','border'],['border-strong','Light hover border','border'],['border-inverse','Dark border','border','dark'],['border-inverse-hover','Dark hover border','border','dark'],['color-muted','Secondary text'],['color-inverse-muted','Dark secondary text','fill','dark'],['color-disabled','Disabled text'],['color-hover','Light hover surface'],['color-pressed','Light pressed surface'],['color-inverse-hover','Dark hover surface','fill','dark'],['color-inverse-pressed','Dark pressed surface','fill','dark']];
   document.querySelector('#state-palette').innerHTML=stateColors.map(([key,label,kind='fill',surface='light'])=>{
     const base=surface==='dark'?'var(--color-inverse)':'var(--color-canvas)';
     const style=kind==='border'?`background:${base};border-color:var(--${key})`:`background:linear-gradient(var(--${key}),var(--${key})),${base}`;
@@ -49,7 +49,7 @@
     const mobile=mode==='mobile';
     const width=mobile?440:item.example.width;
     const open=mobile&&item.state==='open';
-    const height=open?800:(item.state==='manual-copy'||item.manualVisible?(mobile?340:300):(mobile?item.example.mobileHeight:item.example.height));
+    const height=open?800:(item.state==='manual-copy'||item.manualVisible?(item.example.manualHeight||212):(mobile?item.example.mobileHeight:item.example.height));
     const available=item.stage.clientWidth;
     const scale=Math.min(1,available/width);
     item.frame.style.width=width+'px';item.frame.style.height=height+'px';

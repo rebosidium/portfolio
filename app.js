@@ -32,6 +32,27 @@
     const manualCopy = control.querySelector('.agent-copy-fallback');
     const promptField = manualCopy.querySelector('textarea');
     promptField.value = agentPrompt;
+    let promptWidth = 0;
+    function fitManualPrompt() {
+      if (manualCopy.hidden) return;
+      promptWidth = promptField.clientWidth;
+      promptField.style.removeProperty('height');
+      const style = getComputedStyle(promptField);
+      const border = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+      promptField.style.height = Math.max(parseFloat(style.minHeight),promptField.scrollHeight + border) + 'px';
+    }
+    function syncManualCopy() {
+      control.classList.toggle('is-manual-copy',!manualCopy.hidden);
+      if (manualCopy.hidden) promptField.style.removeProperty('height');
+      else fitManualPrompt();
+    }
+    new MutationObserver(syncManualCopy).observe(manualCopy,{attributes:true,attributeFilter:['hidden']});
+    if (typeof ResizeObserver === 'function') new ResizeObserver(() => {
+      if (!manualCopy.hidden && promptField.clientWidth !== promptWidth) fitManualPrompt();
+    }).observe(promptField);
+    else window.addEventListener('resize',fitManualPrompt);
+    document.fonts?.ready.then(fitManualPrompt);
+    syncManualCopy();
     let copying = false,copyFeedback,copyGeneration = 0;
     // The component showcase changes state on the mounted control. Invalidate
     // older real copy work without remounting its production event handlers.

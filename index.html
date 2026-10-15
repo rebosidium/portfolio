@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="f742b3ba0068" data-build="5ef2330e6671">
+<html lang="en" data-ui-revision="439e927cc4d0" data-build="9d4eef87b6a5">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -70,9 +70,9 @@
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-openai.svg?v=2168aa4465c9" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
-  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-copilot.svg?v=c0bca2c1012a" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
   <!-- shared:brief-preloads:end -->
-  <link rel="stylesheet" href="assets/site-ui.css?v=96c8cc5c6fb7">
+  <link rel="stylesheet" href="assets/site-ui.css?v=0c945c69cc54">
   <link rel="stylesheet" href="styles.css?v=41fa58945081">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
@@ -110,7 +110,7 @@
   </script>
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=492b79276fb0" onerror="window.releasePageFallback()"></script>
+  <script defer src="app.js?v=ffed477ab022" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="analytics.js?v=1726aa4d022e"></script>
   <script defer src="mobile-nav.js?v=e8652339618f" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
@@ -202,7 +202,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.0.0","designSystem":"1.0.1+18001b6176ba","tokens":"1.0.0+b8f82b6ba70b","components":{"brief":"1.0.0+fbeb533c3534","brief-dark":"1.0.0+2fe25359b1ca","link":"1.0.0+e6d4de5bb38e","footer-link":"1.0.0+8b37728cbac7","work-actions":"1.0.0+daa537605792","availability":"1.0.0+f0b363a35a17","portrait":"1.0.0+12c831ae41a2","header":"1.0.0+c091b49bddf8","hero":"1.0.0+078f048004a9","work":"1.0.0+5e14b3a81bab","work-section":"1.0.0+9d7baca75acc","footer":"1.0.0+b28aa66a771c"},"revision":"f742b3ba0068"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.0.0","designSystem":"1.1.0+a14ed2040d08","tokens":"1.0.0+9501ba2c0cc2","components":{"brief":"1.0.0+bafdd066218c","brief-dark":"1.0.0+ab8f86547339","link":"1.0.0+a5cce31d38a6","footer-link":"1.0.0+cec955785ca4","work-actions":"1.0.0+363342ed0e61","availability":"1.0.0+85ba446574ef","portrait":"1.0.0+db7346f071e9","header":"1.0.0+78a48b289648","hero":"1.0.0+79739000ac34","work":"1.0.0+6f4dbd121e5f","work-section":"1.0.0+a8c901098bf8","footer":"1.0.0+0593fa127f57"},"revision":"439e927cc4d0"}</script>
 </head>
 <body data-node-id="159:729">
   <main class="scene-flow">
@@ -238,27 +238,29 @@
         </picture>
         <canvas width="270" height="270" aria-hidden="true"></canvas>
       </div>
-      <div class="introduction" data-agent-control data-node-id="159:2150">
+      <div class="introduction" data-node-id="159:2150">
         <h1 id="greeting" data-node-id="159:854">Hello, Everyone</h1>
         <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
         <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
         <!-- shared:brief-light:start -->
-<button class="agent-button agent-button--light" data-agent-theme="light" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
+<div class="agent-control" data-agent-control>
+        <button class="agent-button agent-button--light" data-agent-theme="light" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
           <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied" data-node-id="187:312"><img src="assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"><span data-node-id="187:292">Copied!</span></span></span>
           <span class="agent-button-logos" aria-hidden="true" data-node-id="182:2717">
             <img src="assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2719">
             <img src="assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2721">
             <img src="assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2793">
             <img src="assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2818">
-            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/brief-copilot.svg?v=c0bca2c1012a" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"></span>
+            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="assets/footer-copilot.svg?v=e66a8c6a5212" width="22.1109" height="22.0324" alt="" decoding="sync" loading="eager" fetchpriority="low"></span>
           </span>
         </button>
         <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
         <div class="agent-copy-fallback" hidden>
-          <label for="agent-prompt">Copy this prompt and paste it into your AI chat.</label>
-          <textarea id="agent-prompt" readonly rows="3" spellcheck="false"></textarea>
+          <label for="agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="agent-prompt" readonly rows="2" spellcheck="false"></textarea>
         </div>
         <noscript><style>.agent-button{display:none}</style><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+</div>
   <!-- shared:brief-light:end -->
       </div>
     </section>
@@ -425,8 +427,8 @@
         </button>
         <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
         <div class="agent-copy-fallback" hidden>
-          <label for="footer-agent-prompt">Copy this prompt and paste it into your AI chat.</label>
-          <textarea id="footer-agent-prompt" readonly rows="3" spellcheck="false"></textarea>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
         </div>
         <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
       </div>

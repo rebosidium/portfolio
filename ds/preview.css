@@ -3,7 +3,7 @@
 .ds-preview #preview-root{min-height:100svh}
 .ds-preview[data-kind~="control"] #preview-root{display:flex;align-items:center;justify-content:center;padding:32px 20px;min-height:140px}
 .ds-preview[data-kind~="dark"]{background:var(--color-inverse);color:var(--color-canvas)}
-.ds-preview .agent-control{width:auto;max-width:100%}
+.ds-preview .agent-control{max-width:100%}
 .ds-preview .agent-control .agent-button{margin:0}
 .ds-preview[data-kind~="dark"] .footer-agent{max-width:400px}
 .ds-preview .ds-back-mobile{width:74px;padding-inline:24px}

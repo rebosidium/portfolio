@@ -46,8 +46,9 @@
 .ds-type-footer-body{font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-contact);letter-spacing:var(--tracking-body)}
 .ds-type-contact{font-size:var(--type-body);font-weight:var(--weight-semibold);line-height:var(--line-contact);letter-spacing:var(--tracking-body)}
 .ds-type-back{line-height:var(--line-prose)}
-.ds-type-helper{font-size:var(--type-helper);font-weight:var(--weight-body);line-height:var(--line-helper);letter-spacing:normal}
-.ds-type-helper-dark{font-weight:400}
+.ds-type-helper{font-size:var(--type-helper);font-weight:var(--weight-body);line-height:normal;letter-spacing:normal;color:var(--color-muted)}
+.ds-type-manual-header{line-height:var(--line-prose)}
+.ds-type-prompt{font-size:var(--type-prompt);font-weight:var(--weight-body);line-height:normal;letter-spacing:normal;color:var(--color-muted)}
 .ds-status-color{display:flex;align-items:flex-start;gap:12px;margin-top:20px;padding:16px;border:1px solid var(--border-subtle);border-radius:8px}
 .ds-status-color>img{flex:none;margin-top:4px}.ds-status-color strong{font-size:12px;font-weight:600}.ds-status-color p{max-width:680px;margin:5px 0 0;font-size:12px;line-height:1.8;color:#686966}
 .ds-radii{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}
