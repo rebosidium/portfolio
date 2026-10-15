@@ -8,13 +8,16 @@
     return element;
   };
   async function catalog(){
-    if(!catalogRequest)catalogRequest=fetch(window.DS_CATALOG.code.url).then(response=>{
+    if(!catalogRequest){
+      const url=new URL(window.DS_CATALOG.code.url,location.origin);url.searchParams.set('_dscheck',window.DSFreshness?.visit||String(Date.now()));
+      catalogRequest=fetch(url.href,{cache:'no-store',credentials:'omit'}).then(response=>{
       if(!response.ok)throw Error('Source catalog could not be loaded.');
       return response.json();
     }).then(value=>{
       if(value.schemaVersion!==1)throw Error('Source catalog version is unavailable.');
       return value;
     }).catch(error=>{catalogRequest=null;throw error;});
+    }
     return catalogRequest;
   }
   const foundationSources={

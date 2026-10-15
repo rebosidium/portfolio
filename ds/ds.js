@@ -1,4 +1,5 @@
-(() => {
+(async () => {
+  if(window.DSFreshness && !await window.DSFreshness.ready)return;
   const {examples,icons,tokens,manifest}=window.DS_CATALOG;
   const pageNames=routes=>routes.map(route=>route==='/'?'Homepage':'About').join(' · ');
   const versionLabel=release=>release.version;
@@ -45,6 +46,7 @@
   }).join('');
   document.querySelector('#spacing-scale').innerHTML=[2,3,4,5,6,7,8,10].map(n=>`<div class="ds-space-item"><div class="ds-space-bar" style="width:var(--space-${n})"></div><span>${tokens['space-'+n]}</span></div>`).join('');
   const revision=document.documentElement.dataset.build||'';
+  const visit=window.DSFreshness?.visit||String(Date.now());
   function resize(item){
     const mobile=mode==='mobile';
     const width=mobile?440:item.example.width;
@@ -60,7 +62,7 @@
   function load(item){
     item.frame.title=`${item.example.title}, ${mode}, ${labels[item.state]||item.state}`;
     item.ready=false;item.manualVisible=false;item.instance=String(++navigationId);
-    item.frame.src=`/ds/preview.html?component=${encodeURIComponent(item.example.id)}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}`;
+    item.frame.src=`/ds/preview.html?component=${encodeURIComponent(item.example.id)}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}&_visit=${encodeURIComponent(visit)}`;
     item.code?.refresh();
     resize(item);
   }
@@ -112,6 +114,11 @@
     for(const other of document.querySelectorAll('[data-mode]'))other.setAttribute('aria-pressed',String(other===button));
     for(const item of items){states(item);load(item);}
   });
-  const observer=new ResizeObserver(()=>items.forEach(resize));
+  // Apply observed-size writes on the next frame, outside the observer delivery.
+  let layoutFrame=0;
+  const observer=new ResizeObserver(()=>{
+    if(layoutFrame)return;
+    layoutFrame=requestAnimationFrame(()=>{layoutFrame=0;items.forEach(resize);});
+  });
   items.forEach(item=>observer.observe(item.stage));
 })();

@@ -1,4 +1,5 @@
-(() => {
+(async () => {
+  if(window.DSFreshness && !await window.DSFreshness.ready)return;
   const params=new URLSearchParams(location.search);
   const example=window.DS_CATALOG.examples.find(item=>item.id===params.get('component'));
   if(!example){document.querySelector('#preview-root').textContent='Component not found.';return;}
