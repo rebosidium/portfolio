@@ -62,7 +62,7 @@
 @font-face{font-family:Manrope;src:url('manrope.woff2?v=a30ddcd34970') format('woff2');font-style:normal;font-weight:400 800;font-display:swap}
 :root{--canvas:var(--color-canvas);--ink:var(--color-ink);--content-width:var(--width-page);--ease:var(--ease-out);--scene-height:100svh;--scene-offset:0px;--scroll-travel:180px;--header-top:43px;--intro-content-height:370px;--intro-shift:0px}
 *{box-sizing:border-box}
-body{margin:0;min-width:var(--content-width);min-height:100svh;background:var(--canvas);color:var(--ink);font-family:var(--font-family);word-spacing:var(--word-spacing-body);-webkit-font-smoothing:antialiased}
+body{margin:0;min-width:var(--content-width);min-height:100svh;background:var(--canvas);color:var(--ink);font-family:var(--font-family);word-spacing:var(--word-spacing-body);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{word-spacing:inherit}
 /* One body role for the homepage, work descriptions and reading pages. */
 .ui-body-copy,.introduction,.work-copy,.about-prose{font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:normal;word-spacing:var(--word-spacing-body)}
@@ -71,7 +71,7 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid cu
 .header{position:absolute;inset:var(--header-top) 0 auto;width:var(--content-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:var(--type-body);line-height:var(--line-compact);font-weight:var(--weight-semibold)}
 .header nav{display:flex;align-items:center;gap:var(--space-8)}
 .header nav a.mobile-only{display:none}
-.menu-toggle{display:none;place-items:center;flex:none;width:var(--size-target);height:var(--size-target);margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.menu-toggle{display:none;place-items:center;flex:none;width:var(--size-target);height:var(--size-target);margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer}
 .menu-glyph{display:block;width:28px;height:28px;pointer-events:none}
 .menu-stroke{transform-box:view-box;transform-origin:50% 50%;transition:transform .2s ease-in-out,opacity .2s ease-in-out}
 .menu-stroke-top{transform:translateY(-7px) rotate(0deg)}
