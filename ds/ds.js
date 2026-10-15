@@ -1,6 +1,6 @@
 (async () => {
   if(window.DSFreshness && !await window.DSFreshness.ready)return;
-  const {examples,icons,tokens,manifest,naming}=window.DS_CATALOG;
+  const {examples,icons,tokens,lineHeightScale,manifest,naming}=window.DS_CATALOG;
   const pageNames=routes=>routes.map(route=>route==='/'?'Homepage':'About').join(' · ');
   const versionLabel=release=>release.version;
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
@@ -43,6 +43,24 @@
   }
   for(const element of document.querySelectorAll('[data-token-name]'))element.textContent=tokenName(element.dataset.tokenName);
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
+  for(const step of lineHeightScale){
+    const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');
+    term.textContent='×'+step.value;value.textContent=step.name;item.append(term,value);document.querySelector('#line-height-scale').append(item);
+  }
+  for(const example of document.querySelectorAll('.ds-type-example')){
+    const metric=document.createElement('span');metric.className='ds-type-line';
+    example.querySelector(':scope > span').append(document.createElement('br'),metric);
+  }
+  const updateTypeMetrics=()=>{
+    for(const example of document.querySelectorAll('.ds-type-example')){
+      const sample=getComputedStyle(example.querySelector('p'));
+      const line=Number.parseFloat(sample.lineHeight);
+      example.querySelector('.ds-type-line').textContent='Computed line · '+(Number.isFinite(line)?Number(line.toFixed(2))+'px':sample.lineHeight);
+    }
+  };
+  updateTypeMetrics();
+  document.fonts.ready.then(updateTypeMetrics);
+  window.addEventListener('resize',updateTypeMetrics,{passive:true});
   for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','overlap-recede','overlap-flatten-start','ease-out']){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=tokenName(name);value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }

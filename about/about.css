@@ -29,7 +29,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-page .header .about-identity{display:flex;align-items:center;gap:var(--space-5)}
   .header .about-mobile-back{display:inline-flex;width:74px;padding:var(--space-2) var(--space-6)}
   .about-desktop-back{display:none}
-  .about-page .header .name{white-space:nowrap;line-height:var(--line-compact)}
+  .about-page .header .name{white-space:nowrap}
   .about-main{width:calc(100% - var(--gutter-page) * 2);max-width:var(--width-mobile);padding-top:calc(104px + env(safe-area-inset-top));padding-bottom:112px}
   .about-title-row{display:block;margin-bottom:42px}
   .about-title{width:100%}
