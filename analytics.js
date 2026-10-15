@@ -4,13 +4,14 @@
   if (!['dmitryrybalka.com', 'www.dmitryrybalka.com'].includes(location.hostname)
     || !['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) return;
   const sitePath = location.pathname.startsWith('/about') ? '/about/' : '/';
+  if (window.portfolioAnalytics?.enabled === false) return;
   const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
     && typeof window.posthog?.capture === 'function';
   const clarityActive = typeof clarityTrackingEnabled !== 'undefined' && clarityTrackingEnabled
     && typeof window.clarity === 'function';
   if (!posthogActive && !clarityActive) return;
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
-  const qa = new URLSearchParams(location.search).get('analytics_test') === '1';
+  const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: sitePath,
     site_build: document.documentElement.dataset.build, analytics_version: 2, analytics_test: qa});
@@ -48,6 +49,9 @@
           : properties.ready_ms <= 6000 ? '3_to_6s' : 'over_6s');
       }
       callClarity('event', clarityName(name, properties));
+      // Aggregate API signals let native goals include all current/future
+      // destinations and placements while retaining the detailed event names.
+      if (['contact_clicked', 'menu_link_clicked'].includes(name)) callClarity('event', name);
     }
   };
   syncContext(context());
@@ -91,8 +95,11 @@
     const link = target.closest('.header nav a, .footer-links a');
     if (!link) return;
     const href = link.getAttribute('href') || '';
+    let isWork = false;
+    try {const url = new URL(href, location.href); isWork = url.origin === location.origin
+      && ['/', '/index.html'].includes(url.pathname) && url.hash === '#selected-works';} catch {}
     const destination = link.hasAttribute('data-background-prefetch') && link.hasAttribute('download') ? 'resume'
-      : ['#selected-works', '/#selected-works'].includes(href) ? 'work'
+      : isWork ? 'work'
       : href.startsWith('mailto:') ? 'email'
       : href.startsWith('https://www.linkedin.com/in/ribadima/') ? 'linkedin'
       : href === 'https://t.me/ribadima' ? 'telegram' : null;
