@@ -58,6 +58,10 @@
   --radius-pill: 100px;
   --focus-width: 2px;
   --focus-offset-control: 4px;
+  --focus-offset-link: 6px;
+  --focus-offset-field: 2px;
+  --focus-offset-tool: 3px;
+  --radius-focus-link: 2px;
   --duration-control: .18s;
   --duration-underline: .3s;
   --overlap-recede: .025;
@@ -73,11 +77,16 @@ button,input,select,textarea{word-spacing:inherit}
 /* One body role for the homepage, work descriptions and reading pages. */
 .ui-body-copy,.introduction,.work-copy,.about-prose{font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:normal;word-spacing:var(--word-spacing-body)}
 a{color:inherit;text-decoration:none}
-a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid currentColor;outline-offset:6px;border-radius:2px}
+/* Shared type recipes; page rules own geometry and responsive variants. */
+.ui-title,.about-title h1,.footer h2{font:var(--weight-semibold) var(--type-heading)/var(--line-prose) var(--font-family);letter-spacing:var(--tracking-heading)}
+.ui-strong-label,.introduction h1,.work-copy h3,.about-sections h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
+.ui-control-label,.agent-button,.work-details,.ui-back,.work-availability{font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body)}
+/* One ring recipe, with component-owned offset/color/corner variants. */
+:where(a,button,textarea):is(:focus-visible,[data-ui-state="focus"]),:where(select,summary,[tabindex]):focus-visible{outline:var(--focus-width) solid var(--ui-focus-color,currentColor);outline-offset:var(--ui-focus-offset,var(--focus-offset-link));border-radius:var(--ui-focus-radius,var(--radius-focus-link))}
 .header{position:absolute;inset:var(--header-top) 0 auto;width:var(--content-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:var(--type-body);line-height:var(--line-compact);font-weight:var(--weight-semibold)}
 .header nav{display:flex;align-items:center;gap:var(--space-8)}
 .header nav a.mobile-only{display:none}
-.menu-toggle{display:none;place-items:center;flex:none;width:var(--size-target);height:var(--size-target);margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.menu-toggle{--ui-focus-offset:var(--focus-offset-field);--ui-focus-radius:var(--radius-control);display:none;place-items:center;flex:none;width:var(--size-target);height:var(--size-target);margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer}
 .menu-glyph{display:block;width:28px;height:28px;pointer-events:none}
 .menu-stroke{transform-box:view-box;transform-origin:50% 50%;transition:transform .2s ease-in-out,opacity .2s ease-in-out}
 .menu-stroke-top{transform:translateY(-7px) rotate(0deg)}
@@ -87,12 +96,17 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid cu
 .menu-toggle[data-menu-icon="close"] .menu-stroke-bottom{transform:translateY(0) rotate(-45deg)}
 .menu-toggle[data-icon-instant="true"] .menu-stroke{transition:none}
 .header a{position:relative;display:block}
-.header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:var(--border-subtle);transform:scaleX(0);transform-origin:right;transition:transform var(--duration-underline) var(--ease)}
+.header nav a::after,.footer-link-label::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:var(--link-underline-color,var(--border-subtle));transform:scaleX(0);transform-origin:right;transition:transform var(--duration-underline) var(--ease)}
 .header nav a:is(:hover,[data-ui-state="hover"])::after,.header nav a:is(:focus-visible,[data-ui-state="focus"])::after{transform:scaleX(1);transform-origin:left}
-.agent-button,.work-details{appearance:none;align-self:flex-start;display:inline-flex;align-items:center;gap:var(--space-3);height:var(--height-control);margin-top:4px;padding:var(--space-2) var(--space-6);border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:transparent;color:var(--ink);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body);white-space:nowrap;cursor:pointer;transition:background-color var(--duration-control) ease,border-color var(--duration-control) ease}
+.agent-button,.work-details,.ui-back{--ui-focus-offset:var(--focus-offset-control);--ui-focus-radius:var(--radius-pill);display:inline-flex;align-items:center;height:var(--height-control);border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:transparent;color:var(--ink);transition:background-color var(--duration-control) ease,border-color var(--duration-control) ease}
+.agent-button,.work-details{appearance:none;cursor:pointer;align-self:flex-start;gap:var(--space-3);margin-top:4px;padding:var(--space-2) var(--space-6);white-space:nowrap}
+.ui-back{justify-content:center;gap:var(--space-2);padding:var(--space-2) var(--space-6) var(--space-2) var(--space-5)}
+.ui-back img{display:block;flex:none}
+.ui-back:is(:hover,[data-ui-state="hover"]){background:var(--color-hover);border-color:var(--border-strong)}
+.ui-back:is(:active,[data-ui-state="pressed"]){background:var(--color-pressed)}
 .agent-button--light{--agent-hover-background:var(--color-hover);--agent-hover-border:var(--border-strong);--agent-pressed-background:var(--color-pressed)}
 .agent-control{display:flex;flex-direction:column;align-items:flex-start;width:fit-content;max-width:100%;font-weight:var(--weight-body)}
-.work-details{width:159px;margin-top:0;justify-content:center}
+.work-details{--ui-focus-color:var(--ink);width:159px;margin-top:0;justify-content:center}
 .work-details span{width:109px}
 .work-details:disabled,.work-details:disabled:is(:hover,[data-ui-state="hover"]),.work-details:disabled:is(:active,[data-ui-state="pressed"]){color:var(--color-disabled);background:transparent;border-color:var(--border-subtle);cursor:default}
 .agent-button-label{position:relative;flex:none;width:105px;text-align:left}
@@ -115,7 +129,6 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid cu
 }
 .agent-button:is(:active,[data-ui-state="pressed"]){background:var(--agent-pressed-background)}
 .work-details:is(:active,[data-ui-state="pressed"]){background:var(--color-pressed)}
-.agent-button:is(:focus-visible,[data-ui-state="focus"]),.work-details:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid var(--ink);outline-offset:var(--focus-offset-control);border-radius:var(--radius-pill)}
 /* Manual copy uses the same mounted header/icons, with the compact Figma field. */
 [data-agent-control].is-manual-copy{align-items:flex-start;gap:var(--gap-brief-manual);width:min(var(--width-brief),100%);max-width:100%}
 [data-agent-control].is-manual-copy>.agent-button{position:relative;align-self:flex-start;height:auto;min-height:0;margin:0;padding:0;border:0;border-radius:var(--radius-field);background:transparent;line-height:var(--line-prose)}
@@ -124,8 +137,7 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid cu
 .agent-copy-fallback{--brief-muted:var(--color-muted);--brief-field-border:var(--border-subtle);display:flex;flex-direction:column;gap:var(--gap-brief-manual);width:100%;font-size:var(--type-helper);font-weight:var(--weight-body);line-height:normal;letter-spacing:normal;color:var(--brief-muted)}
 .agent-copy-fallback[hidden]{display:none}
 .agent-copy-fallback label{display:block;min-height:24px}
-.agent-copy-fallback textarea{display:block;width:100%;height:var(--height-brief-field);min-height:var(--height-brief-field);padding:8px 10px 8px 14px;border:1px solid var(--brief-field-border);border-radius:var(--radius-field);background:transparent;color:var(--brief-muted);font:var(--weight-body) var(--type-prompt)/normal var(--font-family);letter-spacing:normal;overflow-wrap:anywhere;resize:none;overflow:hidden}
-.agent-copy-fallback textarea:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid var(--ink);outline-offset:2px}
+.agent-copy-fallback textarea{--ui-focus-offset:var(--focus-offset-field);--ui-focus-radius:var(--radius-field);--ui-focus-color:var(--ink);display:block;width:100%;height:var(--height-brief-field);min-height:var(--height-brief-field);padding:8px 10px 8px 14px;border:1px solid var(--brief-field-border);border-radius:var(--radius-field);background:transparent;color:var(--brief-muted);font:var(--weight-body) var(--type-prompt)/normal var(--font-family);letter-spacing:normal;overflow-wrap:anywhere;resize:none;overflow:hidden}
 .agent-profile-link{text-decoration:underline;text-underline-offset:4px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(prefers-reduced-motion:reduce){
@@ -135,7 +147,6 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid cu
 body{min-width:0}
 .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto var(--gutter-page);width:auto;max-width:none;min-height:var(--size-target);margin:0;font-size:var(--type-body);line-height:28px;z-index:3}
 .menu-toggle{display:grid}
-.menu-toggle:is(:focus-visible,[data-ui-state="focus"]){outline:var(--focus-width) solid currentColor;outline-offset:2px;border-radius:var(--radius-control)}
 .header.menu-animating .menu-toggle{transition:none}
 .nav-pending .menu-toggle{opacity:0}
 html.mobile-menu-open{overflow:hidden}
@@ -149,7 +160,7 @@ body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);wid
 .header nav a{display:flex;align-items:center;justify-content:center;min-height:64px;padding:var(--space-2) var(--space-4);font-size:clamp(32px,10vw,48px);line-height:1.15;text-align:center}
 .header nav a.mobile-only{display:flex}
 .header nav a::after{display:none}
-.header nav a:is(:focus-visible,[data-ui-state="focus"]){outline-offset:0;border-radius:var(--radius-control)}
+.header nav a{--ui-focus-offset:0px;--ui-focus-radius:var(--radius-control)}
 html:not([data-mobile-nav-ready="true"]) .header{flex-wrap:wrap;gap:var(--space-2);right:var(--gutter-page)}
 html:not([data-mobile-nav-ready="true"]) .menu-toggle{display:none}
 html:not([data-mobile-nav-ready="true"]) .header nav{display:flex;position:static;inset:auto;width:100%;height:auto;min-height:0;padding:0;background:none;flex-direction:row;flex-wrap:wrap;gap:var(--space-2) var(--space-4);justify-content:flex-start;overflow:visible;z-index:auto}
@@ -164,22 +175,21 @@ html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:var(--size-tar
 .footer{--footer-heading-height:clamp(48px,calc((var(--scene-height) - 440px) * .24 + 80px),138px);--footer-group-gap:clamp(8px,calc((var(--scene-height) - 440px) * .14),42px);--footer-copy-height:58px;--footer-center-shift:18px;--footer-content-height:calc(var(--footer-copy-height) + 98px + 54px + var(--footer-group-gap) * 2);position:relative;z-index:var(--footer-layer,8);display:flex;flex-direction:column;align-items:center;--footer-top-space:max(8px,calc((var(--scene-height) - var(--footer-content-height)) / 2 + var(--footer-center-shift) - var(--footer-heading-height)));gap:0;padding-top:var(--footer-top-space);height:var(--scene-height);min-height:0;overflow:auto;border-radius:var(--footer-radius,var(--radius-panel)) var(--footer-radius,var(--radius-panel)) 0 0;background:var(--color-inverse);color:var(--color-canvas)}
 .footer-inner{display:contents}
 .footer-native-overlap .works-screen:last-of-type{position:sticky;top:var(--footer-last-top,0px)}
-.footer h2{display:flex;align-items:center;justify-content:center;flex:none;width:var(--content-width);max-width:100%;height:var(--footer-heading-height);margin:0;font-size:var(--type-heading);font-weight:var(--weight-semibold);line-height:var(--line-prose);letter-spacing:var(--tracking-heading);text-align:center}
+.footer h2{display:flex;align-items:center;justify-content:center;flex:none;width:var(--content-width);max-width:100%;height:var(--footer-heading-height);margin:0;text-align:center}
 .footer h2:focus{outline:none}
 .footer-content{display:flex;flex-direction:column;align-items:center;flex:none;gap:var(--footer-group-gap);width:calc(100% - var(--gutter-page) * 2);max-width:464px;padding-bottom:var(--scene-safe-bottom,env(safe-area-inset-bottom))}
 .footer-description{width:100%;min-height:58px;margin:0;font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-contact);letter-spacing:var(--tracking-body);text-align:center;text-wrap:pretty;overflow-wrap:break-word}
 .footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:35px;gap:var(--space-7) var(--space-4);width:100%;max-width:304px;font-size:var(--type-body);font-weight:var(--weight-semibold);line-height:var(--line-contact);letter-spacing:var(--tracking-body);text-align:center}
 .footer-links a{justify-self:stretch}
 .footer-link-label{position:relative;display:inline-block}
-.footer-link-label::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:var(--border-inverse);transform:scaleX(0);transform-origin:right;transition:transform var(--duration-underline) var(--ease)}
+.footer-link-label{--link-underline-color:var(--border-inverse)}
 .footer-links a:is(:focus-visible,[data-ui-state="focus"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 .footer-agent{display:flex;flex-direction:column;align-items:center;gap:var(--space-4);width:100%;color:var(--color-canvas)}
 .footer-agent-button{--agent-hover-background:var(--color-inverse-hover);--agent-hover-border:var(--border-inverse-hover);--agent-pressed-background:var(--color-inverse-pressed);align-self:center;height:var(--height-control-spacious);margin:0;padding:10px var(--space-6);border-color:var(--border-inverse);color:var(--color-canvas)}
 .footer-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px}
 .footer-logo-copilot img{position:absolute;left:.9672px;top:.9864px}
-.footer-agent-button:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
 .footer-agent .agent-copy-fallback{--brief-muted:var(--color-inverse-muted);--brief-field-border:var(--border-inverse)}
-.footer-agent .agent-copy-fallback textarea:is(:focus-visible,[data-ui-state="focus"]){outline-color:var(--color-canvas)}
+.footer-agent .agent-copy-fallback textarea{--ui-focus-color:var(--color-canvas)}
 @media(hover:hover) and (pointer:fine){
 .footer-links a:is(:hover,[data-ui-state="hover"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 }

@@ -24,7 +24,6 @@
 .work-copy{display:flex;flex-direction:column;gap:var(--space-4);flex:none;width:383px}
 .work-heading{display:flex;flex-direction:column;gap:var(--space-4)}
 .work-copy h3,.work-copy p{margin:0}
-.work-copy h3{font-size:inherit;line-height:inherit;font-weight:var(--weight-bold)}
 .work-copy .work-meta{display:flex;align-items:center;gap:6px;font-size:var(--type-body);line-height:var(--line-compact);color:var(--color-muted)}
 .work-meta span:first-child{flex:none}
 .work-meta span:nth-child(2){flex:none;width:5px}
@@ -43,13 +42,13 @@
 .portrait-rendered img{visibility:hidden}
 .portrait[data-spin-ready]{cursor:grab}
 .portrait.dragging{cursor:grabbing}
-.portrait:focus-visible{outline:var(--focus-width) solid var(--ink);outline-offset:var(--focus-offset-control);border-radius:var(--radius-artwork)}
+.portrait{--ui-focus-offset:var(--focus-offset-control);--ui-focus-radius:var(--radius-artwork)}
 .introduction{display:flex;flex-direction:column;gap:var(--space-5);flex:none;width:var(--width-prose);text-wrap:wrap}
-.introduction h1,.introduction p{margin:0;font-size:inherit;line-height:inherit}
-.introduction h1{font-weight:var(--weight-bold)}
+.introduction h1,.introduction p{margin:0}
+.introduction p{font-size:inherit;line-height:inherit}
 .introduction .summary{width:602px}
 .work-actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-3) 23px;align-self:flex-start}
-.work-availability{display:inline-flex;align-items:center;gap:var(--space-3);color:var(--ink);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);white-space:nowrap}
+.work-availability{display:inline-flex;align-items:center;gap:var(--space-3);color:var(--ink);white-space:nowrap}
 .work-availability img{display:block;flex:none;animation:availability-pulse 2.2s ease-in-out infinite;animation-play-state:paused}
 .works-screen[data-pulse-visible="true"] .work-availability img{animation-play-state:running}
 .mobile-menu-open .work-availability img{animation-play-state:paused}
