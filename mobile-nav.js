@@ -1,4 +1,4 @@
-// LIGHT content with the approved NEW mobile navigation behavior.
+// Homepage navigation: one SVG stroke morphs from menu to close.
 (() => {
   const root = document.documentElement;
   const header = document.querySelector('.header');
@@ -28,16 +28,16 @@
   let headerMarker = null;
   let scrollbarWidth = 0;
   let iconTarget = 'menu';
-  let iconSwapTimer = null;
   let iconInstantFrame = 0;
+  const strokes = [...toggle.querySelectorAll('.menu-stroke')];
+  const commitIcon = () => {
+    for (const stroke of strokes) void getComputedStyle(stroke).transform;
+  };
   const settleIcon = () => {
-    clearTimeout(iconSwapTimer);
-    iconSwapTimer = null;
     cancelAnimationFrame(iconInstantFrame);
     toggle.dataset.iconInstant = 'true';
     toggle.dataset.menuIcon = iconTarget;
-    // Commit both visibility gates before restoring their normal transitions.
-    void getComputedStyle(toggle.querySelector('.menu-icon')).opacity;
+    commitIcon();
     iconInstantFrame = requestAnimationFrame(() => {
       delete toggle.dataset.iconInstant;
       iconInstantFrame = 0;
@@ -49,16 +49,10 @@
     cancelAnimationFrame(iconInstantFrame);
     iconInstantFrame = 0;
     delete toggle.dataset.iconInstant;
-    if (toggle.dataset.menuIcon === iconTarget && !iconSwapTimer) return;
-    // Reparenting the open header resets CSS transitions; commit the current pose first.
-    void getComputedStyle(toggle.querySelector('.menu-icon')).opacity;
-    void getComputedStyle(toggle.querySelector('.menu-close-icon')).opacity;
-    // Hide the outgoing glyph completely before allowing the new one to appear.
-    toggle.dataset.menuIcon = 'switching';
-    if (!iconSwapTimer) iconSwapTimer = setTimeout(() => {
-      iconSwapTimer = null;
-      toggle.dataset.menuIcon = iconTarget;
-    },250);
+    // The header has just been portalled. Commit its existing pose before
+    // changing the target so native transitions survive that DOM move.
+    commitIcon();
+    toggle.dataset.menuIcon = iconTarget;
   };
   const headerGeometry = ['--menu-header-top','--menu-header-left','--menu-header-right','--menu-header-height','--menu-identity-left','--menu-identity-top','--menu-identity-scale','--menu-identity-opacity','--menu-toggle-top','--menu-toggle-right','--menu-toggle-width','--menu-toggle-height','--menu-icon-scale'];
   const mountMenuHeader = () => {

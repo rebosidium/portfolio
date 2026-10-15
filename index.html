@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="25304fba5dac">
+<html lang="en" data-build="fcdc9e0a9239">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=1d28f66d2ff3">
+  <link rel="stylesheet" href="styles.css?v=40cdadc3ce3a">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -54,7 +54,7 @@
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=665f66738691" onerror="window.releasePageFallback()"></script>
-  <script defer src="mobile-nav.js?v=cc097c99cee4" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="mobile-nav.js?v=0bef7f4d72ae" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
     (() => {
@@ -151,7 +151,14 @@
   <div class="intro-screen" data-scene="intro">
   <header class="header" role="banner">
     <a class="name identity" href="/" data-node-id="159:898">Dmitry Rybalka</a>
-    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205"><img class="menu-icon" src="assets/lucide-menu.svg?v=af6491988ac1" width="24" height="24" alt=""><img class="menu-close-icon" src="assets/lucide-x.svg?v=4a9cdab38fbb" width="24" height="24" alt=""></button>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-middle" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
     <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
       <a href="#selected-works" data-node-id="159:892">Work</a>
       <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
