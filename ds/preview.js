@@ -8,6 +8,8 @@
   document.body.dataset.kind=example.kind;document.body.dataset.state=state;
   if(example.kind.includes('about-page')||(example.id==='footer'&&state==='about'))document.body.classList.add('about-page');
   document.querySelector('#preview-root').innerHTML=mobile&&example.htmlMobile?example.htmlMobile:example.html;
+  // An isolated ready-menu link has no toggle to initialise the full menu runtime.
+  if(example.id==='link')document.documentElement.dataset.mobileNavReady='true';
   window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const control=document.querySelector('.agent-button,.ui-back,.header nav a,.footer-links a');
   if(control&&['hover','focus','pressed'].includes(state))control.dataset.uiState=state;

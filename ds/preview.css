@@ -16,7 +16,7 @@
 .ds-preview[data-state="manual-copy"] #preview-root{align-items:flex-start}
 .ds-preview[data-kind~="portrait"] #preview-root{display:flex;align-items:center;justify-content:center;min-height:340px}
 .ds-preview[data-kind~="about-title"] #preview-root{display:flex;align-items:center;width:var(--width-prose);max-width:calc(100% - 40px);margin:auto;min-height:130px}
-.ds-preview[data-kind~="photo"] #preview-root{min-height:0}
+.ds-preview[data-kind~="photo"] #preview-root{width:var(--width-page);max-width:100%;margin-inline:auto;min-height:0}
 .ds-preview[data-kind~="photo"] .about-photo-placeholder{margin:0}
 .ds-preview[data-kind~="header"] #preview-root{min-height:107px}
 .ds-preview[data-kind~="hero"] .intro-content{min-height:900px}
