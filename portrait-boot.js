@@ -1,4 +1,4 @@
-const originalPlayerURL = './portrait-spin.js?v=d68eae9bf82a';
+const originalPlayerURL = './portrait-spin.js?v=dc744fc108e4';
 try {
   const {mountSeedancePortrait} = await import(window.portraitModuleURL || originalPlayerURL)
     .catch(() => import(originalPlayerURL));

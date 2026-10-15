@@ -110,7 +110,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
   function sample(values,value){values.push(value);if(values.length>4096)values.splice(0,256)}
-  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(url,options)}
+  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(new URL(url,import.meta.url),options)}
   function diagnostics(){
     const resources=[...cache.values()].filter(e=>e.state==='ready');
     const pixels=resources.reduce((sum,e)=>sum+e.resource.width*e.resource.height,0);

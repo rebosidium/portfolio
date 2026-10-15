@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="e01a0a2e47c8">
+<html lang="en" data-build="65641f1813ad">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,8 +26,8 @@
     };
     window.mobileNavigationDeadline = setTimeout(window.releaseMobileNavigation,3000);
     window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
-      ? '/portrait-spin-android.js?v=50690c87c7bd'
-      : '/portrait-spin.js?v=d68eae9bf82a';
+      ? '/portrait-spin-android.js?v=9c82b3433460'
+      : '/portrait-spin.js?v=dc744fc108e4';
     const portraitPreload = document.createElement('link');
     portraitPreload.rel = 'modulepreload';
     portraitPreload.href = window.portraitModuleURL;
@@ -51,7 +51,7 @@
       window.pageDeadline = setTimeout(window.releasePageFallback,21000);
     }
   </script>
-  <script type="module" src="portrait-boot.js?v=3e5ba6df0a84" onerror="window.resolvePortraitReady(false)"></script>
+  <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=665f66738691" onerror="window.releasePageFallback()"></script>
   <script defer src="mobile-nav.js?v=cc097c99cee4" onerror="window.releaseMobileNavigation()"></script>
