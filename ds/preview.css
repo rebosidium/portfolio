@@ -3,10 +3,9 @@
 .ds-preview #preview-root{min-height:100svh}
 .ds-preview[data-kind~="control"] #preview-root{display:flex;align-items:center;justify-content:center;padding:32px 20px;min-height:140px}
 .ds-preview[data-kind~="dark"]{background:var(--color-inverse);color:var(--color-canvas)}
-.ds-preview .ds-control{width:auto;max-width:100%}
-.ds-preview .ds-control .agent-button{margin:0}
+.ds-preview .agent-control{width:auto;max-width:100%}
+.ds-preview .agent-control .agent-button{margin:0}
 .ds-preview[data-kind~="dark"] .footer-agent{max-width:400px}
-.ds-preview[data-kind~="dark"] .agent-copy-fallback textarea{background:var(--color-inverse);color:var(--color-canvas);border-color:var(--border-inverse)}
 .ds-preview .ds-back-mobile{width:74px;padding-inline:24px}
 .ds-preview .ds-link-header{position:static;inset:auto;display:flex;width:auto;margin:0}
 .ds-preview .ds-link-header nav{position:static;inset:auto;display:flex;width:auto;height:auto;min-height:0;padding:0;background:transparent}

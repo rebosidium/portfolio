@@ -11,6 +11,14 @@
     const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${variant.id}">${variant.html}</div><span>${variant.id} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}<code>renderIcon('${icon.id}', {variant: '${variant.id}'})</code></div>`).join('');
     card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div>`;
     document.querySelector(`#${icon.group}-icons`).append(card);
+    for(const [index,variant] of icon.variants.entries())window.DSCode?.attach({
+      triggerParent:card.querySelectorAll('.ds-icon-variant')[index],panelParent:card,
+      kind:'icon',id:icon.id,variant:variant.id,label:icon.name+' · '+variant.id
+    });
+  }
+  for(const [id,label] of [['palette','Palette'],['typography','Typography'],['layout','Layout & spacing']]){
+    const section=document.querySelector('#'+id);
+    window.DSCode?.attach({triggerParent:section.querySelector('.ds-section-heading'),panelParent:section,kind:'foundation',id,label});
   }
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
   const colors=[['color-canvas','Canvas'],['color-ink','Ink'],['color-surface','Work surface'],['color-placeholder','Photo slot'],['color-inverse','Footer']];
@@ -39,6 +47,7 @@
     item.frame.title=`${item.example.title}, ${mode}, ${labels[item.state]||item.state}`;
     item.ready=false;item.manualVisible=false;item.instance=String(++navigationId);
     item.frame.src=`/ds/preview.html?component=${encodeURIComponent(item.example.id)}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}`;
+    item.code?.refresh();
     resize(item);
   }
   function sendState(item){
@@ -50,6 +59,7 @@
     item.frame.title=`${item.example.title}, ${mode}, ${labels[item.state]||item.state}`;
     item.manualVisible=false;
     resize(item);sendState(item);
+    item.code?.refresh();
   }
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin||!event.data||typeof event.data!=='object')return;
@@ -76,9 +86,10 @@
   }
   for(const example of examples){
     const card=document.createElement('article');card.className='ds-specimen';card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
-    card.innerHTML=`<div class="ds-specimen-head"><h3>${example.title}</h3><span class="ds-source">${example.source}</span></div><div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
+    card.innerHTML=`<div class="ds-specimen-head"><h3>${example.title}</h3><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div><div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
     document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
     const item={example,state:example.states[0],switch:card.querySelector('.ds-state-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
+    item.code=window.DSCode?.attach({triggerParent:card.querySelector('.ds-head-actions'),panelParent:card,id:example.id,label:example.title,getContext:()=>({mode,state:item.state})});
     items.push(item);states(item);load(item);
   }
   for(const button of document.querySelectorAll('[data-mode]'))button.addEventListener('click',()=>{

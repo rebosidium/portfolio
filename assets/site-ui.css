@@ -64,6 +64,7 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outl
 .header nav a:is(:hover,[data-ui-state="hover"])::after,.header nav a:is(:focus-visible,[data-ui-state="focus"])::after{transform:scaleX(1);transform-origin:left}
 .agent-button,.work-details{appearance:none;align-self:flex-start;display:inline-flex;align-items:center;gap:12px;height:50px;margin-top:4px;padding:8px 24px;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:transparent;color:var(--ink);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:.18px;word-spacing:1px;white-space:nowrap;cursor:pointer;transition:background-color .18s ease,border-color .18s ease}
 .agent-button--light{--agent-hover-background:var(--color-hover);--agent-hover-border:var(--border-strong);--agent-pressed-background:var(--color-pressed)}
+.agent-control{font-weight:var(--weight-body)}
 .work-details{width:158px;margin-top:0;justify-content:center;word-spacing:normal}
 .work-details span{width:108px}
 .work-details:disabled,.work-details:disabled:is(:hover,[data-ui-state="hover"]),.work-details:disabled:is(:active,[data-ui-state="pressed"]){color:var(--color-disabled);background:transparent;border-color:var(--border-subtle);cursor:default}
@@ -139,14 +140,14 @@ html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:44px;padding:4
 .footer-link-label{position:relative;display:inline-block}
 .footer-link-label::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:var(--border-inverse);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .footer-links a:is(:focus-visible,[data-ui-state="focus"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
-.footer-agent{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+.footer-agent{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;color:var(--color-canvas)}
 .footer-agent-button{--agent-hover-background:var(--color-inverse-hover);--agent-hover-border:var(--border-inverse-hover);--agent-pressed-background:var(--color-inverse-pressed);align-self:center;height:54px;margin:0;padding:10px 24px;border-color:var(--border-inverse);color:var(--color-canvas);word-spacing:normal}
 .footer-agent-button .agent-button-label{width:103px}
 .footer-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px}
 .footer-logo-copilot img{position:absolute;left:.9672px;top:.9864px}
 .footer-agent-button:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
-.footer .agent-copy-fallback textarea{border-color:var(--border-inverse);background:var(--color-inverse);color:inherit}
-.footer .agent-copy-fallback textarea:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
+.footer-agent .agent-copy-fallback textarea{border-color:var(--border-inverse);background:var(--color-inverse);color:inherit}
+.footer-agent .agent-copy-fallback textarea:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
 @media(hover:hover) and (pointer:fine){
 .footer-links a:is(:hover,[data-ui-state="hover"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 }
