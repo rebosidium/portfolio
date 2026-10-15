@@ -18,7 +18,7 @@
   widthProbe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:0;visibility:hidden;pointer-events:none;contain:strict';
   document.body.append(widthProbe);
   const layoutWidth = () => widthProbe.getBoundingClientRect().width || innerWidth;
-  const background = [document.querySelector('.intro-content'),...document.querySelectorAll('.works-screen'),document.querySelector('.footer'),header.querySelector('.identity')].filter(Boolean);
+  const background = [document.querySelector('.intro-content'),...document.querySelectorAll('.works-screen,[data-navigation-background]'),document.querySelector('.footer'),header.querySelector('.identity')].filter(Boolean);
   let scrollPosition = null;
   let inertBefore = [];
   let desiredOpen = false;

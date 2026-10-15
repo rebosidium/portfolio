@@ -1,8 +1,8 @@
 (() => {
   'use strict';
+  /* shared:controls:start */
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
   const agentButtons = [...document.querySelectorAll('.agent-button')];
-  const agentButton = document.querySelector('.introduction .agent-button');
   agentButtons.forEach(mountAgentCopy);
   function mountAgentCopy(agentButton) {
     const control = agentButton.closest('[data-agent-control]');
@@ -144,6 +144,8 @@
       else {hovering = hovering && agentButton.matches(':hover');startHover();}
     });
   }
+  /* shared:controls:end */
+  const agentButton = document.querySelector('.introduction .agent-button');
   const navigation = mobile.matches
     ? [...document.querySelectorAll('.header > .identity,.menu-toggle')]
     : [...document.querySelectorAll('.header > a,.header nav a:not(.mobile-only)')];
@@ -442,7 +444,7 @@
         }
       });
       root.dataset.workSceneIndex = String(visibleIndex);
-      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F5F5F7';
+      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
       paintFooter(footerCover);
     }
     function paintDesktopPanels() {
@@ -467,7 +469,7 @@
       });
       root.dataset.workSceneIndex=String(visibleIndex);
       if (overlapping) root.dataset.sceneState='overlap';
-      if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? '#fff' : '#F5F5F7';
+      if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
       else document.body.style.removeProperty('background-color');
       paintFooter(footerCover,true);
     }

@@ -1,0 +1,146 @@
+(() => {
+  'use strict';
+  const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
+  const agentButtons = [...document.querySelectorAll('.agent-button')];
+  agentButtons.forEach(mountAgentCopy);
+  function mountAgentCopy(agentButton) {
+    const control = agentButton.closest('[data-agent-control]');
+    const agentStatus = control.querySelector('[role="status"]');
+    const manualCopy = control.querySelector('.agent-copy-fallback');
+    const promptField = manualCopy.querySelector('textarea');
+    promptField.value = agentPrompt;
+    let copying = false,copyFeedback;
+    function copyWithSelection() {
+      const previousFocus = document.activeElement;
+      const selection = document.getSelection();
+      const previousRanges = Array.from({length:selection?.rangeCount || 0},(_,index) => selection.getRangeAt(index).cloneRange());
+      const field = document.createElement('textarea');
+      field.value = agentPrompt;
+      field.readOnly = true;
+      field.style.cssText = 'position:fixed;left:-9999px;top:0;font-size:16px';
+      document.body.append(field);
+      let copied = false;
+      try {
+        field.focus({preventScroll:true});
+        field.select();
+        copied = document.execCommand('copy');
+      } catch (_) {
+        copied = false;
+      } finally {
+        field.remove();
+        previousFocus?.focus({preventScroll:true});
+        if (selection) {
+          selection.removeAllRanges();
+          previousRanges.forEach(range => selection.addRange(range));
+        }
+      }
+      return copied;
+    }
+    agentButton.addEventListener('click',async () => {
+      if (copying) return;
+      copying = true;
+      agentButton.setAttribute('aria-busy','true');
+      clearTimeout(copyFeedback);
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(agentPrompt);
+          copied = true;
+        }
+      } catch (_) {
+        copied = false;
+      }
+      if (!copied) copied = copyWithSelection();
+      if (copied) {
+        manualCopy.hidden = true;
+        agentButton.classList.add('is-copied');
+        agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
+        copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
+      } else {
+        agentButton.classList.remove('is-copied');
+        manualCopy.hidden = false;
+        agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
+        promptField.focus({preventScroll:true});
+        promptField.select();
+        if(control.closest('.footer'))promptField.scrollIntoView({block:'nearest',inline:'nearest'});
+      }
+      agentButton.setAttribute('aria-busy','false');
+      copying = false;
+    });
+  }
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = window.mobileLayout;
+  agentButtons.forEach(mountAgentIconMotion);
+  function mountAgentIconMotion(agentButton) {
+    // Move direct children so Copilot travels with its clipping wrapper.
+    const icons = [...agentButton.querySelector('.agent-button-logos').children];
+    if (!icons.length || icons.some(icon => typeof icon.animate !== 'function')) return;
+    const hoverPointer = matchMedia('(hover: hover) and (pointer: fine)');
+    const ease = 'cubic-bezier(.37,0,.63,1)';
+    let animations = [],hovering = false,waving = false;
+    const canHover = () => hovering && hoverPointer.matches && !mobile.matches && !reduced.matches && !document.hidden;
+    const poses = () => icons.map(icon => {
+      const transform = getComputedStyle(icon).transform;
+      return transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42;
+    });
+    // Ease each half of the motion to turn smoothly at the peak and baseline.
+    const frame = y => ({transform:`translateY(${y}px)`,easing:ease});
+    function cancelMotion() {
+      animations.forEach(animation => animation.cancel());
+      animations = [];
+    }
+    function whenFinished(current,callback) {
+      Promise.all(current.map(animation => animation.finished)).then(() => {
+        if (animations !== current) return;
+        cancelMotion();callback();
+      }).catch(() => {}); // Cancellation on preference/visibility changes is expected.
+    }
+    function startHover() {
+      if (!canHover() || waving || animations.length) return;
+      animations = icons.map((icon,index) => icon.animate([frame(0),frame(-2),frame(0)],{
+        duration:2400,delay:index * 140,iterations:Infinity
+      }));
+    }
+    function settleHover() {
+      if (waving || !animations.length) return;
+      const from = poses();
+      cancelMotion();
+      animations = icons.map((icon,index) => icon.animate([frame(from[index]),frame(0)],{
+        duration:240
+      }));
+      whenFinished(animations,startHover);
+    }
+    function playWave() {
+      if (waving || reduced.matches || document.hidden) return;
+      const from = poses();
+      cancelMotion();waving = true;
+      // Preserve each current hover pose through its delay; repeated clicks keep
+      // the same wave alive while the independent copy handler runs normally.
+      animations = icons.map((icon,index) => icon.animate([frame(from[index]),frame(-9),frame(0)],{
+        duration:500,delay:index * 70,fill:'both'
+      }));
+      whenFinished(animations,() => {waving = false;startHover();});
+    }
+    agentButton.addEventListener('pointerenter',event => {
+      if (event.pointerType === 'touch') return;
+      hovering = true;startHover();
+    });
+    agentButton.addEventListener('pointerleave',() => {hovering = false;settleHover();});
+    agentButton.addEventListener('pointerdown',event => {
+      if (event.pointerType === 'touch') {hovering = false;settleHover();}
+    });
+    agentButton.addEventListener('click',playWave);
+    const syncHover = () => {if (canHover()) startHover();else settleHover();};
+    hoverPointer.addEventListener('change',syncHover);
+    mobile.addEventListener('change',syncHover);
+    reduced.addEventListener('change',() => {
+      if (reduced.matches) {cancelMotion();waving = false;}
+      else startHover();
+    });
+    document.addEventListener('visibilitychange',() => {
+      if (document.hidden) {cancelMotion();waving = false;}
+      else {hovering = hovering && agentButton.matches(':hover');startHover();}
+    });
+  }
+})();

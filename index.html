@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="bfb3c75b75d3">
+<html lang="en" data-build="08486e1eba42">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,8 @@
   <link rel="preload" as="font" href="assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=40cdadc3ce3a">
+  <link rel="stylesheet" href="assets/site-ui.css?v=4733d6b4ae63">
+  <link rel="stylesheet" href="styles.css?v=cd457ff8505a">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -53,8 +54,8 @@
   </script>
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=665f66738691" onerror="window.releasePageFallback()"></script>
-  <script defer src="mobile-nav.js?v=0bef7f4d72ae" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="app.js?v=dbfb65b6506a" onerror="window.releasePageFallback()"></script>
+  <script defer src="mobile-nav.js?v=5b57f95ee98b" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
     (() => {
@@ -149,6 +150,7 @@
   <main class="scene-flow">
   <div class="scene-stage">
   <div class="intro-screen" data-scene="intro">
+  <!-- shared:header:start -->
   <header class="header" role="banner">
     <a class="name identity" href="/" data-node-id="159:898">Dmitry Rybalka</a>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205">
@@ -167,6 +169,7 @@
       <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
+  <!-- shared:header:end -->
   <div class="intro-content">
     <section class="hero" aria-labelledby="greeting" data-node-id="159:1060">
       <div class="portrait" role="img" aria-label="Dmitry Rybalka" data-node-id="159:847">
@@ -333,6 +336,7 @@
       </article>
     </div>
   </section>
+  <!-- shared:footer:start -->
   <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
     <div class="footer-inner">
     <h2 id="footer-title" tabindex="-1" data-node-id="182:2736">Let’s Talk</h2>
@@ -365,6 +369,7 @@
     </div>
     </div>
   </footer>
+  <!-- shared:footer:end -->
   </div>
   </main>
 </body>
