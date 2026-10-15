@@ -39,7 +39,7 @@
     }
   }
   for(const example of examples){
-    const card=document.createElement('article');card.className='ds-specimen';card.dataset.component=example.id;
+    const card=document.createElement('article');card.className='ds-specimen';card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
     card.innerHTML=`<div class="ds-specimen-head"><h3>${example.title}</h3><span class="ds-source">${example.source}</span></div><div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
     document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
     const item={example,state:example.states[0],switch:card.querySelector('.ds-state-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};

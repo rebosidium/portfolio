@@ -52,27 +52,29 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outl
 .header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:var(--border-subtle);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .header nav a:is(:hover,[data-ui-state="hover"])::after,.header nav a:is(:focus-visible,[data-ui-state="focus"])::after{transform:scaleX(1);transform-origin:left}
 .agent-button,.work-details{appearance:none;align-self:flex-start;display:inline-flex;align-items:center;gap:12px;height:50px;margin-top:4px;padding:8px 24px;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:transparent;color:var(--ink);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:.18px;word-spacing:1px;white-space:nowrap;cursor:pointer;transition:background-color .18s ease,border-color .18s ease}
+.agent-button{--agent-hover-background:var(--color-hover);--agent-hover-border:var(--border-strong);--agent-pressed-background:var(--color-pressed)}
 .work-details{width:158px;margin-top:0;justify-content:center;word-spacing:normal}
 .work-details span{width:108px}
 .work-details:disabled,.work-details:disabled:is(:hover,[data-ui-state="hover"]),.work-details:disabled:is(:active,[data-ui-state="pressed"]){color:var(--color-disabled);background:transparent;border-color:var(--border-subtle);cursor:default}
 .agent-button-label{position:relative;flex:none;width:105px;text-align:left}
-.agent-button-label>span{display:block;transition:opacity .32s cubic-bezier(.4,0,.2,1);transition-delay:var(--agent-label-delay,0s)}
+.agent-button-label>span{display:block;transition:opacity .32s cubic-bezier(.4,0,.2,1),visibility 0s linear;transition-delay:var(--agent-label-delay,0s),var(--agent-visibility-delay,0s)}
 .agent-button-idle{--agent-label-delay:.36s}
-.agent-button-label>.agent-button-copied{position:absolute;inset:0 auto 0 -6px;display:flex;align-items:center;gap:8px;width:109px;opacity:0;--agent-label-delay:0s}
+.agent-button-label>.agent-button-copied{position:absolute;inset:0 auto 0 -6px;display:flex;align-items:center;gap:8px;width:109px;opacity:0;visibility:hidden;--agent-label-delay:0s;--agent-visibility-delay:.32s}
 .agent-button-copied>img{display:block;flex:none;width:24px;height:24px}
 .agent-button-copied>span{flex:none;width:77px}
 .agent-button.is-copied .agent-button-idle{opacity:0;--agent-label-delay:0s}
-.agent-button.is-copied .agent-button-copied{opacity:1;--agent-label-delay:.36s}
+.agent-button.is-copied .agent-button-copied{opacity:1;visibility:visible;--agent-label-delay:.36s;--agent-visibility-delay:0s}
 .agent-button-logos{display:flex;align-items:center;gap:6px;flex:none}
 .agent-button-logos picture{display:block;flex:none}
 .agent-button-logos img{display:block;flex:none}
 .agent-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px;overflow:hidden}
 .agent-logo-copilot img{width:100%;height:100%}
 .work-details:is(:hover,[data-ui-state="hover"]){background:var(--color-hover);border-color:var(--border-strong)}
-@media(min-width:768px) and (hover:is(:hover,[data-ui-state="hover"])) and (pointer:fine){
-.agent-button:is(:hover,[data-ui-state="hover"]){background:var(--color-hover);border-color:var(--border-strong)}
+@media(min-width:768px) and (hover:hover) and (pointer:fine){
+.agent-button:is(:hover,[data-ui-state="hover"]){background:var(--agent-hover-background);border-color:var(--agent-hover-border)}
 }
-.agent-button:is(:active,[data-ui-state="pressed"]),.work-details:is(:active,[data-ui-state="pressed"]){background:var(--color-pressed)}
+.agent-button:is(:active,[data-ui-state="pressed"]){background:var(--agent-pressed-background)}
+.work-details:is(:active,[data-ui-state="pressed"]){background:var(--color-pressed)}
 .agent-button:is(:focus-visible,[data-ui-state="focus"]),.work-details:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid var(--ink);outline-offset:4px;border-radius:var(--radius-pill)}
 .agent-copy-fallback{display:flex;flex-direction:column;gap:8px;width:100%;font-size:14px;line-height:22px;letter-spacing:normal;word-spacing:normal}
 .agent-copy-fallback[hidden]{display:none}
@@ -134,18 +136,15 @@ html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:44px;padding:4
 .footer-link-label::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:var(--border-inverse);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .footer-links a:is(:focus-visible,[data-ui-state="focus"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 .footer-agent{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
-.footer-agent-button{align-self:center;height:54px;margin:0;padding:10px 24px;border-color:var(--border-inverse);color:inherit;word-spacing:normal}
+.footer-agent-button{--agent-hover-background:rgba(255,255,255,.06);--agent-hover-border:rgba(255,255,255,.5);--agent-pressed-background:rgba(255,255,255,.08);align-self:center;height:54px;margin:0;padding:10px 24px;border-color:var(--border-inverse);color:var(--color-canvas);word-spacing:normal}
 .footer-agent-button .agent-button-label{width:103px}
 .footer-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px}
 .footer-logo-copilot img{position:absolute;left:.9672px;top:.9864px}
-.footer-agent-button .agent-button-copied>img{filter:brightness(0) invert(1)}
-.footer-agent-button:is(:active,[data-ui-state="pressed"]){background:rgba(255,255,255,.08)}
 .footer-agent-button:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
 .footer .agent-copy-fallback textarea{border-color:var(--border-inverse);background:var(--color-inverse);color:inherit}
 .footer .agent-copy-fallback textarea:is(:focus-visible,[data-ui-state="focus"]){outline-color:currentColor}
-@media(hover:is(:hover,[data-ui-state="hover"])) and (pointer:fine){
+@media(hover:hover) and (pointer:fine){
 .footer-links a:is(:hover,[data-ui-state="hover"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
-.footer-agent-button:is(:hover,[data-ui-state="hover"]){background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.5)}
 }
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
 .footer{display:block;height:auto;min-height:100lvh;overflow:visible;padding-top:0;--footer-heading-height:clamp(48px,calc((var(--scene-height) - 440px) * .24 + 80px),140px);--footer-group-gap:clamp(8px,calc((var(--scene-height) - 360px) * .2142857143),60px);--footer-copy-height:87px;--footer-center-shift:clamp(0px,calc((var(--scene-height) - 480px) * .1515625),48.5px)}
