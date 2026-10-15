@@ -1,5 +1,14 @@
 (() => {
-  const {examples,icons,tokens}=window.DS_CATALOG;
+  const {examples,icons,tokens,manifest}=window.DS_CATALOG;
+  const pageNames=routes=>routes.map(route=>route==='/'?'Homepage':'About').join(' · ');
+  const versionLabel=release=>release.version;
+  document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
+  document.querySelector('#token-version').textContent='Shared tokens · '+manifest.tokens.version;
+  for(const example of examples){
+    const row=document.createElement('tr');
+    for(const [index,value] of [example.title,versionLabel(example.release),pageNames(example.release.usedBy)].entries()){const cell=document.createElement('td');if(index===0){const link=document.createElement('a');link.href='#component-'+example.id;link.textContent=value;cell.append(link);}else cell.textContent=value;row.append(cell);}
+    document.querySelector('#component-versions').append(row);
+  }
   const labels={'default':'Default','hover':'Hover','focus':'Keyboard focus','pressed':'Pressed','copied':'Copied','manual-copy':'Manual copy','disabled':'Disabled','reduced-motion':'Reduced motion','initial':'Initial frame','front':'Front','empty':'Empty','closed':'Closed','open':'Open','gray':'Gray surface','white':'White surface','homepage':'Homepage','about':'About','pulsing':'Visible · pulsing','paused':'Paused','composite':'Transparent artwork','image-error':'Preview unavailable'};
   let mode='desktop';
   let navigationId=0;
@@ -11,6 +20,7 @@
     const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${variant.id}">${variant.html}</div><span>${variant.id} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}<code>renderIcon('${icon.id}', {variant: '${variant.id}'})</code></div>`).join('');
     card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div>`;
     document.querySelector(`#${icon.group}-icons`).append(card);
+    for(const [index,variant] of icon.variants.entries()){const info=document.createElement('p');info.className='ds-component-version';info.textContent=versionLabel(variant.release);card.querySelectorAll('.ds-icon-variant')[index].append(info);}
     for(const [index,variant] of icon.variants.entries())window.DSCode?.attach({
       triggerParent:card.querySelectorAll('.ds-icon-variant')[index],panelParent:card,
       kind:'icon',id:icon.id,variant:variant.id,label:icon.name+' · '+variant.id
@@ -21,6 +31,9 @@
     window.DSCode?.attach({triggerParent:section.querySelector('.ds-section-heading'),panelParent:section,kind:'foundation',id,label});
   }
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
+  for(const [name,label] of [['height-control','Compact control'],['height-control-spacious','Spacious control'],['size-target','Menu target'],['focus-width','Focus outline'],['focus-offset-control','Control focus offset'],['duration-control','Control feedback'],['duration-underline','Link underline'],['overlap-recede','Outgoing surface recession'],['overlap-flatten-start','Corner flattening begins']]){
+    const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=label;value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
+  }
   const colors=[['color-canvas','Canvas'],['color-ink','Ink'],['color-surface','Work surface'],['color-placeholder','Photo slot'],['color-inverse','Footer']];
   document.querySelector('#palette-grid').innerHTML=colors.map(([key,label])=>`<article class="ds-color"><div class="ds-color-swatch" style="background:var(--${key})"></div><div class="ds-color-info"><strong>${label}</strong><span>${tokens[key]}</span><span>--${key}</span></div></article>`).join('');
   const stateColors=[['border-subtle','Light border','border'],['border-strong','Light hover / field border','border'],['border-inverse','Dark border','border','dark'],['border-inverse-hover','Dark hover border','border','dark'],['color-muted','Secondary text'],['color-disabled','Disabled text'],['color-hover','Light hover surface'],['color-pressed','Light pressed surface'],['color-inverse-hover','Dark hover surface','fill','dark'],['color-inverse-pressed','Dark pressed surface','fill','dark']];
@@ -85,8 +98,8 @@
     }
   }
   for(const example of examples){
-    const card=document.createElement('article');card.className='ds-specimen';card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
-    card.innerHTML=`<div class="ds-specimen-head"><h3>${example.title}</h3><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div><div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
+    const card=document.createElement('article');card.className='ds-specimen';card.id='component-'+example.id;card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
+    card.innerHTML=`<div class="ds-specimen-head"><div class="ds-component-heading"><h3>${example.title}</h3><p class="ds-component-version">${versionLabel(example.release)}</p></div><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div><div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
     document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
     const item={example,state:example.states[0],switch:card.querySelector('.ds-state-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
     item.code=window.DSCode?.attach({triggerParent:card.querySelector('.ds-head-actions'),panelParent:card,id:example.id,label:example.title,getContext:()=>({mode,state:item.state})});

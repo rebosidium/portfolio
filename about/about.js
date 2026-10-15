@@ -7,6 +7,15 @@
   if(!main||!footer||!CSS.supports('position','sticky'))return;
   const root=document.documentElement;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  // Match HOME's shared footer pose without reading computed styles per frame.
+  const footerStyle=getComputedStyle(footer);
+  const poseNumber=(name,fallback)=>{
+    const value=parseFloat(footerStyle.getPropertyValue(name));
+    return Number.isFinite(value)?value:fallback;
+  };
+  const footerRadius=poseNumber('--radius-panel',40);
+  const overlapRecede=poseNumber('--overlap-recede',.025);
+  const flattenStart=poseNumber('--overlap-flatten-start',.75);
   const probe=document.createElement('div');
   probe.className='reading-viewport-probe';probe.setAttribute('aria-hidden','true');
   page.append(probe);
@@ -33,10 +42,10 @@
     // Sticky layout supplies the same native incoming motion as HOME. Only the
     // outgoing reading surface and the last quarter of the corners are painted.
     const cover=clamp((window.scrollY-footerStart+viewport)/viewport);
-    const flatten=clamp((cover-.75)/.25);
+    const flatten=clamp((cover-flattenStart)/(1-flattenStart));
     main.style.opacity=String(1-cover);
-    main.style.transform=cover>0?`scale(${1-.025*cover})`:'none';
-    footer.style.setProperty('--footer-radius',`${40*(1-flatten*flatten*(3-2*flatten))}px`);
+    main.style.transform=cover>0?`scale(${1-overlapRecede*cover})`:'none';
+    footer.style.setProperty('--footer-radius',`${footerRadius*(1-flatten*flatten*(3-2*flatten))}px`);
     page.dataset.readingFooterProgress=cover.toFixed(4);
     root.dataset.readingFooterCovered=String(cover>=.999);
   }
@@ -53,7 +62,7 @@
     if(!cover)return;
     const target=event.target.getBoundingClientRect();
     if(target.top>=0&&target.bottom<=Math.min(window.innerHeight,footer.getBoundingClientRect().top))return;
-    const relativeTop=(target.top-main.getBoundingClientRect().top)/(1-.025*cover);
+    const relativeTop=(target.top-main.getBoundingClientRect().top)/(1-overlapRecede*cover);
     const originalTop=footerStart-main.offsetHeight+relativeTop;
     // Native Tab/Shift+Tab can focus a link in the covered article. Reveal its
     // original reading position without changing focus or animating the scroll.

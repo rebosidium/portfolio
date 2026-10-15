@@ -1,0 +1,3365 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "1.0.0",
+  "tokens": {
+    "version": "1.0.0+a259b25f95a6",
+    "revision": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+    "sources": [
+      "shared/tokens.css"
+    ]
+  },
+  "components": {
+    "brief": {
+      "componentKey": "brief",
+      "variant": "light",
+      "version": "1.0.0+7dd92180e079",
+      "revision": "7dd92180e079e17514a6ef52b4bc1cdc8d7ab49e11522001af431b48bea52cb3",
+      "markupRevision": "b829ec8fe8b99f20abcc4901cb8b05474780e735916a18f02ff0f58efc1c5948",
+      "owners": [
+        "shared/brief-light.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/assets/agent-claude-mobile.svg",
+          "kind": "asset",
+          "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+          "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+        },
+        {
+          "path": "home/assets/brief-codex-blue.svg",
+          "kind": "asset",
+          "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+          "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+        },
+        {
+          "path": "home/assets/brief-copilot.svg",
+          "kind": "asset",
+          "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+          "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+        },
+        {
+          "path": "home/assets/brief-cursor.svg",
+          "kind": "asset",
+          "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+          "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+        },
+        {
+          "path": "home/assets/brief-openai.svg",
+          "kind": "asset",
+          "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+          "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+        },
+        {
+          "path": "home/assets/lucide-check.svg",
+          "kind": "asset",
+          "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+          "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/brief-light.html",
+          "kind": "markup",
+          "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+          "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-controls.js",
+          "kind": "runtime",
+          "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+          "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "brief-dark": {
+      "componentKey": "brief",
+      "variant": "dark",
+      "version": "1.0.0+ce8cb9f1e185",
+      "revision": "ce8cb9f1e18500e7c1988cc03afac832c8b08ff8d1b91f55887c2aed0930f388",
+      "markupRevision": "5ef7d1c95ec17297c99ce513de394d8f8b4b313ecf99ec20351edef5e5ccc643",
+      "owners": [
+        "shared/brief-dark.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/assets/footer-chatgpt-white.svg",
+          "kind": "asset",
+          "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+          "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+        },
+        {
+          "path": "home/assets/footer-claude.svg",
+          "kind": "asset",
+          "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+          "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+        },
+        {
+          "path": "home/assets/footer-codex-blue.svg",
+          "kind": "asset",
+          "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+          "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+        },
+        {
+          "path": "home/assets/footer-copilot.svg",
+          "kind": "asset",
+          "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+          "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+        },
+        {
+          "path": "home/assets/footer-cursor-white.svg",
+          "kind": "asset",
+          "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+          "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+        },
+        {
+          "path": "home/assets/lucide-check-white.svg",
+          "kind": "asset",
+          "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+          "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/brief-dark.html",
+          "kind": "markup",
+          "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+          "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-controls.js",
+          "kind": "runtime",
+          "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+          "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/",
+        "/about/"
+      ]
+    },
+    "back": {
+      "componentKey": "back",
+      "variant": "responsive",
+      "version": "1.0.0+4206a7e0b383",
+      "revision": "4206a7e0b38347ddb7ae0c3c0fe029a4d12c117262d1672d152cef8550a5d526",
+      "markupRevision": "6718b8aae93aabb0a5a5f943003015a051601bd2dde8961f85bcd0dbfa81a127",
+      "owners": [
+        "shared/back.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/lucide-arrow-left.svg",
+          "kind": "asset",
+          "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
+          "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/back.html",
+          "kind": "markup",
+          "sha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315",
+          "revisionSha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "link": {
+      "componentKey": "navigation-link",
+      "version": "1.0.0+7cda8b950d3f",
+      "revision": "7cda8b950d3f5e5c2ed31754b6f683bdd023597bbf30e38e4a355edfc0073551",
+      "markupRevision": "f16946494543207ad1610780b98fb6d31640f3a7b8be5a5760b840399839c18c",
+      "owners": [
+        "shared/header.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/mobile-nav.js",
+          "kind": "runtime",
+          "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+          "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/header.html",
+          "kind": "markup",
+          "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+          "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/",
+        "/about/"
+      ]
+    },
+    "footer-link": {
+      "componentKey": "footer-link",
+      "version": "1.0.0+8a67c4916b05",
+      "revision": "8a67c4916b05d8ce85dce0485f8a6927a1da8a63dce796a7cb0447a1ace8f56b",
+      "markupRevision": "96974ee3c400093ef69a853505fedfad034a15928cc7430040cad08d1d1196ed",
+      "owners": [
+        "shared/footer.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/footer.html",
+          "kind": "markup",
+          "sha256": "6f9716459c437361c63cb5dfe6f1cb501e586d809a9248d19f39f3bb87064bb1",
+          "revisionSha256": "eee5a8e4cdedc27a68dbb466e4a051006db37865daf6c1e344c287a46198f231"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/",
+        "/about/"
+      ]
+    },
+    "work-actions": {
+      "componentKey": "work-actions",
+      "version": "1.0.0+318300c410c2",
+      "revision": "318300c410c2e85826bd77cbd0f444574d8b656393b4140669f7fc7ec6cdf198",
+      "markupRevision": "b7d77293a8d61bd31071fbf72f25efb8bdbf192e0ca00450d83fcbe0a7b308cb",
+      "owners": [
+        "shared/work-actions.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/coming-soon-dot.svg",
+          "kind": "asset",
+          "sha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1",
+          "revisionSha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        },
+        {
+          "path": "shared/work-actions.html",
+          "kind": "markup",
+          "sha256": "bedf6f59e8c693e7dfe2e1042902bc361b0caed77c1dd81705e8df776ea44e5e",
+          "revisionSha256": "4e12fc3bc978db5a89a4dc9228ada7c0ed80cd2fdc2edb3d7018230f9cba7f32"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "availability": {
+      "componentKey": "availability",
+      "version": "1.0.0+d38433f4a45a",
+      "revision": "d38433f4a45a4b8888cf27e58bddc80f2b053be923a31320af6b7895d9ce5429",
+      "markupRevision": "c848f243c706ee0a2d8a13c5e316803dde97cd3ff576576e02c3e7c6bb8a52c0",
+      "owners": [
+        "shared/work-actions.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/coming-soon-dot.svg",
+          "kind": "asset",
+          "sha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1",
+          "revisionSha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        },
+        {
+          "path": "shared/work-actions.html",
+          "kind": "markup",
+          "sha256": "bedf6f59e8c693e7dfe2e1042902bc361b0caed77c1dd81705e8df776ea44e5e",
+          "revisionSha256": "4e12fc3bc978db5a89a4dc9228ada7c0ed80cd2fdc2edb3d7018230f9cba7f32"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "portrait": {
+      "componentKey": "portrait",
+      "version": "1.0.0+e5af44741eeb",
+      "revision": "e5af44741eebf50da090f80f11306db1c4f43ad9926bfda1298a7ada5b4dd25f",
+      "markupRevision": "4540fecda5edc16fcd7837b6eef5d27dcb4178a546189b402f0db43f300436f5",
+      "owners": [
+        "shared/home-intro.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/assets/portrait-front.webp",
+          "kind": "asset",
+          "sha256": "b288f612539c616367fc9636a3d5c92b0f092228aec80092779969173481899f",
+          "revisionSha256": "b288f612539c616367fc9636a3d5c92b0f092228aec80092779969173481899f"
+        },
+        {
+          "path": "home/assets/portrait-start.webp",
+          "kind": "asset",
+          "sha256": "c93a9a36c8015e6956abf99046868ee8a1630f99fef90ae05a69821bda3622bd",
+          "revisionSha256": "c93a9a36c8015e6956abf99046868ee8a1630f99fef90ae05a69821bda3622bd"
+        },
+        {
+          "path": "home/assets/seedance-manifest.json",
+          "kind": "asset",
+          "sha256": "c6815470ab3d89788fa22e230d2e957a10b7209b17260dd0d778fe8db31aeca2",
+          "revisionSha256": "cc68a5136871905a9b27fc8f30a85a88082606ffe6e03553a2aa6b10d06b780d"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-00.zip",
+          "kind": "asset",
+          "sha256": "e245f05239cb5c4cf34247f96d65041396b5dd5cfe1e22d025bad9e4365b49a5",
+          "revisionSha256": "e245f05239cb5c4cf34247f96d65041396b5dd5cfe1e22d025bad9e4365b49a5"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-01.zip",
+          "kind": "asset",
+          "sha256": "750f09c9141189821d273fec57345cf3ee0608b762fe7d6547b195c2ebc805d6",
+          "revisionSha256": "750f09c9141189821d273fec57345cf3ee0608b762fe7d6547b195c2ebc805d6"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-02.zip",
+          "kind": "asset",
+          "sha256": "52780f2d2d17841c38e9d9e059b23b58f98ed641401209b9b5126713dcb12f9d",
+          "revisionSha256": "52780f2d2d17841c38e9d9e059b23b58f98ed641401209b9b5126713dcb12f9d"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-03.zip",
+          "kind": "asset",
+          "sha256": "41055ff16cf0834e98db971062998195c1611c2215c1a3ae7e908dfcb1f27caf",
+          "revisionSha256": "41055ff16cf0834e98db971062998195c1611c2215c1a3ae7e908dfcb1f27caf"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-04.zip",
+          "kind": "asset",
+          "sha256": "9e7f10839084606db92975fcae4597775c73e58438a53a681fa638ca9b084dc4",
+          "revisionSha256": "9e7f10839084606db92975fcae4597775c73e58438a53a681fa638ca9b084dc4"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-05.zip",
+          "kind": "asset",
+          "sha256": "e501ea654aa3642d2fc8f9d706f1d862bfbc67e38579d67654e28ae9acb0ae87",
+          "revisionSha256": "e501ea654aa3642d2fc8f9d706f1d862bfbc67e38579d67654e28ae9acb0ae87"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-06.zip",
+          "kind": "asset",
+          "sha256": "0d98f58a4bcff744d73f1c723cc47e7eff7dc6d930e84feaa3fdd4118c714472",
+          "revisionSha256": "0d98f58a4bcff744d73f1c723cc47e7eff7dc6d930e84feaa3fdd4118c714472"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-00.zip",
+          "kind": "asset",
+          "sha256": "92412e944a0632b954efbbc313db424d44d4987686fdf03f87bc940956ff7932",
+          "revisionSha256": "92412e944a0632b954efbbc313db424d44d4987686fdf03f87bc940956ff7932"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-01.zip",
+          "kind": "asset",
+          "sha256": "3f649ad1191d96292b3bcfd61a1766b3622410aa898388a3cd8a34111378ab19",
+          "revisionSha256": "3f649ad1191d96292b3bcfd61a1766b3622410aa898388a3cd8a34111378ab19"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-02.zip",
+          "kind": "asset",
+          "sha256": "9b4f66f19b4aea15f6b23b81638dad175b1b1dcd3b6a8ab725349ef4f9ba33f2",
+          "revisionSha256": "9b4f66f19b4aea15f6b23b81638dad175b1b1dcd3b6a8ab725349ef4f9ba33f2"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-00.zip",
+          "kind": "asset",
+          "sha256": "8b3aedda54b98cb7830183da24d9665f1e6990c6fa0290e6d429befaa2df51a2",
+          "revisionSha256": "8b3aedda54b98cb7830183da24d9665f1e6990c6fa0290e6d429befaa2df51a2"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-01.zip",
+          "kind": "asset",
+          "sha256": "d888e387bac9fd3c014b6103b483299bb0ecc9c3fe9031c52cced1f0918f0021",
+          "revisionSha256": "d888e387bac9fd3c014b6103b483299bb0ecc9c3fe9031c52cced1f0918f0021"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-02.zip",
+          "kind": "asset",
+          "sha256": "7d4d4bcf141697c289abc6641206854189e54d3c4a068df1ee7d6b9f3482daca",
+          "revisionSha256": "7d4d4bcf141697c289abc6641206854189e54d3c4a068df1ee7d6b9f3482daca"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-03.zip",
+          "kind": "asset",
+          "sha256": "c2fdf11eb585f32c2356f3a458d61da0a2a496124477103426ab8434f57fe6fb",
+          "revisionSha256": "c2fdf11eb585f32c2356f3a458d61da0a2a496124477103426ab8434f57fe6fb"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-00.zip",
+          "kind": "asset",
+          "sha256": "9e9791f11846e349b0d35313b0f7fbed9d851ad345960bfd13eea2f0eaa2b524",
+          "revisionSha256": "9e9791f11846e349b0d35313b0f7fbed9d851ad345960bfd13eea2f0eaa2b524"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-01.zip",
+          "kind": "asset",
+          "sha256": "65243adf8773d6a65efbbfcf99e965b9d860b3ede759e231e8c39ca570eeb760",
+          "revisionSha256": "65243adf8773d6a65efbbfcf99e965b9d860b3ede759e231e8c39ca570eeb760"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-02.zip",
+          "kind": "asset",
+          "sha256": "af2b7025704beeee0d546e29c2555a3d6f5f5f566a3303a6e5a34c66a8e4d0f6",
+          "revisionSha256": "af2b7025704beeee0d546e29c2555a3d6f5f5f566a3303a6e5a34c66a8e4d0f6"
+        },
+        {
+          "path": "home/assets/seedance-startup-600-00.zip",
+          "kind": "asset",
+          "sha256": "e5c1affc518349fd438993f4bd9caba85173a85d2e660929a9ad4840c352ac46",
+          "revisionSha256": "e5c1affc518349fd438993f4bd9caba85173a85d2e660929a9ad4840c352ac46"
+        },
+        {
+          "path": "home/assets/seedance-startup-800-00.zip",
+          "kind": "asset",
+          "sha256": "75626f7281d20c72b79d0099baebb562affc18e6699526edca86211ec08d8c29",
+          "revisionSha256": "75626f7281d20c72b79d0099baebb562affc18e6699526edca86211ec08d8c29"
+        },
+        {
+          "path": "home/assets/seedance-startup-800-01.zip",
+          "kind": "asset",
+          "sha256": "9802b7203027b992c5c615a1a9fa270707e95798657a893402be1ef02b42cd30",
+          "revisionSha256": "9802b7203027b992c5c615a1a9fa270707e95798657a893402be1ef02b42cd30"
+        },
+        {
+          "path": "home/portrait-boot.js",
+          "kind": "runtime",
+          "sha256": "92e1655978af340cd7283b786bbe91e4b7aaa48ccc2b8a7b6fb6048858d36a98",
+          "revisionSha256": "15b12aa3dad7ca7e6a61352290226d5165f3c32b543a9bb089793425ebcecd3e"
+        },
+        {
+          "path": "home/portrait-spin-android.js",
+          "kind": "runtime",
+          "sha256": "9c82b3433460896da8f0188752c837ce16dace4dc84365ea3406f9b33816952c",
+          "revisionSha256": "9c82b3433460896da8f0188752c837ce16dace4dc84365ea3406f9b33816952c"
+        },
+        {
+          "path": "home/portrait-spin.js",
+          "kind": "runtime",
+          "sha256": "dc744fc108e410098013ded3037708e81504655c48bab3fa04f6b948f12cba3a",
+          "revisionSha256": "dc744fc108e410098013ded3037708e81504655c48bab3fa04f6b948f12cba3a"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/home-intro.html",
+          "kind": "markup",
+          "sha256": "8d9d2ef6c156ec7bdb2dc2feec55fd58946fed54d75c476977a9896233c90d13",
+          "revisionSha256": "45b7778380f0988fc6ce306af3413a1d51f333609e1b312035c9e76ff06ca3a5"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "about-title": {
+      "componentKey": "about-title",
+      "version": "1.0.0+df59cb7f7e79",
+      "revision": "df59cb7f7e792f99d05e03c8630cde25abde3c847b97ebbce9b71f2590124d2d",
+      "markupRevision": "5f168da790b66a41baed249c401c4327a1d41b91a1411fba36fdf4ef284fe7b3",
+      "owners": [
+        "shared/about-main.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/about-avatar.png",
+          "kind": "asset",
+          "sha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c",
+          "revisionSha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/about-main.html",
+          "kind": "markup",
+          "sha256": "aa4bb302d4df1b30a78841a1e64d38c5a75f5fa741479e60633cc26f936b1c03",
+          "revisionSha256": "115d087f1bebf2c181863458c102bcb68df95fc4683db8af852130e396d621a6"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "about-avatar": {
+      "componentKey": "about-avatar",
+      "version": "1.0.0+7530459e2efa",
+      "revision": "7530459e2efac92caa285629b4e35c8d0553c41010b337405815f37c5a52487f",
+      "markupRevision": "9d3e8c3c8b67704ac30fd5dcc4865879dbe85f41e5e0433aa5da89c22021e28a",
+      "owners": [
+        "shared/about-main.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/about-avatar.png",
+          "kind": "asset",
+          "sha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c",
+          "revisionSha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/about-main.html",
+          "kind": "markup",
+          "sha256": "aa4bb302d4df1b30a78841a1e64d38c5a75f5fa741479e60633cc26f936b1c03",
+          "revisionSha256": "115d087f1bebf2c181863458c102bcb68df95fc4683db8af852130e396d621a6"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "prose-section": {
+      "componentKey": "prose-section",
+      "version": "1.0.0+a0f5a8e800bc",
+      "revision": "a0f5a8e800bc93dee96e79f65cec5b798357fe901a1260b17e69c8973f682200",
+      "markupRevision": "4bb0fb14d87cfef56d01e720e7233655bfada82408ef5420418389a0eb178ef8",
+      "owners": [
+        "shared/about-main.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/about-avatar.png",
+          "kind": "asset",
+          "sha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c",
+          "revisionSha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/about-main.html",
+          "kind": "markup",
+          "sha256": "aa4bb302d4df1b30a78841a1e64d38c5a75f5fa741479e60633cc26f936b1c03",
+          "revisionSha256": "115d087f1bebf2c181863458c102bcb68df95fc4683db8af852130e396d621a6"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "photo-slot": {
+      "componentKey": "photo-slot",
+      "version": "1.0.0+a2b1e125fcd1",
+      "revision": "a2b1e125fcd118ce24b9c32d0da353db154552df107d9c82cd935308af299ac7",
+      "markupRevision": "6f968e0a239279e70ea08742e10056598ae14fe4d4d42713036ec77421980a98",
+      "owners": [
+        "shared/about-main.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/about-avatar.png",
+          "kind": "asset",
+          "sha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c",
+          "revisionSha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "shared/about-main.html",
+          "kind": "markup",
+          "sha256": "aa4bb302d4df1b30a78841a1e64d38c5a75f5fa741479e60633cc26f936b1c03",
+          "revisionSha256": "115d087f1bebf2c181863458c102bcb68df95fc4683db8af852130e396d621a6"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "header": {
+      "componentKey": "header",
+      "variant": "default",
+      "version": "1.0.0+89f093b39b5b",
+      "revision": "89f093b39b5b8668e1b59974b9abc86521da90d247fbc26290e2a1e86226fd75",
+      "markupRevision": "9361b7ae262d2847ad0980de1a67a2a108474087ffabc08fab080923929d7d61",
+      "owners": [
+        "shared/header.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/mobile-nav.js",
+          "kind": "runtime",
+          "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+          "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+        },
+        {
+          "path": "home/resume-prefetch.js",
+          "kind": "runtime",
+          "sha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c",
+          "revisionSha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/header.html",
+          "kind": "markup",
+          "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+          "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "about-header": {
+      "componentKey": "header",
+      "variant": "article",
+      "version": "1.0.0+6cf97d4cb398",
+      "revision": "6cf97d4cb398da0545fbd5bd916a3fafdbb0efe381fb7c487ab6f51257e70476",
+      "markupRevision": "b5ae3b5780742564886830f99f901bdfa75545cb933f1368c8dacb4241d69bc4",
+      "owners": [
+        "shared/header.html",
+        "shared/back.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/lucide-arrow-left.svg",
+          "kind": "asset",
+          "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
+          "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/mobile-nav.js",
+          "kind": "runtime",
+          "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+          "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+        },
+        {
+          "path": "home/resume-prefetch.js",
+          "kind": "runtime",
+          "sha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c",
+          "revisionSha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/back.html",
+          "kind": "markup",
+          "sha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315",
+          "revisionSha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315"
+        },
+        {
+          "path": "shared/header.html",
+          "kind": "markup",
+          "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+          "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    },
+    "hero": {
+      "componentKey": "homepage-intro",
+      "version": "1.0.0+ac3f61dce78c",
+      "revision": "ac3f61dce78cb1e53e939e8ed38996b2133de7435e90c5541d2a022f1c0a79c5",
+      "markupRevision": "c86392aef7bd6e5d8749904357ba466db9194fe176b74c571614c1ebf12f75c3",
+      "owners": [
+        "shared/home-intro.html",
+        "shared/brief-light.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/agent-claude-mobile.svg",
+          "kind": "asset",
+          "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+          "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+        },
+        {
+          "path": "home/assets/brief-codex-blue.svg",
+          "kind": "asset",
+          "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+          "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+        },
+        {
+          "path": "home/assets/brief-copilot.svg",
+          "kind": "asset",
+          "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+          "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+        },
+        {
+          "path": "home/assets/brief-cursor.svg",
+          "kind": "asset",
+          "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+          "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+        },
+        {
+          "path": "home/assets/brief-openai.svg",
+          "kind": "asset",
+          "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+          "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+        },
+        {
+          "path": "home/assets/lucide-check.svg",
+          "kind": "asset",
+          "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+          "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/assets/portrait-front.webp",
+          "kind": "asset",
+          "sha256": "b288f612539c616367fc9636a3d5c92b0f092228aec80092779969173481899f",
+          "revisionSha256": "b288f612539c616367fc9636a3d5c92b0f092228aec80092779969173481899f"
+        },
+        {
+          "path": "home/assets/portrait-start.webp",
+          "kind": "asset",
+          "sha256": "c93a9a36c8015e6956abf99046868ee8a1630f99fef90ae05a69821bda3622bd",
+          "revisionSha256": "c93a9a36c8015e6956abf99046868ee8a1630f99fef90ae05a69821bda3622bd"
+        },
+        {
+          "path": "home/assets/seedance-manifest.json",
+          "kind": "asset",
+          "sha256": "c6815470ab3d89788fa22e230d2e957a10b7209b17260dd0d778fe8db31aeca2",
+          "revisionSha256": "cc68a5136871905a9b27fc8f30a85a88082606ffe6e03553a2aa6b10d06b780d"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-00.zip",
+          "kind": "asset",
+          "sha256": "e245f05239cb5c4cf34247f96d65041396b5dd5cfe1e22d025bad9e4365b49a5",
+          "revisionSha256": "e245f05239cb5c4cf34247f96d65041396b5dd5cfe1e22d025bad9e4365b49a5"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-01.zip",
+          "kind": "asset",
+          "sha256": "750f09c9141189821d273fec57345cf3ee0608b762fe7d6547b195c2ebc805d6",
+          "revisionSha256": "750f09c9141189821d273fec57345cf3ee0608b762fe7d6547b195c2ebc805d6"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-02.zip",
+          "kind": "asset",
+          "sha256": "52780f2d2d17841c38e9d9e059b23b58f98ed641401209b9b5126713dcb12f9d",
+          "revisionSha256": "52780f2d2d17841c38e9d9e059b23b58f98ed641401209b9b5126713dcb12f9d"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-03.zip",
+          "kind": "asset",
+          "sha256": "41055ff16cf0834e98db971062998195c1611c2215c1a3ae7e908dfcb1f27caf",
+          "revisionSha256": "41055ff16cf0834e98db971062998195c1611c2215c1a3ae7e908dfcb1f27caf"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-04.zip",
+          "kind": "asset",
+          "sha256": "9e7f10839084606db92975fcae4597775c73e58438a53a681fa638ca9b084dc4",
+          "revisionSha256": "9e7f10839084606db92975fcae4597775c73e58438a53a681fa638ca9b084dc4"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-05.zip",
+          "kind": "asset",
+          "sha256": "e501ea654aa3642d2fc8f9d706f1d862bfbc67e38579d67654e28ae9acb0ae87",
+          "revisionSha256": "e501ea654aa3642d2fc8f9d706f1d862bfbc67e38579d67654e28ae9acb0ae87"
+        },
+        {
+          "path": "home/assets/seedance-rest-1200-06.zip",
+          "kind": "asset",
+          "sha256": "0d98f58a4bcff744d73f1c723cc47e7eff7dc6d930e84feaa3fdd4118c714472",
+          "revisionSha256": "0d98f58a4bcff744d73f1c723cc47e7eff7dc6d930e84feaa3fdd4118c714472"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-00.zip",
+          "kind": "asset",
+          "sha256": "92412e944a0632b954efbbc313db424d44d4987686fdf03f87bc940956ff7932",
+          "revisionSha256": "92412e944a0632b954efbbc313db424d44d4987686fdf03f87bc940956ff7932"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-01.zip",
+          "kind": "asset",
+          "sha256": "3f649ad1191d96292b3bcfd61a1766b3622410aa898388a3cd8a34111378ab19",
+          "revisionSha256": "3f649ad1191d96292b3bcfd61a1766b3622410aa898388a3cd8a34111378ab19"
+        },
+        {
+          "path": "home/assets/seedance-rest-600-02.zip",
+          "kind": "asset",
+          "sha256": "9b4f66f19b4aea15f6b23b81638dad175b1b1dcd3b6a8ab725349ef4f9ba33f2",
+          "revisionSha256": "9b4f66f19b4aea15f6b23b81638dad175b1b1dcd3b6a8ab725349ef4f9ba33f2"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-00.zip",
+          "kind": "asset",
+          "sha256": "8b3aedda54b98cb7830183da24d9665f1e6990c6fa0290e6d429befaa2df51a2",
+          "revisionSha256": "8b3aedda54b98cb7830183da24d9665f1e6990c6fa0290e6d429befaa2df51a2"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-01.zip",
+          "kind": "asset",
+          "sha256": "d888e387bac9fd3c014b6103b483299bb0ecc9c3fe9031c52cced1f0918f0021",
+          "revisionSha256": "d888e387bac9fd3c014b6103b483299bb0ecc9c3fe9031c52cced1f0918f0021"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-02.zip",
+          "kind": "asset",
+          "sha256": "7d4d4bcf141697c289abc6641206854189e54d3c4a068df1ee7d6b9f3482daca",
+          "revisionSha256": "7d4d4bcf141697c289abc6641206854189e54d3c4a068df1ee7d6b9f3482daca"
+        },
+        {
+          "path": "home/assets/seedance-rest-800-03.zip",
+          "kind": "asset",
+          "sha256": "c2fdf11eb585f32c2356f3a458d61da0a2a496124477103426ab8434f57fe6fb",
+          "revisionSha256": "c2fdf11eb585f32c2356f3a458d61da0a2a496124477103426ab8434f57fe6fb"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-00.zip",
+          "kind": "asset",
+          "sha256": "9e9791f11846e349b0d35313b0f7fbed9d851ad345960bfd13eea2f0eaa2b524",
+          "revisionSha256": "9e9791f11846e349b0d35313b0f7fbed9d851ad345960bfd13eea2f0eaa2b524"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-01.zip",
+          "kind": "asset",
+          "sha256": "65243adf8773d6a65efbbfcf99e965b9d860b3ede759e231e8c39ca570eeb760",
+          "revisionSha256": "65243adf8773d6a65efbbfcf99e965b9d860b3ede759e231e8c39ca570eeb760"
+        },
+        {
+          "path": "home/assets/seedance-startup-1200-02.zip",
+          "kind": "asset",
+          "sha256": "af2b7025704beeee0d546e29c2555a3d6f5f5f566a3303a6e5a34c66a8e4d0f6",
+          "revisionSha256": "af2b7025704beeee0d546e29c2555a3d6f5f5f566a3303a6e5a34c66a8e4d0f6"
+        },
+        {
+          "path": "home/assets/seedance-startup-600-00.zip",
+          "kind": "asset",
+          "sha256": "e5c1affc518349fd438993f4bd9caba85173a85d2e660929a9ad4840c352ac46",
+          "revisionSha256": "e5c1affc518349fd438993f4bd9caba85173a85d2e660929a9ad4840c352ac46"
+        },
+        {
+          "path": "home/assets/seedance-startup-800-00.zip",
+          "kind": "asset",
+          "sha256": "75626f7281d20c72b79d0099baebb562affc18e6699526edca86211ec08d8c29",
+          "revisionSha256": "75626f7281d20c72b79d0099baebb562affc18e6699526edca86211ec08d8c29"
+        },
+        {
+          "path": "home/assets/seedance-startup-800-01.zip",
+          "kind": "asset",
+          "sha256": "9802b7203027b992c5c615a1a9fa270707e95798657a893402be1ef02b42cd30",
+          "revisionSha256": "9802b7203027b992c5c615a1a9fa270707e95798657a893402be1ef02b42cd30"
+        },
+        {
+          "path": "home/portrait-boot.js",
+          "kind": "runtime",
+          "sha256": "92e1655978af340cd7283b786bbe91e4b7aaa48ccc2b8a7b6fb6048858d36a98",
+          "revisionSha256": "15b12aa3dad7ca7e6a61352290226d5165f3c32b543a9bb089793425ebcecd3e"
+        },
+        {
+          "path": "home/portrait-spin-android.js",
+          "kind": "runtime",
+          "sha256": "9c82b3433460896da8f0188752c837ce16dace4dc84365ea3406f9b33816952c",
+          "revisionSha256": "9c82b3433460896da8f0188752c837ce16dace4dc84365ea3406f9b33816952c"
+        },
+        {
+          "path": "home/portrait-spin.js",
+          "kind": "runtime",
+          "sha256": "dc744fc108e410098013ded3037708e81504655c48bab3fa04f6b948f12cba3a",
+          "revisionSha256": "dc744fc108e410098013ded3037708e81504655c48bab3fa04f6b948f12cba3a"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/brief-light.html",
+          "kind": "markup",
+          "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+          "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+        },
+        {
+          "path": "shared/home-intro.html",
+          "kind": "markup",
+          "sha256": "8d9d2ef6c156ec7bdb2dc2feec55fd58946fed54d75c476977a9896233c90d13",
+          "revisionSha256": "45b7778380f0988fc6ce306af3413a1d51f333609e1b312035c9e76ff06ca3a5"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-controls.js",
+          "kind": "runtime",
+          "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+          "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "work": {
+      "componentKey": "work-card",
+      "version": "1.0.0+c6b434119b5d",
+      "revision": "c6b434119b5d4315cca40f22701367815a6d73142ffc6630d5010f135436788c",
+      "markupRevision": "656bd69301b27b918f5fd87f3847989d7e2aa6be126d5dfa546f3a37008c8871",
+      "owners": [
+        "shared/work-card.html",
+        "shared/work-actions.html",
+        "shared/work-projects.json"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/coming-soon-dot.svg",
+          "kind": "asset",
+          "sha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1",
+          "revisionSha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/assets/work-gdematerial-1088.png",
+          "kind": "asset",
+          "sha256": "e88d6b601c4e9d725b416324efa237269374bb6ecc97e8e108fcea0407ae218c",
+          "revisionSha256": "e88d6b601c4e9d725b416324efa237269374bb6ecc97e8e108fcea0407ae218c"
+        },
+        {
+          "path": "home/assets/work-gdematerial-1600.png",
+          "kind": "asset",
+          "sha256": "ca9647771011376f7712e2317c5a22a8572e5c0413e6dc148d1db9b5414683a1",
+          "revisionSha256": "ca9647771011376f7712e2317c5a22a8572e5c0413e6dc148d1db9b5414683a1"
+        },
+        {
+          "path": "home/assets/work-gdematerial-544.png",
+          "kind": "asset",
+          "sha256": "2570ce408485b8364ceddc8388be9af33b921408d12ff031c9c4333cf12ae48e",
+          "revisionSha256": "2570ce408485b8364ceddc8388be9af33b921408d12ff031c9c4333cf12ae48e"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-1088.png",
+          "kind": "asset",
+          "sha256": "7f56744894d18566daa6e5360636c8bd26e22f08cda843325e94116e5e1b6d79",
+          "revisionSha256": "7f56744894d18566daa6e5360636c8bd26e22f08cda843325e94116e5e1b6d79"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-1600.png",
+          "kind": "asset",
+          "sha256": "991c81638d70bc0deaaa5af1169183526139a364f6523f7b62aab48b7dba409d",
+          "revisionSha256": "991c81638d70bc0deaaa5af1169183526139a364f6523f7b62aab48b7dba409d"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-544.png",
+          "kind": "asset",
+          "sha256": "d01faeba304f798d85cfffe6a2085dabd4f1978b6066df25a6af423dd95cd754",
+          "revisionSha256": "d01faeba304f798d85cfffe6a2085dabd4f1978b6066df25a6af423dd95cd754"
+        },
+        {
+          "path": "home/assets/work-medesk-1088.png",
+          "kind": "asset",
+          "sha256": "334932fe8bc4ffe0d5c9f781f0fe771835acc9077ee8cbc45e53f3d599205f0a",
+          "revisionSha256": "334932fe8bc4ffe0d5c9f781f0fe771835acc9077ee8cbc45e53f3d599205f0a"
+        },
+        {
+          "path": "home/assets/work-medesk-1600.png",
+          "kind": "asset",
+          "sha256": "b6c936d0e32619fdb41c2cad7c2a51e09dec5c132b5b1f89c2f963ba9d4e0140",
+          "revisionSha256": "b6c936d0e32619fdb41c2cad7c2a51e09dec5c132b5b1f89c2f963ba9d4e0140"
+        },
+        {
+          "path": "home/assets/work-medesk-544.png",
+          "kind": "asset",
+          "sha256": "3df4098fa73a6091b033f829249fbdcb696df448b0adb4af9c85787f57597863",
+          "revisionSha256": "3df4098fa73a6091b033f829249fbdcb696df448b0adb4af9c85787f57597863"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-bank-1088.png",
+          "kind": "asset",
+          "sha256": "5a53c4e913157fc6ad78c94b7af3cdffb5f8baa5aa7a2bc3e82699edfede406b",
+          "revisionSha256": "5a53c4e913157fc6ad78c94b7af3cdffb5f8baa5aa7a2bc3e82699edfede406b"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-bank-544.png",
+          "kind": "asset",
+          "sha256": "009c399f50bf1b788e530a2513fac67674aa09c9eea0e0e98b0dad57cbcdebf4",
+          "revisionSha256": "009c399f50bf1b788e530a2513fac67674aa09c9eea0e0e98b0dad57cbcdebf4"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-1088.png",
+          "kind": "asset",
+          "sha256": "9604d414a93d0159bc8c704eaa4fdc5819a3aa25e56f416b2a6745c60d8c2ca3",
+          "revisionSha256": "9604d414a93d0159bc8c704eaa4fdc5819a3aa25e56f416b2a6745c60d8c2ca3"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-1600.png",
+          "kind": "asset",
+          "sha256": "516ce6c3eb2ac481a4c85f3f67c5f6beb3084c15f817b89cb7f223c8af5f9377",
+          "revisionSha256": "516ce6c3eb2ac481a4c85f3f67c5f6beb3084c15f817b89cb7f223c8af5f9377"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-544.png",
+          "kind": "asset",
+          "sha256": "b0d13a128c5c59bfe4692b9cebc6bfe37dea8d5beb09faeba4e33797bdaaf886",
+          "revisionSha256": "b0d13a128c5c59bfe4692b9cebc6bfe37dea8d5beb09faeba4e33797bdaaf886"
+        },
+        {
+          "path": "home/assets/work-yandex-market-1088.png",
+          "kind": "asset",
+          "sha256": "aa617dbc9115243b357af72ea9945bd62f51280a771115ad3d86500cdd1f556c",
+          "revisionSha256": "aa617dbc9115243b357af72ea9945bd62f51280a771115ad3d86500cdd1f556c"
+        },
+        {
+          "path": "home/assets/work-yandex-market-1600.png",
+          "kind": "asset",
+          "sha256": "23552dfae8c5bd3eab5807e7547fdd89ce8600edbbe7e561d3b7216f52cc8629",
+          "revisionSha256": "23552dfae8c5bd3eab5807e7547fdd89ce8600edbbe7e561d3b7216f52cc8629"
+        },
+        {
+          "path": "home/assets/work-yandex-market-544.png",
+          "kind": "asset",
+          "sha256": "2470bf6165702aa00e63340fdf16ccfd0183d1d44f6646694b6fc905994cf4a4",
+          "revisionSha256": "2470bf6165702aa00e63340fdf16ccfd0183d1d44f6646694b6fc905994cf4a4"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        },
+        {
+          "path": "shared/work-actions.html",
+          "kind": "markup",
+          "sha256": "bedf6f59e8c693e7dfe2e1042902bc361b0caed77c1dd81705e8df776ea44e5e",
+          "revisionSha256": "4e12fc3bc978db5a89a4dc9228ada7c0ed80cd2fdc2edb3d7018230f9cba7f32"
+        },
+        {
+          "path": "shared/work-card.html",
+          "kind": "markup",
+          "sha256": "a4f17b5b850068a32319b7ff67d3d19242d41516d93ef375a9a29ab568fba1e8",
+          "revisionSha256": "a4f17b5b850068a32319b7ff67d3d19242d41516d93ef375a9a29ab568fba1e8"
+        },
+        {
+          "path": "shared/work-projects.json",
+          "kind": "markup",
+          "sha256": "0c4a97e504b7bce14771adc379cd8f32ec7fd4d3d991fb436acaa2d9407ab1a0",
+          "revisionSha256": "393b107056cfbf01622b8a4fdce5302d96ef14f1a8ccdad8bdd57a27705e4d91"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "work-section": {
+      "componentKey": "work-section",
+      "version": "1.0.0+ef5c02a76625",
+      "revision": "ef5c02a766255bf6127381608498be8de263914ad0e6f2eb08446bf11cebd30d",
+      "markupRevision": "dfe1ca6e23f1fbbfbcc01c84391b7161a5f2193ca31589881df75c8809e9d432",
+      "owners": [
+        "shared/work-section.html",
+        "shared/work-card.html",
+        "shared/work-actions.html",
+        "shared/work-projects.json"
+      ],
+      "dependencies": [
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/coming-soon-dot.svg",
+          "kind": "asset",
+          "sha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1",
+          "revisionSha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/assets/work-gdematerial-1088.png",
+          "kind": "asset",
+          "sha256": "e88d6b601c4e9d725b416324efa237269374bb6ecc97e8e108fcea0407ae218c",
+          "revisionSha256": "e88d6b601c4e9d725b416324efa237269374bb6ecc97e8e108fcea0407ae218c"
+        },
+        {
+          "path": "home/assets/work-gdematerial-1600.png",
+          "kind": "asset",
+          "sha256": "ca9647771011376f7712e2317c5a22a8572e5c0413e6dc148d1db9b5414683a1",
+          "revisionSha256": "ca9647771011376f7712e2317c5a22a8572e5c0413e6dc148d1db9b5414683a1"
+        },
+        {
+          "path": "home/assets/work-gdematerial-544.png",
+          "kind": "asset",
+          "sha256": "2570ce408485b8364ceddc8388be9af33b921408d12ff031c9c4333cf12ae48e",
+          "revisionSha256": "2570ce408485b8364ceddc8388be9af33b921408d12ff031c9c4333cf12ae48e"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-1088.png",
+          "kind": "asset",
+          "sha256": "7f56744894d18566daa6e5360636c8bd26e22f08cda843325e94116e5e1b6d79",
+          "revisionSha256": "7f56744894d18566daa6e5360636c8bd26e22f08cda843325e94116e5e1b6d79"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-1600.png",
+          "kind": "asset",
+          "sha256": "991c81638d70bc0deaaa5af1169183526139a364f6523f7b62aab48b7dba409d",
+          "revisionSha256": "991c81638d70bc0deaaa5af1169183526139a364f6523f7b62aab48b7dba409d"
+        },
+        {
+          "path": "home/assets/work-larixon-bazaraki-544.png",
+          "kind": "asset",
+          "sha256": "d01faeba304f798d85cfffe6a2085dabd4f1978b6066df25a6af423dd95cd754",
+          "revisionSha256": "d01faeba304f798d85cfffe6a2085dabd4f1978b6066df25a6af423dd95cd754"
+        },
+        {
+          "path": "home/assets/work-medesk-1088.png",
+          "kind": "asset",
+          "sha256": "334932fe8bc4ffe0d5c9f781f0fe771835acc9077ee8cbc45e53f3d599205f0a",
+          "revisionSha256": "334932fe8bc4ffe0d5c9f781f0fe771835acc9077ee8cbc45e53f3d599205f0a"
+        },
+        {
+          "path": "home/assets/work-medesk-1600.png",
+          "kind": "asset",
+          "sha256": "b6c936d0e32619fdb41c2cad7c2a51e09dec5c132b5b1f89c2f963ba9d4e0140",
+          "revisionSha256": "b6c936d0e32619fdb41c2cad7c2a51e09dec5c132b5b1f89c2f963ba9d4e0140"
+        },
+        {
+          "path": "home/assets/work-medesk-544.png",
+          "kind": "asset",
+          "sha256": "3df4098fa73a6091b033f829249fbdcb696df448b0adb4af9c85787f57597863",
+          "revisionSha256": "3df4098fa73a6091b033f829249fbdcb696df448b0adb4af9c85787f57597863"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-bank-1088.png",
+          "kind": "asset",
+          "sha256": "5a53c4e913157fc6ad78c94b7af3cdffb5f8baa5aa7a2bc3e82699edfede406b",
+          "revisionSha256": "5a53c4e913157fc6ad78c94b7af3cdffb5f8baa5aa7a2bc3e82699edfede406b"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-bank-544.png",
+          "kind": "asset",
+          "sha256": "009c399f50bf1b788e530a2513fac67674aa09c9eea0e0e98b0dad57cbcdebf4",
+          "revisionSha256": "009c399f50bf1b788e530a2513fac67674aa09c9eea0e0e98b0dad57cbcdebf4"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-1088.png",
+          "kind": "asset",
+          "sha256": "9604d414a93d0159bc8c704eaa4fdc5819a3aa25e56f416b2a6745c60d8c2ca3",
+          "revisionSha256": "9604d414a93d0159bc8c704eaa4fdc5819a3aa25e56f416b2a6745c60d8c2ca3"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-1600.png",
+          "kind": "asset",
+          "sha256": "516ce6c3eb2ac481a4c85f3f67c5f6beb3084c15f817b89cb7f223c8af5f9377",
+          "revisionSha256": "516ce6c3eb2ac481a4c85f3f67c5f6beb3084c15f817b89cb7f223c8af5f9377"
+        },
+        {
+          "path": "home/assets/work-raiffeisen-leasing-544.png",
+          "kind": "asset",
+          "sha256": "b0d13a128c5c59bfe4692b9cebc6bfe37dea8d5beb09faeba4e33797bdaaf886",
+          "revisionSha256": "b0d13a128c5c59bfe4692b9cebc6bfe37dea8d5beb09faeba4e33797bdaaf886"
+        },
+        {
+          "path": "home/assets/work-yandex-market-1088.png",
+          "kind": "asset",
+          "sha256": "aa617dbc9115243b357af72ea9945bd62f51280a771115ad3d86500cdd1f556c",
+          "revisionSha256": "aa617dbc9115243b357af72ea9945bd62f51280a771115ad3d86500cdd1f556c"
+        },
+        {
+          "path": "home/assets/work-yandex-market-1600.png",
+          "kind": "asset",
+          "sha256": "23552dfae8c5bd3eab5807e7547fdd89ce8600edbbe7e561d3b7216f52cc8629",
+          "revisionSha256": "23552dfae8c5bd3eab5807e7547fdd89ce8600edbbe7e561d3b7216f52cc8629"
+        },
+        {
+          "path": "home/assets/work-yandex-market-544.png",
+          "kind": "asset",
+          "sha256": "2470bf6165702aa00e63340fdf16ccfd0183d1d44f6646694b6fc905994cf4a4",
+          "revisionSha256": "2470bf6165702aa00e63340fdf16ccfd0183d1d44f6646694b6fc905994cf4a4"
+        },
+        {
+          "path": "home/styles.css",
+          "kind": "styles",
+          "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+          "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        },
+        {
+          "path": "shared/work-actions.html",
+          "kind": "markup",
+          "sha256": "bedf6f59e8c693e7dfe2e1042902bc361b0caed77c1dd81705e8df776ea44e5e",
+          "revisionSha256": "4e12fc3bc978db5a89a4dc9228ada7c0ed80cd2fdc2edb3d7018230f9cba7f32"
+        },
+        {
+          "path": "shared/work-card.html",
+          "kind": "markup",
+          "sha256": "a4f17b5b850068a32319b7ff67d3d19242d41516d93ef375a9a29ab568fba1e8",
+          "revisionSha256": "a4f17b5b850068a32319b7ff67d3d19242d41516d93ef375a9a29ab568fba1e8"
+        },
+        {
+          "path": "shared/work-projects.json",
+          "kind": "markup",
+          "sha256": "0c4a97e504b7bce14771adc379cd8f32ec7fd4d3d991fb436acaa2d9407ab1a0",
+          "revisionSha256": "393b107056cfbf01622b8a4fdce5302d96ef14f1a8ccdad8bdd57a27705e4d91"
+        },
+        {
+          "path": "shared/work-section.html",
+          "kind": "markup",
+          "sha256": "58f09d8c61813e17417c6f5d880a20a4ac3c16a559f4904c2fb4d785ea2ff2e8",
+          "revisionSha256": "58f09d8c61813e17417c6f5d880a20a4ac3c16a559f4904c2fb4d785ea2ff2e8"
+        }
+      ],
+      "usedBy": [
+        "/"
+      ]
+    },
+    "footer": {
+      "componentKey": "footer",
+      "version": "1.0.0+0eb049b045da",
+      "revision": "0eb049b045da8c3a7c0472d68a8457cd15ed4b22773d2ad0fae639ff822aaf58",
+      "markupRevision": "3a813500daf1125772c3cb83280ea9fd65ccd9f5cee5524aa9edc2ee8effcb50",
+      "owners": [
+        "shared/footer.html",
+        "shared/brief-dark.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.js",
+          "kind": "runtime",
+          "sha256": "7ce1d0e0fd308e464160e6793897a3b337414a9349a728910bdf0cb5951b8488",
+          "revisionSha256": "7ce1d0e0fd308e464160e6793897a3b337414a9349a728910bdf0cb5951b8488"
+        },
+        {
+          "path": "home/app.js",
+          "kind": "runtime",
+          "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+          "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/footer-chatgpt-white.svg",
+          "kind": "asset",
+          "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+          "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+        },
+        {
+          "path": "home/assets/footer-claude.svg",
+          "kind": "asset",
+          "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+          "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+        },
+        {
+          "path": "home/assets/footer-codex-blue.svg",
+          "kind": "asset",
+          "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+          "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+        },
+        {
+          "path": "home/assets/footer-copilot.svg",
+          "kind": "asset",
+          "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+          "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+        },
+        {
+          "path": "home/assets/footer-cursor-white.svg",
+          "kind": "asset",
+          "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+          "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+        },
+        {
+          "path": "home/assets/lucide-check-white.svg",
+          "kind": "asset",
+          "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+          "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/resume-prefetch.js",
+          "kind": "runtime",
+          "sha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c",
+          "revisionSha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/brief-dark.html",
+          "kind": "markup",
+          "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+          "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+        },
+        {
+          "path": "shared/footer.html",
+          "kind": "markup",
+          "sha256": "6f9716459c437361c63cb5dfe6f1cb501e586d809a9248d19f39f3bb87064bb1",
+          "revisionSha256": "eee5a8e4cdedc27a68dbb466e4a051006db37865daf6c1e344c287a46198f231"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/site-controls.js",
+          "kind": "runtime",
+          "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+          "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/",
+        "/about/"
+      ]
+    },
+    "reading-page": {
+      "componentKey": "reading-page",
+      "version": "1.0.0+d672191346d7",
+      "revision": "d672191346d799ec14bb1ae8a36b0a36f84cab863221daf2554310783eab9999",
+      "markupRevision": "b0151337d46142acec5378e309f3f7af3ebaace5ac98b1667095fdda1ef635f3",
+      "owners": [
+        "shared/reading-page.html",
+        "shared/about-main.html",
+        "shared/header.html",
+        "shared/back.html",
+        "shared/footer.html",
+        "shared/brief-dark.html"
+      ],
+      "dependencies": [
+        {
+          "path": "home/about/about.css",
+          "kind": "styles",
+          "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+          "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+        },
+        {
+          "path": "home/about/about.js",
+          "kind": "runtime",
+          "sha256": "7ce1d0e0fd308e464160e6793897a3b337414a9349a728910bdf0cb5951b8488",
+          "revisionSha256": "7ce1d0e0fd308e464160e6793897a3b337414a9349a728910bdf0cb5951b8488"
+        },
+        {
+          "path": "home/assets/about-avatar.png",
+          "kind": "asset",
+          "sha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c",
+          "revisionSha256": "e5a3dd0c63625bc6636aa994def20ed41660355130ec3fe1dcbc60cc3a98759c"
+        },
+        {
+          "path": "home/assets/apple-touch-icon.png",
+          "kind": "asset",
+          "sha256": "94a2efca3e426d16b53c49c9ce3bb4e2ad7227caa56b5989f96fb29406f15a18",
+          "revisionSha256": "94a2efca3e426d16b53c49c9ce3bb4e2ad7227caa56b5989f96fb29406f15a18"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+          "kind": "asset",
+          "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+          "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+        },
+        {
+          "path": "home/assets/favicon.ico",
+          "kind": "asset",
+          "sha256": "f48a5dcf6c33998f9e0b6bf33a158147c8265ef65c9eb2a2db661180facc995d",
+          "revisionSha256": "f48a5dcf6c33998f9e0b6bf33a158147c8265ef65c9eb2a2db661180facc995d"
+        },
+        {
+          "path": "home/assets/footer-chatgpt-white.svg",
+          "kind": "asset",
+          "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+          "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+        },
+        {
+          "path": "home/assets/footer-claude.svg",
+          "kind": "asset",
+          "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+          "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+        },
+        {
+          "path": "home/assets/footer-codex-blue.svg",
+          "kind": "asset",
+          "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+          "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+        },
+        {
+          "path": "home/assets/footer-copilot.svg",
+          "kind": "asset",
+          "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+          "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+        },
+        {
+          "path": "home/assets/footer-cursor-white.svg",
+          "kind": "asset",
+          "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+          "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+        },
+        {
+          "path": "home/assets/lucide-arrow-left.svg",
+          "kind": "asset",
+          "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
+          "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
+        },
+        {
+          "path": "home/assets/lucide-check-white.svg",
+          "kind": "asset",
+          "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+          "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+        },
+        {
+          "path": "home/assets/manrope.woff2",
+          "kind": "asset",
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+        },
+        {
+          "path": "home/mobile-nav.js",
+          "kind": "runtime",
+          "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+          "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+        },
+        {
+          "path": "home/resume-prefetch.js",
+          "kind": "runtime",
+          "sha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c",
+          "revisionSha256": "8698924168bdb70ad7d41e805a4da2debba8c02c8dacfdd4ac39fb9d2701086c"
+        },
+        {
+          "path": "home/vendor/gsap.min.js",
+          "kind": "vendor",
+          "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+          "revisionSha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+        },
+        {
+          "path": "shared/about-main.html",
+          "kind": "markup",
+          "sha256": "aa4bb302d4df1b30a78841a1e64d38c5a75f5fa741479e60633cc26f936b1c03",
+          "revisionSha256": "115d087f1bebf2c181863458c102bcb68df95fc4683db8af852130e396d621a6"
+        },
+        {
+          "path": "shared/back.html",
+          "kind": "markup",
+          "sha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315",
+          "revisionSha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315"
+        },
+        {
+          "path": "shared/brief-dark.html",
+          "kind": "markup",
+          "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+          "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+        },
+        {
+          "path": "shared/footer.html",
+          "kind": "markup",
+          "sha256": "6f9716459c437361c63cb5dfe6f1cb501e586d809a9248d19f39f3bb87064bb1",
+          "revisionSha256": "eee5a8e4cdedc27a68dbb466e4a051006db37865daf6c1e344c287a46198f231"
+        },
+        {
+          "path": "shared/header.html",
+          "kind": "markup",
+          "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+          "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+        },
+        {
+          "path": "shared/library.mjs",
+          "kind": "producer",
+          "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+          "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+        },
+        {
+          "path": "shared/reading-page.html",
+          "kind": "markup",
+          "sha256": "c43ee161a6c4ca1ae2919e41e90c47926f3f4e86ccc559167535d9b0ce37cd25",
+          "revisionSha256": "270b9ba06a21be5620b44e3cb020228263027a8a237f6f88f7760c0af5822914"
+        },
+        {
+          "path": "shared/site-controls.js",
+          "kind": "runtime",
+          "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+          "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+        },
+        {
+          "path": "shared/site-ui.css",
+          "kind": "styles",
+          "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+          "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+        },
+        {
+          "path": "shared/tokens.css",
+          "kind": "styles",
+          "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+          "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+        }
+      ],
+      "usedBy": [
+        "/about/"
+      ]
+    }
+  },
+  "icons": {
+    "arrow-left": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/arrow-left",
+          "variant": "light",
+          "version": "1.0.0+04971bbfcfd3",
+          "revision": "04971bbfcfd3717cbcf8b42c243d155fc5c1308dcd98c596e5d9b22734b62e9f",
+          "markupRevision": "ba4042f14f219a1c6d030adca16a91ba1e026d578b2f27d6fcb3749bfaad99e1",
+          "owners": [
+            "shared/back.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/about/about.css",
+              "kind": "styles",
+              "sha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728",
+              "revisionSha256": "33bc94a81280f355eae8b329372aebafc7b11198d25d9c9c87c8f24f54a64728"
+            },
+            {
+              "path": "home/assets/lucide-arrow-left.svg",
+              "kind": "asset",
+              "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
+              "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/back.html",
+              "kind": "markup",
+              "sha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315",
+              "revisionSha256": "6de9188f1aea04ba205709091225552e52acc2be00a9748bbb6084f253784315"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/about/"
+          ]
+        }
+      }
+    },
+    "check": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/check",
+          "variant": "light",
+          "version": "1.0.0+ddb9778c1089",
+          "revision": "ddb9778c10898610081ba0e66b42cecdb486d09703b3e00ee3e378722982ce7f",
+          "markupRevision": "cd9f6deb1284bf5e6d706ff8d6909eff903039f285d227c4fb7fc15c6d97cea9",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/check",
+          "variant": "dark",
+          "version": "1.0.0+bf2c4f0351d1",
+          "revision": "bf2c4f0351d1394f13f8a4b5b4e9150b2555078ddb0562b04317c2a53e0f43cb",
+          "markupRevision": "b5d15c4ea83c6d573a9053ac7cf7816ace9aef20529b5504d8091589fddb2cdb",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "menu": {
+      "variants": {
+        "closed": {
+          "componentKey": "icon/menu",
+          "variant": "closed",
+          "version": "1.0.0+c971b6feb6e0",
+          "revision": "c971b6feb6e0f847717d8ab839d9941bdb85d09396c414a8ac0b9552fcd84798",
+          "markupRevision": "d27fb553aceaee2add1aaa1f0c995d6112160e45e9bfbd5bca0d54023eafc035",
+          "owners": [
+            "shared/header.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+              "kind": "asset",
+              "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+              "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "home/mobile-nav.js",
+              "kind": "runtime",
+              "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+              "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+            },
+            {
+              "path": "shared/header.html",
+              "kind": "markup",
+              "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+              "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        },
+        "open": {
+          "componentKey": "icon/menu",
+          "variant": "open",
+          "version": "1.0.0+18a92c4f5fff",
+          "revision": "18a92c4f5fffef1fdf64517e7efc56b9ccafe58a646edad6649e510d3997c53b",
+          "markupRevision": "7647c287d80343b53cf7e62b74942f5569a120a64f9bb2076509de3556882b37",
+          "owners": [
+            "shared/header.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/dmitry-rybalka-resume-en.pdf",
+              "kind": "asset",
+              "sha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88",
+              "revisionSha256": "be1fc393a5f97ca635cb0534ca3cfb54ead7ac371f93ff8bb2002b405557ef88"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "home/mobile-nav.js",
+              "kind": "runtime",
+              "sha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37",
+              "revisionSha256": "e8652339618f1c4ec5985594abc1e31d53d370c4ffd12b391d3f2f8cc14fea37"
+            },
+            {
+              "path": "shared/header.html",
+              "kind": "markup",
+              "sha256": "fe0a66a85371f5a449b544e8e3fd021f4418e83358987d53b70f88b1a8b238cb",
+              "revisionSha256": "e28b2cb399669e89f947e9664564cfe9535a85b89b264c003e830ba028189590"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "claude": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/claude",
+          "variant": "light",
+          "version": "1.0.0+f18fc203931f",
+          "revision": "f18fc203931f0cb855ccfd0fef043e5161002d9d74ed8e6332e8384b43f3b3cc",
+          "markupRevision": "508041fa637d9617cb3467091c2f152617a811e5821cf96da72460b939e699d5",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/claude",
+          "variant": "dark",
+          "version": "1.0.0+2ccc33aa9bea",
+          "revision": "2ccc33aa9bea31e28cf8c269b84c1680c4e1d58748b2396b0be1c1f4a20cb636",
+          "markupRevision": "d631f2ebd21f51011d9fcea7c208f454232d14e986ccb2f4fb089d3cfc73dd5c",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "chatgpt": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/chatgpt",
+          "variant": "light",
+          "version": "1.0.0+c8ee6f3ee071",
+          "revision": "c8ee6f3ee0712b8c8fa62827a84948032643b0b3b6f849fbe43f60e092d7a6b3",
+          "markupRevision": "5ecc0bbf2c8e392a7b908b0e959ebb5ad1bf326f04d0a586a3be87680b898b94",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/chatgpt",
+          "variant": "dark",
+          "version": "1.0.0+8989aa8d4b6b",
+          "revision": "8989aa8d4b6b6104ed217691f66968dcae5902025066779377a8070b548ca44d",
+          "markupRevision": "e68584ff1bdd08c3e28c623e576b10610215ce5a119482bcd176e00f41fb01b2",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "codex": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/codex",
+          "variant": "light",
+          "version": "1.0.0+1913f45bebf1",
+          "revision": "1913f45bebf1af0a9a8e75d89bdaa93ea5643a050080ebd657e2af8af0986396",
+          "markupRevision": "d994a38d32891e3ace03015ab79fa6f8c19f7aae2be81bab1e23f4b6bcf88ae5",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/codex",
+          "variant": "dark",
+          "version": "1.0.0+a709b5196be5",
+          "revision": "a709b5196be51b0aceb62ad9cdb835df3505b5a577265cf6f8ab11007406e2c3",
+          "markupRevision": "6ed75ca8d26bb8ab78a0b9f715937cdbeed956275fe86a6bbf1b1fb217d29c15",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "cursor": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/cursor",
+          "variant": "light",
+          "version": "1.0.0+68986c45ec70",
+          "revision": "68986c45ec70af1a2a4817e090595247cd5ffae12d4f7de10ae80ef63a3c4a5d",
+          "markupRevision": "7b91bfdb8d9bebdac2d1ac9e2567bbb4cfc3cf0e95027c5fd52cabbb62858965",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/cursor",
+          "variant": "dark",
+          "version": "1.0.0+86b758da690e",
+          "revision": "86b758da690e2e62c1e24d1348d1c46d55ed76a6b5433be5702bc1a79df59b02",
+          "markupRevision": "46243445444e47d173b16d53bd5bc43d798346c5ea05976c5ddd9f86b0d4647e",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "copilot": {
+      "variants": {
+        "light": {
+          "componentKey": "icon/copilot",
+          "variant": "light",
+          "version": "1.0.0+c1092317a1f7",
+          "revision": "c1092317a1f789f7bc484888fb15f48304d08db7eac3ce77f63f3ea2b51047d1",
+          "markupRevision": "dc41b1191257207279bbd35f8fb21c891a9f7dd36f228a0d92183641790527f1",
+          "owners": [
+            "shared/brief-light.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/agent-claude-mobile.svg",
+              "kind": "asset",
+              "sha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec",
+              "revisionSha256": "6288fbeeec9d35e752b41c947bc0435fc8663378112f347da838b9055b00c1ec"
+            },
+            {
+              "path": "home/assets/brief-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145",
+              "revisionSha256": "b40b8cfdef1e1ae30f434535f374f8cc77d4c6efa56d4bde5381e8103e54a145"
+            },
+            {
+              "path": "home/assets/brief-copilot.svg",
+              "kind": "asset",
+              "sha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5",
+              "revisionSha256": "c0bca2c1012aaf6c3828f4c62670104e23e7819302039dfacce7a132574f47f5"
+            },
+            {
+              "path": "home/assets/brief-cursor.svg",
+              "kind": "asset",
+              "sha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7",
+              "revisionSha256": "05546f1ae7b7d60d8373e6ab52d2e650825967ad665c43b511613f68446f35e7"
+            },
+            {
+              "path": "home/assets/brief-openai.svg",
+              "kind": "asset",
+              "sha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b",
+              "revisionSha256": "2168aa4465c9e365f0d9151008f7fade0153b8045de2a463509a20e60d48399b"
+            },
+            {
+              "path": "home/assets/lucide-check.svg",
+              "kind": "asset",
+              "sha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5",
+              "revisionSha256": "c9e39ddf31b8e021e3c74eae0ed850598a347dfe5309d9e5503b8c42c55d50d5"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-light.html",
+              "kind": "markup",
+              "sha256": "0732607c6631b2aea289464d928ac47ff661283fd39b5d1707d79b314031598d",
+              "revisionSha256": "322e18e769c29cdb690ed44c22e640dcd9fc0181e461af432e8e64084c98ff61"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        },
+        "dark": {
+          "componentKey": "icon/copilot",
+          "variant": "dark",
+          "version": "1.0.0+455da63777de",
+          "revision": "455da63777de5cb4193f0d0357939473adf8b5ca27579592160ec98b36fe87cb",
+          "markupRevision": "d004d307513aa0f7edfad1b6b61cf14770a6b51168896d19506e0672cf3700d4",
+          "owners": [
+            "shared/brief-dark.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/assets/footer-chatgpt-white.svg",
+              "kind": "asset",
+              "sha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb",
+              "revisionSha256": "31685c331afcaa300d067dff03bd1a41ce18399a07e7c014102a01202f9d8cfb"
+            },
+            {
+              "path": "home/assets/footer-claude.svg",
+              "kind": "asset",
+              "sha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8",
+              "revisionSha256": "4c02aab6dbf547712c5a189905b56fc76bc9f7cb8bbbafddf9f43f2ec739c3f8"
+            },
+            {
+              "path": "home/assets/footer-codex-blue.svg",
+              "kind": "asset",
+              "sha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc",
+              "revisionSha256": "688bbe62639f068475c461484ec86c8bb38cfed01e0553beaa02804364b3efdc"
+            },
+            {
+              "path": "home/assets/footer-copilot.svg",
+              "kind": "asset",
+              "sha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4",
+              "revisionSha256": "e66a8c6a521255cc24e446d02688646acdcc3bf92a3ecb51d0811cba2917c7b4"
+            },
+            {
+              "path": "home/assets/footer-cursor-white.svg",
+              "kind": "asset",
+              "sha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a",
+              "revisionSha256": "b6213bf33e0ac7c3c8ddc3a444009b28ab3f85de6cac66e48fd864b054284c4a"
+            },
+            {
+              "path": "home/assets/lucide-check-white.svg",
+              "kind": "asset",
+              "sha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458",
+              "revisionSha256": "f5434dbfe8e0ea93d3083d4728620f95cd5d14f3e4ac18a93a18a3cefb460458"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "shared/brief-dark.html",
+              "kind": "markup",
+              "sha256": "2e5b80def4ed4f851fe82bd3737bce6695a1b015809edb14a7a894b59e424558",
+              "revisionSha256": "b4573d9a9cda8267a88b26b2322c62a02ba4008de96dd2c47d841be398f645b4"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-controls.js",
+              "kind": "runtime",
+              "sha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d",
+              "revisionSha256": "533c11adb147b3f4cff935545215ede491265ab13c9e7ab33034eef0e41b295d"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            }
+          ],
+          "usedBy": [
+            "/",
+            "/about/"
+          ]
+        }
+      }
+    },
+    "availability-dot": {
+      "variants": {
+        "default": {
+          "componentKey": "icon/availability-dot",
+          "variant": "default",
+          "version": "1.0.0+498990bebd97",
+          "revision": "498990bebd979b9dc43a544c9ca084547043a714376d34af07dfb14f082b4f88",
+          "markupRevision": "b2b9303221effe6266e4c9c1edc189c02da9d4e9d2cd0523053fc3a18a34ae10",
+          "owners": [
+            "shared/work-actions.html"
+          ],
+          "dependencies": [
+            {
+              "path": "home/app.js",
+              "kind": "runtime",
+              "sha256": "492b79276fb0e6fcf355409fec0186526a50dc5a2898e769405ac8577d0d472f",
+              "revisionSha256": "5b14a89fbf74ff8c71c5854fdbf2c7333235b5c848f6b78fceeb5f924c4bc737"
+            },
+            {
+              "path": "home/assets/coming-soon-dot.svg",
+              "kind": "asset",
+              "sha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1",
+              "revisionSha256": "64b918f624e32925b0d52c667c34df26a42f326235d78020f7b257c2dcd8b8e1"
+            },
+            {
+              "path": "home/assets/manrope.woff2",
+              "kind": "asset",
+              "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+              "revisionSha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+            },
+            {
+              "path": "home/styles.css",
+              "kind": "styles",
+              "sha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa",
+              "revisionSha256": "e41400f5dac44ca0fdbbd438c3f76ed03d66e7bbed614977face377a040870fa"
+            },
+            {
+              "path": "shared/library.mjs",
+              "kind": "producer",
+              "sha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736",
+              "revisionSha256": "8f7c6aeb4ee80459ec647a5e0ccbd2b3ff88c6dd2dfe115a5bb67287812c4736"
+            },
+            {
+              "path": "shared/site-ui.css",
+              "kind": "styles",
+              "sha256": "6d9e5b428e0696719c98d5f259c88025686684219a0274c65f9142c0926298cb",
+              "revisionSha256": "899904ed481d25b6c26be58f18ad79dfea7537adcb250c5e30ccaaa51ebc0e17"
+            },
+            {
+              "path": "shared/tokens.css",
+              "kind": "styles",
+              "sha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa",
+              "revisionSha256": "a259b25f95a6150ea0cbac21baca9b51cafabfe9bc4bf5808419e3b6539a5cfa"
+            },
+            {
+              "path": "shared/work-actions.html",
+              "kind": "markup",
+              "sha256": "bedf6f59e8c693e7dfe2e1042902bc361b0caed77c1dd81705e8df776ea44e5e",
+              "revisionSha256": "4e12fc3bc978db5a89a4dc9228ada7c0ed80cd2fdc2edb3d7018230f9cba7f32"
+            }
+          ],
+          "usedBy": [
+            "/"
+          ]
+        }
+      }
+    }
+  }
+}

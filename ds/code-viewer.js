@@ -36,6 +36,7 @@
     let data,entry,active=kind==='foundation'?'css':'usage',selected={},request=0,currentCode='';
     const title=node('h4','ds-code-title',label);
     const context=node('p','ds-code-context');
+    const releaseInfo=node('p','ds-code-release');
     const tabs=node('div','ds-code-tabs');tabs.setAttribute('role','group');tabs.setAttribute('aria-label',`${label} code format`);
     const fileLabel=node('label','ds-code-file-label','Source');
     const files=node('select','ds-code-file');files.id=panel.id+'-file';fileLabel.htmlFor=files.id;
@@ -51,7 +52,7 @@
     const instruction=node('p','ds-code-instruction');
     tools.append(copy,published,hash);
     const selectWrap=node('div','ds-code-select');selectWrap.append(fileLabel,files);
-    const body=node('div','ds-code-body');body.append(title,context,tabs,instruction,selectWrap,tools,pre,status,setup);
+    const body=node('div','ds-code-body');body.append(title,context,releaseInfo,tabs,instruction,selectWrap,tools,pre,status,setup);
     function definition(){
       if(kind==='foundation')return {sources:foundationSources[id].map(([path,label])=>({path,label,group:'styles'})),notes:['These are the current source files. Shared tokens and component styles compile into /assets/site-ui.css; page layouts retain their current responsive rules.']};
       if(kind==='icon')return data.icons[id].variants[variant];
@@ -107,7 +108,13 @@
         const tab=node('button',null,label);tab.type='button';tab.dataset.format=id;
         tab.addEventListener('click',()=>{active=id;show();});tabs.append(tab);
       }
+      releaseInfo.hidden=!entry.release;
+      releaseInfo.textContent=entry.release?`${entry.release.version} · Used on ${entry.release.usedBy.map(route=>route==='/'?'Homepage':'About').join(' · ')}`:'';
       notes.replaceChildren();
+      if(entry.release){
+        notes.append(node('li',null,'Canonical sources: '+entry.release.owners.join(', ')));
+        notes.append(node('li',null,'Revision includes current shared dependencies. A shared stylesheet change can revise several components.'));
+      }
       for(const text of entry.notes||[])notes.append(node('li',null,text));
       for(const dependency of entry.dependencies||[]){
         const item=node('li');

@@ -262,6 +262,16 @@
     const intro = document.querySelector('.intro-screen');
     const works = document.querySelector('.works-screen');
     const footer = document.querySelector('.footer');
+    // Read the shared pose values once after styles are available. Scroll paint
+    // only uses numbers; changing the token source takes effect on the next load.
+    const footerStyle = getComputedStyle(footer);
+    const poseNumber = (name,fallback) => {
+      const value = parseFloat(footerStyle.getPropertyValue(name));
+      return Number.isFinite(value) ? value : fallback;
+    };
+    const footerRadius = poseNumber('--radius-panel',40);
+    const overlapRecede = poseNumber('--overlap-recede',.025);
+    const flattenStart = poseNumber('--overlap-flatten-start',.75);
     const footerTitle = footer.querySelector('h2');
     const stage = document.querySelector('.scene-stage');
     const flow = document.querySelector('.scene-flow');
@@ -438,8 +448,8 @@
       return null;
     }
     function paintFooterCorners(cover) {
-      const flatten = Math.max(0,Math.min(1,(cover-.75)/.25));
-      footer.style.setProperty('--footer-radius',`${40*(1-flatten*flatten*(3-2*flatten))}px`);
+      const flatten = Math.max(0,Math.min(1,(cover-flattenStart)/(1-flattenStart)));
+      footer.style.setProperty('--footer-radius',`${footerRadius*(1-flatten*flatten*(3-2*flatten))}px`);
     }
     function paintFooter(cover,desktop = false) {
       paintFooterCorners(cover);
@@ -460,7 +470,7 @@
         const next = panels[index+1];
         const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
-        set(panel.element,{autoAlpha:1-covering,scale:1-.025*covering,y:0});
+        set(panel.element,{autoAlpha:1-covering,scale:1-overlapRecede*covering,y:0});
         panel.element.inert = covering>=.999;
         panel.element.setAttribute('aria-hidden',String(covering>=.999));
         panel.element.style.pointerEvents = covering>=.999 ? 'none' : 'auto';
@@ -493,7 +503,7 @@
         const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
         const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : footerCover;
         const visible=entering>0 && covering<.999;
-        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering),scale:1-.025*covering});
+        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering),scale:1-overlapRecede*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
         panel.element.dataset.coverProgress=covering.toFixed(4);
         if (entering>=.5) visibleIndex=index;
@@ -544,7 +554,7 @@
         paintFooterCorners(cover);
         if(root.classList.contains('footer-native-overlap')) {
           const last=panels[panels.length-1].element;
-          set(last,{autoAlpha:1-cover,scale:1-.025*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
+          set(last,{autoAlpha:1-cover,scale:1-overlapRecede*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
           root.dataset.footerProgress=cover.toFixed(4);root.dataset.footerStart=footerStart.toFixed(1);
         }
         if (!mobile.matches) panels.forEach(panel=>{

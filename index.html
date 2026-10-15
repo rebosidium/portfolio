@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="70fd108756c6">
+<html lang="en" data-ui-revision="6eab71cb41c2" data-build="3b546cd6d04d">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" data-analytics="posthog">
@@ -72,8 +72,8 @@
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-copilot.svg?v=c0bca2c1012a" fetchpriority="low">
   <!-- shared:brief-preloads:end -->
-  <link rel="stylesheet" href="assets/site-ui.css?v=9d411a808023">
-  <link rel="stylesheet" href="styles.css?v=cd457ff8505a">
+  <link rel="stylesheet" href="assets/site-ui.css?v=de89eb60d7b3">
+  <link rel="stylesheet" href="styles.css?v=e41400f5dac4">
   <script>
     window.mobileLayout = matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
     window.mobileNavigationReady = new Promise(resolve => {window.resolveMobileNavigationReady = resolve;});
@@ -110,9 +110,9 @@
   </script>
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=6c3066138f73" onerror="window.releasePageFallback()"></script>
+  <script defer src="app.js?v=492b79276fb0" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="analytics.js?v=1726aa4d022e"></script>
-  <script defer src="mobile-nav.js?v=5b57f95ee98b" onerror="window.releaseMobileNavigation()"></script>
+  <script defer src="mobile-nav.js?v=e8652339618f" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
     (() => {
@@ -202,6 +202,7 @@
       document.head.append(script);
     },{once:true});
   </script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.0.0","tokens":"1.0.0+a259b25f95a6","components":{"brief":"1.0.0+7dd92180e079","brief-dark":"1.0.0+ce8cb9f1e185","link":"1.0.0+7cda8b950d3f","footer-link":"1.0.0+8a67c4916b05","work-actions":"1.0.0+318300c410c2","availability":"1.0.0+d38433f4a45a","portrait":"1.0.0+e5af44741eeb","header":"1.0.0+89f093b39b5b","hero":"1.0.0+ac3f61dce78c","work":"1.0.0+c6b434119b5d","work-section":"1.0.0+ef5c02a76625","footer":"1.0.0+0eb049b045da"},"revision":"6eab71cb41c2"}</script>
 </head>
 <body data-node-id="159:729">
   <main class="scene-flow">
@@ -228,6 +229,7 @@
   </header>
   <!-- shared:header:end -->
   <div class="intro-content">
+    <!-- shared:home-intro:start -->
     <section class="hero" aria-labelledby="greeting" data-node-id="159:1060">
       <div class="portrait" role="img" aria-label="Dmitry Rybalka" data-node-id="159:847">
         <picture>
@@ -260,8 +262,10 @@
   <!-- shared:brief-light:end -->
       </div>
     </section>
+  <!-- shared:home-intro:end -->
   </div>
   </div>
+  <!-- shared:home-works:start -->
   <section class="works-screen" data-work-surface="gray" id="selected-works" aria-labelledby="works-title" data-scene="works" data-node-id="162:2545">
     <h2 id="works-title" tabindex="-1" data-node-id="162:2491">Selected Works</h2>
     <div class="works-body">
@@ -395,6 +399,7 @@
       </article>
     </div>
   </section>
+  <!-- shared:home-works:end -->
   <!-- shared:footer:start -->
   <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
     <div class="footer-inner">

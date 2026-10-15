@@ -75,7 +75,7 @@
       '--menu-toggle-right':`${rect.right-button.right}px`,
       '--menu-toggle-width':`${button.width}px`,
       '--menu-toggle-height':`${button.height}px`,
-      '--menu-icon-scale':String(button.width/44)
+      '--menu-icon-scale':String(button.width/(parseFloat(getComputedStyle(toggle).getPropertyValue('--size-target'))||44))
     };
     for (const [property,value] of Object.entries(values)) header.style.setProperty(property,value);
     // A scene transform would otherwise make the fixed panel use the scene as its viewport.
