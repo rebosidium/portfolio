@@ -22,8 +22,8 @@
   }
   const foundationSources={
     palette:[['shared/tokens.css','Color and state tokens']],
-    typography:[['shared/tokens.css','Type tokens'],['shared/site-ui.css','Shared type roles'],['home/about/about.css','Reading type roles'],['home/styles.css','HOME type roles']],
-    layout:[['shared/tokens.css','Spacing, width and radius tokens'],['shared/site-ui.css','Shared responsive layout'],['home/about/about.css','Reading layout'],['home/styles.css','HOME layout']]
+    typography:[['shared/tokens.css','Type tokens'],['shared/site-ui.css','Shared type roles'],['home/about/about.css','Reading type roles'],['home/styles.css','Homepage type roles']],
+    layout:[['shared/tokens.css','Spacing, width and radius tokens'],['shared/site-ui.css','Shared responsive layout'],['home/about/about.css','Reading layout'],['home/styles.css','Homepage layout']]
   };
   function attach({triggerParent,panelParent,kind='example',id,variant,label,getContext=()=>({mode:'desktop',state:'default'})}){
     const button=node('button','ds-code-toggle','View code');button.type='button';
@@ -102,7 +102,7 @@
       instruction.textContent=active==='usage'?entry.usage.instruction:'Exact current source. CSS and JavaScript files may also contain shared rules or page integration; required context is listed below.';
       for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.format===active));
       const ctx=getContext();
-      context.textContent=kind==='example'?`${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${variant} variant. Use the surrounding control to provide an accessible name.`:'Current shared source tokens and styles.';
+      context.textContent=kind==='example'?`${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${window.DS_CATALOG.naming.states[ctx.state]||ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${window.DS_CATALOG.naming.variants[variant]||variant} variant. Use the surrounding control to provide an accessible name.`:'Current shared source tokens and styles.';
     }
     function render(){
       entry=definition();panel.replaceChildren(body);tabs.replaceChildren();

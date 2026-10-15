@@ -30,6 +30,7 @@
     const agentStatus = control.querySelector('[role="status"]');
     const manualCopy = control.querySelector('.agent-copy-fallback');
     const promptField = manualCopy.querySelector('textarea');
+    const copyLabel = agentButton.getAttribute('aria-label');
     promptField.value = agentPrompt;
     let promptWidth = 0;
     function fitManualPrompt() {
@@ -41,7 +42,12 @@
       promptField.style.height = Math.max(parseFloat(style.minHeight),promptField.scrollHeight + border) + 'px';
     }
     function syncManualCopy() {
-      control.classList.toggle('is-manual-copy',!manualCopy.hidden);
+      const manualVisible = !manualCopy.hidden;
+      control.classList.toggle('is-manual-copy',manualVisible);
+      // Keep the prepared logo nodes mounted, but make this compact header
+      // genuinely non-interactive while the user selects the prompt below.
+      if (agentButton.disabled !== manualVisible) agentButton.disabled = manualVisible;
+      agentButton.setAttribute('aria-label',manualVisible ? 'Brief your AI' : copyLabel);
       if (manualCopy.hidden) promptField.style.removeProperty('height');
       else fitManualPrompt();
     }
@@ -62,6 +68,7 @@
       agentButton.setAttribute('aria-busy','false');
       agentButton.classList.remove('is-copied');
       manualCopy.hidden = true;
+      syncManualCopy();
       agentStatus.textContent = 'Copies a prompt to paste into your AI chat.';
     });
     function copyWithSelection() {
@@ -91,7 +98,7 @@
       return copied;
     }
     agentButton.addEventListener('click',async () => {
-      if (copying) return;
+      if (copying || agentButton.disabled || !manualCopy.hidden) return;
       const generation = ++copyGeneration;
       copying = true;
       agentButton.setAttribute('aria-busy','true');
@@ -110,12 +117,14 @@
       if (!copied) copied = copyWithSelection();
       if (copied) {
         manualCopy.hidden = true;
+        syncManualCopy();
         agentButton.classList.add('is-copied');
         agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
         copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
       } else {
         agentButton.classList.remove('is-copied');
         manualCopy.hidden = false;
+        syncManualCopy();
         agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
         promptField.focus({preventScroll:true});
         promptField.select();
@@ -136,7 +145,7 @@
     const hoverPointer = matchMedia('(hover: hover) and (pointer: fine)');
     const ease = 'cubic-bezier(.37,0,.63,1)';
     let animations = [],hovering = false,waving = false;
-    const canHover = () => hovering && hoverPointer.matches && !mobile.matches && !reduced.matches && !document.hidden;
+    const canHover = () => !agentButton.disabled && hovering && hoverPointer.matches && !mobile.matches && !reduced.matches && !document.hidden;
     const poses = () => icons.map(icon => {
       const transform = getComputedStyle(icon).transform;
       return transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42;
@@ -169,7 +178,7 @@
       whenFinished(animations,startHover);
     }
     function playWave() {
-      if (waving || reduced.matches || document.hidden) return;
+      if (agentButton.disabled || waving || reduced.matches || document.hidden) return;
       const from = poses();
       cancelMotion();waving = true;
       // Preserve each current hover pose through its delay; repeated clicks keep
@@ -182,6 +191,9 @@
     agentButton.addEventListener('portfolio:agent-preview-reset',() => {
       cancelMotion();waving = false;hovering = false;
     });
+    new MutationObserver(() => {
+      if (agentButton.disabled) {cancelMotion();waving = false;hovering = false;}
+    }).observe(agentButton,{attributes:true,attributeFilter:['disabled']});
     agentButton.addEventListener('pointerenter',event => {
       if (event.pointerType === 'touch') return;
       hovering = true;startHover();

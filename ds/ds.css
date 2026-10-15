@@ -111,3 +111,11 @@
 .ds-freshness-status{margin:0;font-size:12px;line-height:1.6;color:var(--ds-color-secondary)}
 .ds-check-updates{flex:none}.ds-check-updates:disabled{opacity:.55;cursor:default}
 @media(max-width:767px){.ds-freshness{justify-content:space-between;gap:12px;padding:10px 20px}.ds-freshness-status{font-size:11px}}
+
+/* Names explain purpose; stable source keys remain visible for reuse. */
+.ds-api-key,.ds-style-key{display:block;margin-top:6px;font:400 11px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;word-spacing:normal;overflow-wrap:anywhere;color:var(--ds-color-secondary)}
+.ds-type-row .ds-style-usage{margin:10px 0 0;font-size:11px;line-height:1.7;color:var(--ds-color-secondary)}
+.ds-naming{max-width:720px;margin-top:20px;font-size:12px;line-height:1.8;color:var(--ds-color-secondary)}
+.ds-naming summary{width:fit-content;min-height:44px;padding:10px 0;cursor:pointer;color:var(--color-ink);font-weight:600;--ui-focus-offset:var(--focus-offset-tool)}
+.ds-naming p{margin:8px 0}.ds-naming a{text-decoration:underline;text-underline-offset:3px}
+.ds-space-item code{font-size:10px;word-spacing:normal}
