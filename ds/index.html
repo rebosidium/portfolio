@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="25bc0e2a61ba">
+<html lang="en" data-build="c7b7c36e4f00">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,17 +10,17 @@
   <meta name="description" content="The current palette, typography, components and responsive templates used on Dmitry Rybalka’s homepage and About page.">
   <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33">
   <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site-ui.css?v=b1f9a6c260c7">
-  <link rel="stylesheet" href="/ds/ds.css?v=92e9deab09ba">
-  <script src="/ds/examples.js?v=d638fe3eeaaf" defer></script>
-  <script src="/ds/ds.js?v=ae2e93eff35a" defer></script>
+  <link rel="stylesheet" href="/assets/site-ui.css?v=3756a9058305">
+  <link rel="stylesheet" href="/ds/ds.css?v=928425fb8152">
+  <script src="/ds/examples.js?v=adf9d6b5539a" defer></script>
+  <script src="/ds/ds.js?v=5f5b3bdeb96c" defer></script>
 </head>
 <body class="ds-page">
   <header class="ds-top"><a href="/">Dmitry Rybalka</a><span>Interface library</span><a class="ds-home-link" href="/">Open homepage</a></header>
   <div class="ds-layout">
     <aside class="ds-sidebar">
       <p class="ds-eyebrow">DESIGN SYSTEM</p>
-      <nav aria-label="Library sections"><a href="#overview">Overview</a><a href="#palette">Palette</a><a href="#typography">Typography</a><a href="#layout">Layout & spacing</a><a href="#components">Components</a><a href="#templates">Templates</a></nav>
+      <nav aria-label="Library sections"><a href="#overview">Overview</a><a href="#palette">Palette</a><a href="#typography">Typography</a><a href="#layout">Layout & spacing</a><a href="#icons">Icons & logos</a><a href="#components">Components</a><a href="#templates">Templates</a></nav>
       <div class="ds-scope"><span class="ds-label">CURRENT SOURCES</span><p>Homepage<br>About</p><p class="ds-fine">Shared components.<br>Current states only.</p></div>
     </aside>
     <main class="ds-main">
@@ -35,27 +35,48 @@
         <div class="ds-section-heading"><div><span class="ds-label">01 / FOUNDATIONS</span><h2>Palette</h2></div><p>Quiet surfaces. Clear contrast.</p></div>
         <div id="palette-grid" class="ds-palette"></div>
         <div id="state-palette" class="ds-state-palette"></div>
+        <div class="ds-status-color"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><div><strong>Coming Soon dot · #C3BD24</strong><p>The custom status mark used beside project actions. This color belongs to that mark; it is not a general warning color.</p></div></div>
       </section>
       <section id="typography" class="ds-section">
-        <div class="ds-section-heading"><div><span class="ds-label">02 / FOUNDATIONS</span><h2>Typography</h2></div><p>One family. Three working weights.</p></div>
-        <div class="ds-type-family"><div><span class="ds-label">TYPEFACE</span><h3>Manrope</h3><p>Aa Bb Cc Dd Ee Ff Gg<br>0123456789</p></div><div class="ds-weights"><span style="font-weight:500">Medium · 500</span><span style="font-weight:600">Semibold · 600</span><span style="font-weight:700">Bold · 700</span></div></div>
-        <div class="ds-type-row"><div><strong>Page / section title</strong><span>24 px · Semibold · 1.8</span></div><p class="ds-type-heading">A little about me</p></div>
-        <div class="ds-type-row"><div><strong>Body copy</strong><span>18 px · Medium · 32 px</span></div><p class="ds-type-body">Hi, I’m Dima. I’m a product designer.</p></div>
-        <div class="ds-type-row"><div><strong>Section label</strong><span>18 px · Bold · 1.8</span></div><p class="ds-type-section">What I enjoy about design</p></div>
-        <div class="ds-type-row"><div><strong>Navigation / contact link</strong><span>18 px · Semibold</span></div><p class="ds-type-nav">Work &nbsp; Email &nbsp; LinkedIn</p></div>
-        <div class="ds-type-row"><div><strong>Mobile menu</strong><span>32–48 px · Semibold · 1.15</span></div><p class="ds-type-menu">Work</p></div>
-        <div class="ds-type-row"><div><strong>Mobile work metadata</strong><span>16 px · Medium · 22 px</span></div><p class="ds-type-meta">Classifieds · Aug. 2025 — Present</p></div>
-        <p class="ds-fine">Body copy uses the shared 32 px line height. Headings and controls retain their existing type roles.</p>
+        <div class="ds-section-heading"><div><span class="ds-label">02 / FOUNDATIONS</span><h2>Typography</h2></div><p>Manrope. Current page roles.</p></div>
+        <div class="ds-type-family"><div><span class="ds-label">TYPEFACE</span><h3>Manrope</h3><p>Aa Bb Cc Dd Ee Ff Gg<br>0123456789</p></div><div class="ds-weights"><span style="font-weight:400">Regular · 400</span><span style="font-weight:500">Medium · 500</span><span style="font-weight:600">Semibold · 600</span><span style="font-weight:700">Bold · 700</span></div></div>
+        <div class="ds-type-row"><div><strong>About title</strong><span>Semibold · 600</span></div><div class="ds-type-example"><span>Desktop · 24 px / 1.8</span><p class="ds-type-heading">A little about me</p></div><div class="ds-type-example"><span>Mobile · 24 px / 1.8<br>22 px at 359 px and below</span><p class="ds-type-heading ds-type-about-mobile">A little about me</p></div></div>
+        <div class="ds-type-row"><div><strong>Homepage greeting</strong><span>Bold · 700</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-home-heading">Hello, Everyone</p></div><div class="ds-type-example"><span>Mobile · 18 px / 36 px</span><p class="ds-type-home-heading ds-type-greeting-mobile">Hello, Everyone</p></div></div>
+        <div class="ds-type-row"><div><strong>Project title</strong><span>Bold · 700</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-home-heading">Larixon Classifieds</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-home-heading">Larixon Classifieds</p></div></div>
+        <div class="ds-type-row"><div><strong>Homepage / work body</strong><span>Medium · 500<br>1 px word spacing</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-home-body">I’m a product designer and design lead.</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-home-body">I’m a product designer and design lead.</p></div></div>
+        <div class="ds-type-row"><div><strong>About prose</strong><span>Medium · 500<br>0.18 px letter spacing</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-body">Hi, I’m Dima. I’m a product designer.</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-body">Hi, I’m Dima. I’m a product designer.</p></div></div>
+        <div class="ds-type-row"><div><strong>About section label</strong><span>Bold · 700</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-section">What I enjoy about design</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-section">What I enjoy about design</p></div></div>
+        <div class="ds-type-row"><div><strong>Work metadata</strong><span>Medium · 500</span></div><div class="ds-type-example"><span>Desktop · 18 px / 25 px</span><p class="ds-type-meta-desktop">Classifieds · Aug. 2025 — Present</p></div><div class="ds-type-example"><span>Mobile · 16 px / 22 px</span><p class="ds-type-meta">Classifieds · Aug. 2025 — Present</p></div></div>
+        <div class="ds-type-row"><div><strong>Navigation links</strong><span>Semibold · 600</span></div><div class="ds-type-example"><span>Desktop · 18 px / 25 px</span><p class="ds-type-nav">Work &nbsp; Email</p></div><div class="ds-type-example"><span>Mobile menu · 32–48 px / 1.15<br>Shown at 44 px for a 440 px viewport</span><p class="ds-type-menu">Work</p></div></div>
+        <div class="ds-type-row"><div><strong>Header name</strong><span>Semibold · 600</span></div><div class="ds-type-example"><span>Desktop · 18 px / 25 px</span><p class="ds-type-nav ds-type-name">Dmitry Rybalka</p></div><div class="ds-type-example"><span>Mobile HOME · 18 px / 28 px<br>About retains 25 px line height</span><p class="ds-type-nav ds-type-identity-mobile">Dmitry Rybalka</p></div></div>
+        <div class="ds-type-row"><div><strong>Footer title</strong><span>Semibold · 600</span></div><div class="ds-type-example"><span>Desktop · 24 px / 1.8</span><p class="ds-type-heading">Let’s Talk</p></div><div class="ds-type-example"><span>Mobile · 24 px / 1.8</span><p class="ds-type-heading">Let’s Talk</p></div></div>
+        <div class="ds-type-row"><div><strong>Footer description</strong><span>Medium · 500</span></div><div class="ds-type-example"><span>Desktop · 18 px / 1.6</span><p class="ds-type-footer-body">Have a project or opportunity in mind?</p></div><div class="ds-type-example"><span>Mobile · 18 px / 1.6</span><p class="ds-type-footer-body">Have a project or opportunity in mind?</p></div></div>
+        <div class="ds-type-row"><div><strong>Contact links</strong><span>Semibold · 600</span></div><div class="ds-type-example"><span>Desktop · 18 px / 1.6</span><p class="ds-type-contact">Email &nbsp; LinkedIn</p></div><div class="ds-type-example"><span>Mobile · 18 px / 1.6</span><p class="ds-type-contact">Email &nbsp; LinkedIn</p></div></div>
+        <div class="ds-type-row"><div><strong>Brief · light</strong><span>Medium · 500</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-body ds-type-brief-light">Brief your AI</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-body ds-type-brief-light">Brief your AI</p></div></div>
+        <div class="ds-type-row"><div><strong>Brief · dark / project control</strong><span>Medium · 500<br>Normal word spacing</span></div><div class="ds-type-example"><span>Desktop · 18 px / 32 px</span><p class="ds-type-body ds-type-control-normal">More Details</p></div><div class="ds-type-example"><span>Mobile · 18 px / 32 px</span><p class="ds-type-body ds-type-control-normal">More Details</p></div></div>
+        <div class="ds-type-row"><div><strong>Back control</strong><span>Medium · 500</span></div><div class="ds-type-example"><span>Desktop · 18 px / 1.8</span><p class="ds-type-body ds-type-back">Back</p></div><div class="ds-type-example"><span>Mobile · 18 px / 1.8</span><p class="ds-type-body ds-type-back">Back</p></div></div>
+        <div class="ds-type-row"><div><strong>Copy fallback</strong><span>Desktop and mobile · 14 px / 22 px</span></div><div class="ds-type-example"><span>Light control · Medium 500</span><p class="ds-type-helper">Copy this prompt and paste it into your AI chat.</p></div><div class="ds-type-example"><span>Dark control · Regular 400</span><p class="ds-type-helper ds-type-helper-dark">Copy this prompt and paste it into your AI chat.</p></div></div>
+        <p class="ds-fine">Samples preserve the current line height, weight and spacing for each role. The mobile menu scales with its viewport; ordinary body copy remains 18 px.</p>
       </section>
       <section id="layout" class="ds-section">
         <div class="ds-section-heading"><div><span class="ds-label">03 / FOUNDATIONS</span><h2>Layout & spacing</h2></div><p>Shared rhythm, page-specific composition.</p></div>
-        <div class="ds-layout-facts"><div><span class="ds-label">DESKTOP PAGE</span><strong data-token="width-page">944 px</strong><p>Centered content</p></div><div><span class="ds-label">READING COLUMN</span><strong data-token="width-prose">624 px</strong><p>About prose</p></div><div><span class="ds-label">MOBILE GUTTER</span><strong data-token="space-5">20 px</strong><p>On each side</p></div><div><span class="ds-label">CORNERS</span><strong>40 / 100 px</strong><p>Panels / pill controls</p></div></div>
+        <div class="ds-layout-facts"><div><span class="ds-label">DESKTOP PAGE</span><strong data-token="width-page">944 px</strong><p>Centered content</p></div><div><span class="ds-label">READING COLUMN</span><strong data-token="width-prose">624 px</strong><p>About prose</p></div><div><span class="ds-label">MOBILE GUTTER</span><strong data-token="space-5">20 px</strong><p>On each side</p></div><div><span class="ds-label">MOBILE MAXIMUM</span><strong>600 px</strong><p>Homepage hero, work cards and About content</p></div></div>
+        <div class="ds-radii"><div><span style="border-radius:4px"></span><strong>4 px</strong><p>Work previews</p></div><div><span style="border-radius:8px"></span><strong>8 px</strong><p>Copy field / menu focus</p></div><div><span style="border-radius:var(--radius-panel)"></span><strong data-token="radius-panel">40 px</strong><p>Footer corners</p></div><div><span style="border-radius:var(--radius-pill)"></span><strong data-token="radius-pill">100 px</strong><p>Pill controls / avatar</p></div></div>
+        <p class="ds-fine">Ordinary link focus outlines use a separate 2 px corner radius. Footer corners flatten from 40 px to 0 as the homepage footer covers the previous section.</p>
         <div id="spacing-scale" class="ds-spacing"></div>
         <p class="ds-fine">Mobile layout: up to 767 px, or up to 1023 px on a touch device. The previews below use a 440 px mobile viewport.</p>
       </section>
+      <section id="icons" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">04 / ASSETS</span><h2>Icons & logos</h2></div><p id="icon-count">Current assets. Actual sizes.</p></div>
+        <p class="ds-fine">Arrow left and Check are from <a href="https://lucide.dev/" target="_blank" rel="noopener noreferrer">Lucide</a>. The mobile menu is the current custom animated glyph. Brand marks and the Coming Soon dot are separate assets. Only variants used on the homepage or About are shown. <a href="/vendor/Lucide-LICENSE.txt?v=b495047bd93a" target="_blank" rel="noopener noreferrer">Lucide license & attribution</a></p>
+        <h3 class="ds-icon-group-title">Interface icons</h3><div class="ds-icon-grid" id="interface-icons"></div>
+        <h3 class="ds-icon-group-title">Brand logos</h3><div class="ds-icon-grid" id="brand-icons"></div>
+        <h3 class="ds-icon-group-title">Status mark</h3><div class="ds-icon-grid" id="status-icons"></div>
+        <p class="ds-fine">The menu glyph is 28 px inside a 44 px control. Brief logos use 24 px slots; Copilot retains its current wrapper and crop. The status animation is shown in the Coming Soon component below.</p>
+      </section>
       <div class="ds-preview-toolbar"><div><span class="ds-label">PREVIEW VIEWPORT</span><p>Same components. Two layouts.</p></div><div class="ds-mode-switch" role="group" aria-label="Preview layout"><button type="button" data-mode="desktop" aria-pressed="true">Desktop</button><button type="button" data-mode="mobile" aria-pressed="false">Mobile · 440</button></div></div>
-      <section id="components" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">04 / INTERFACE</span><h2>Components & states</h2></div><p>Choose a state, or interact with a preview.</p></div><div id="component-gallery" class="ds-gallery"></div></section>
-      <section id="templates" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">05 / COMPOSITION</span><h2>Templates</h2></div><p>The current page patterns, assembled.</p></div><div id="template-gallery" class="ds-gallery"></div></section>
+      <section id="components" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">05 / INTERFACE</span><h2>Components & states</h2></div><p>Choose a state, or interact with a preview.</p></div><div id="component-gallery" class="ds-gallery"></div></section>
+      <section id="templates" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">06 / COMPOSITION</span><h2>Templates</h2></div><p>The current page patterns, assembled.</p></div><div id="template-gallery" class="ds-gallery"></div></section>
       <footer class="ds-colophon"><p>Built from the current homepage and About sources.</p><p>Shared source keeps pages and this library in sync. Reuse an existing component first; extend the library when a new page needs a new pattern.</p></footer>
     </main>
   </div>

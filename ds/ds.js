@@ -1,13 +1,25 @@
 (() => {
-  const {examples,tokens}=window.DS_CATALOG;
-  const labels={'default':'Default','hover':'Hover','focus':'Keyboard focus','pressed':'Pressed','copied':'Copied','manual-copy':'Manual copy','disabled':'Disabled','reduced-motion':'Reduced motion','initial':'Initial frame','front':'Front','empty':'Empty','closed':'Closed','open':'Open','gray':'Gray surface','white':'White surface','homepage':'Homepage','about':'About'};
+  const {examples,icons,tokens}=window.DS_CATALOG;
+  const labels={'default':'Default','hover':'Hover','focus':'Keyboard focus','pressed':'Pressed','copied':'Copied','manual-copy':'Manual copy','disabled':'Disabled','reduced-motion':'Reduced motion','initial':'Initial frame','front':'Front','empty':'Empty','closed':'Closed','open':'Open','gray':'Gray surface','white':'White surface','homepage':'Homepage','about':'About','pulsing':'Visible · pulsing','paused':'Paused','composite':'Transparent artwork','image-error':'Preview unavailable'};
   let mode='desktop';
   const items=[];
   document.querySelector('#specimen-count').textContent=`${examples.length} live specimens`;
+  document.querySelector('#icon-count').textContent=`${icons.length} current icons · ${icons.reduce((count,icon)=>count+icon.variants.length,0)} used variants`;
+  for(const icon of icons){
+    const card=document.createElement('article');card.className='ds-icon-card';card.dataset.icon=icon.id;
+    const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${variant.id}">${variant.html}</div><span>${variant.id} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}</div>`).join('');
+    card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div><code>renderIcon('${icon.id}')</code>`;
+    document.querySelector(`#${icon.group}-icons`).append(card);
+  }
   for(const element of document.querySelectorAll('[data-token]'))element.textContent=tokens[element.dataset.token];
   const colors=[['color-canvas','Canvas'],['color-ink','Ink'],['color-surface','Work surface'],['color-placeholder','Photo slot'],['color-inverse','Footer']];
   document.querySelector('#palette-grid').innerHTML=colors.map(([key,label])=>`<article class="ds-color"><div class="ds-color-swatch" style="background:var(--${key})"></div><div class="ds-color-info"><strong>${label}</strong><span>${tokens[key]}</span><span>--${key}</span></div></article>`).join('');
-  document.querySelector('#state-palette').innerHTML=[['border-subtle','Light border'],['border-inverse','Dark border'],['color-muted','Secondary text'],['color-disabled','Disabled text'],['color-hover','Hover surface'],['color-pressed','Pressed surface']].map(([key,label])=>`<div class="ds-small-color"><div class="ds-small-swatch" style="background:var(--${key});${key==='border-inverse'?'background-color:#1d1d1f;border-color:var(--border-inverse)':''}"></div><div><strong>${label}</strong><span>${tokens[key]}</span></div></div>`).join('');
+  const stateColors=[['border-subtle','Light border','border'],['border-strong','Light hover / field border','border'],['border-inverse','Dark border','border','dark'],['border-inverse-hover','Dark hover border','border','dark'],['color-muted','Secondary text'],['color-disabled','Disabled text'],['color-hover','Light hover surface'],['color-pressed','Light pressed surface'],['color-inverse-hover','Dark hover surface','fill','dark'],['color-inverse-pressed','Dark pressed surface','fill','dark']];
+  document.querySelector('#state-palette').innerHTML=stateColors.map(([key,label,kind='fill',surface='light'])=>{
+    const base=surface==='dark'?'var(--color-inverse)':'var(--color-canvas)';
+    const style=kind==='border'?`background:${base};border-color:var(--${key})`:`background:linear-gradient(var(--${key}),var(--${key})),${base}`;
+    return `<div class="ds-small-color"><div class="ds-small-swatch" style="${style}"></div><div><strong>${label}</strong><span>${tokens[key]}</span><span>--${key}</span></div></div>`;
+  }).join('');
   document.querySelector('#spacing-scale').innerHTML=[2,3,4,5,6,7,8,10].map(n=>`<div class="ds-space-item"><div class="ds-space-bar" style="width:var(--space-${n})"></div><span>${tokens['space-'+n]}</span></div>`).join('');
   const revision=document.documentElement.dataset.build||'';
   function resize(item){

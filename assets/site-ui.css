@@ -22,6 +22,9 @@
   --color-hover: #f7f7f6;
   --color-pressed: #eff0ed;
   --border-strong: rgba(0,0,0,.2);
+  --color-inverse-hover: rgba(255,255,255,.06);
+  --color-inverse-pressed: rgba(255,255,255,.08);
+  --border-inverse-hover: rgba(255,255,255,.5);
   --width-page: 944px;
   --width-prose: 624px;
   --space-2: 8px;
@@ -46,7 +49,15 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outl
 .header{position:absolute;inset:var(--header-top) 0 auto;width:var(--content-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:var(--type-body);line-height:25px;font-weight:var(--weight-semibold)}
 .header nav{display:flex;align-items:center;gap:var(--space-8)}
 .header nav a.mobile-only{display:none}
-.menu-toggle{display:none}
+.menu-toggle{display:none;place-items:center;flex:none;width:44px;height:44px;margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.menu-glyph{display:block;width:28px;height:28px;pointer-events:none}
+.menu-stroke{transform-box:view-box;transform-origin:50% 50%;transition:transform .2s ease-in-out,opacity .2s ease-in-out}
+.menu-stroke-top{transform:translateY(-7px) rotate(0deg)}
+.menu-stroke-bottom{transform:translateY(7px) rotate(0deg)}
+.menu-toggle[data-menu-icon="close"] .menu-stroke-top{transform:translateY(0) rotate(45deg)}
+.menu-toggle[data-menu-icon="close"] .menu-stroke-middle{opacity:0}
+.menu-toggle[data-menu-icon="close"] .menu-stroke-bottom{transform:translateY(0) rotate(-45deg)}
+.menu-toggle[data-icon-instant="true"] .menu-stroke{transition:none}
 .header a{position:relative;display:block}
 .header .name{word-spacing:1px}
 .header nav a::after{content:'';position:absolute;bottom:-5px;left:0;height:1px;width:100%;background:var(--border-subtle);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
@@ -88,15 +99,7 @@ a:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outl
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
 body{min-width:0}
 .header{inset:calc(23px + env(safe-area-inset-top)) 10px auto 20px;width:auto;max-width:none;min-height:44px;margin:0;font-size:var(--type-body);line-height:28px;z-index:3}
-.menu-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;margin:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.menu-glyph{display:block;width:28px;height:28px;pointer-events:none}
-.menu-stroke{transform-box:view-box;transform-origin:50% 50%;transition:transform .2s ease-in-out,opacity .2s ease-in-out}
-.menu-stroke-top{transform:translateY(-7px) rotate(0deg)}
-.menu-stroke-bottom{transform:translateY(7px) rotate(0deg)}
-.menu-toggle[data-menu-icon="close"] .menu-stroke-top{transform:translateY(0) rotate(45deg)}
-.menu-toggle[data-menu-icon="close"] .menu-stroke-middle{opacity:0}
-.menu-toggle[data-menu-icon="close"] .menu-stroke-bottom{transform:translateY(0) rotate(-45deg)}
-.menu-toggle[data-icon-instant="true"] .menu-stroke{transition:none}
+.menu-toggle{display:grid}
 .menu-toggle:is(:focus-visible,[data-ui-state="focus"]){outline:2px solid currentColor;outline-offset:2px;border-radius:8px}
 .header.menu-animating .menu-toggle{transition:none}
 .nav-pending .menu-toggle{opacity:0}
@@ -136,7 +139,7 @@ html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:44px;padding:4
 .footer-link-label::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:var(--border-inverse);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--ease)}
 .footer-links a:is(:focus-visible,[data-ui-state="focus"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 .footer-agent{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
-.footer-agent-button{--agent-hover-background:rgba(255,255,255,.06);--agent-hover-border:rgba(255,255,255,.5);--agent-pressed-background:rgba(255,255,255,.08);align-self:center;height:54px;margin:0;padding:10px 24px;border-color:var(--border-inverse);color:var(--color-canvas);word-spacing:normal}
+.footer-agent-button{--agent-hover-background:var(--color-inverse-hover);--agent-hover-border:var(--border-inverse-hover);--agent-pressed-background:var(--color-inverse-pressed);align-self:center;height:54px;margin:0;padding:10px 24px;border-color:var(--border-inverse);color:var(--color-canvas);word-spacing:normal}
 .footer-agent-button .agent-button-label{width:103px}
 .footer-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px}
 .footer-logo-copilot img{position:absolute;left:.9672px;top:.9864px}
