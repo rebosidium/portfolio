@@ -52,7 +52,10 @@
       if (Number(response.headers.get('content-length')) > maxBytes) {attempts=2;throw new Error('PDF exceeds background budget');}
       const blob = await response.blob();
       if (blob.size > maxBytes) {attempts=2;throw new Error('PDF exceeds background budget');}
-      prepared.set(url,URL.createObjectURL(blob));
+      // iOS Safari can preview an application/pdf Blob despite a[download].
+      // Offer the same bytes as a file; the anchor still supplies the .pdf name.
+      const file = new Blob([blob],{type:'application/octet-stream'});
+      prepared.set(url,URL.createObjectURL(file));
       done.add(url);attempts = 0;
       root.dataset.resumePrefetchReadyAt = performance.now().toFixed(1);
       status(done.size === urls.length ? 'ready' : 'waiting');
