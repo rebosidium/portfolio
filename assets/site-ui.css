@@ -68,9 +68,10 @@
   --radius-focus-link: 2px;
   --duration-control: .18s;
   --duration-underline: .3s;
-  --duration-reading-reveal: .65s;
-  --delay-reading-step: .08s;
-  --offset-reading-reveal: 12px;
+  --duration-reading-reveal: 1.1s;
+  --delay-reading-step: .12s;
+  --offset-reading-reveal: 8px;
+  --ease-reading-reveal: cubic-bezier(.37,0,.63,1);
   --overlap-recede: .025;
   --overlap-flatten-start: .75;
   --ease-out: cubic-bezier(.22,1,.36,1);
