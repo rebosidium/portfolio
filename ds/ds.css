@@ -83,7 +83,7 @@
 .ds-radii{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}
 .ds-radii>div{display:flex;flex-direction:column;align-items:flex-start;gap:10px}.ds-radii>div>span{display:block;width:80px;height:56px;background:var(--color-canvas);border:1px solid var(--border-control-hover)}.ds-radii strong{font-size:13px;font-weight:600}.ds-radii p{font-size:11px;line-height:1.6;margin:0;color:var(--ds-color-secondary)}
 @media(max-width:767px){.ds-radii{grid-template-columns:repeat(2,minmax(0,1fr))}.ds-type-example>span{min-height:0}}
-@media(max-width:359px){.ds-type-about-mobile{font-size:22px}}
+@media(max-width:359px){.ds-type-about-mobile{font-size:var(--type-heading-compact)}}
 
 
 .ds-state-switch[hidden]{display:none}
@@ -194,3 +194,10 @@
 /* Keep the selected iframe mounted when inspecting its native size. */
 .ds-preview-stage[data-zoom="actual"]{overflow:auto}
 .ds-zoom-toggle[aria-pressed="true"]{background:var(--color-surface)}
+
+/* Token reference reuses the library table; long names stay inside mobile gutters. */
+.ds-token-index{max-width:none}
+.ds-token-index .ds-version-table{table-layout:fixed}
+.ds-token-index th,.ds-token-index td{overflow-wrap:anywhere}
+.ds-token-index tr[id]{scroll-margin-top:110px}
+@media(max-width:767px){.ds-token-index tr[id]{scroll-margin-top:150px}}

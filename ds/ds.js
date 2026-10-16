@@ -82,7 +82,7 @@
   updateTypeMetrics();
   document.fonts.ready.then(updateTypeMetrics);
   window.addEventListener('resize',updateTypeMetrics,{passive:true});
-  for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','duration-reading-reveal','delay-reading-step','offset-reading-reveal','overlap-recede','overlap-flatten-start','ease-out']){
+  for(const name of ['size-icon','size-menu-glyph','size-status','size-avatar','width-back-mobile','width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','duration-reading-reveal','delay-reading-step','offset-reading-reveal','ease-reading-reveal','overlap-recede','overlap-flatten-start','ease-out']){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=tokenName(name);value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }
   // Every sample uses the exact opaque token and states its intended surface.
@@ -117,6 +117,25 @@
     }).join('');
     return `<div class="ds-palette-group"><h3>${title}</h3><div class="ds-palette">${cards}</div></div>`;
   }).join('');
+  // Complete token definitions, including semantic roles outside curated samples.
+  const tokenReference=document.querySelector('#token-reference');
+  document.querySelector('#token-count').textContent=Object.keys(tokens).length;
+  for(const [key,value] of Object.entries(tokens)){
+    const row=document.createElement('tr');
+    if(!document.getElementById('token-'+key))row.id='token-'+key;
+    const name=document.createElement('th');name.scope='row';name.textContent=tokenName(key);
+    const token=document.createElement('td'),link=document.createElement('a');link.href='#token-'+key;link.textContent='--'+key;token.append(link);
+    const definition=document.createElement('td');definition.textContent=value;
+    row.append(name,token,definition);tokenReference.append(row);
+  }
+  function revealTokenReference(){
+    if(!location.hash.startsWith('#token-'))return;
+    const target=document.getElementById(location.hash.slice(1));
+    const disclosure=target?.closest('details');
+    if(disclosure){disclosure.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+  }
+  window.addEventListener('hashchange',revealTokenReference);
+  revealTokenReference();
   document.querySelector('#spacing-scale').innerHTML=[2,3,4,5,6,7,8,10].map(n=>`<div class="ds-space-item"><div class="ds-space-bar" style="width:var(--space-${n})"></div><span>${tokenName('space-'+n)}</span><code>--space-${n}</code><span>${tokens['space-'+n]}</span></div>`).join('');
   const revision=document.documentElement.dataset.build||'';
   const visit=window.DSFreshness?.visit||String(Date.now());
