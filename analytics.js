@@ -63,7 +63,7 @@
     const preview = ['/404', '/404/', '/404/index.html', '/404.html'].includes(location.pathname);
     const errorContext = {requested_path: location.pathname, error_preview: preview, ...(!preview ? {error_code: 404} : {})};
     if (clarityActive) {tag('error_preview', preview);tag('requested_path', location.pathname.slice(0, 255));}
-    if (!preview) capture('page_not_found', errorContext);
+    if (!preview) capture('page_not_found', errorContext, true);
     document.addEventListener('click', event => {
       if (event.isTrusted && event.target.closest?.('.not-found-actions .ui-back'))
         capture('homepage_opened', {...errorContext, placement: 'not_found', input_method: inputMethod(event)}, true);
