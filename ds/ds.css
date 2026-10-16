@@ -24,6 +24,11 @@
 .ds-colophon{padding:12px 0 44px;border-top:1px solid var(--border-subtle);color:var(--ds-color-secondary);font-size:12px}.ds-colophon p{margin:12px 0 0}.ds-noscript{padding:24px}
 .ds-specimen[data-preview-surface="dark"] .ds-preview-stage,.ds-specimen[data-preview-surface="dark"] .ds-preview-frame{background:var(--color-inverse)}
 .ds-fine a{text-decoration:underline;text-underline-offset:3px}
+.ds-agent-guide>p,.ds-agent-guide>ol{max-width:760px}
+.ds-agent-guide>p{margin:16px 0;line-height:1.8}.ds-agent-guide h3{margin:28px 0 12px;font-size:16px;font-weight:600;line-height:1.6}
+.ds-agent-guide a{text-decoration:underline;text-underline-offset:3px}.ds-agent-guide code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;word-spacing:normal;overflow-wrap:anywhere}
+.ds-agent-guide .ds-version-table th[scope="row"]{width:25%;min-width:100px}.ds-agent-guide .ds-version-table td:nth-child(2){font:inherit;color:var(--ds-color-secondary)}
+.ds-agent-guide ol{padding-left:24px}.ds-agent-guide li+li{margin-top:8px}.ds-agent-commands{max-width:100%;margin:16px 0;padding:16px;border:1px solid var(--border-subtle);border-radius:8px;background:var(--color-canvas);white-space:pre-wrap;overflow-wrap:anywhere;word-spacing:normal}
 .ds-icon-group-title{margin:28px 0 14px;font-size:16px;font-weight:600}
 .ds-icon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .ds-icon-card{min-width:0;padding:18px}
