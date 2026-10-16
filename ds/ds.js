@@ -1,8 +1,10 @@
 (async () => {
   if(window.DSFreshness && !await window.DSFreshness.ready)return;
   const {examples,icons,favicons,tokens,lineHeightScale,manifest,naming}=window.DS_CATALOG;
-  const pageNames=routes=>routes.map(route=>({'/':'Homepage','/about/':'About','/404/':'404'}[route]||route)).join(' · ');
+  const pageNames=routes=>routes.map(route=>manifest.pages.find(page=>page.route===route)?.label||route).join(' · ');
   const versionLabel=release=>release.version;
+  document.querySelector('#source-page-count').textContent=manifest.pages.length+' source pages';
+  document.querySelector('#source-pages').replaceChildren(...manifest.pages.flatMap((page,index)=>{const text=document.createTextNode(page.label);return index?[document.createElement('br'),text]:[text];}));
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
   document.querySelector('#ds-release-detail').textContent='Design system · '+manifest.designSystem.release+' · Semantic release + automatic source revision';
   document.querySelector('#token-version').textContent='Shared tokens · '+manifest.tokens.version;
@@ -20,7 +22,9 @@
   const labels=naming.states;
   const tokenName=key=>naming.tokens[key];
   const iconVariant=id=>naming.variants[id]||id;
-  let mode='desktop';
+  let mode=innerWidth<=767?'mobile':'desktop';
+  try{const saved=sessionStorage.getItem('portfolio.ds.preview-layout');if(['desktop','mobile'].includes(saved))mode=saved;}catch(_){}
+  for(const button of document.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode));
   let navigationId=0;
   const items=[];
   document.querySelector('#specimen-count').textContent=`${specimens.length} live specimens`;
@@ -122,11 +126,13 @@
     const open=mobile&&item.state==='open';
     const height=open?800:(item.state==='manual-copy'||item.manualVisible?(item.example.manualHeight||212):(mobile?item.example.mobileHeight:item.example.height));
     const available=item.stage.clientWidth;
-    const scale=Math.min(1,available/width);
+    const scale=item.actualSize?1:Math.min(1,available/width);
+    item.stage.dataset.zoom=item.actualSize?'actual':'fit';
     item.frame.style.width=width+'px';item.frame.style.height=height+'px';
-    item.frame.style.transform=`translateX(${-width*scale/2}px) scale(${scale})`;
+    item.frame.style.left=item.actualSize?'0':'50%';
+    item.frame.style.transform=item.actualSize?'none':`translateX(${-width*scale/2}px) scale(${scale})`;
     item.stage.style.height=Math.ceil(height*scale)+'px';
-    item.size.textContent=`${width} × ${height}`;
+    item.size.textContent=`${width} × ${height} · ${Math.round(scale*100)}%`;
   }
   function load(item){
     item.frame.title=`${item.base.title}${item.variant.label?' · '+item.variant.label:''}, ${mode}, ${labels[item.state]||item.state}`;
@@ -194,6 +200,9 @@
       button.addEventListener('click',()=>selectVariant(item,variant.id));item.variantSwitch.append(button);
     }
     item.code=window.DSCode?.attach({triggerParent:card.querySelector('.ds-head-actions'),panelParent:card,id:example.id,label:example.title,getContext:()=>({mode,state:item.state,exampleId:item.example.id,variantLabel:item.variant.label})});
+    const zoom=document.createElement('button');zoom.type='button';zoom.className='ds-code-toggle ds-zoom-toggle';zoom.textContent='100%';zoom.setAttribute('aria-label','Actual size: '+example.title);zoom.setAttribute('aria-pressed','false');
+    zoom.addEventListener('click',()=>{item.actualSize=!item.actualSize;zoom.setAttribute('aria-pressed',String(item.actualSize));zoom.textContent=item.actualSize?'Fit':'100%';resize(item);if(item.actualSize)item.stage.scrollLeft=Math.max(0,(parseFloat(item.frame.style.width)-item.stage.clientWidth)/2);});
+    card.querySelector('.ds-head-actions').append(zoom);
     items.push(item);states(item);load(item);
   }
   // Keep both existing header anchors useful after grouping their gallery cards.
@@ -259,6 +268,7 @@
   for(const button of document.querySelectorAll('[data-mode]'))button.addEventListener('click',()=>{
     if(mode===button.dataset.mode)return;
     mode=button.dataset.mode;
+    try{sessionStorage.setItem('portfolio.ds.preview-layout',mode);}catch(_){}
     for(const other of document.querySelectorAll('[data-mode]'))other.setAttribute('aria-pressed',String(other===button));
     for(const item of items){states(item);load(item);}
   });

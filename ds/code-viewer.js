@@ -113,7 +113,7 @@
         tab.addEventListener('click',()=>{active=id;show();});tabs.append(tab);
       }
       releaseInfo.hidden=!entry.release;
-      releaseInfo.textContent=entry.release?`${entry.release.version} · Used on ${entry.release.usedBy.map(route=>({'/':'Homepage','/about/':'About','/404/':'404'}[route]||route)).join(' · ')}`:'';
+      releaseInfo.textContent=entry.release?`${entry.release.version} · Used on ${entry.release.usedBy.map(route=>(window.DS_CATALOG.manifest.pages.find(page=>page.route===route)?.label||route)).join(' · ')}`:'';
       notes.replaceChildren();
       if(entry.release){
         notes.append(node('li',null,'Canonical sources: '+entry.release.owners.join(', ')));

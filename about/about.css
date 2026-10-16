@@ -51,8 +51,15 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 }
 @media(max-width:359px){
   .about-page .header:not(.menu-open) .about-identity{gap:var(--space-3)}
-  .about-mobile-back{width:50px;padding-inline:var(--space-3)}
   .about-title{gap:var(--space-3)}
   .about-title h1{font-size:22px}
 }
 @media(prefers-reduced-motion:reduce){.ui-back{transition:none}}
+
+/* Page gutters belong to the reading shell; an embedded card fills it. */
+.article-work>.work-card{width:100%;max-width:100%}
+@media(min-width:768px) and (max-width:983px) and (pointer:fine){
+.article-work>.work-card{flex-direction:column;align-items:stretch}
+.article-work .work-copy,.article-work .work-artwork{width:100%}
+.article-work .work-artwork{height:auto;aspect-ratio:544 / 294}
+}

@@ -190,3 +190,7 @@
 .ds-color-info code{display:block;margin-top:6px;font-size:10px;line-height:1.6;color:var(--ds-color-secondary);overflow-wrap:anywhere;word-spacing:normal}
 .ds-color-info .ds-color-value{font-size:13px;font-weight:600;color:var(--color-ink);font-variant-numeric:tabular-nums}
 .ds-color-info .ds-color-context{margin-top:8px}
+
+/* Keep the selected iframe mounted when inspecting its native size. */
+.ds-preview-stage[data-zoom="actual"]{overflow:auto}
+.ds-zoom-toggle[aria-pressed="true"]{background:var(--color-surface)}

@@ -1,5 +1,43 @@
 (() => {
   'use strict';
+  /* shared:project-media:start */
+(() => {
+  'use strict';
+  const pending = new WeakMap();
+  function load(artwork) {
+    if (pending.has(artwork)) return pending.get(artwork);
+    const image = artwork.querySelector('.work-image');
+    const error = artwork.querySelector('.work-image-error');
+    if (!image) return Promise.resolve();
+    artwork.dataset.imageState = 'loading';
+    const loaded = new Promise((resolve,reject) => {
+      const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
+      const onLoad = () => {clear();resolve();};
+      const onError = () => {clear();reject(new Error('Work preview unavailable'));};
+      image.addEventListener('load',onLoad);image.addEventListener('error',onError);
+      if (image.dataset.srcset) image.srcset = image.dataset.srcset;
+      if (image.dataset.src) image.src = image.dataset.src;
+      if (image.complete && image.naturalWidth > 0) onLoad();
+      else if (image.complete && (image.currentSrc || image.getAttribute('src'))) onError();
+    });
+    // Decode after load: WebKit can reject an early decode of a lazy image.
+    const ready = loaded.then(() => image.decode?.().catch(failure => {if (!image.naturalWidth) throw failure;}))
+      .then(() => {
+        artwork.dataset.imageState = 'ready';artwork.classList.remove('image-failed');
+        if (error) error.hidden = true;
+      },failure => {
+        artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');
+        if (error) error.hidden = false;
+        throw failure;
+      });
+    pending.set(artwork,ready);return ready;
+  }
+  window.PortfolioProjectMedia = {load};
+  // HOME chooses request timing itself; reading pages own only their cards.
+  document.querySelectorAll('.article-work .work-artwork,[data-project-media-auto] .work-artwork').forEach(artwork => {load(artwork).catch(() => {});});
+})();
+
+  /* shared:project-media:end */
   /* shared:controls:start */
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
   const agentButtons = [...document.querySelectorAll('.agent-button')];
@@ -418,23 +456,10 @@
       // enters view, promote even an already pending request before returning.
       if (!mobile.matches && (eager || !panel.imagePending)) image.fetchPriority = priority;
       if (panel.imagePending) return panel.imagePending;
-      artwork.dataset.imageState = 'loading';
-      const loaded = new Promise((resolve,reject) => {
-        const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
-        const onLoad = () => {clear();resolve();};
-        const onError = () => {clear();reject(new Error('Work preview unavailable'));};
-        image.addEventListener('load',onLoad);image.addEventListener('error',onError);
-        if (image.dataset.srcset) image.srcset=image.dataset.srcset;
-        image.src=image.dataset.src;
-        if (image.complete && image.naturalWidth>0) onLoad();
-      });
-      // WebKit may reject decode() before a lazy image starts its request. Decode
-      // after the real load event; keep a successfully loaded preview on decode-only errors.
-      const ready = loaded.then(()=>image.decode?.().catch(error=>{if (!image.naturalWidth) throw error;}));
-      panel.imagePending = ready.then(() => {
-        panel.imageReady = true;artwork.dataset.imageState = 'ready';revealArtwork(panel);scheduleScroll();
+      panel.imagePending = window.PortfolioProjectMedia.load(artwork).then(() => {
+        panel.imageReady = true;revealArtwork(panel);scheduleScroll();
       }).catch(() => {
-        panel.imageFailed = true;artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');imageError.hidden = false;revealArtwork(panel);scheduleScroll();
+        panel.imageFailed = true;revealArtwork(panel);scheduleScroll();
       });
       if (panel === panels[0]) panel.imagePending.then(resolveFirstPreview);
       return panel.imagePending;
