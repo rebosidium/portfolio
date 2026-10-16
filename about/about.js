@@ -14,6 +14,9 @@
   if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
   if(!still()&&typeof IntersectionObserver==='function'){
     let observer;
+    const stepValue=getComputedStyle(main).getPropertyValue('--delay-reading-step').trim();
+    const stepMs=parseFloat(stepValue)*(stepValue.endsWith('ms')?1:1000)||240;
+    let nextRevealAt=0;
     const show=target=>{
       target.dataset.readingReveal='shown';
       target.style.removeProperty('--reading-reveal-delay');
@@ -27,10 +30,14 @@
     };
     try{
       observer=new IntersectionObserver(entries=>{
-        const entering=entries.filter(entry=>entry.isIntersecting&&entry.target.dataset.readingReveal==='pending');
-        entering.forEach(({target},index)=>{
+        const entering=entries.filter(entry=>entry.isIntersecting&&entry.target.dataset.readingReveal==='pending')
+          .sort((a,b)=>revealTargets.indexOf(a.target)-revealTargets.indexOf(b.target));
+        const now=performance.now();
+        nextRevealAt=Math.max(now,nextRevealAt);
+        entering.forEach(({target})=>{
           observer.unobserve(target);
-          target.style.setProperty('--reading-reveal-delay',`calc(var(--delay-reading-step) * ${Math.min(index,2)})`);
+          target.style.setProperty('--reading-reveal-delay',`${Math.max(0,nextRevealAt-now)}ms`);
+          nextRevealAt+=stepMs;
           target.dataset.readingReveal='entering';
         });
       },{threshold:0,rootMargin:'0px 0px -24px 0px'});
@@ -39,6 +46,16 @@
           target.dataset.readingReveal='pending';observer.observe(target);
         }else if(window.scrollY>0)show(target);
       });
+      // Keep new scroll batches behind first-paint blocks still waiting to start.
+      const now=performance.now();
+      for(const target of revealTargets){
+        for(const animation of target.getAnimations()){
+          if(animation.animationName!=='reading-content-enter')continue;
+          const delay=Number(animation.effect.getTiming().delay)||0;
+          const elapsed=Number(animation.currentTime)||0;
+          nextRevealAt=Math.max(nextRevealAt,now+delay-elapsed+stepMs);
+        }
+      }
       main.addEventListener('animationend',event=>{
         if(event.animationName==='reading-content-enter'&&revealTargets.includes(event.target))show(event.target);
       });
