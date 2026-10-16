@@ -1,4 +1,12 @@
 .ds-page{--ds-color-secondary:#686966;min-width:0;background:var(--color-surface);font-size:14px;line-height:1.6}
+.ds-platform-table{width:100%;min-width:660px;border-collapse:collapse;text-align:left;font-size:13px;line-height:1.8;table-layout:fixed}
+.ds-platform-table caption{text-align:left;padding:16px;font-weight:600}
+.ds-platform-table th,.ds-platform-table td{padding:16px;border-top:1px solid var(--border-subtle);vertical-align:top;overflow-wrap:break-word}
+.ds-platform-table thead th:first-child{width:18%}.ds-platform-table th{font-weight:600}
+.ds-platform-table tbody th span{font-weight:500;color:var(--ds-color-secondary)}
+.ds-platform-table-wrap:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:var(--focus-offset-tool)}
+.ds-platform-notes{padding-left:20px;font-size:13px;line-height:1.8}.ds-platform-notes li+li{margin-top:12px}
+.ds-platform-notes code{overflow-wrap:anywhere}.ds-platform-sources{margin-top:20px}
 /* Shared local foundations for the DS showcase; each group keeps its layout and states. */
 .ds-color,.ds-type-family,.ds-layout-facts>div,.ds-specimen,.ds-icon-card,.ds-version-table-wrap{background:var(--color-canvas);border:1px solid var(--border-subtle);border-radius:12px}
 .ds-mode-switch button,.ds-state-switch button,.ds-code-toggle,.ds-code-copy,.ds-code-tabs button,.ds-check-updates{appearance:none;border:0;background:transparent;font:600 12px/1.5 var(--font-family);color:var(--color-ink);cursor:pointer;border-radius:var(--radius-pill);white-space:nowrap}
