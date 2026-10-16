@@ -11,7 +11,7 @@
     const images = [...button.querySelectorAll('img')];
     const ready = Promise.allSettled(images.map(image => {
       image.loading = 'eager';
-      return image.decode();
+      return window.DSAssets?.whenReady(image) || image.decode();
     })).then(() => {
       button.dataset.agentIconsReady = String(images.every(image => image.complete && image.naturalWidth > 0));
     });

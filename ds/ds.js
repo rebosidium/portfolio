@@ -22,8 +22,10 @@
   for(const icon of icons){
     const card=document.createElement('article');card.className='ds-icon-card';card.dataset.icon=icon.id;
     const variants=icon.variants.map(variant=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${variant.theme}" role="img" aria-label="${icon.name}, ${iconVariant(variant.id)}">${variant.html}</div><span>${iconVariant(variant.id)} · ${icon.size} px</span>${variant.asset?`<a class="ds-icon-asset" href="${variant.asset}" target="_blank" rel="noopener noreferrer">${variant.asset.split('/').pop().split('?')[0]}</a>`:'<span class="ds-icon-asset">Shared header glyph</span>'}<code>renderIcon('${icon.id}', {variant: '${variant.id}'})</code></div>`).join('');
-    card.innerHTML=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div>`;
+    const markup=`<h4>${icon.name}</h4><p>${icon.url?`<a href="${icon.url}" target="_blank" rel="noopener noreferrer">${icon.source}</a>`:icon.source} · ${icon.usage}</p><div class="ds-icon-variants">${variants}</div>`;
+    if(window.DSAssets)card.append(window.DSAssets.stage(markup));else card.innerHTML=markup;
     document.querySelector(`#${icon.group}-icons`).append(card);
+    window.DSAssets?.prepare(card);
     for(const [index,variant] of icon.variants.entries()){const info=document.createElement('p');info.className='ds-component-version';info.textContent=versionLabel(variant.release);card.querySelectorAll('.ds-icon-variant')[index].append(info);}
     for(const [index,variant] of icon.variants.entries())window.DSCode?.attach({
       triggerParent:card.querySelectorAll('.ds-icon-variant')[index],panelParent:card,

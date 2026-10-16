@@ -11,7 +11,10 @@
   let controlsReady=false;
   document.body.dataset.kind=example.kind;document.body.dataset.state=state;
   if(example.kind.includes('about-page'))document.body.classList.add('about-page');
-  document.querySelector('#preview-root').innerHTML=example.htmlByState?.[state]||(mobile&&example.htmlMobile?example.htmlMobile:example.html);
+  const previewRoot=document.querySelector('#preview-root');
+  const markup=example.htmlByState?.[state]||(mobile&&example.htmlMobile?example.htmlMobile:example.html);
+  if(window.DSAssets){previewRoot.append(window.DSAssets.stage(markup,'.agent-button img'));window.DSAssets.prepare(previewRoot);}
+  else previewRoot.innerHTML=markup;
   // An isolated ready-menu link has no toggle to initialise the full menu runtime.
   if(example.id==='link')document.documentElement.dataset.mobileNavReady='true';
   window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
