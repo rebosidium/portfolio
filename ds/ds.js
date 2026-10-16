@@ -81,13 +81,39 @@
   for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','duration-reading-reveal','delay-reading-step','offset-reading-reveal','overlap-recede','overlap-flatten-start','ease-out']){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=tokenName(name);value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }
-  const colors=['color-canvas','color-ink','color-surface','color-inverse'];
-  document.querySelector('#palette-grid').innerHTML=colors.map(key=>`<article class="ds-color"><div class="ds-color-swatch" style="background:var(--${key})"></div><div class="ds-color-info"><strong>${tokenName(key)}</strong><span>${tokens[key]}</span><span>--${key}</span></div></article>`).join('');
-  const stateColors=[['border-subtle','border'],['border-strong','border'],['border-inverse','border','dark'],['border-inverse-hover','border','dark'],['color-muted'],['color-inverse-muted','fill','dark'],['color-disabled'],['color-hover'],['color-pressed'],['color-inverse-hover','fill','dark'],['color-inverse-pressed','fill','dark']];
-  document.querySelector('#state-palette').innerHTML=stateColors.map(([key,kind='fill',surface='light'])=>{
-    const base=surface==='dark'?'var(--color-inverse)':'var(--color-canvas)';
-    const style=kind==='border'?`background:${base};border-color:var(--${key})`:`background:linear-gradient(var(--${key}),var(--${key})),${base}`;
-    return `<div class="ds-small-color"><div class="ds-small-swatch" style="${style}"></div><div><strong>${tokenName(key)}</strong><span>${tokens[key]}</span><span>--${key}</span></div></div>`;
+  // Every sample uses the exact opaque token and states its intended surface.
+  const paletteGroups=[
+    {title:'Backgrounds',items:[
+      ['color-canvas'],['color-surface'],['color-inverse'],['color-work-placeholder'],
+      ['color-hover'],['color-pressed'],['color-inverse-hover'],['color-inverse-pressed']
+    ]},
+    {title:'Text',kind:'text',items:[
+      ['color-ink'],['color-muted'],['color-muted-on-surface','color-surface'],
+      ['color-muted-on-placeholder','color-work-placeholder'],['color-inverse-muted','color-inverse'],
+      ['color-disabled'],['color-disabled-on-surface','color-surface']
+    ]},
+    {title:'Borders',kind:'border',items:[
+      ['border-subtle'],['border-subtle-on-surface','color-surface'],
+      ['border-subtle-on-inverse','color-inverse'],['border-strong'],
+      ['border-inverse','color-inverse'],['border-inverse-hover','color-inverse'],
+      ['border-subtle-on-hover','color-hover']
+    ]},
+    {title:'Control borders',kind:'border',items:[
+      ['border-control-hover','color-hover'],['border-control-pressed','color-pressed'],
+      ['border-control-hover-pressed','color-pressed'],
+      ['border-inverse-control-hover','color-inverse-hover'],
+      ['border-inverse-control-pressed','color-inverse-pressed'],
+      ['border-inverse-control-hover-pressed','color-inverse-pressed']
+    ]}
+  ];
+  document.querySelector('#palette-grid').innerHTML=paletteGroups.map(({title,kind='fill',items})=>{
+    const cards=items.map(([key,surface='color-canvas'])=>{
+      const background=kind==='fill'?key:surface;
+      const sample=kind==='text'?'Aa':kind==='border'?'<span></span>':'';
+      const context=kind==='fill'?'Solid fill':`On ${tokens[surface]}`;
+      return `<article class="ds-color" id="token-${key}" data-color-token="${key}"><div class="ds-color-swatch" data-kind="${kind}" style="background:var(--${background});--ds-sample-color:var(--${key})" aria-hidden="true">${sample}</div><div class="ds-color-info"><strong>${tokenName(key)}</strong><span class="ds-color-value">${tokens[key]}</span><code>--${key}</code><span class="ds-color-context">${context}</span></div></article>`;
+    }).join('');
+    return `<div class="ds-palette-group"><h3>${title}</h3><div class="ds-palette">${cards}</div></div>`;
   }).join('');
   document.querySelector('#spacing-scale').innerHTML=[2,3,4,5,6,7,8,10].map(n=>`<div class="ds-space-item"><div class="ds-space-bar" style="width:var(--space-${n})"></div><span>${tokenName('space-'+n)}</span><code>--space-${n}</code><span>${tokens['space-'+n]}</span></div>`).join('');
   const revision=document.documentElement.dataset.build||'';
