@@ -64,7 +64,7 @@
   for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','duration-reading-reveal','delay-reading-step','offset-reading-reveal','overlap-recede','overlap-flatten-start','ease-out']){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=tokenName(name);value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }
-  const colors=['color-canvas','color-ink','color-surface','color-placeholder','color-inverse'];
+  const colors=['color-canvas','color-ink','color-surface','color-inverse'];
   document.querySelector('#palette-grid').innerHTML=colors.map(key=>`<article class="ds-color"><div class="ds-color-swatch" style="background:var(--${key})"></div><div class="ds-color-info"><strong>${tokenName(key)}</strong><span>${tokens[key]}</span><span>--${key}</span></div></article>`).join('');
   const stateColors=[['border-subtle','border'],['border-strong','border'],['border-inverse','border','dark'],['border-inverse-hover','border','dark'],['color-muted'],['color-inverse-muted','fill','dark'],['color-disabled'],['color-hover'],['color-pressed'],['color-inverse-hover','fill','dark'],['color-inverse-pressed','fill','dark']];
   document.querySelector('#state-palette').innerHTML=stateColors.map(([key,kind='fill',surface='light'])=>{
