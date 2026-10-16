@@ -9,7 +9,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .about-title{display:flex;align-items:center;gap:var(--space-4);min-height:64px}
 .about-title h1{margin:0;text-wrap:pretty}
 .about-avatar{position:relative;flex:none;width:58px;height:58px;overflow:hidden;border-radius:var(--radius-pill);background:var(--color-surface)}
-.about-avatar img{position:absolute;left:-8.33%;top:2.08%;display:block;width:120.83%;height:120.83%;max-width:none}
+.about-avatar img{display:block;width:100%;height:100%;object-fit:cover}
 .header .about-mobile-back{display:none}
 .about-prose{width:var(--width-prose);margin-inline:auto;text-wrap:pretty;overflow-wrap:break-word}
 .about-prose p{margin:0}
