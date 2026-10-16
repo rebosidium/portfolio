@@ -59,7 +59,7 @@
     function definition(){
       if(kind==='foundation')return {sources:foundationSources[id].map(([path,label])=>({path,label,group:'styles'})),notes:['These are the current source files. Shared tokens and component styles compile into /assets/site-ui.css; page layouts retain their current responsive rules.']};
       if(kind==='icon')return data.icons[id].variants[variant];
-      return data.examples[id];
+      return data.examples[getContext().exampleId||id];
     }
     function choices(section){
       const ctx=getContext(),sources=entry.sources||[];
@@ -102,7 +102,7 @@
       instruction.textContent=active==='usage'?entry.usage.instruction:'Exact current source. CSS and JavaScript files may also contain shared rules or page integration; required context is listed below.';
       for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.format===active));
       const ctx=getContext();
-      context.textContent=kind==='example'?`${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${window.DS_CATALOG.naming.states[ctx.state]||ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${window.DS_CATALOG.naming.variants[variant]||variant} variant. Use the surrounding control to provide an accessible name.`:'Current shared source tokens and styles.';
+      context.textContent=kind==='example'?`${ctx.variantLabel?ctx.variantLabel+' · ':''}${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${window.DS_CATALOG.naming.states[ctx.state]||ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${window.DS_CATALOG.naming.variants[variant]||variant} variant. Use the surrounding control to provide an accessible name.`:'Current shared source tokens and styles.';
     }
     function render(){
       entry=definition();panel.replaceChildren(body);tabs.replaceChildren();

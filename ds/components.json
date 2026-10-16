@@ -1103,8 +1103,7 @@
         "/"
       ],
       "name": "Header / Site",
-      "displayName": "Header / Site · Default",
-      "variantLabel": "Default"
+      "displayName": "Header / Site"
     },
     "about-header": {
       "componentKey": "header",
@@ -3500,10 +3499,10 @@
     }
   },
   "designSystem": {
-    "version": "1.6.2",
-    "revision": "8cc4cb08e03f",
-    "release": "1.6.2+8cc4cb08e03f",
-    "updatedAt": "2026-10-16T00:39:43.000Z",
+    "version": "1.7.0",
+    "revision": "cae27bed6328",
+    "release": "1.7.0+cae27bed6328",
+    "updatedAt": "2026-10-16T00:40:35.000Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -3517,18 +3516,18 @@
       },
       {
         "path": "home/ds/code-viewer.js",
-        "sha256": "77514c452d2d0efb6c4640380d965f417aa79514c2106c6379e41701fda0d82c",
-        "revisionSha256": "77514c452d2d0efb6c4640380d965f417aa79514c2106c6379e41701fda0d82c"
+        "sha256": "b187a9375ef14c30fe16cc3bad03da5f0101675ef8351c64d1116769f038ea38",
+        "revisionSha256": "b187a9375ef14c30fe16cc3bad03da5f0101675ef8351c64d1116769f038ea38"
       },
       {
         "path": "home/ds/ds.css",
-        "sha256": "60c43b5c695aaeea6138ea7a7c8fde3265e9df70e33bed9313d67a70536279ec",
-        "revisionSha256": "60c43b5c695aaeea6138ea7a7c8fde3265e9df70e33bed9313d67a70536279ec"
+        "sha256": "e363a7081f9401a52f811b0b96c1fe17da036f773a9f3f85302017bc6a0f32ef",
+        "revisionSha256": "e363a7081f9401a52f811b0b96c1fe17da036f773a9f3f85302017bc6a0f32ef"
       },
       {
         "path": "home/ds/ds.js",
-        "sha256": "38b5061e8060e84ef0573a5d2ced99ec4e60be499bfb31c326c0bab875fb04f0",
-        "revisionSha256": "38b5061e8060e84ef0573a5d2ced99ec4e60be499bfb31c326c0bab875fb04f0"
+        "sha256": "060ca14d9ce78b34f6932fd7bc5f9ac22eb8918e2b870baf98fe1e4c12f584ee",
+        "revisionSha256": "060ca14d9ce78b34f6932fd7bc5f9ac22eb8918e2b870baf98fe1e4c12f584ee"
       },
       {
         "path": "home/ds/freshness-worker.js",
@@ -3557,8 +3556,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "f1e2e50abd9f0557c022cb73cec05df6b7f4a8d1bbe329f8420c8015b39be74f",
-        "revisionSha256": "f1e2e50abd9f0557c022cb73cec05df6b7f4a8d1bbe329f8420c8015b39be74f"
+        "sha256": "51cdca036e58aa5f9f0f805776f684c54ced42fb99f8d1cdb43bdee4473e23cf",
+        "revisionSha256": "51cdca036e58aa5f9f0f805776f684c54ced42fb99f8d1cdb43bdee4473e23cf"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -3572,8 +3571,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "e8df6eb8e0fa654a170c5c5d65b53e7d86f4588ad2dfac54db3d417d6697c363",
-        "revisionSha256": "e8df6eb8e0fa654a170c5c5d65b53e7d86f4588ad2dfac54db3d417d6697c363"
+        "sha256": "bc95fa7fe37558538fca370a68c0f56df19d4330846b0ecfd6736fcffa5e49f1",
+        "revisionSha256": "bc95fa7fe37558538fca370a68c0f56df19d4330846b0ecfd6736fcffa5e49f1"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -3582,8 +3581,8 @@
       },
       {
         "path": "shared/ds-names.mjs",
-        "sha256": "deaebe05a013e6be10fe8f42015ce71d50794d74aeb119c7daf31ca24bd00102",
-        "revisionSha256": "deaebe05a013e6be10fe8f42015ce71d50794d74aeb119c7daf31ca24bd00102"
+        "sha256": "0f66427d5dddec6d955f22c6c1e1661afec1aa2b181386a22503a9c1902f1d59",
+        "revisionSha256": "0f66427d5dddec6d955f22c6c1e1661afec1aa2b181386a22503a9c1902f1d59"
       },
       {
         "path": "shared/ds-release.mjs",

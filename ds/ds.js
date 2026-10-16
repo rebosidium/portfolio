@@ -6,10 +6,16 @@
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
   document.querySelector('#ds-release-detail').textContent='Design system · '+manifest.designSystem.release+' · Semantic release + automatic source revision';
   document.querySelector('#token-version').textContent='Shared tokens · '+manifest.tokens.version;
-  for(const example of examples){
-    const row=document.createElement('tr');
-    for(const [index,value] of [example.title,versionLabel(example.release),pageNames(example.release.usedBy)].entries()){const cell=document.createElement('td');if(index===0){const link=document.createElement('a');link.href='#component-'+example.id;link.textContent=value;cell.append(link);}else cell.textContent=value;row.append(cell);}
-    document.querySelector('#component-versions').append(row);
+  const specimens=examples.filter(example=>!example.galleryParent);
+  const variantsFor=example=>(example.galleryVariants||[{id:example.id,exampleId:example.id}]).map(variant=>({...variant,example:examples.find(current=>current.id===variant.exampleId)}));
+  for(const example of specimens){
+    const variants=variantsFor(example),row=document.createElement('tr');
+    const name=document.createElement('td'),link=document.createElement('a');
+    link.href='#component-'+example.id;link.textContent=example.title;name.append(link);
+    const versions=document.createElement('td');
+    for(const variant of variants){const line=document.createElement('div');line.textContent=(variant.label?variant.label+' · ':'')+versionLabel(variant.example.release);versions.append(line);}
+    const pages=document.createElement('td');pages.textContent=pageNames([...new Set(variants.flatMap(variant=>variant.example.release.usedBy))]);
+    row.append(name,versions,pages);document.querySelector('#component-versions').append(row);
   }
   const labels=naming.states;
   const tokenName=key=>naming.tokens[key];
@@ -17,7 +23,7 @@
   let mode='desktop';
   let navigationId=0;
   const items=[];
-  document.querySelector('#specimen-count').textContent=`${examples.length} live specimens`;
+  document.querySelector('#specimen-count').textContent=`${specimens.length} live specimens`;
   document.querySelector('#icon-count').textContent=`${icons.length} current icons · ${icons.reduce((count,icon)=>count+icon.variants.length,0)} used variants`;
   for(const icon of icons){
     const card=document.createElement('article');card.className='ds-icon-card';card.dataset.icon=icon.id;
@@ -90,7 +96,7 @@
     item.size.textContent=`${width} × ${height}`;
   }
   function load(item){
-    item.frame.title=`${item.example.title}, ${mode}, ${labels[item.state]||item.state}`;
+    item.frame.title=`${item.base.title}${item.variant.label?' · '+item.variant.label:''}, ${mode}, ${labels[item.state]||item.state}`;
     item.ready=false;item.manualVisible=false;item.instance=String(++navigationId);
     item.frame.src=`/ds/preview.html?component=${encodeURIComponent(item.example.id)}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}&_visit=${encodeURIComponent(visit)}`;
     item.code?.refresh();
@@ -102,7 +108,7 @@
   }
   function updateState(item){
     if(!item.example.inPlaceStates){load(item);return;}
-    item.frame.title=`${item.example.title}, ${mode}, ${labels[item.state]||item.state}`;
+    item.frame.title=`${item.base.title}${item.variant.label?' · '+item.variant.label:''}, ${mode}, ${labels[item.state]||item.state}`;
     item.manualVisible=false;
     resize(item);sendState(item);
     item.code?.refresh();
@@ -123,21 +129,50 @@
     item.switch.replaceChildren();
     item.switch.hidden=!!item.example.liveOnly;
     if(item.example.liveOnly)return;
+    if(item.base.galleryVariants){const label=document.createElement('span');label.className='ds-switch-label';label.textContent='State';item.switch.append(label);}
     for(const state of available){
       const button=document.createElement('button');button.type='button';button.textContent=labels[state]||state;button.dataset.state=state;
       button.setAttribute('aria-pressed',String(item.state===state));
-      button.addEventListener('click',()=>{item.state=state;for(const other of item.switch.children)other.setAttribute('aria-pressed',String(other===button));updateState(item);});
+      button.addEventListener('click',()=>{item.state=state;for(const other of item.switch.querySelectorAll('button'))other.setAttribute('aria-pressed',String(other===button));updateState(item);});
       item.switch.append(button);
     }
   }
-  for(const example of examples){
+  function selectVariant(item,id){
+    const variant=item.variants.find(variant=>variant.id===id);
+    if(!variant||variant===item.variant)return;
+    item.variant=variant;item.example=variant.example;
+    item.card.dataset.activeVariant=variant.id;
+    for(const button of item.variantSwitch.children)if(button.tagName==='BUTTON')button.setAttribute('aria-pressed',String(button.dataset.variant===id));
+    item.card.querySelector('.ds-api-key').textContent=item.example.release.componentKey+(item.example.release.variant?' · '+item.example.release.variant:'');
+    item.card.querySelector('.ds-component-version').textContent=versionLabel(item.example.release);
+    item.card.querySelector('.ds-source').textContent=item.example.source;
+    item.card.querySelector('.ds-preview-meta>p').textContent=item.example.note||'Shared source · working interaction';
+    states(item);load(item);
+  }
+  for(const example of specimens){
+    const variants=variantsFor(example),variant=variants[0],grouped=variants.length>1;
     const card=document.createElement('article');card.className='ds-specimen';card.id='component-'+example.id;card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
-    card.innerHTML=`<div class="ds-specimen-head"><div class="ds-component-heading"><h3>${example.title}</h3><code class="ds-api-key">${example.release.componentKey}${example.release.variant?' · '+example.release.variant:''}</code><p class="ds-component-version">${versionLabel(example.release)}</p></div><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div><div class="ds-state-switch" role="group" aria-label="${example.title} variants and states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
+    if(grouped)card.dataset.activeVariant=variant.id;
+    card.innerHTML=`<div class="ds-specimen-head"><div class="ds-component-heading"><h3>${example.title}</h3><code class="ds-api-key">${example.release.componentKey}${example.release.variant?' · '+example.release.variant:''}</code><p class="ds-component-version">${versionLabel(example.release)}</p></div><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div>${grouped?`<div class="ds-variant-switch ds-state-switch" role="group" aria-label="${example.title} variants"><span class="ds-switch-label">Variant</span></div>`:''}<div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
     document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
-    const item={example,state:example.states[0],switch:card.querySelector('.ds-state-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
-    item.code=window.DSCode?.attach({triggerParent:card.querySelector('.ds-head-actions'),panelParent:card,id:example.id,label:example.title,getContext:()=>({mode,state:item.state})});
+    const item={base:example,example:variant.example,variants,variant,card,state:example.states[0],switch:card.querySelector('.ds-state-switch:not(.ds-variant-switch)'),variantSwitch:card.querySelector('.ds-variant-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
+    if(grouped)for(const variant of variants){
+      const button=document.createElement('button');button.type='button';button.textContent=variant.label;button.dataset.variant=variant.id;button.setAttribute('aria-pressed',String(variant===item.variant));
+      button.addEventListener('click',()=>selectVariant(item,variant.id));item.variantSwitch.append(button);
+    }
+    item.code=window.DSCode?.attach({triggerParent:card.querySelector('.ds-head-actions'),panelParent:card,id:example.id,label:example.title,getContext:()=>({mode,state:item.state,exampleId:item.example.id,variantLabel:item.variant.label})});
     items.push(item);states(item);load(item);
   }
+  // Keep both existing header anchors useful after grouping their gallery cards.
+  function selectLinkedVariant(){
+    const id=location.hash.slice(1).replace(/^component-/,'');
+    const item=items.find(item=>item.base.galleryVariants?.some(variant=>variant.exampleId===id));
+    if(!item)return;
+    selectVariant(item,item.variants.find(variant=>variant.exampleId===id).id);
+    item.card.scrollIntoView({block:'start'});
+  }
+  window.addEventListener('hashchange',selectLinkedVariant);
+  selectLinkedVariant();
   for(const button of document.querySelectorAll('[data-mode]'))button.addEventListener('click',()=>{
     if(mode===button.dataset.mode)return;
     mode=button.dataset.mode;
