@@ -142,6 +142,22 @@
 /* Variants share one specimen; interaction states remain a separate control. */
 .ds-switch-label{align-self:center;padding:6px 8px;font-size:11px;color:var(--ds-color-secondary)}
 
+/* Motion documentation links to real specimens instead of duplicating players. */
+.ds-motion-group{margin-top:32px}.ds-motion-group>h3{font-size:16px;font-weight:600;margin:0 0 14px}
+.ds-motion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ds-motion-card{min-width:0;padding:24px;background:var(--color-canvas);border:1px solid var(--border-subtle);border-radius:12px;scroll-margin-top:24px}
+.ds-motion-card>.ds-label{font-size:10px;letter-spacing:.6px;margin:0 0 10px}
+.ds-motion-card h4{font-size:16px;font-weight:600;line-height:1.5;margin:0 0 10px}
+.ds-motion-card>p:not(.ds-label){font-size:12px;line-height:1.8;margin:12px 0}
+.ds-motion-card .ds-motion-timing{font-weight:600}
+.ds-motion-card details{margin-top:16px;border-top:1px solid var(--border-subtle)}
+.ds-motion-card summary{min-height:44px;padding:12px 0;cursor:pointer;font-size:12px;font-weight:600;--ui-focus-offset:var(--focus-offset-tool)}
+.ds-motion-card dl{font-size:12px;line-height:1.8;margin:0 0 12px}.ds-motion-card dt{font-weight:600;margin-top:12px}.ds-motion-card dd{margin:4px 0 0;color:var(--ds-color-secondary)}
+.ds-motion-card code{display:block;font-size:10px;word-spacing:normal;overflow-wrap:anywhere}
+.ds-motion-links{display:flex;flex-wrap:wrap;gap:8px 20px}.ds-motion-links a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1100px){.ds-motion-grid{grid-template-columns:1fr}}
+@media(max-width:767px){.ds-motion-card{padding:20px}}
+
 .ds-favicon-card h3{margin:0 0 6px;font-size:14px;font-weight:600}
 .ds-favicon-card>p{min-height:44px}
 .ds-favicon-download{display:flex;align-items:center;min-height:44px;margin-top:12px;font-size:12px;overflow-wrap:anywhere}
