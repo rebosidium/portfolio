@@ -1,9 +1,10 @@
 (() => {
   'use strict';
-  // Optional observers never participate in either page's startup promises.
+  // Optional observers never participate in a page's startup promises.
+  const notFound = document.documentElement.dataset.pageKind === 'not-found';
   if (!['dmitryrybalka.com', 'www.dmitryrybalka.com'].includes(location.hostname)
-    || !['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) return;
-  const sitePath = location.pathname.startsWith('/about') ? '/about/' : '/';
+    || (!notFound && !['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname))) return;
+  const sitePath = notFound ? '/404/' : location.pathname.startsWith('/about') ? '/about/' : '/';
   if (window.portfolioAnalytics?.enabled === false) return;
   const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
     && typeof window.posthog?.capture === 'function';
@@ -58,6 +59,17 @@
   mobile.addEventListener?.('change', () => syncContext(context()));
   const placement = target => target.closest('.footer') ? 'footer' : mobile.matches ? 'mobile_menu' : 'desktop_navigation';
   const inputMethod = event => event.detail === 0 ? 'keyboard' : event.pointerType || 'pointer';
+  if (notFound) {
+    const preview = ['/404', '/404/', '/404/index.html', '/404.html'].includes(location.pathname);
+    const errorContext = {requested_path: location.pathname, error_preview: preview, ...(!preview ? {error_code: 404} : {})};
+    if (clarityActive) {tag('error_preview', preview);tag('requested_path', location.pathname.slice(0, 255));}
+    if (!preview) capture('page_not_found', errorContext);
+    document.addEventListener('click', event => {
+      if (event.isTrusted && event.target.closest?.('.not-found-actions .ui-back'))
+        capture('homepage_opened', {...errorContext, placement: 'not_found', input_method: inputMethod(event)}, true);
+    }, true);
+    return;
+  }
   const pendingCopies = new WeakMap();
   document.querySelectorAll('.agent-button').forEach(button => {
     new MutationObserver(() => {

@@ -244,7 +244,8 @@
         }
       ],
       "usedBy": [
-        "/about/"
+        "/about/",
+        "/404/"
       ],
       "name": "Link / Back",
       "displayName": "Link / Back"
@@ -799,7 +800,8 @@
         }
       ],
       "usedBy": [
-        "/about/"
+        "/about/",
+        "/404/"
       ],
       "name": "Heading / Article",
       "displayName": "Heading / Article · With avatar",
@@ -1973,8 +1975,8 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.0.0+b428b00edb7a",
-      "revision": "b428b00edb7a226b8a45fd523330b6821c406ff365ae3930711aa033cca7d445",
+      "version": "1.0.0+75a50b95728d",
+      "revision": "75a50b95728d4113c58bd1182fc1eafb77e36ea56a51f191b5c32a2f7dbc3e5e",
       "markupRevision": "74837c46c30d01458c7dfa88166d4cae72cf159c7e4140978b66ae2c21bdcecb",
       "owners": [
         "shared/reading-page.html",
@@ -2144,8 +2146,8 @@
         {
           "path": "shared/reading-page.html",
           "kind": "markup",
-          "sha256": "c43ee161a6c4ca1ae2919e41e90c47926f3f4e86ccc559167535d9b0ce37cd25",
-          "revisionSha256": "270b9ba06a21be5620b44e3cb020228263027a8a237f6f88f7760c0af5822914"
+          "sha256": "15a4b4de6cebe421eacd77ed669ef0217abbcd6b171c76785aea0485223e587d",
+          "revisionSha256": "e01d06c7c31943e2fa8e12d66e9238f15a8fbbe53d5d6665f9da375f4750a496"
         },
         {
           "path": "shared/site-controls.js",
@@ -2231,7 +2233,8 @@
             }
           ],
           "usedBy": [
-            "/about/"
+            "/about/",
+            "/404/"
           ]
         }
       }
@@ -3499,10 +3502,10 @@
     }
   },
   "designSystem": {
-    "version": "1.7.0",
-    "revision": "cae27bed6328",
-    "release": "1.7.0+cae27bed6328",
-    "updatedAt": "2026-10-16T00:40:35.000Z",
+    "version": "1.8.0",
+    "revision": "aad26f4de1a5",
+    "release": "1.8.0+aad26f4de1a5",
+    "updatedAt": "2026-10-16T01:00:10.000Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -3526,8 +3529,8 @@
       },
       {
         "path": "home/ds/ds.js",
-        "sha256": "060ca14d9ce78b34f6932fd7bc5f9ac22eb8918e2b870baf98fe1e4c12f584ee",
-        "revisionSha256": "060ca14d9ce78b34f6932fd7bc5f9ac22eb8918e2b870baf98fe1e4c12f584ee"
+        "sha256": "5c655a9989d50fc5a339237d5a8ba92958d9f458fabe05a1622105e39ccddc28",
+        "revisionSha256": "5c655a9989d50fc5a339237d5a8ba92958d9f458fabe05a1622105e39ccddc28"
       },
       {
         "path": "home/ds/freshness-worker.js",
@@ -3536,7 +3539,7 @@
       },
       {
         "path": "home/ds/index.html",
-        "revisionSha256": "56fe36790ca87f7645c363d00c4cdab482e4eafe17d812105654eb2c0d66f563",
+        "revisionSha256": "7eb91487afdb5eaf59cc8bdd5c7e21a849f21ea473b4be80cfb088074e56dbb7",
         "hashBasis": "normalized-authored-document"
       },
       {
@@ -3556,8 +3559,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "51cdca036e58aa5f9f0f805776f684c54ced42fb99f8d1cdb43bdee4473e23cf",
-        "revisionSha256": "51cdca036e58aa5f9f0f805776f684c54ced42fb99f8d1cdb43bdee4473e23cf"
+        "sha256": "0f572ac2d467a6c5d3e2422574bb17facd51ac2cbf778eb81af027833dbd0106",
+        "revisionSha256": "0f572ac2d467a6c5d3e2422574bb17facd51ac2cbf778eb81af027833dbd0106"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -3566,13 +3569,13 @@
       },
       {
         "path": "shared/component-registry.mjs",
-        "sha256": "8519aff369da99d221e5c04dd9a639ba334cec44811e0e5da8adefcf90f60e84",
-        "revisionSha256": "8519aff369da99d221e5c04dd9a639ba334cec44811e0e5da8adefcf90f60e84"
+        "sha256": "d840f2029fe38fda5b2b30131dd509c99bc3bb73312f494b11da100487474921",
+        "revisionSha256": "d840f2029fe38fda5b2b30131dd509c99bc3bb73312f494b11da100487474921"
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "bc95fa7fe37558538fca370a68c0f56df19d4330846b0ecfd6736fcffa5e49f1",
-        "revisionSha256": "bc95fa7fe37558538fca370a68c0f56df19d4330846b0ecfd6736fcffa5e49f1"
+        "sha256": "87537c9478ff6869aed86bad1d04d22c944f9311271b05f0237e3648d5315410",
+        "revisionSha256": "87537c9478ff6869aed86bad1d04d22c944f9311271b05f0237e3648d5315410"
       },
       {
         "path": "shared/ds-freshness.js",

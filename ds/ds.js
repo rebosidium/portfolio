@@ -1,7 +1,7 @@
 (async () => {
   if(window.DSFreshness && !await window.DSFreshness.ready)return;
   const {examples,icons,tokens,lineHeightScale,manifest,naming}=window.DS_CATALOG;
-  const pageNames=routes=>routes.map(route=>route==='/'?'Homepage':'About').join(' · ');
+  const pageNames=routes=>routes.map(route=>({'/':'Homepage','/about/':'About','/404/':'404'}[route]||route)).join(' · ');
   const versionLabel=release=>release.version;
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
   document.querySelector('#ds-release-detail').textContent='Design system · '+manifest.designSystem.release+' · Semantic release + automatic source revision';

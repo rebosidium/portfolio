@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="800ebc449798" data-build="3317cdbd1334">
+<html lang="en" data-ui-revision="4cb56c63cc81" data-build="70950284a782">
 <head>
   <meta charset="utf-8">
 <!-- shared:analytics-preferences:start -->
@@ -8,7 +8,7 @@
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
   const routes = ['/', '/index.html', '/about', '/about/', '/about/index.html'];
-  const allowed = hosts.includes(location.hostname) && routes.includes(location.pathname);
+  const allowed = hosts.includes(location.hostname) && (routes.includes(location.pathname) || document.documentElement.dataset.pageKind === 'not-found');
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
   const params = new URLSearchParams(location.search);
@@ -183,7 +183,7 @@
   <script type="module" src="portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=0795e1d2ac6a" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=5e553f897176"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=3d8bbee4289e"></script>
   <script defer src="mobile-nav.js?v=e8652339618f" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
@@ -274,7 +274,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.0.0","designSystem":"1.7.0+cae27bed6328","tokens":"1.0.0+4932ef5429b9","components":{"brief":"1.0.0+74d5919f8699","brief-dark":"1.0.0+ee27c109e1ff","link":"1.0.0+217967bebeb7","footer-link":"1.0.0+f9143187ba32","work-actions":"1.0.0+c840fc790a37","availability":"1.0.0+f27725f1504d","portrait":"1.0.0+db1580973d37","header":"1.0.0+61df52349909","hero":"1.0.0+ede741543fe6","work":"1.0.0+7311c3cdb378","work-section":"1.0.0+8fc1361238e7","footer":"1.0.0+556c3e8c2136"},"revision":"800ebc449798"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.0.0","designSystem":"1.8.0+aad26f4de1a5","tokens":"1.0.0+4932ef5429b9","components":{"brief":"1.0.0+74d5919f8699","brief-dark":"1.0.0+ee27c109e1ff","link":"1.0.0+217967bebeb7","footer-link":"1.0.0+f9143187ba32","work-actions":"1.0.0+c840fc790a37","availability":"1.0.0+f27725f1504d","portrait":"1.0.0+db1580973d37","header":"1.0.0+61df52349909","hero":"1.0.0+ede741543fe6","work":"1.0.0+7311c3cdb378","work-section":"1.0.0+8fc1361238e7","footer":"1.0.0+556c3e8c2136"},"revision":"4cb56c63cc81"}</script>
 </head>
 <body data-node-id="159:729">
   <main class="scene-flow">

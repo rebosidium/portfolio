@@ -1,0 +1,7 @@
+/* Standalone 404 composition. Appearance comes from the shared DS. */
+html .not-found-page .about-main{display:flex;flex-direction:column;justify-content:center;min-height:100svh;padding-block:var(--space-10)}
+.not-found-content{width:var(--width-prose);max-width:100%;margin-inline:auto}
+.not-found-page .about-title-row{display:block;margin-bottom:var(--space-4)}
+.not-found-page .about-title{min-height:0}
+.not-found-page .about-intro{margin-bottom:var(--space-8)}
+.not-found-actions{display:flex;align-items:center}
