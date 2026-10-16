@@ -36,7 +36,7 @@
     if(kind==='foundation')triggerParent.after(panel);
     else if(stage)stage.before(panel);
     else panelParent.append(panel);
-    let data,entry,active=kind==='foundation'?'css':'usage',selected={},request=0,currentCode='';
+    let data,entry,active=kind==='foundation'?'css':kind==='asset'?'html':'usage',selected={},request=0,currentCode='';
     const title=node('h4','ds-code-title',label);
     const context=node('p','ds-code-context');
     const releaseInfo=node('p','ds-code-release');
@@ -59,6 +59,7 @@
     function definition(){
       if(kind==='foundation')return {sources:foundationSources[id].map(([path,label])=>({path,label,group:'styles'})),notes:['These are the current source files. Shared tokens and component styles compile into /assets/site-ui.css; page layouts retain their current responsive rules.']};
       if(kind==='icon')return data.icons[id].variants[variant];
+      if(kind==='asset')return data.assets[id];
       return data.examples[getContext().exampleId||id];
     }
     function choices(section){
@@ -70,7 +71,7 @@
       }
       if(section==='html'){
         const rendered=kind==='icon'?entry.html:entry.htmlByState?.[ctx.state]||(ctx.mode==='mobile'&&entry.htmlMobile)||entry.html;
-        const result=[{id:'rendered',label:kind==='icon'?'Icon markup':'Canonical component markup',language:'html',code:rendered}];
+        const result=[{id:'rendered',label:kind==='asset'?'Document head links':kind==='icon'?'Icon markup':'Canonical component markup',language:'html',code:rendered}];
         if(kind==='icon'&&entry.svgSource?.fragment){
           const fragment=data.fragments[entry.svgSource.fragment];
           result.push({id:'svg-fragment',label:'Original SVG · '+fragment.path,...fragment});
@@ -102,11 +103,11 @@
       instruction.textContent=active==='usage'?entry.usage.instruction:'Exact current source. CSS and JavaScript files may also contain shared rules or page integration; required context is listed below.';
       for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.format===active));
       const ctx=getContext();
-      context.textContent=kind==='example'?`${ctx.variantLabel?ctx.variantLabel+' · ':''}${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${window.DS_CATALOG.naming.states[ctx.state]||ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${window.DS_CATALOG.naming.variants[variant]||variant} variant. Use the surrounding control to provide an accessible name.`:'Current shared source tokens and styles.';
+      context.textContent=kind==='example'?`${ctx.variantLabel?ctx.variantLabel+' · ':''}${ctx.mode==='mobile'?'Mobile':'Desktop'} · ${window.DS_CATALOG.naming.states[ctx.state]||ctx.state}. HTML shows the canonical renderer output; interaction states use the shared styles and runtime.`:kind==='icon'?`Current ${window.DS_CATALOG.naming.variants[variant]||variant} variant. Use the surrounding control to provide an accessible name.`:kind==='asset'?'Current favicon links and the exact published web manifest.':'Current shared source tokens and styles.';
     }
     function render(){
       entry=definition();panel.replaceChildren(body);tabs.replaceChildren();
-      const sections=kind==='foundation'?[['css','CSS']]:[['usage','Use'],['html','HTML'],['css','CSS'],...(entry.sources.some(source=>source.group==='runtime')?[['js','JavaScript']]:[])];
+      const sections=kind==='foundation'?[['css','CSS']]:kind==='asset'?[['html','HTML / Manifest']]:[['usage','Use'],['html','HTML'],['css','CSS'],...(entry.sources.some(source=>source.group==='runtime')?[['js','JavaScript']]:[])];
       for(const [id,label] of sections){
         const tab=node('button',null,label);tab.type='button';tab.dataset.format=id;
         tab.addEventListener('click',()=>{active=id;show();});tabs.append(tab);

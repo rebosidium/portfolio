@@ -128,3 +128,7 @@
 
 /* Variants share one specimen; interaction states remain a separate control. */
 .ds-switch-label{align-self:center;padding:6px 8px;font-size:11px;color:var(--ds-color-secondary)}
+
+.ds-favicon-card h3{margin:0 0 6px;font-size:14px;font-weight:600}
+.ds-favicon-card>p{min-height:44px}
+.ds-favicon-download{display:flex;align-items:center;min-height:44px;margin-top:12px;font-size:12px;overflow-wrap:anywhere}

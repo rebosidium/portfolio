@@ -6,7 +6,7 @@
   --type-small: 16px;
   --type-helper: 14px;
   --type-prompt: 12px;
-  --type-menu-max: 38px;
+  --type-menu-max: 32px;
   /* Closed portfolio line-height scale: 1.15, 1.4, 1.6, 1.8, 2. */
   --line-copy: 1.8;
   --line-prose: 1.8;
@@ -164,7 +164,7 @@ body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);wid
 .header.menu-open>.identity{position:absolute;left:var(--menu-identity-left,0px);top:var(--menu-identity-top,8px);opacity:var(--menu-identity-opacity,1)!important;transform:scale(var(--menu-identity-scale,1))!important;transform-origin:top left}
 .header.menu-open .menu-toggle{position:absolute;top:var(--menu-toggle-top,0px);right:var(--menu-toggle-right,0px);width:var(--menu-toggle-width,var(--size-target));height:var(--menu-toggle-height,var(--size-target));margin:0;transform:none!important;z-index:3}
 .header.menu-open .menu-glyph{width:calc(28px * var(--menu-icon-scale,1));height:calc(28px * var(--menu-icon-scale,1))}
-.header nav a{display:flex;align-items:center;justify-content:center;min-height:64px;padding:var(--space-2) var(--space-4);font-size:clamp(32px,10vw,var(--type-menu-max));line-height:var(--line-menu);text-align:center}
+.header nav a{display:flex;align-items:center;justify-content:center;min-height:64px;padding:var(--space-2) var(--space-4);font-size:var(--type-menu-max);line-height:var(--line-menu);text-align:center}
 .header nav a.mobile-only{display:flex}
 .header nav a::after{display:none}
 .header nav a{--ui-focus-offset:0px;--ui-focus-radius:var(--radius-control)}

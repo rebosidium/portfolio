@@ -1,6 +1,6 @@
 (async () => {
   if(window.DSFreshness && !await window.DSFreshness.ready)return;
-  const {examples,icons,tokens,lineHeightScale,manifest,naming}=window.DS_CATALOG;
+  const {examples,icons,favicons,tokens,lineHeightScale,manifest,naming}=window.DS_CATALOG;
   const pageNames=routes=>routes.map(route=>({'/':'Homepage','/about/':'About','/404/':'404'}[route]||route)).join(' · ');
   const versionLabel=release=>release.version;
   document.querySelector('#library-contract').textContent='API contract '+manifest.contractVersion;
@@ -38,6 +38,15 @@
       kind:'icon',id:icon.id,variant:variant.id,label:icon.name+' · '+iconVariant(variant.id)
     });
   }
+  for(const asset of favicons.files){
+    const card=document.createElement('article');card.className='ds-icon-card ds-favicon-card';
+    const previewSize=Math.min(asset.size,64);
+    card.innerHTML=`<h3>${asset.name}</h3><p>${asset.format} · ${asset.format==='ICO'?'16 / 32 / 48 px':asset.size+' × '+asset.size+' px'}<br>${asset.usage}</p><div class="ds-icon-variants">${['light','dark'].map(theme=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${theme}"><img src="${asset.url}" width="${previewSize}" height="${previewSize}" alt="${asset.name}, ${theme} background" loading="lazy" decoding="async"></div><span>${theme==='light'?'Light':'Dark'} background · ${previewSize} px preview</span></div>`).join('')}</div><a class="ds-favicon-download" href="${asset.url}" download="${asset.file}">Download ${asset.file}</a>`;
+    document.querySelector('#favicon-grid').append(card);
+  }
+  const manifestLink=document.querySelector('#favicon-manifest');manifestLink.href=favicons.manifest;
+  const faviconSection=document.querySelector('#favicon');
+  window.DSCode?.attach({triggerParent:faviconSection.querySelector('.ds-section-heading'),panelParent:faviconSection,kind:'asset',id:'favicon',label:'Favicon'});
   for(const [id,label] of [['palette','Palette'],['typography','Typography'],['layout','Layout & spacing']]){
     const section=document.querySelector('#'+id);
     window.DSCode?.attach({triggerParent:section.querySelector('.ds-section-heading'),panelParent:section,kind:'foundation',id,label});
