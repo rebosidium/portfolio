@@ -29,28 +29,23 @@
   --color-inverse-muted: #A5A5A5;
   --border-subtle: #E0E0E0;
   --border-inverse: #6A6A6B;
-  --color-muted: #848686;
+  --color-muted: #7F8182;
   --color-disabled: #A7A8A7;
   --color-hover: #F7F7F6;
   --color-pressed: #EFF0ED;
-  --border-strong: #CCCCCC;
   --color-inverse-hover: #2B2B2C;
   --color-inverse-pressed: #2F2F31;
-  --border-inverse-hover: #8E8E8F;
-  /* Opaque equivalents on the actual surfaces; keep context-specific colors. */
+  /* Opaque HEX; secondary text is shared on canvas and subtle surfaces. */
   --color-work-placeholder: #E5E5E7;
-  --color-muted-on-surface: #7F8182;
   --color-muted-on-placeholder: #77797A;
   --color-disabled-on-surface: #A1A2A2;
   --border-subtle-on-surface: #D8D8D9;
   --border-subtle-on-inverse: #1A1A1B;
-  --border-subtle-on-hover: #D9D9D8;
   --border-control-hover: #C6C6C5;
   --border-control-pressed: #D2D3D1;
   --border-control-hover-pressed: #BFC0BE;
   --border-inverse-control-hover: #959596;
   --border-inverse-control-pressed: #767677;
-  --border-inverse-control-hover-pressed: #979798;
   --width-page: 944px;
   --width-prose: 624px;
   --width-mobile: 600px;
@@ -212,7 +207,7 @@ html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:var(--size-tar
 .footer-link-label{--link-underline-color:var(--border-inverse)}
 .footer-links a:is(:focus-visible,[data-ui-state="focus"]) .footer-link-label::after{transform:scaleX(1);transform-origin:left}
 .footer-agent{display:flex;flex-direction:column;align-items:center;gap:var(--space-4);width:100%;color:var(--color-canvas)}
-.footer-agent-button{--agent-hover-background:var(--color-inverse-hover);--agent-hover-border:var(--border-inverse-control-hover);--agent-pressed-background:var(--color-inverse-pressed);--agent-pressed-border:var(--border-inverse-control-pressed);--agent-hover-pressed-border:var(--border-inverse-control-hover-pressed);align-self:center;height:var(--height-control-spacious);margin:0;padding:10px var(--space-6);border-color:var(--border-inverse);color:var(--color-canvas)}
+.footer-agent-button{--agent-hover-background:var(--color-inverse-hover);--agent-hover-border:var(--border-inverse-control-hover);--agent-pressed-background:var(--color-inverse-pressed);--agent-pressed-border:var(--border-inverse-control-pressed);--agent-hover-pressed-border:var(--border-inverse-control-hover);align-self:center;height:var(--height-control-spacious);margin:0;padding:10px var(--space-6);border-color:var(--border-inverse);color:var(--color-canvas)}
 .footer-logo-copilot{position:relative;display:block;flex:none;width:24px;height:24px}
 .footer-logo-copilot img{position:absolute;left:.9672px;top:.9864px}
 .footer-agent .agent-copy-fallback{--brief-muted:var(--color-inverse-muted);--brief-field-border:var(--border-inverse)}

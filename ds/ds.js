@@ -88,29 +88,27 @@
       ['color-hover'],['color-pressed'],['color-inverse-hover'],['color-inverse-pressed']
     ]},
     {title:'Text',kind:'text',items:[
-      ['color-ink'],['color-muted'],['color-muted-on-surface','color-surface'],
+      ['color-ink'],['color-muted','color-canvas',`On ${tokens['color-canvas']} and ${tokens['color-surface']}`],
       ['color-muted-on-placeholder','color-work-placeholder'],['color-inverse-muted','color-inverse'],
       ['color-disabled'],['color-disabled-on-surface','color-surface']
     ]},
     {title:'Borders',kind:'border',items:[
-      ['border-subtle'],['border-subtle-on-surface','color-surface'],
-      ['border-subtle-on-inverse','color-inverse'],['border-strong'],
-      ['border-inverse','color-inverse'],['border-inverse-hover','color-inverse'],
-      ['border-subtle-on-hover','color-hover']
+      ['border-subtle'],['border-subtle-on-surface','color-surface',`On ${tokens['color-surface']}; DS tool hover on ${tokens['color-hover']}`],
+      ['border-subtle-on-inverse','color-inverse'],
+      ['border-inverse','color-inverse']
     ]},
     {title:'Control borders',kind:'border',items:[
       ['border-control-hover','color-hover'],['border-control-pressed','color-pressed'],
       ['border-control-hover-pressed','color-pressed'],
-      ['border-inverse-control-hover','color-inverse-hover'],
-      ['border-inverse-control-pressed','color-inverse-pressed'],
-      ['border-inverse-control-hover-pressed','color-inverse-pressed']
+      ['border-inverse-control-hover','color-inverse-hover',`Hover on ${tokens['color-inverse-hover']}; hover + pressed on ${tokens['color-inverse-pressed']}`],
+      ['border-inverse-control-pressed','color-inverse-pressed']
     ]}
   ];
   document.querySelector('#palette-grid').innerHTML=paletteGroups.map(({title,kind='fill',items})=>{
-    const cards=items.map(([key,surface='color-canvas'])=>{
+    const cards=items.map(([key,surface='color-canvas',usage])=>{
       const background=kind==='fill'?key:surface;
       const sample=kind==='text'?'Aa':kind==='border'?'<span></span>':'';
-      const context=kind==='fill'?'Solid fill':`On ${tokens[surface]}`;
+      const context=usage||(kind==='fill'?'Solid fill':`On ${tokens[surface]}`);
       return `<article class="ds-color" id="token-${key}" data-color-token="${key}"><div class="ds-color-swatch" data-kind="${kind}" style="background:var(--${background});--ds-sample-color:var(--${key})" aria-hidden="true">${sample}</div><div class="ds-color-info"><strong>${tokenName(key)}</strong><span class="ds-color-value">${tokens[key]}</span><code>--${key}</code><span class="ds-color-context">${context}</span></div></article>`;
     }).join('');
     return `<div class="ds-palette-group"><h3>${title}</h3><div class="ds-palette">${cards}</div></div>`;
