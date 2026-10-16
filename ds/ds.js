@@ -182,6 +182,56 @@
   }
   window.addEventListener('hashchange',selectLinkedVariant);
   selectLinkedVariant();
+  for(const link of document.querySelectorAll('[data-code-recipe]'))link.addEventListener('click',async()=>{
+    const item=items.find(item=>item.example.id===link.dataset.codeRecipe);
+    if(!item?.code)return;
+    await item.code.openUsage();
+    const panel=item.card.querySelector('.ds-code-panel');
+    panel.scrollIntoView({block:'start'});
+    panel.querySelector('[data-format="usage"]')?.focus({preventScroll:true});
+  });
+
+  // One location marker for anchor navigation, scrolling and expanding content.
+  const sectionLinks=[...document.querySelectorAll('.ds-sidebar nav a')];
+  const sections=sectionLinks.map(link=>document.querySelector(link.getAttribute('href')));
+  const sectionNavigation=document.querySelector('#library-sections');
+  const contentsLink=document.querySelector('.ds-contents-link');
+  let sectionFrame=0;
+  function updateSection(){
+    sectionFrame=0;
+    const marker=Math.min(innerHeight*.2,140);
+    let current=0;
+    sections.forEach((section,index)=>{if(section.getBoundingClientRect().top<=marker)current=index;});
+    if(scrollY+innerHeight>=document.documentElement.scrollHeight-2)current=sections.length-1;
+    sectionLinks.forEach((link,index)=>{
+      if(index===current)link.setAttribute('aria-current','location');
+      else link.removeAttribute('aria-current');
+    });
+    contentsLink.hidden=innerWidth>767||sectionNavigation.getBoundingClientRect().bottom>=0;
+  }
+  function scheduleSection(){if(!sectionFrame)sectionFrame=requestAnimationFrame(updateSection);}
+  window.addEventListener('scroll',scheduleSection,{passive:true});
+  window.addEventListener('resize',scheduleSection,{passive:true});
+  window.addEventListener('hashchange',scheduleSection);
+  window.addEventListener('pageshow',scheduleSection);
+  new ResizeObserver(scheduleSection).observe(document.querySelector('.ds-main'));
+  updateSection();
+
+  const table=document.querySelector('.ds-platform-table-wrap');
+  const tableSurface=table.parentElement;
+  const scrollHint=document.querySelector('#technical-scroll-hint');
+  function updateTableScroll(){
+    const overflow=table.scrollWidth-table.clientWidth>1;
+    scrollHint.hidden=!overflow;
+    if(overflow)table.setAttribute('aria-describedby',scrollHint.id);
+    else table.removeAttribute('aria-describedby');
+    tableSurface.classList.toggle('has-more-left',overflow&&table.scrollLeft>1);
+    tableSurface.classList.toggle('has-more-right',overflow&&table.scrollLeft+table.clientWidth<table.scrollWidth-1);
+  }
+  table.addEventListener('scroll',updateTableScroll,{passive:true});
+  new ResizeObserver(updateTableScroll).observe(table);
+  document.fonts.ready.then(updateTableScroll);
+  updateTableScroll();
   for(const button of document.querySelectorAll('[data-mode]'))button.addEventListener('click',()=>{
     if(mode===button.dataset.mode)return;
     mode=button.dataset.mode;

@@ -5,6 +5,19 @@
 .ds-platform-table thead th:first-child{width:18%}.ds-platform-table th{font-weight:600}
 .ds-platform-table tbody th span{font-weight:500;color:var(--ds-color-secondary)}
 .ds-platform-table-wrap:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:var(--focus-offset-tool)}
+.ds-platform-scroll{position:relative;isolation:isolate}
+.ds-platform-scroll::before,.ds-platform-scroll::after{content:"";position:absolute;z-index:1;top:1px;bottom:1px;width:24px;pointer-events:none;border-radius:12px;opacity:0}
+.ds-platform-scroll::before{left:1px;background:linear-gradient(to right,var(--color-canvas),transparent)}
+.ds-platform-scroll::after{right:1px;background:linear-gradient(to left,var(--color-canvas),transparent)}
+.ds-platform-scroll.has-more-left::before,.ds-platform-scroll.has-more-right::after{opacity:1}
+.ds-scroll-hint{font-size:12px;line-height:1.8;color:var(--ds-color-secondary);margin:0 0 12px}
+.ds-scroll-hint[hidden]{display:none}
+.ds-project-checklist{padding-left:22px}.ds-project-checklist li+li{margin-top:12px}
+.ds-project-checklist a{text-decoration:underline;text-underline-offset:3px}
+.ds-sidebar nav a[aria-current="location"]{color:var(--color-ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.ds-sidebar nav a:not([aria-current]){color:var(--ds-color-secondary)}
+.ds-contents-link{display:none}
+@media(max-width:767px){.ds-contents-link:not([hidden]){position:fixed;z-index:12;right:20px;bottom:max(20px,env(safe-area-inset-bottom));display:flex;align-items:center;min-height:44px;padding:10px 16px;background:var(--color-canvas);border:1px solid var(--border-subtle);text-decoration:none}}
 .ds-platform-notes{padding-left:20px;font-size:13px;line-height:1.8}.ds-platform-notes li+li{margin-top:12px}
 .ds-platform-notes code{overflow-wrap:anywhere}.ds-platform-sources{margin-top:20px}
 /* Shared local foundations for the DS showcase; each group keeps its layout and states. */

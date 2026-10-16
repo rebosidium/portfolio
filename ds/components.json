@@ -3628,6 +3628,8 @@
       "playback": "Runs once per page load. Desktop reveals the poster and copy before the portrait turn buffer; mobile waits for prepared portrait frames. Leaving the tab settles the entrance.",
       "reduced": "Show the final content immediately. Missing GSAP or failed portrait preparation keeps the page readable.",
       "component": "hero",
+      "live": "/",
+      "preview": "The component preview is static. Open the live homepage to see its page entrance.",
       "sources": [
         {
           "path": "home/app.js",
@@ -3646,7 +3648,7 @@
       "name": "Entrance / Reading content",
       "usage": "About · 404 · reusable reading page",
       "trigger": "First paint, then each prepared block as it enters the viewport.",
-      "timing": "1.1s · .24s step",
+      "timing": "1100 ms · 240 ms step",
       "motion": "Fade 0 → 1 and rise 8px using cubic-bezier(.37,0,.63,1). The title leads the intro paragraphs. Blocks enter in reading order with one shared step; newly visible batches continue the sequence behind first-paint blocks.",
       "playback": "Reading-page blocks appear once. Reverse scrolling does not replay them. Hash navigation, keyboard focus and history restoration expose the relevant text immediately. The 404 page reuses the CSS entrance for its title and copy at first paint.",
       "reduced": "All reading content is visible without entrance animation. CSS first paint and the optional observer preserve readable content if JavaScript is unavailable.",
@@ -3710,6 +3712,8 @@
       "playback": "Decode and actual visibility gate the preview. A fast jump restores an image already passed so copy can continue. Returning all the way to the intro resets HOME reveals; ordinary card-to-card reverse scrolling keeps revealed content.",
       "reduced": "Readable cards in normal flow; no reveal or overlapping scene animation. Image errors expose the existing Preview unavailable state.",
       "component": "work",
+      "live": "/#selected-works",
+      "preview": "The component preview shows the artwork and content. The live homepage runs the scroll-triggered entrance.",
       "sources": [
         {
           "path": "home/app.js",
@@ -3759,7 +3763,7 @@
       "name": "Control / Surface feedback",
       "usage": "AI brief · Back · shared pill frame",
       "trigger": "Hover or press an enabled control.",
-      "timing": ".18s · ease",
+      "timing": "180 ms · ease",
       "motion": "Background and border colors transition within the fixed control frame; control dimensions stay stable. Disabled More Details and the Manual copy heading do not animate on activation.",
       "playback": "Reverses to the default colors when hover/press ends. Manual copy keeps the existing heading and native logos mounted.",
       "reduced": "Brief and Back feedback changes immediately; disabled states remain static.",
@@ -3785,7 +3789,7 @@
       "name": "Link / Underline",
       "usage": "Desktop navigation · footer contacts",
       "trigger": "Hover a link; keyboard focus also reveals the header underline.",
-      "timing": ".3s · shared ease-out",
+      "timing": "300 ms · shared ease-out",
       "motion": "The 1 px line scales horizontally from 0 → 1 using cubic-bezier(.22,1,.36,1). It follows the label width; the transform origin switches to make entry and exit directional.",
       "playback": "Reverses on pointer leave. Mobile menu links have their own presentation; footer hover is limited to hover-capable fine pointers. Keyboard focus uses the shared outline.",
       "reduced": "The underline changes immediately.",
@@ -3975,10 +3979,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.16.0",
-    "revision": "219f7a35bcb7",
-    "release": "1.16.0+219f7a35bcb7",
-    "updatedAt": "2026-10-16T01:46:41.000Z",
+    "version": "1.17.0",
+    "revision": "6a0a826fac20",
+    "release": "1.17.0+6a0a826fac20",
+    "updatedAt": "2026-10-16T02:04:07.071Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -3992,18 +3996,18 @@
       },
       {
         "path": "home/ds/code-viewer.js",
-        "sha256": "3036d39ef9f104761365d4b5bf4c0036a5eae2cf12a1621c6c2799b2f3331e00",
-        "revisionSha256": "3036d39ef9f104761365d4b5bf4c0036a5eae2cf12a1621c6c2799b2f3331e00"
+        "sha256": "72c693443319e326d3f86c51e058f06fa06cf71b71ac27d9a702b2489ef16666",
+        "revisionSha256": "72c693443319e326d3f86c51e058f06fa06cf71b71ac27d9a702b2489ef16666"
       },
       {
         "path": "home/ds/ds.css",
-        "sha256": "0f7f8870c4c318f6251a910182d629dadf9f05d783aad3537d69ae2d31d61c7a",
-        "revisionSha256": "0f7f8870c4c318f6251a910182d629dadf9f05d783aad3537d69ae2d31d61c7a"
+        "sha256": "4cc6b4aca980d9b581416c5f22e5ffc8081bc78d341b67eb7a50cf923d36082b",
+        "revisionSha256": "4cc6b4aca980d9b581416c5f22e5ffc8081bc78d341b67eb7a50cf923d36082b"
       },
       {
         "path": "home/ds/ds.js",
-        "sha256": "1546ec37f1cafe7b86d47fcd70fb65d1736fc8bc4be889fb2bd49fd2f3ce48b8",
-        "revisionSha256": "1546ec37f1cafe7b86d47fcd70fb65d1736fc8bc4be889fb2bd49fd2f3ce48b8"
+        "sha256": "ef6f05b11e48788d151ab7b9c0e370c5b49e7cba0ef95524e64ed95be57cecfc",
+        "revisionSha256": "ef6f05b11e48788d151ab7b9c0e370c5b49e7cba0ef95524e64ed95be57cecfc"
       },
       {
         "path": "home/ds/freshness-worker.js",
@@ -4012,7 +4016,7 @@
       },
       {
         "path": "home/ds/index.html",
-        "revisionSha256": "1284a96517fe1a8d2a8accac6a7869c22d32292b6250c69db71b91d773ae9b38",
+        "revisionSha256": "ab281505a058e45468b7e7c108f6d879d9ee167644d64bb3537b431c4ebab21a",
         "hashBasis": "normalized-authored-document"
       },
       {
@@ -4047,8 +4051,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "aab1632d2bf4ff6d963baa4880c627c3f0e181785e837454e0f690bc9be8d5f0",
-        "revisionSha256": "aab1632d2bf4ff6d963baa4880c627c3f0e181785e837454e0f690bc9be8d5f0"
+        "sha256": "82c6cc7a5425055bc7b428c78a7346aae8936e690041601e104dbe2d853414b9",
+        "revisionSha256": "82c6cc7a5425055bc7b428c78a7346aae8936e690041601e104dbe2d853414b9"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -4067,8 +4071,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "4c0a49285510590201fecd399c23c53c3e049e9a7b218cba217dcbee53d32a76",
-        "revisionSha256": "4c0a49285510590201fecd399c23c53c3e049e9a7b218cba217dcbee53d32a76"
+        "sha256": "5f8f3308975076621de452582008de76e8bf3eb0979e9aadb24296c6f174db7b",
+        "revisionSha256": "5f8f3308975076621de452582008de76e8bf3eb0979e9aadb24296c6f174db7b"
       }
     ]
   }

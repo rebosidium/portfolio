@@ -161,7 +161,7 @@
         status.textContent='Code selected. Copy it with ⌘C or Ctrl+C.';
       }
     });
-    return {refresh(){if(data&&!panel.hidden)render();}};
+    return {openUsage(){active='usage';return open();},refresh(){if(data&&!panel.hidden)render();}};
   }
   window.DSCode={attach};
 })();
