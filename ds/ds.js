@@ -61,7 +61,7 @@
   updateTypeMetrics();
   document.fonts.ready.then(updateTypeMetrics);
   window.addEventListener('resize',updateTypeMetrics,{passive:true});
-  for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','overlap-recede','overlap-flatten-start','ease-out']){
+  for(const name of ['width-brief','height-brief-field','gap-brief-manual','height-control','height-control-spacious','size-target','focus-width','focus-offset-control','focus-offset-link','focus-offset-field','focus-offset-tool','radius-focus-link','duration-control','duration-underline','duration-reading-reveal','delay-reading-step','offset-reading-reveal','overlap-recede','overlap-flatten-start','ease-out']){
     const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');term.textContent=tokenName(name);value.textContent=tokens[name]+' · --'+name;item.append(term,value);document.querySelector('#layout-tokens').append(item);
   }
   const colors=['color-canvas','color-ink','color-surface','color-placeholder','color-inverse'];

@@ -34,7 +34,7 @@
     button.classList.toggle('is-copied',state==='copied');
     wrapper.querySelector('.agent-copy-fallback').hidden=state!=='manual-copy';
     if(state==='copied')wrapper.querySelector('[role="status"]').textContent='Prompt copied. Paste it into your AI chat.';
-    if(state==='manual-copy')wrapper.querySelector('[role="status"]').textContent='Select and copy the prompt below, then paste it into your AI chat.';
+    if(state==='manual-copy')wrapper.querySelector('[role="status"]').textContent='Copy the selected prompt below, then paste it into your AI chat.';
     // Commit the chosen static label before restoring normal native click fades.
     labels.forEach(label=>{void getComputedStyle(label).opacity;});
     labels.forEach((label,index)=>{if(transitions[index])label.style.transition=transitions[index];else label.style.removeProperty('transition');});

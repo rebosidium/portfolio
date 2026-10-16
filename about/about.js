@@ -4,9 +4,54 @@
   const page=document.querySelector('.about-page');
   const main=page?.querySelector('.about-main');
   const footer=page?.querySelector('.footer');
-  if(!main||!footer||!CSS.supports('position','sticky'))return;
+  if(!main)return;
   const root=document.documentElement;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const still=()=>reduced.matches||page.matches('.ds-preview[data-state="reduced-motion"]');
+  // CSS handles the first paint. Only prepare blocks still below the viewport:
+  // a late script must never hide text the visitor has already started reading.
+  const revealTargets=[...main.querySelectorAll('.about-title-row,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *')];
+  if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
+  if(!still()&&typeof IntersectionObserver==='function'){
+    let observer;
+    const show=target=>{
+      target.dataset.readingReveal='shown';
+      target.style.removeProperty('--reading-reveal-delay');
+      observer?.unobserve(target);
+    };
+    const showAll=()=>{observer?.disconnect();revealTargets.forEach(show);};
+    const showHash=()=>{
+      let id;try{id=decodeURIComponent(location.hash.slice(1));}catch(_){return;}
+      const anchor=document.getElementById(id);
+      revealTargets.filter(target=>target===anchor||target.contains(anchor)).forEach(show);
+    };
+    try{
+      observer=new IntersectionObserver(entries=>{
+        const entering=entries.filter(entry=>entry.isIntersecting&&entry.target.dataset.readingReveal==='pending');
+        entering.forEach(({target},index)=>{
+          observer.unobserve(target);
+          target.style.setProperty('--reading-reveal-delay',`calc(var(--delay-reading-step) * ${Math.min(index,2)})`);
+          target.dataset.readingReveal='entering';
+        });
+      },{threshold:0,rootMargin:'0px 0px -24px 0px'});
+      revealTargets.forEach(target=>{
+        if(target.getBoundingClientRect().top>=window.innerHeight){
+          target.dataset.readingReveal='pending';observer.observe(target);
+        }else if(window.scrollY>0)show(target);
+      });
+      main.addEventListener('animationend',event=>{
+        if(event.animationName==='reading-content-enter'&&revealTargets.includes(event.target))show(event.target);
+      });
+      main.addEventListener('focusin',event=>{
+        revealTargets.filter(target=>target.contains(event.target)).forEach(show);
+      });
+      window.addEventListener('hashchange',showHash);
+      window.addEventListener('pagehide',showAll);
+      reduced.addEventListener('change',()=>{if(still())showAll();});
+      showHash();
+    }catch(_){showAll();} // Optional motion must never leave content hidden.
+  }
+  if(!footer||!CSS.supports('position','sticky'))return;
   // Match HOME's shared footer pose without reading computed styles per frame.
   const footerStyle=getComputedStyle(footer);
   const poseNumber=(name,fallback)=>{
@@ -24,7 +69,7 @@
   function paint(){
     frame=0;
     if(root.classList.contains('mobile-menu-open')||document.hidden)return;
-    if(reduced.matches){
+    if(still()){
       page.classList.remove('reading-footer-overlap');
       main.style.removeProperty('opacity');main.style.removeProperty('transform');
       footer.style.removeProperty('--footer-radius');
@@ -57,7 +102,7 @@
   window.addEventListener('resize',()=>schedule(true),{passive:true});
   window.addEventListener('pageshow',()=>schedule(true));
   main.addEventListener('focusin',event=>{
-    if(reduced.matches||root.classList.contains('mobile-menu-open'))return;
+    if(still()||root.classList.contains('mobile-menu-open'))return;
     const cover=Number(page.dataset.readingFooterProgress)||0;
     if(!cover)return;
     const target=event.target.getBoundingClientRect();

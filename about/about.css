@@ -18,6 +18,17 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .about-sections{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections section{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections h2{display:flex;align-items:center;min-height:60px;margin:0}
+/* First-paint entrance works without JavaScript. The reading runtime only
+   postpones blocks that have not yet reached the viewport. Layout stays fixed. */
+@keyframes reading-content-enter{from{opacity:0;transform:translateY(var(--offset-reading-reveal))}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .about-main :where(.about-title-row,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *){animation:reading-content-enter var(--duration-reading-reveal) var(--ease-out) var(--reading-reveal-delay,0s) backwards}
+  .about-intro > p{--reading-reveal-delay:var(--delay-reading-step)}
+  .about-intro > p + p{--reading-reveal-delay:calc(var(--delay-reading-step) * 2)}
+  .about-main [data-reading-reveal="pending"]{animation:none;opacity:0;transform:translateY(var(--offset-reading-reveal))}
+  .about-main [data-reading-reveal="shown"]{animation:none}
+}
+.ds-preview[data-state="reduced-motion"] .about-main :is(.about-title-row,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *){animation:none;opacity:1;transform:none}
 @media(max-width:983px) and (min-width:768px) and (pointer:fine){
   .about-main{width:calc(100% - var(--gutter-page) * 2)}
   .about-title-row{grid-template-columns:120px minmax(0,1fr);gap:var(--space-10)}

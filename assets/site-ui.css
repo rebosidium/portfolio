@@ -68,6 +68,9 @@
   --radius-focus-link: 2px;
   --duration-control: .18s;
   --duration-underline: .3s;
+  --duration-reading-reveal: .65s;
+  --delay-reading-step: .08s;
+  --offset-reading-reveal: 12px;
   --overlap-recede: .025;
   --overlap-flatten-start: .75;
   --ease-out: cubic-bezier(.22,1,.36,1);
@@ -135,7 +138,7 @@ a{color:inherit;text-decoration:none}
 .work-details:is(:active,[data-ui-state="pressed"]){background:var(--color-pressed)}
 /* Manual copy uses the same mounted header/icons, with the compact Figma field. */
 [data-agent-control].is-manual-copy{align-items:flex-start;gap:var(--gap-brief-manual);width:min(var(--width-brief),100%);max-width:100%}
-[data-agent-control].is-manual-copy>.agent-button{position:relative;align-self:flex-start;height:auto;min-height:0;margin:0;padding:0;border:0;border-radius:var(--radius-field);background:transparent;line-height:var(--line-prose);cursor:default;opacity:1;-webkit-text-fill-color:currentColor}
+[data-agent-control].is-manual-copy>.agent-button{position:relative;align-self:flex-start;height:auto;min-height:0;margin:0;padding:0;border:0;border-radius:var(--radius-field);background:transparent;cursor:default;opacity:1;-webkit-text-fill-color:currentColor}
 .is-manual-copy .agent-button--light .agent-button-logos>img:nth-child(4){order:1}
 .agent-copy-fallback{--brief-muted:var(--color-muted);--brief-field-border:var(--border-subtle);display:flex;flex-direction:column;gap:var(--gap-brief-manual);width:100%;font-size:var(--type-helper);font-weight:var(--weight-body);line-height:var(--line-helper);letter-spacing:normal;color:var(--brief-muted)}
 .agent-copy-fallback[hidden]{display:none}

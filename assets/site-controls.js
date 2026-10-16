@@ -32,7 +32,7 @@
     const promptField = manualCopy.querySelector('textarea');
     const copyLabel = agentButton.getAttribute('aria-label');
     promptField.value = agentPrompt;
-    let promptWidth = 0;
+    let promptWidth = 0,manualWasVisible = false;
     function fitManualPrompt() {
       if (manualCopy.hidden) return;
       promptWidth = promptField.clientWidth;
@@ -43,6 +43,8 @@
     }
     function syncManualCopy() {
       const manualVisible = !manualCopy.hidden;
+      const manualOpened = manualVisible && !manualWasVisible;
+      manualWasVisible = manualVisible;
       control.classList.toggle('is-manual-copy',manualVisible);
       // Keep the prepared logo nodes mounted, but make this compact header
       // genuinely non-interactive while the user selects the prompt below.
@@ -50,6 +52,12 @@
       agentButton.setAttribute('aria-label',manualVisible ? 'Brief your AI' : copyLabel);
       if (manualCopy.hidden) promptField.style.removeProperty('height');
       else fitManualPrompt();
+      // Select once when Manual copy opens, including the DS state picker.
+      // Resizing and later focus changes must preserve the user's selection.
+      if (manualOpened) {
+        promptField.focus({preventScroll:true});
+        promptField.select();
+      }
     }
     new MutationObserver(syncManualCopy).observe(manualCopy,{attributes:true,attributeFilter:['hidden']});
     if (typeof ResizeObserver === 'function') new ResizeObserver(() => {
@@ -125,9 +133,7 @@
         agentButton.classList.remove('is-copied');
         manualCopy.hidden = false;
         syncManualCopy();
-        agentStatus.textContent = 'Select and copy the prompt below, then paste it into your AI chat.';
-        promptField.focus({preventScroll:true});
-        promptField.select();
+        agentStatus.textContent = 'Copy the selected prompt below, then paste it into your AI chat.';
         if(control.closest('.footer'))promptField.scrollIntoView({block:'nearest',inline:'nearest'});
       }
       agentButton.setAttribute('aria-busy','false');
