@@ -11,6 +11,7 @@
   let controlsReady=false;
   document.body.dataset.kind=example.kind;document.body.dataset.state=state;
   if(example.kind.includes('about-page'))document.body.classList.add('about-page');
+  if(example.id==='not-found-page')document.body.classList.add('not-found-page');
   const previewRoot=document.querySelector('#preview-root');
   const markup=example.htmlByState?.[state]||(mobile&&example.htmlMobile?example.htmlMobile:example.html);
   if(window.DSAssets){previewRoot.append(window.DSAssets.stage(markup,'.agent-button img'));window.DSAssets.prepare(previewRoot);}
@@ -69,11 +70,11 @@
   }
   if(state==='hover'&&example.group==='template')document.querySelector('.header nav a')?.setAttribute('data-ui-state','hover');
   function script(src,done){const node=document.createElement('script');node.src=src;node.onload=done;document.body.append(node);}
-  script(window.DS_CATALOG.scripts.controls,()=>{
+  if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.controls,()=>{
     if(example.inPlaceStates){controlsReady=true;applyBriefState(state);notify('portfolio:ds-ready');}
   });
   if(example.id==='reading-page')script(window.DS_CATALOG.scripts.reading);
   if(document.querySelector('.menu-toggle'))script(window.DS_CATALOG.scripts.navigation,()=>{if(state==='open')document.querySelector('.menu-toggle').click();});
   document.documentElement.dataset.contentReadyAt=performance.now().toFixed(1);
-  script(window.DS_CATALOG.scripts.resume);
+  if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.resume);
 })();
