@@ -4,6 +4,7 @@
   const page=document.querySelector('.about-page');
   const main=page?.querySelector('.about-main');
   const footer=page?.querySelector('.footer');
+  const footerTitle=footer?.querySelector('h2');
   if(!main)return;
   const root=document.documentElement;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -81,7 +82,7 @@
   const probe=document.createElement('div');
   probe.className='reading-viewport-probe';probe.setAttribute('aria-hidden','true');
   page.append(probe);
-  let viewport=0,footerStart=0,frame=0,measurePending=true;
+  let viewport=0,footerStart=0,overlapTravel=1,frame=0,measurePending=true;
   const clamp=value=>Math.max(0,Math.min(1,value));
   function paint(){
     frame=0;
@@ -96,14 +97,21 @@
     if(measurePending){
       viewport=probe.offsetHeight||window.innerHeight;
       page.style.setProperty('--reading-viewport-height',`${viewport}px`);
-      page.style.setProperty('--reading-sticky-top',`${Math.min(0,viewport-main.offsetHeight)}px`);
+      // Let the footer scroll in normally until its entire heading is visible.
+      // Only then pin and recede the preceding reading surface.
+      const footerInner=footer.querySelector('.footer-inner');
+      const topPadding=element=>element ? parseFloat(getComputedStyle(element).paddingTop)||0 : 0;
+      // Padding stays stable even while the mobile inner wrapper is sticky.
+      const headingDepth=footerTitle ? topPadding(footer)+topPadding(footerInner)+footerTitle.offsetHeight : 0;
+      overlapTravel=Math.max(1,viewport-Math.min(headingDepth,viewport-1));
+      page.style.setProperty('--reading-sticky-top',`${Math.min(0,overlapTravel-main.offsetHeight)}px`);
       page.classList.add('reading-footer-overlap');
       footerStart=footer.getBoundingClientRect().top+window.scrollY;
       measurePending=false;
     }
     // Sticky layout supplies the same native incoming motion as HOME. Only the
     // outgoing reading surface and the last quarter of the corners are painted.
-    const cover=clamp((window.scrollY-footerStart+viewport)/viewport);
+    const cover=clamp((window.scrollY-footerStart+overlapTravel)/overlapTravel);
     const flatten=clamp((cover-flattenStart)/(1-flattenStart));
     main.style.opacity=String(1-cover);
     main.style.transform=cover>0?`scale(${1-overlapRecede*cover})`:'none';
@@ -135,6 +143,7 @@
   document.addEventListener('visibilitychange',()=>schedule(true));
   new ResizeObserver(()=>schedule(true)).observe(main);
   new ResizeObserver(()=>schedule(true)).observe(probe);
+  if(footerTitle)new ResizeObserver(()=>schedule(true)).observe(footerTitle);
   // Menu scroll-lock temporarily fixes the body; retain the reading pose until
   // its normal flow and original scroll position have been restored.
   new MutationObserver(()=>schedule(true)).observe(root,{attributes:true,attributeFilter:['class']});

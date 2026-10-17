@@ -2266,8 +2266,8 @@
     },
     "footer": {
       "componentKey": "footer",
-      "version": "1.2.0+675c0b86c3e1",
-      "revision": "675c0b86c3e1872e24e56017988444c59a470efbbb19982f8c89ffd195c389d3",
+      "version": "1.2.0+83c807e5e335",
+      "revision": "83c807e5e335de9e66324789112094c57b13a718f450dfd396ede888e25a9368",
       "markupRevision": "02cdea56a8ebb3c67acea10b12ef832c047d9246618d8a1709e5b3bd8ea83757",
       "owners": [
         "shared/footer.html",
@@ -2277,8 +2277,8 @@
         {
           "path": "home/about/about.js",
           "kind": "runtime",
-          "sha256": "f02d5ad6b4317e58ae07e6b220fd7d26def506945d67baf4f1b57ec3d80f68f1",
-          "revisionSha256": "f02d5ad6b4317e58ae07e6b220fd7d26def506945d67baf4f1b57ec3d80f68f1"
+          "sha256": "8e5e0d6213637c7179deb00e0af0b6b3bd4acebfaf0a8d81e4e885b037fb1348",
+          "revisionSha256": "8e5e0d6213637c7179deb00e0af0b6b3bd4acebfaf0a8d81e4e885b037fb1348"
         },
         {
           "path": "home/app.js",
@@ -2410,8 +2410,8 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.2.0+302fe58da3e6",
-      "revision": "302fe58da3e6a658cee225a31c97fa10357f4d0f85adf0cfeae03309a3ecec8d",
+      "version": "1.2.0+83bb88b209ae",
+      "revision": "83bb88b209ae4217abe8b91095140780f13e35be9a230528db481c8df19033c0",
       "markupRevision": "7c0a508dd6008921be69e19af2c2bf5eaa94d6b77545fa2ec027cc76bce7fcbd",
       "owners": [
         "shared/reading-page.html",
@@ -2433,8 +2433,8 @@
         {
           "path": "home/about/about.js",
           "kind": "runtime",
-          "sha256": "f02d5ad6b4317e58ae07e6b220fd7d26def506945d67baf4f1b57ec3d80f68f1",
-          "revisionSha256": "f02d5ad6b4317e58ae07e6b220fd7d26def506945d67baf4f1b57ec3d80f68f1"
+          "sha256": "8e5e0d6213637c7179deb00e0af0b6b3bd4acebfaf0a8d81e4e885b037fb1348",
+          "revisionSha256": "8e5e0d6213637c7179deb00e0af0b6b3bd4acebfaf0a8d81e4e885b037fb1348"
         },
         {
           "path": "home/assets/about-avatar-116.webp",
@@ -4650,7 +4650,7 @@
       "trigger": "The contact footer covers the preceding content.",
       "timing": "Scroll progress · corners flatten in final quarter",
       "motion": "The outgoing surface fades and recedes to scale 0.975. Footer upper corners go from 40px → 0 after 75% cover, using smoothstep. The incoming footer follows native sticky/scroll geometry.",
-      "playback": "Reverse scrolling restores the previous surface and round corners. Reading-page content waits until its natural end before the footer covers it. Menu scroll lock and hidden tabs preserve the current pose.",
+      "playback": "Reverse scrolling restores the previous surface and round corners. On reading pages, the footer first scrolls in naturally until the complete Let’s talk heading is visible; only then does the preceding content pin, fade and recede. Menu scroll lock and hidden tabs preserve the current pose.",
       "reduced": "Footer follows content in ordinary flow; the overlap effect is removed.",
       "component": "reading-page",
       "live": "/about/#contact",
@@ -4741,10 +4741,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.25.2",
-    "revision": "817cdd3d84b7",
-    "release": "1.25.2+817cdd3d84b7",
-    "updatedAt": "2026-10-17T21:42:57.039Z",
+    "version": "1.25.3",
+    "revision": "5b0d9d1f7b8b",
+    "release": "1.25.3+5b0d9d1f7b8b",
+    "updatedAt": "2026-10-17T21:46:39.829Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -4798,8 +4798,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "de746d1ebb0176d8f80aca4fcaa458aede171fd256bebdd31309b34cfae6274e",
-        "revisionSha256": "de746d1ebb0176d8f80aca4fcaa458aede171fd256bebdd31309b34cfae6274e"
+        "sha256": "d5d05ff1638e0fb1f5e558904e370db817e659015b910fa87acac7c32ef7c2e7",
+        "revisionSha256": "d5d05ff1638e0fb1f5e558904e370db817e659015b910fa87acac7c32ef7c2e7"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -4813,8 +4813,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "35f500c0ae8047d662516402c5e6398c83b58c371743e836d372e1f3841ff2a1",
-        "revisionSha256": "35f500c0ae8047d662516402c5e6398c83b58c371743e836d372e1f3841ff2a1"
+        "sha256": "c883c98b1137a3cb95cdfecfa11176c48cf813aeed8ec0df419b9b60246c41c3",
+        "revisionSha256": "c883c98b1137a3cb95cdfecfa11176c48cf813aeed8ec0df419b9b60246c41c3"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -4833,8 +4833,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "24b1c6f0afbfc8c9dc4af3867a20807c6a1a5962040eb582e8bb1bf841270097",
-        "revisionSha256": "24b1c6f0afbfc8c9dc4af3867a20807c6a1a5962040eb582e8bb1bf841270097"
+        "sha256": "0476ded11fc0fa0f247c62d52ff1c0bf6288219874e0359176d4e6ebcbe45f28",
+        "revisionSha256": "0476ded11fc0fa0f247c62d52ff1c0bf6288219874e0359176d4e6ebcbe45f28"
       },
       {
         "path": "shared/site-pages.mjs",
