@@ -203,6 +203,7 @@
   nav.addEventListener('click',event => {
     const link = event.target.closest('a');
     if (!link || !nav.contains(link) || event.defaultPrevented) return;
+    if(link.getAttribute('aria-disabled')==='true'){event.preventDefault();return;}
     const plainClick = event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
     const target = link.hash && link.origin === location.origin && link.pathname === location.pathname ? document.getElementById(link.hash.slice(1)) : null;
     if (target && desiredOpen && plainClick) {
@@ -219,7 +220,7 @@
     event.preventDefault();
     if (!desiredOpen) {toggle.focus({preventScroll:true});return;}
     // Safari can omit links from its native Tab order; keep this dialog's cycle explicit.
-    const controls = [toggle,...links];
+    const controls = [toggle,...links.filter(link=>link.getAttribute('aria-disabled')!=='true')];
     const index = controls.indexOf(document.activeElement);
     const next = index < 0 ? (event.shiftKey ? controls.length - 1 : 0)
       : (index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
@@ -234,7 +235,7 @@
     desiredOpen = true; // Force immediate cleanup even during an unfinished close.
     setOpen(false,false,true);
     if (mobile.matches && focusedLink) toggle.focus({preventScroll:true});
-    if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links.find(link=>!link.classList.contains('mobile-only'))?.focus({preventScroll:true});
+    if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links.find(link=>!link.classList.contains('mobile-only')&&link.getAttribute('aria-disabled')!=='true')?.focus({preventScroll:true});
   });
   reduced.addEventListener('change',() => {
     if (reduced.matches) {
