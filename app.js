@@ -387,7 +387,7 @@
     const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
-    let height = 0,workHeight = 0,travel = 1,footerStart = 0,progress = location.hash === '#selected-works' ? 1 : 0;
+    let height = 0,workHeight = 0,travel = 1,footerStart = 0,footerLead = 0,progress = location.hash === '#selected-works' ? 1 : 0;
     let enhanced = false,mobileOverlap = false,mobileStart = 0,mobileTravel = 1,mobileRecedeStart = 0,resizeFrame = 0,scrollFrame = 0,scrollTween;
     let viewportOffset = 0,viewportWidth = window.innerWidth,mobilePaintedY = window.scrollY,desktopPaintedY = window.scrollY,initialLocationHandled = false,nativePaintedPose = null,pendingMobileWorkStep = null;
     let focusAtEnd = false,parked = false,resizeWheelUntil = 0,portraitIntroFinished = false,portraitPrepared = false;
@@ -495,7 +495,7 @@
         panel.element.style.setProperty('--work-read-travel',`${Math.max(0,titleTop-titleRest)}px`);
         const style = getComputedStyle(panel.element);
         panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
-        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,workHeight-panel.height)}px`);
+        panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,(index===panels.length-1 ? height-footerLead : workHeight)-panel.height)}px`);
         panel.element.style.setProperty('--work-layer',String(index+2));
       });
       footerStart = start;
@@ -511,25 +511,31 @@
       }
       return null;
     }
+    // Incoming footer first scrolls beside the outgoing panel. Start covering
+    // only once its complete heading has entered the current scene viewport.
+    const footerCoverAt = y => {
+      const remaining=Math.max(1,height-footerLead);
+      return Math.max(0,Math.min(1,(y-footerStart+remaining)/remaining));
+    };
     function paintFooterCorners(cover) {
       const flatten = Math.max(0,Math.min(1,(cover-flattenStart)/(1-flattenStart)));
       footer.style.setProperty('--footer-radius',`${footerRadius*(1-flatten*flatten*(3-2*flatten))}px`);
     }
-    function paintFooter(cover,desktop = false) {
-      paintFooterCorners(cover);
+    function paintFooter(cover,desktop = false,effect = cover) {
+      paintFooterCorners(effect);
       if (desktop) set(footer,{autoAlpha:cover<=0 ? 0 : 1,y:height*(1-cover)});
       footer.inert = cover<=.001;
       footer.setAttribute('aria-hidden',String(footer.inert));
       footer.style.pointerEvents = footer.inert ? 'none' : 'auto';
-      root.dataset.footerProgress = cover.toFixed(4);
+      root.dataset.footerProgress = effect.toFixed(4);
       root.dataset.footerStart = footerStart.toFixed(1);
-      if (cover>0 && cover<1) root.dataset.sceneState='overlap';
+      if (effect>0 && effect<1) root.dataset.sceneState='overlap';
       if (cover>=.999) root.dataset.sceneView='footer';
     }
     function paintWorkPanels() {
       let visibleIndex = 0,backgroundIndex = 0;
       const viewport = window.visualViewport,visibleTop = viewport?.offsetTop || 0,visibleHeight = viewport?.height || height,visibleBottom = visibleTop+visibleHeight;
-      const footerCover = Math.max(0,Math.min(1,(mobilePaintedY-footerStart+workHeight)/workHeight));
+      const footerCover = footerCoverAt(mobilePaintedY);
       panels.forEach((panel,index) => {
         const next = panels[index+1];
         const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
@@ -558,16 +564,17 @@
       });
       root.dataset.workSceneIndex = String(visibleIndex);
       document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
-      paintFooter(footerCover);
+      paintFooter(Math.max(0,Math.min(1,(mobilePaintedY-footerStart+height)/height)),false,footerCover);
     }
     function paintDesktopPanels() {
       let visibleIndex=0,backgroundIndex=0,overlapping=false;
-      const footerCover = Math.max(0,Math.min(1,(desktopPaintedY-footerStart+height)/height));
+      const footerIncoming = Math.max(0,Math.min(1,(desktopPaintedY-footerStart+height)/height));
+      const footerCover = footerCoverAt(desktopPaintedY);
       panels.forEach((panel,index)=>{
         const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
         const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : footerCover;
         const visible=entering>0 && covering<.999;
-        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering),scale:1-overlapRecede*covering});
+        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering)-(index===panels.length-1 ? Math.min(footerLead,footerIncoming*height) : 0),scale:1-overlapRecede*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
         panel.element.dataset.coverProgress=covering.toFixed(4);
         if (entering>=.5) visibleIndex=index;
@@ -584,7 +591,7 @@
       if (overlapping) root.dataset.sceneState='overlap';
       if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
       else document.body.style.removeProperty('background-color');
-      paintFooter(footerCover,true);
+      paintFooter(footerIncoming,true,footerCover);
     }
     function nativeWorkPose(y) {
       const starts=[...panels.map(panel=>y+panel.element.getBoundingClientRect().top),y+footer.getBoundingClientRect().top];
@@ -614,7 +621,7 @@
     function paintScene() {
       if (!enhanced && !mobileOverlap) {
         footerStart=window.scrollY+footer.getBoundingClientRect().top;
-        const cover=Math.max(0,Math.min(1,(window.scrollY-footerStart+height)/height));
+        const cover=footerCoverAt(window.scrollY);
         paintFooterCorners(cover);
         if(root.classList.contains('footer-native-overlap')) {
           const last=panels[panels.length-1].element;
@@ -716,6 +723,8 @@
       height = nextHeight;travel = Math.max(1,Math.round(height * .85));
       viewportOffset = offset;viewportWidth = window.innerWidth;
       root.style.setProperty('--scene-height',`${height}px`);root.style.setProperty('--scene-offset',`${offset}px`);
+      const topPadding=element=>element ? parseFloat(getComputedStyle(element).paddingTop)||0 : 0;
+      footerLead=Math.min(Math.max(0,height-1),topPadding(footer)+topPadding(footer.querySelector('.footer-inner'))+(footerTitle?.offsetHeight||0));
       root.style.setProperty('--scroll-travel',`${travel}px`);root.style.setProperty('--intro-content-height',`${contentHeight}px`);
       root.style.setProperty('--work-stack-travel',`${(panels.length-1)*height}px`);
       root.style.setProperty('--footer-travel',`${height}px`);
@@ -769,7 +778,7 @@
           const keepMobileReading = mobileOverlap && mobile.matches;
           nativeLayout();
           root.classList.toggle('footer-native-overlap',!mobile.matches && !reduced.matches);
-          root.style.setProperty('--footer-last-top',`${Math.min(0,height-panels[panels.length-1].element.offsetHeight)}px`);
+          root.style.setProperty('--footer-last-top',`${Math.min(0,height-footerLead-panels[panels.length-1].element.offsetHeight)}px`);
           if(wasEnhanced && !mobile.matches) {
             const step=oldDesktopStep,index=step===null ? 0 : Math.min(panels.length,Math.floor(step)),panel=readingPanel(index);
             const destination=step===null ? intro.offsetHeight-Math.max(0,height*(1-oldProgress)) : step>=panels.length-1 && root.classList.contains('footer-native-overlap') ? nativeDestination(step) : panel.element.getBoundingClientRect().top+window.scrollY+(step-index)*parseFloat(getComputedStyle(panel.element).height);
@@ -783,7 +792,7 @@
         }
         else if (!root.dataset.sceneState) nativeLayout();
         root.classList.toggle('footer-native-overlap',!mobile.matches && !reduced.matches);
-        root.style.setProperty('--footer-last-top',`${Math.min(0,height-panels[panels.length-1].element.offsetHeight)}px`);
+        root.style.setProperty('--footer-last-top',`${Math.min(0,height-footerLead-panels[panels.length-1].element.offsetHeight)}px`);
         if(!wasEnhanced && !wasMobile && nativeViewportChanged && nativePose?.step!==undefined)window.scrollTo(0,nativeDestination(nativePose.step));
         root.dataset.sceneView = showWorks ? 'works' : 'intro';
         nativePaintedPose=nativeWorkPose(window.scrollY);
