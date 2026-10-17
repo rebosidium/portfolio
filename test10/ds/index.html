@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en" data-ui-revision="699ca97ffee9" data-build="358121a0012c">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <style>html:is([data-ds-freshness="checking"],[data-ds-freshness="waiting"],[data-ds-freshness="updating"]) :is(.ds-layout,#preview-root){visibility:hidden}</style>
+  <!-- shared:ds-freshness:start -->
+  <script>
+(() => {
+  'use strict';
+  const root = document.documentElement;
+  const build = root.dataset.build;
+  const valid = value => typeof value === 'string' && /^[a-f0-9]{12}$/.test(value);
+  const visit = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+  let allow, owner, inFlight, timer, sequence = 0, lastCheck = 0, settled = false, lastOutcome = true;
+  let message = 'Checking for updates…', state = 'checking', registration;
+  const entry = new URL(location.href), cooldown = 120000;
+  const attempts = new Map();
+
+  function paint() {
+    root.dataset.dsFreshness = state;
+    const status = document.querySelector('.ds-freshness-status');
+    if (status && status.textContent !== message) status.textContent = message;
+    const button = document.querySelector('.ds-check-updates');
+    if (button) button.disabled = ['checking','checking-background','updating'].includes(state);
+  }
+  function status(next, text) { state = next; message = text; paint(); }
+  const recent = time => Number.isFinite(time) && time > 0 && Math.abs(Date.now() - time) < cooldown;
+  function attempted(version) {
+    if (recent(attempts.get(version))) return true;
+    if (entry.searchParams.get('v') === version && recent(Number(entry.searchParams.get('_dsrefresh')))) return true;
+    try { return recent(Number(sessionStorage.getItem('portfolio:ds:refresh:' + version))); }
+    catch (_) { return false; }
+  }
+  function remember(version) {
+    const time = Date.now(); attempts.set(version,time);
+    try { sessionStorage.setItem('portfolio:ds:refresh:' + version,String(time)); } catch (_) {}
+    return time;
+  }
+  async function fresh(url) {
+    url.searchParams.set('_dscheck',visit + '-' + (++sequence));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(),6000);
+    try {
+      const response = await fetch(url.href,{cache:'no-store',credentials:'omit',signal:controller.signal});
+      if (!response.ok) throw Error('Fresh response unavailable');
+      return await response.text();
+    } finally { clearTimeout(timeout); }
+  }
+  async function verify() {
+    let updateKnown = false;
+    status(!settled || ['checking','waiting','updating'].includes(state) ? 'checking' : 'checking-background','Checking for updates…');
+    try {
+      if (!valid(build) || navigator.onLine === false) throw Error('Cannot verify');
+      const version = JSON.parse(await fresh(new URL('/test10/version.json',location.origin))).version;
+      if (!valid(version)) throw Error('Invalid version');
+      if (version === build) {
+        if (owner && owner.document.documentElement.dataset.build !== build) {
+          status('waiting','Updating the preview…');owner.DSFreshness.check({force:true});return false;
+        }
+        status('current','Up to date · checked ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));
+        return true;
+      }
+      updateKnown = true;
+      status('waiting','An update is being published. Retrying…');
+      const destination = new URL(location.href);
+      destination.searchParams.set('v',version);
+      const html = await fresh(new URL(destination.href));
+      const tag = html.match(/<html\b[^>]*>/i)?.[0] || '';
+      if (tag.match(/\bdata-build="([a-f0-9]{12})"/)?.[1] !== version || attempted(version)) return false;
+      if (document.hidden || navigator.onLine === false) return false;
+      destination.searchParams.set('_dsrefresh',String(remember(version)));
+      status('updating','Updating the library…');
+      location.replace(destination.href);
+      return false;
+    } catch (_) {
+      if (updateKnown || (owner && owner.document.documentElement.dataset.build !== build)) { status('waiting','An update is being published. Retrying…'); return false; }
+      status('unverified','Couldn’t verify the latest version. Try again.');
+      return true;
+    } finally { settled = true; lastCheck = Date.now(); }
+  }
+  function check({force = false, initial = false} = {}) {
+    if (inFlight) return inFlight;
+    if ((!initial && !force && document.hidden) || (!force && settled && Date.now() - lastCheck < 2000)) return Promise.resolve(lastOutcome);
+    inFlight = verify().then(value => { lastOutcome = value; if (value) allow(true); return value; }).finally(() => { inFlight = null; });
+    return inFlight;
+  }
+  const api = window.DSFreshness = {check,visit,ready:new Promise(resolve => { allow = resolve; })};
+
+  // A parent DS document owns version polling for all its persistent previews.
+  if (parent !== window) {
+    try {
+      if (parent.location.origin === location.origin && parent.DSFreshness) {
+        const matches = parent.document.documentElement.dataset.build === build;
+        status(matches ? 'current' : 'waiting',matches ? '' : 'Updating the preview…');
+        if (matches) { allow(true); return; }
+        owner = parent;
+        parent.DSFreshness.check({force:true});
+      }
+    } catch (_) {}
+  }
+  if (entry.searchParams.get('v') === build && entry.searchParams.has('_dsrefresh')) {
+    entry.searchParams.delete('_dsrefresh');
+    try { history.replaceState(history.state,'',entry.href); } catch (_) {}
+  }
+  function sync() {
+    clearInterval(timer);
+    if (!document.hidden) { check(); timer = setInterval(check,30000); }
+  }
+  function bind() {
+    paint();
+    document.querySelector('.ds-check-updates')?.addEventListener('click',() => {
+      registration?.update().catch(() => {});
+      check({force:true});
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',bind,{once:true});
+  else bind();
+  if (typeof fetch !== 'function' || typeof AbortController !== 'function') {
+    status('unverified','Automatic checks are unavailable in this browser.');
+    allow(true);
+    return;
+  }
+  check({initial:true});
+  window.addEventListener('focus',() => check());
+  window.addEventListener('online',() => check({force:true}));
+  document.addEventListener('visibilitychange',sync);
+  window.addEventListener('pageshow',event => { if (event.persisted) check({force:true}); sync(); });
+  window.addEventListener('pagehide',() => { clearInterval(timer); status('checking','Checking for updates…'); });
+  sync();
+
+  // No offline cache or site-wide cache clearing. Only /test10/ds/ can be controlled.
+  if (navigator.serviceWorker?.register && window.isSecureContext) {
+    const controlled = () => {
+      const controller = navigator.serviceWorker.controller;
+      root.dataset.dsNetwork = controller && new URL(controller.scriptURL).pathname === '/test10/ds/freshness-worker.js' ? 'network-only' : 'checking';
+    };
+    controlled();
+    navigator.serviceWorker.addEventListener('controllerchange',controlled);
+    navigator.serviceWorker.register('/test10/ds/freshness-worker.js?v=65fb10beb50c',{scope:'/test10/ds/',updateViaCache:'none'})
+      .then(value => { registration = value; controlled(); })
+      .catch(() => { root.dataset.dsNetwork = 'unavailable'; });
+  } else root.dataset.dsNetwork = 'unavailable';
+})();
+  </script>
+  <!-- shared:ds-freshness:end -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f7">
+  <link rel="canonical" href="https://dmitryrybalka.com/ds/">
+  <title>Design system — Dmitry Rybalka</title>
+  <meta name="description" content="The current palette, typography, components and responsive templates used on Dmitry Rybalka’s homepage, About and 404 pages.">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <!-- shared:brief-preloads:start -->
+  <!-- DS SVGs use the ordered mounted-image queue. -->
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/test10/assets/site-ui.css?v=89795181ac1a">
+  <link rel="stylesheet" href="/test10/ds/ds.css?v=b943f0c6f50f">
+  <link rel="stylesheet" href="/test10/ds/asset-loading.css?v=a9b154c7c8ab">
+  <script src="/test10/ds/asset-loading.js?v=0d319f6c36f8" defer></script>
+  <script src="/test10/ds/examples.js?v=830c864562ba" defer></script>
+  <script src="/test10/ds/code-viewer.js?v=be9f09a1f030" defer></script>
+  <script src="/test10/ds/ds.js?v=ac1f4e3f1ebd" defer></script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.24.0+83be775ec437","tokens":"1.2.0+1da9eb25e921","components":{"brief":"1.2.0+9bbcab9aa9f8","brief-dark":"1.2.0+230d9e787876","back":"1.2.0+0e10f2eeb79a","link":"1.2.0+0a3c58b84921","footer-link":"1.2.0+14c51a745757","work-actions":"1.2.0+984e948d5b70","availability":"1.2.0+b0c3ab250a24","portrait":"1.2.0+bcd84458c69e","about-title":"1.2.0+ec5fde4ab4ba","article-title":"1.2.0+2007c694dec2","about-avatar":"1.2.0+310a68727268","prose-section":"1.2.0+6187bbb023a3","photo-slot":"1.2.0+b326abc0b379","header":"1.2.0+48c02ea6e18e","about-header":"1.2.0+7b7aed61204c","hero":"1.2.0+83ead5dc569b","work":"1.2.0+f30e46d6ca76","work-section":"1.2.0+f311fbdaea43","footer":"1.2.0+b13dc794b32f","reading-page":"1.2.0+5964aa48f01a","not-found-page":"1.2.0+c7291f8c9db5"},"revision":"699ca97ffee9"}</script>
+</head>
+<body class="ds-page">
+  <header class="ds-top"><a href="/">Dmitry Rybalka</a><span class="ds-library-label">Interface library</span><!-- shared:ds-release:start -->
+<a class="ds-release" href="#versions" aria-label="Design system version 1.24.0+83be775ec437, updated 17 Oct 2026, 16:25 UTC+3"><span>v1.24.0+83be775ec437</span><time class="ds-release-updated" datetime="2026-10-17T13:25:35.148Z" title="Last DS update · Europe/Istanbul">Updated 17 Oct 2026, 16:25 UTC+3</time></a>
+  <!-- shared:ds-release:end --><a class="ds-home-link" href="/">Open homepage</a></header>
+  <div class="ds-freshness"><p class="ds-freshness-status" role="status" aria-live="polite">Check that you’re viewing the latest library.</p><button class="ds-check-updates" type="button">Check for updates</button></div>
+  <div class="ds-layout">
+    <aside class="ds-sidebar">
+      <p class="ds-eyebrow">DESIGN SYSTEM</p>
+      <nav id="library-sections" aria-label="Library sections" tabindex="-1"><a href="#overview">Overview</a><a href="#versions">Versions & usage</a><a href="#agents">For AI agents</a><a href="#palette">Palette</a><a href="#typography">Typography</a><a href="#layout">Layout & spacing</a><a href="#animations">Animations</a><a href="#icons">Icons & logos</a><a href="#favicon">Favicon</a><a href="#technical">Technical implementation</a><a href="#components">Components</a><a href="#templates">Templates</a></nav>
+      <div class="ds-scope"><span class="ds-label">CURRENT SOURCES</span><p id="source-pages">Homepage<br>About<br>404</p><p class="ds-fine">Shared components.<br>Current states only.</p></div>
+    </aside>
+    <main class="ds-main">
+      <section id="overview" class="ds-overview">
+        <p class="ds-eyebrow">DMITRYRYBALKA.COM</p>
+        <h1>Design system</h1>
+        <p class="ds-lead">The building blocks of the homepage, About and 404.</p>
+        <p class="ds-subtle">Shared components, states and responsive templates. Open View code to reuse the actual markup, styles and behavior on a new project page.</p>
+        <details class="ds-naming"><summary>Naming conventions</summary><p>Names describe purpose: family / role, followed by a variant when needed. Light and Dark describe prepared themes; Hover, Pressed and Keyboard focus describe interaction states. Responsive layouts and motion preferences keep their own labels.</p><p>Each type recipe has one name, with its current uses and responsive differences listed below. Token names describe the design decision, with the CSS key beside the value. Stable renderer keys and specimen links stay unchanged.</p><p>Based on <a href="https://spectrum.adobe.com/page/design-tokens/" target="_blank" rel="noopener noreferrer">Adobe Spectrum naming guidance</a> and the <a href="https://designsystem.digital.gov/design-tokens/" target="_blank" rel="noopener noreferrer">USWDS token approach</a>.</p></details>
+        <div class="ds-facts"><span id="source-page-count">3 source pages</span><span id="specimen-count">Current components</span><span>Manrope</span></div>
+      </section>
+      <section id="versions" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">SHARED LIBRARY</span><h2>Versions &amp; usage</h2></div><p id="library-contract">Current component contract</p></div>
+        <p class="ds-fine">Each revision follows its canonical markup, tokens, styles, behavior and assets. Editing the shared source regenerates the pages and this library; a check rejects stale generated output.</p>
+        <p class="ds-fine" id="ds-release-detail"></p>
+        <p class="ds-fine" id="token-version"></p>
+        <div class="ds-version-table-wrap"><table class="ds-version-table"><caption>Current components and the pages that use them</caption><thead><tr><th scope="col">Component</th><th scope="col">Version</th><th scope="col">Used on</th></tr></thead><tbody id="component-versions"></tbody></table></div>
+        <p class="ds-fine"><a href="/test10/ds/components.json?v=d660f8f82018" target="_blank" rel="noopener noreferrer">Open component manifest</a> · The DS release versions the whole library; API contract versions describe the renderer interface; automatic revisions identify current implementation and dependency changes. Git preserves the change history.</p>
+      </section>
+      <section id="agents" class="ds-section ds-agent-guide" aria-labelledby="agents-title">
+        <div class="ds-section-heading"><div><span class="ds-label">IMPLEMENTATION GUIDE</span><h2 id="agents-title">For AI agents</h2></div><p>Where to edit. How to reuse.</p></div>
+        <p>This project serves static HTML, CSS and JavaScript. Node renders shared markup at build time. Start with the repository’s <code>AGENTS.md</code>, <code>shared/AGENTS.md</code> and <code>shared/README.md</code>; use this guide as a map to the current implementation.</p>
+        <h3>Source ownership</h3>
+        <div class="ds-version-table-wrap"><table class="ds-version-table"><caption>Paths are relative to the site repository</caption><thead><tr><th scope="col">Concern</th><th scope="col">Edit here</th></tr></thead><tbody>
+          <tr><th scope="row">Design decisions</th><td><code>shared/tokens.css</code> — semantic colors, type, spacing and dimensions.</td></tr>
+          <tr><th scope="row">Shared appearance &amp; controls</th><td><code>shared/site-ui.css</code>, <code>shared/site-controls.js</code> — component styles, focus, Brief copy and feedback. <code>home/mobile-nav.js</code> owns menu behavior.</td></tr>
+          <tr><th scope="row">Markup &amp; content</th><td><code>shared/*.html</code>, <code>shared/work-projects.json</code> — canonical templates and project data. <code>shared/library.mjs</code> composes them.</td></tr>
+          <tr><th scope="row">Page composition &amp; motion</th><td><code>home/styles.css</code>, <code>home/app.js</code> — homepage scenes; <code>home/about/about.css</code>, <code>home/about/about.js</code> — reading layout. <code>shared/not-found-page.mjs</code> composes 404.</td></tr>
+          <tr><th scope="row">Library &amp; generation</th><td><code>shared/site-pages.mjs</code> (routes, files and consumers), <code>shared/component-registry.mjs</code> (owners and dependencies), <code>shared/build-ds.mjs</code> — dependencies, usage and specimens. <code>build-site.mjs</code> generates pages, shared assets and catalogs.</td></tr>
+        </tbody></table></div>
+        <h3>How layout works</h3>
+        <p>Centered page and reading-column widths, mobile gutters and type come from <a href="#layout">Layout &amp; spacing</a>, <a href="#typography">Typography</a> and their tokens. Page CSS owns arrangement; shared CSS owns component appearance. Reuse existing classes and semantic tokens.</p>
+        <p>Mobile mode depends on width and pointer capability. Keep CSS and JavaScript aligned with <code>shared/layout-contract.mjs</code>; the build rejects mismatches. HOME uses measured sticky scenes and overlapping work panels. About uses native reading flow followed by the shared footer overlap. Preserve their existing viewport and resize handling when changing composition.</p>
+        <h3>Reuse before extending</h3>
+        <p>Open a component or template’s <strong>View code → Use</strong> for its current renderer recipe, then check <strong>Setup &amp; dependencies</strong>. Import <code>renderComponent</code> or <code>renderArticlePage</code> from <code>shared/library.mjs</code> in build-time Node code. The reading-page renderer supplies the existing header, Back, prose, footer and working controls. Use confirmed content; add a shared pattern only when an actual page needs it.</p>
+        <h3>Build a project page</h3>
+        <ol class="ds-project-checklist">
+          <li>Gather confirmed text and images. Mark missing details as draft.</li>
+          <li><a href="#component-reading-page" data-code-recipe="reading-page">Open the reading-page recipe → Use</a>. Supply the title, canonical URL, introduction and sections to <code>renderArticlePage</code>; reuse current components before extending them.</li>
+          <li>For a production page, store its confirmed content in a shared JSON file and register an <code>article</code> entry in <code>shared/site-pages.mjs</code>. The build renders its exact document. Direct renderer calls still return HTML without writing or publishing it.</li>
+          <li>In that one registry entry, declare the route, exact document/files, component consumers and <code>contentSource</code>. Build-time usage stamps, dependency fingerprinting and publication checks use the same entry. Publication still requires a reviewed release; adding a route does not advertise it in navigation.</li>
+          <li>Run the build and check commands below. Verify the new page on desktop and mobile, including shared controls, focus, reduced motion and existing consumers.</li>
+          <li>Commit the finished change. Review the dry run with <code>node publish.mjs --site=home --expect-base=&lt;reviewed-public-SHA&gt;</code>, then add <code>--publish</code> for the authorized release. Keep draft pages out of navigation and the sitemap unless requested.</li>
+        </ol>
+        <h3>Change and verify</h3>
+        <ol>
+          <li>Edit canonical sources. Generated <code>shared:…</code> regions, <code>home/assets/site-ui.css</code>, <code>home/assets/site-controls.js</code> and DS catalogs are build output.</li>
+          <li>Run the HOME release pipeline from the repository root:</li>
+        </ol>
+        <pre class="ds-agent-commands"><code>node refresh-release.mjs --site=home
+node refresh-release.mjs --site=home --check</code></pre>
+        <p>Verify desktop/mobile layout and affected states; recheck existing consumers after a shared change. Preserve keyboard focus, reduced motion, readable fallbacks, portrait startup and Resume downloads. Register new routes in <code>shared/site-pages.mjs</code>; keep component ownership/dependencies in <code>shared/component-registry.mjs</code>. Declare DS releases in <code>shared/design-system.json</code>; revisions and fingerprints are generated.</p>
+        <p class="ds-fine">Maintenance rule: update this map only when ownership, layout architecture or the workflow changes. Current values, states, recipes and versions live in the linked sections and View code.</p>
+      </section>
+      <section id="palette" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">01 / FOUNDATIONS</span><h2>Palette</h2></div><p>Quiet surfaces. Clear contrast.</p></div>
+        <p class="ds-fine">23 shared colors, all in opaque six-digit HEX. Secondary text shares one token on white and subtle surfaces. Use the stated backgrounds and states for text and border tokens.</p>
+        <div id="palette-grid" class="ds-palette-groups"></div>
+        <div class="ds-status-color"><!-- shared:status-mark:start -->
+<img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt="" data-node-id="182:2732">
+  <!-- shared:status-mark:end --><div><strong>Status / Project availability · #C3BD24</strong><p>The custom status mark used beside project actions. This color belongs to that mark; it is not a general warning color.</p></div></div>
+      </section>
+      <section id="typography" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">02 / FOUNDATIONS</span><h2>Typography</h2></div><p>Manrope. Current page roles.</p></div>
+        <div class="ds-type-family"><div><span class="ds-label">TYPEFACE</span><h3>Manrope</h3><p>Aa Bb Cc Dd Ee Ff Gg<br>0123456789</p></div><div class="ds-weights"><span style="font-weight:400">Regular · 400</span><span style="font-weight:500">Medium · <span data-token="weight-body">500</span></span><span style="font-weight:600">Semibold · <span data-token="weight-semibold">600</span></span><span style="font-weight:700">Bold · <span data-token="weight-bold">700</span></span></div></div>
+        <p class="ds-fine">Font sizes are in px. Line heights use the five shared multipliers below; semantic tokens reuse this scale.</p>
+        <dl id="line-height-scale" class="ds-token-roles ds-leading-scale" aria-label="Portfolio line-height scale"></dl>
+        <div class="ds-type-row" data-type-style="heading"><div><strong>Heading / Section</strong><span>Weight · <span data-token="weight-semibold">600</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-heading">24 px</span> / ×<span data-token="line-prose">1.8</span></span><p class="ui-title ds-type-heading">A little about me</p><p class="ui-title ds-type-selected-works">Selected Works</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-heading">24 px</span> / ×<span data-token="line-prose">1.8</span><br><span data-token="type-heading-compact">22px</span> at 359 px and below</span><p class="ui-title ds-type-heading ds-type-about-mobile">A little about me</p></div></div>
+        <div class="ds-type-row" data-type-style="strong-label"><div><strong>Heading / Label</strong><span>Weight · <span data-token="weight-bold">700</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-copy"></span></span><p class="ui-strong-label ds-type-home-heading">Hello, Everyone</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-body">18px</span> / ×<span data-token="line-spacious">2</span></span><p class="ui-strong-label ds-type-home-heading ds-type-greeting-mobile">Hello, Everyone</p></div></div>
+        <div class="ds-type-row" data-type-style="body"><div><strong>Text / Body</strong><span>Weight · <span data-token="weight-body">500</span><br><span data-token="word-spacing-body">1px</span> word spacing</span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-copy"></span></span><p class="ui-body-copy">I’m a product designer and design lead.</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-body">18 px</span> / ×<span data-token="line-copy"></span></span><p class="ui-body-copy">I’m a product designer and design lead.</p></div></div>
+        <div class="ds-type-row" data-type-style="metadata"><div><strong>Text / Project metadata</strong><span>Weight · <span data-token="weight-body">500</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-small">16 px</span> / ×<span data-token="line-compact"></span></span><p class="ds-type-meta-desktop">Classifieds · Aug. 2025 — Present</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-small">16 px</span> / ×<span data-token="line-helper"></span></span><p class="ds-type-meta">Classifieds · Aug. 2025 — Present</p></div></div>
+        <div class="ds-type-row" data-type-style="navigation"><div><strong>Link / Navigation</strong><span>Weight · <span data-token="weight-semibold">600</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-compact"></span></span><p class="ds-type-nav">Work &nbsp; Email</p></div><div class="ds-type-example"><span>Mobile menu · <span data-token="type-menu-max">32px</span> maximum / ×<span data-token="line-menu">1.15</span><br>Shown at the maximum · <code>--type-menu-max</code></span><p class="ds-type-menu">Work</p></div></div>
+        <div class="ds-type-row" data-type-style="identity"><div><strong>Text / Site identity</strong><span>Weight · <span data-token="weight-semibold">600</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-compact"></span></span><p class="ds-type-nav ds-type-name">Dmitry Rybalka</p></div><div class="ds-type-example"><span>Mobile HOME &amp; About · <span data-token="type-body">18px</span> / ×<span data-token="line-identity">1.6</span></span><p class="ds-type-nav ds-type-identity-mobile">Dmitry Rybalka</p></div></div>
+        <div class="ds-type-row" data-type-style="contact"><div><strong>Text / Contact description</strong><span>Weight · <span data-token="weight-body">500</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-contact">1.6</span></span><p class="ds-type-footer-body">Have a project or opportunity in mind?</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-body">18 px</span> / ×<span data-token="line-contact">1.6</span></span><p class="ds-type-footer-body">Have a project or opportunity in mind?</p></div></div>
+        <div class="ds-type-row" data-type-style="contact-link"><div><strong>Link / Contact</strong><span>Weight · <span data-token="weight-semibold">600</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-contact">1.6</span></span><p class="ds-type-contact">Email &nbsp; LinkedIn</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-body">18 px</span> / ×<span data-token="line-contact">1.6</span></span><p class="ds-type-contact">Email &nbsp; LinkedIn</p></div></div>
+        <div class="ds-type-row" data-type-style="control"><div><strong>Label / Control</strong><span>Weight · <span data-token="weight-body">500</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-body">18 px</span> / ×<span data-token="line-copy"></span></span><p class="ui-control-label ds-type-body">Brief your AI · More Details</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-body">18 px</span> / ×<span data-token="line-copy"></span></span><p class="ui-control-label ds-type-body">Brief your AI · More Details</p></div></div>
+        <div class="ds-type-row" data-type-style="helper"><div><strong>Text / AI brief / Instruction</strong><span>Weight · <span data-token="weight-body">500</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-helper">14 px</span> / ×<span data-token="line-helper">1.4</span></span><p class="ds-type-helper">Copy this prompt into your AI chat</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-helper">14 px</span> / ×<span data-token="line-helper">1.4</span></span><p class="ds-type-helper">Copy this prompt into your AI chat</p></div></div>
+        <div class="ds-type-row" data-type-style="prompt"><div><strong>Text / AI brief / Prompt</strong><span>Weight · <span data-token="weight-body">500</span></span></div><div class="ds-type-example"><span>Desktop · <span data-token="type-prompt">12 px</span> / ×<span data-token="line-helper">1.4</span></span><p class="ds-type-prompt">Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt</p></div><div class="ds-type-example"><span>Mobile · <span data-token="type-prompt">12 px</span> / ×<span data-token="line-helper">1.4</span></span><p class="ds-type-prompt">Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt</p></div></div>
+        <p class="ds-fine">Portfolio content uses <span data-token="word-spacing-body">1px</span> extra word spacing; code displays retain normal monospace spacing. Shared type recipes also connect About/Footer titles, greeting/project/section labels, and controls including Coming Soon and Back. Body, control labels and Back use ×1.8 (32.4px at 18px). Button heights remain 50px or 54px. Manual copy retains its compact layout and static heading. Body copy shares one style across Homepage, work descriptions and About. Samples use the actual shared recipes. Selected Works keeps normal letter spacing; About and footer titles use <span data-token="tracking-heading">.24px</span> tracking; controls and contact text use <span data-token="tracking-body">.18px</span>. Computed lines follow the current sample size. The mobile menu scales with its viewport; ordinary body copy remains 18 px.</p>
+      </section>
+      <section id="layout" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">03 / FOUNDATIONS</span><h2>Layout & spacing</h2></div><p>Shared rhythm, page-specific composition.</p></div>
+        <div class="ds-layout-facts"><div><span class="ds-label" data-token-name="width-page">DESKTOP PAGE</span><strong data-token="width-page">944 px</strong><p>Centered content</p></div><div><span class="ds-label" data-token-name="width-prose">READING COLUMN</span><strong data-token="width-prose">624 px</strong><p>About prose</p></div><div><span class="ds-label" data-token-name="gutter-page">MOBILE GUTTER</span><strong data-token="gutter-page">20 px</strong><p>On each side</p></div><div><span class="ds-label" data-token-name="width-mobile">MOBILE MAXIMUM</span><strong data-token="width-mobile">600 px</strong><p>Homepage hero, work cards and About content</p></div></div>
+        <div class="ds-radii"><div><span style="border-radius:var(--radius-field)"></span><strong data-token="radius-field">4 px</strong><p data-token-name="radius-field">Manual copy field</p></div><div><span style="border-radius:var(--radius-artwork)"></span><strong data-token="radius-artwork">4 px</strong><p data-token-name="radius-artwork">Work previews</p></div><div><span style="border-radius:var(--radius-control)"></span><strong data-token="radius-control">8 px</strong><p data-token-name="radius-control">Menu focus</p></div><div><span style="border-radius:var(--radius-panel)"></span><strong data-token="radius-panel">40 px</strong><p data-token-name="radius-panel">Footer corners</p></div><div><span style="border-radius:var(--radius-pill)"></span><strong data-token="radius-pill">100 px</strong><p data-token-name="radius-pill">Pill controls / avatar</p></div></div>
+        <p class="ds-fine">Ordinary link focus outlines use a separate 2 px corner radius. Footer corners flatten from 40 px to 0 as the shared footer covers the previous section on HOME and About.</p>
+        <div id="spacing-scale" class="ds-spacing"></div>
+        <h3 class="ds-icon-group-title">Size, focus &amp; motion tokens</h3><dl id="layout-tokens" class="ds-token-roles"></dl>
+        <details class="ds-naming ds-token-index" id="token-index"><summary>All shared tokens · <span id="token-count"></span></summary><p>Complete current definitions from <code>shared/tokens.css</code>. Token links are stable; palette links open their color samples. Runtime measurements and library-only presentation values stay in their own source.</p><table class="ds-version-table"><caption>Shared token reference</caption><thead><tr><th scope="col">Name</th><th scope="col">Token</th><th scope="col">Value</th></tr></thead><tbody id="token-reference"></tbody></table></details>
+        <p class="ds-fine">Touch interactions use the component’s own feedback without the browser’s rectangular tap overlay. Keyboard focus remains visible.<br>Mobile layout: up to 767 px, or up to 1023 px on a touch device. The previews below use a 440 px mobile viewport.</p>
+      </section>
+      <section id="animations" class="ds-section" aria-labelledby="animations-title">
+        <div class="ds-section-heading"><div><span class="ds-label">04 / FOUNDATIONS</span><h2 id="animations-title">Animations</h2></div><p>Current motion, from the same page sources.</p></div>
+        <p class="ds-fine">Timing, triggers and playback for the effects used today. Scroll-driven effects follow page position; springs settle from the current pose. Their duration is not a fixed timer. Open the related component for its current code and states, or the live page for complete portrait and scroll behavior.</p>
+        <p class="ds-fine">Reduced motion follows the visitor’s system preference. Each entry describes its actual fallback. Values follow the current shared tokens and page behavior.</p>
+        <!-- shared:motion-catalog:start -->
+<div class="ds-motion-group"><h3>Page &amp; content</h3><div class="ds-motion-grid"><article class="ds-motion-card" id="motion-entrance">
+  <p class="ds-label">Homepage · desktop &amp; mobile</p><h4>Entrance / Homepage</h4><p class="ds-motion-timing">Header 1050 ms · content 850 ms</p>
+  <p>Header links fade in and rise 12 px with a 140 ms delay and 70 ms step (power2.out). The portrait fades in, rises 18 px and scales .97 → 1; copy rises 18 px with a 200 ms step (power3.out). Portrait starts at 100 ms and copy at 300 ms in the content timeline.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>First visit, after fonts and navigation are ready.</dd><dt>Playback &amp; reverse</dt><dd>Runs once per page load. Desktop reveals the poster and copy before the portrait turn buffer; mobile waits for prepared portrait frames. Leaving the tab settles the entrance.</dd><dt>Reduced motion</dt><dd>Show the final content immediately. Missing GSAP or failed portrait preparation keeps the page readable.</dd><dt>Current source</dt><dd><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-preview">The component preview is static. Open the live homepage to see its page entrance.</p>
+  <p class="ds-motion-links"><a href="#component-hero">Related component &amp; code</a><a href="/" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article><article class="ds-motion-card" id="motion-reading">
+  <p class="ds-label">About · 404 · reusable reading page</p><h4>Entrance / Reading content</h4><p class="ds-motion-timing">1100 ms · 240 ms step</p>
+  <p>Fade 0 → 1 and rise 8px using cubic-bezier(.37,0,.63,1). The title leads the intro paragraphs. Blocks enter in reading order with one shared step; newly visible batches continue the sequence behind first-paint blocks.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>First paint, then each prepared block as it enters the viewport.</dd><dt>Playback &amp; reverse</dt><dd>Reading-page blocks appear once. Reverse scrolling does not replay them. Hash navigation, keyboard focus and history restoration expose the relevant text immediately. The 404 page reuses the CSS entrance for its title and copy at first paint.</dd><dt>Reduced motion</dt><dd>All reading content is visible without entrance animation. CSS first paint and the optional observer preserve readable content if JavaScript is unavailable.</dd><dt>Current source</dt><dd><code>home/about/about.css</code><code>home/about/about.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-reading-page">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-portrait">
+  <p class="ds-label">Homepage · desktop &amp; mobile</p><h4>Portrait / Turn &amp; interaction</h4><p class="ds-motion-timing">Welcome 1200 ms · follow 95 ms damping</p>
+  <p>One welcome turn eases to the front with sine ease-in-out. Desktop pointer following reaches ±49° and softens within 1.5 portrait widths of the face. Drag allows full turns; release returns to the nearest front with a damped spring and a small overshoot. Android uses its separate touch player.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Prepared welcome frames, pointer movement, drag or keyboard input.</dd><dt>Playback &amp; reverse</dt><dd>There is no idle loop. Manual input cancels the welcome and takes priority over follow/scroll. A new press interrupts the spring. Mobile scroll pose follows actual occlusion; menu close returns to the front. These interactions run on the live homepage; the portrait specimen shows static poses.</dd><dt>Reduced motion</dt><dd>Static front portrait; no animation-frame ZIP requests. Hidden tabs suspend movement; errors retain the poster.</dd><dt>Current source</dt><dd><code>home/portrait-spin.js</code><code>home/portrait-spin-android.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-portrait">Related component &amp; code</a><a href="/" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article><article class="ds-motion-card" id="motion-work-reveal">
+  <p class="ds-label">Homepage · all current work cards</p><h4>Entrance / Project content</h4><p class="ds-motion-timing">Text 700 ms · preview 800 / 1150 ms</p>
+  <p>Text fades in and rises 14 px with a 70 ms step (power2.out). Desktop artwork rises 14 px and fades over 800 ms. Mobile artwork uses a pure 1150 ms sine.inOut fade after 12% of the image is visible, capped at 48 px; visible description starts no earlier than 420 ms after the image, then actions 140 ms after description.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>A card enters view and its own preview has loaded or failed.</dd><dt>Playback &amp; reverse</dt><dd>Decode and actual visibility gate the preview. A fast jump restores an image already passed so copy can continue. Returning all the way to the intro resets HOME reveals; ordinary card-to-card reverse scrolling keeps revealed content.</dd><dt>Reduced motion</dt><dd>Readable cards in normal flow; no reveal or overlapping scene animation. Image errors expose the existing Preview unavailable state.</dd><dt>Current source</dt><dd><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-preview">The component preview shows the artwork and content. The live homepage runs the scroll-triggered entrance.</p>
+  <p class="ds-motion-links"><a href="#component-work">Related component &amp; code</a><a href="/#selected-works" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article></div></div>
+<div class="ds-motion-group"><h3>Interactions</h3><div class="ds-motion-grid"><article class="ds-motion-card" id="motion-menu">
+  <p class="ds-label">Homepage · About · both header variants</p><h4>Navigation / Mobile menu</h4><p class="ds-motion-timing">Glyph 200 ms · panel 280 ms</p>
+  <p>The same two SVG strokes morph into a cross over 200 ms ease-in-out. Opening fades the panel over 280 ms (power2.out); links fade/rise 12 px over 320 ms with a 55 ms step, starting at 70 ms (power3.out). Closing sends links down 12 px over 240 ms in reverse order (power3.in), then fades the panel over 280 ms (power2.inOut).</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Activate the mobile menu toggle or close the menu.</dd><dt>Playback &amp; reverse</dt><dd>Rapid toggles cancel the active timeline and follow the latest requested state. Scroll is locked while open; closing restores the page and relevant focus.</dd><dt>Reduced motion</dt><dd>Toggle and menu settle immediately. Missing GSAP retains working open/close controls; hidden/changed-layout transitions settle.</dd><dt>Current source</dt><dd><code>shared/site-ui.css</code><code>home/mobile-nav.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-header">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-controls">
+  <p class="ds-label">AI brief · Back · shared pill frame</p><h4>Control / Surface feedback</h4><p class="ds-motion-timing">180 ms · ease</p>
+  <p>Background and border colors transition within the fixed control frame; control dimensions stay stable. Disabled More Details and the Manual copy heading do not animate on activation.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Hover or press an enabled control.</dd><dt>Playback &amp; reverse</dt><dd>Reverses to the default colors when hover/press ends. Manual copy keeps the existing heading and native logos mounted.</dd><dt>Reduced motion</dt><dd>Brief and Back feedback changes immediately; disabled states remain static.</dd><dt>Current source</dt><dd><code>shared/site-ui.css</code><code>home/about/about.css</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-brief">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-underline">
+  <p class="ds-label">Desktop navigation · footer contacts</p><h4>Link / Underline</h4><p class="ds-motion-timing">300 ms · shared ease-out</p>
+  <p>The 1 px line scales horizontally from 0 → 1 using cubic-bezier(.22,1,.36,1). It follows the label width; the transform origin switches to make entry and exit directional.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Hover a link; keyboard focus also reveals the header underline.</dd><dt>Playback &amp; reverse</dt><dd>Reverses on pointer leave. Mobile menu links have their own presentation; footer hover is limited to hover-capable fine pointers. Keyboard focus uses the shared outline.</dd><dt>Reduced motion</dt><dd>The underline changes immediately.</dd><dt>Current source</dt><dd><code>shared/site-ui.css</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-footer-link">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-logos">
+  <p class="ds-label">Light &amp; Dark AI brief · Homepage · About</p><h4>AI brief / Logo motion</h4><p class="ds-motion-timing">Hover 2400 ms loop · activation 500 ms</p>
+  <p>Hover moves each logo 0 → −2 → 0 px, with a 140 ms step. Leaving hover returns current poses to baseline over 240 ms. Activation sends one −9 px wave with a 70 ms step, starting from current poses. Each half uses cubic-bezier(.37,0,.63,1).</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Desktop fine-pointer hover, or activate the enabled Brief button.</dd><dt>Playback &amp; reverse</dt><dd>Hover loops only while eligible. A click wave finishes before hover can resume; repeated clicks keep the current wave. Manual copy disables motion; hiding the tab cancels it.</dd><dt>Reduced motion</dt><dd>No logo movement. Mobile has no hover loop; normal activation can still play the single wave when reduced motion is off.</dd><dt>Current source</dt><dd><code>shared/site-controls.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-brief">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-copied">
+  <p class="ds-label">Light &amp; Dark AI brief · Homepage · About</p><h4>AI brief / Copy confirmation</h4><p class="ds-motion-timing">320 ms fade · next label starts at 360 ms</p>
+  <p>Fade the outgoing label out, leave a 40 ms separation, then fade in the other label over 320 ms using cubic-bezier(.4,0,.2,1). The check shares the Copied label’s opacity; the button frame stays fixed.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>The prompt is copied successfully.</dd><dt>Playback &amp; reverse</dt><dd>Copied is requested for 2200 ms after success, then the sequence reverses to Brief your AI. Copy failure exposes selectable Manual copy instead.</dd><dt>Reduced motion</dt><dd>Labels switch immediately; confirmation and manual-copy behavior remain available.</dd><dt>Current source</dt><dd><code>shared/site-ui.css</code><code>shared/site-controls.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-brief">Related component &amp; code</a></p>
+</article><article class="ds-motion-card" id="motion-availability">
+  <p class="ds-label">Homepage · project actions</p><h4>Status / Coming Soon</h4><p class="ds-motion-timing">2200 ms loop · ease-in-out</p>
+  <p>The original 12px dot pulses opacity .4 → 1 → .4. Text and the disabled action stay still.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>The current project action is visible and uncovered.</dd><dt>Playback &amp; reverse</dt><dd>Pauses offscreen, when the document is hidden, behind the mobile menu or when its surface is covered. Continues while visible.</dd><dt>Reduced motion</dt><dd>Static dot at full opacity.</dd><dt>Current source</dt><dd><code>home/styles.css</code><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-availability">Related component &amp; code</a></p>
+</article></div></div>
+<div class="ds-motion-group"><h3>Scroll</h3><div class="ds-motion-grid"><article class="ds-motion-card" id="motion-work-stack">
+  <p class="ds-label">Homepage · desktop &amp; mobile</p><h4>Scroll / Work panels</h4><p class="ds-motion-timing">Scroll progress · no fixed duration</p>
+  <p>The next full-height panel covers the previous one. An outgoing project fades 1 → 0 and scales 1 → 0.975. The intro has its own recede: opacity 1 → .38, scale 1 → .955 and up to −18 px. Mobile uses native sticky surfaces and preserves reading space for taller cards.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Actual page scrolling through the intro and project panels.</dd><dt>Playback &amp; reverse</dt><dd>Stopping scroll holds the pose; reversing scroll restores it. Fully covered surfaces become inert. Resize preserves the current reading position. The live homepage owns this composition; the card specimen documents its content.</dd><dt>Reduced motion</dt><dd>Ordinary readable list without overlapping transforms. Short/fallback layouts keep content in flow.</dd><dt>Current source</dt><dd><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-work-section">Related component &amp; code</a><a href="/#selected-works" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article><article class="ds-motion-card" id="motion-footer">
+  <p class="ds-label">Homepage · About · reusable reading page</p><h4>Scroll / Contact footer</h4><p class="ds-motion-timing">Scroll progress · corners flatten in final quarter</p>
+  <p>The outgoing surface fades and recedes to scale 0.975. Footer upper corners go from 40px → 0 after 75% cover, using smoothstep. The incoming footer follows native sticky/scroll geometry.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>The contact footer covers the preceding content.</dd><dt>Playback &amp; reverse</dt><dd>Reverse scrolling restores the previous surface and round corners. Reading-page content waits until its natural end before the footer covers it. Menu scroll lock and hidden tabs preserve the current pose.</dd><dt>Reduced motion</dt><dd>Footer follows content in ordinary flow; the overlap effect is removed.</dd><dt>Current source</dt><dd><code>home/about/about.js</code><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-reading-page">Related component &amp; code</a><a href="/about/#contact" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article><article class="ds-motion-card" id="motion-navigation-scroll">
+  <p class="ds-label">Homepage · Work link &amp; scene navigation</p><h4>Navigation / Work anchor</h4><p class="ds-motion-timing">1050 ms · power2.inOut</p>
+  <p>Animate the real scroll position to the requested scene; the same scene renderer paints the intermediate panel poses.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>Activate navigation to a work section.</dd><dt>Playback &amp; reverse</dt><dd>The destination receives focus once its content is visible when requested. User scrolling cancels the active navigation tween. Fallback layouts position the page immediately.</dd><dt>Reduced motion</dt><dd>Navigate immediately with readable focus targets.</dd><dt>Current source</dt><dd><code>home/app.js</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-header">Related component &amp; code</a><a href="/#selected-works" target="_blank" rel="noopener noreferrer">Open live page ↗</a></p>
+</article></div></div>
+<div class="ds-motion-group"><h3>Library only</h3><div class="ds-motion-grid"><article class="ds-motion-card" id="motion-asset-loading">
+  <p class="ds-label">Design-system gallery &amp; its previews</p><h4>Loading / Library SVGs</h4><p class="ds-motion-timing">240 ms · shared ease-out</p>
+  <p>Fade 0 → 1 using cubic-bezier(.22,1,.36,1). Brief logos appear as one prepared row; ready/offscreen assets appear immediately.</p>
+  <details><summary>Trigger, playback &amp; accessibility</summary><dl><dt>Trigger</dt><dd>A visible, slowly loaded native SVG or a complete Brief logo row finishes decoding.</dd><dt>Playback &amp; reverse</dt><dd>The gallery prepares actual image nodes in visual order. State changes do not restart loading or replace the SVGs. This loading presentation belongs only to the DS.</dd><dt>Reduced motion</dt><dd>Prepared assets appear immediately without a fade.</dd><dt>Current source</dt><dd><code>home/ds/asset-loading.css</code></dd></dl></details>
+  <p class="ds-motion-links"><a href="#component-brief">Related component &amp; code</a></p>
+</article></div></div>
+  <!-- shared:motion-catalog:end -->
+      </section>
+      <section id="icons" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">05 / ASSETS</span><h2>Icons & logos</h2></div><p id="icon-count">Current assets. Actual sizes.</p></div>
+        <p class="ds-fine">Arrow left and Check are from <a href="https://lucide.dev/" target="_blank" rel="noopener noreferrer">Lucide</a>. The mobile menu is the current custom animated glyph. Brand marks and the Coming Soon dot are separate assets. Only variants used on the homepage or About are shown. Light and dark marks use their own SVG files, without CSS recoloring. <a href="/vendor/Lucide-LICENSE.txt?v=b495047bd93a" target="_blank" rel="noopener noreferrer">Lucide license & attribution</a></p>
+        <h3 class="ds-icon-group-title">Interface icons</h3><div class="ds-icon-grid" id="interface-icons"></div>
+        <h3 class="ds-icon-group-title">Brand logos</h3><div class="ds-icon-grid" id="brand-icons"></div>
+        <h3 class="ds-icon-group-title">Status mark</h3><div class="ds-icon-grid" id="status-icons"></div>
+        <p class="ds-fine">The menu glyph is <span data-token="size-menu-glyph">28px</span> inside a <span data-token="size-target">44px</span> control. Brief logos use <span data-token="size-icon">24px</span> slots; Copilot retains its current wrapper and crop. The status animation is shown in the Coming Soon component below. Loaded marks appear softly if visible; offscreen preparation stays unobtrusive. The logo row in AI brief appears together.</p>
+      </section>
+      <section id="favicon" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">06 / ASSETS</span><h2>Favicon</h2></div><p>The current site identity, at every supplied size.</p></div>
+        <p class="ds-fine">The original frontal portrait used in browser tabs and bookmarks. Each file is shown on light and dark surfaces. Browser previews use their native 16, 32 and 48 px sizes; larger icons are shown at 64 px.</p>
+        <div id="favicon-grid" class="ds-icon-grid"></div>
+        <p class="ds-fine"><a id="favicon-manifest" href="/assets/site.webmanifest?v=068621bc9238" target="_blank" rel="noopener noreferrer">Open site.webmanifest</a> · Includes the existing 192 and 512 px icons. View code provides the head links and exact manifest.</p>
+      </section>
+      <section id="technical" class="ds-section">
+        <div class="ds-section-heading"><div><span class="ds-label">PLATFORMS</span><h2 id="technical-title">Technical implementation</h2></div><p>Current platform differences.</p></div>
+        <p class="ds-fine">One HTML, CSS and JavaScript system shares tokens and components across platforms. Mobile layout applies at ≤767 CSS px, or ≤1023 CSS px with a coarse primary pointer. Wider windows use the desktop layout.</p>
+        <p id="technical-scroll-hint" class="ds-scroll-hint" hidden>Swipe or scroll horizontally to see all columns. Keyboard: focus the table and use the arrow keys.</p>
+        <div class="ds-platform-scroll">
+        <div class="ds-version-table-wrap ds-platform-table-wrap" role="region" aria-labelledby="technical-title" tabindex="0">
+          <table class="ds-platform-table">
+            <caption>Current homepage and About implementation</caption>
+            <thead><tr><th scope="col">Platform</th><th scope="col">Layout and input</th><th scope="col">Homepage portrait</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Desktop<br><span>Safari / Chrome</span></th><td>Centered 944 px page in wide windows; inline navigation, keyboard focus and supported hover. Narrow windows follow the same responsive rule.</td><td>Standard Canvas 2D player: mouse following, drag and spring return. Frames are prepared at the display raster size.</td></tr>
+              <tr><th scope="row">iPad<br><span>Safari</span></th><td>Mobile in narrow or ≤1023 px coarse-pointer windows; desktop from 1024 px. Touch drag works in either layout; mouse following depends on reported mouse/trackpad capabilities.</td><td>The same standard player as desktop and iPhone. No dedicated iPad renderer.</td></tr>
+              <tr><th scope="row">iPhone<br><span>Safari</span></th><td>Usually mobile, under the same responsive rule. The menu locks background scroll, contains keyboard focus and restores the reading position.</td><td>Standard player with touch drag and spring return. Vertical gestures remain available for page scrolling.</td></tr>
+              <tr><th scope="row">Android<br><span>Chrome</span></th><td>The same responsive UI. Android user agent plus a coarse primary pointer selects the alternate player, even in wide windows.</td><td>After the welcome turn, native-size ImageBitmaps are scaled into a canvas capped at 2× CSS size. Bounded frame advances and gentler touch rotation limit decoding jumps.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <h3 class="ds-icon-group-title">Implementation and verification</h3>
+        <p class="ds-fine">The platform rows describe the current code paths. They are not a device-support certification. Evidence applies only to the named build and scope.</p>
+        <ul class="ds-platform-notes ds-verification-scope">
+          <li><strong>Full site regression · 16 Oct 2026.</strong> Chrome and Playwright WebKit at 1440 and 390 CSS px checked Homepage, About and DS, build <code>e6a88275e6df</code>. The mobile cases used browser emulation; Playwright WebKit is not native Safari. Browser and OS versions were not recorded in that run.</li>
+          <li><strong>This documentation update · 16 Oct 2026.</strong> Codex in-app browser at desktop and mobile widths checks the guide, links, table scrolling and current-section navigation.</li>
+          <li><strong>Physical devices and native Safari.</strong> Not rechecked as a complete matrix for this documentation update. The iPad row describes the shared implementation, not a fresh physical-device test.</li>
+        </ul>
+        <details class="ds-naming ds-platform-sources"><summary>Verification evidence in the repository</summary><p>Full regression: <code>references/final-parallel-audit-20261016/README.md</code> and <code>browser-final.json</code>. Current documentation checks: <code>references/ds-documentation-improvements/</code>. These paths are relative to the source repository; they are not public download links.</p></details>
+        <h3 class="ds-icon-group-title">Shared browser handling</h3>
+        <ul class="ds-platform-notes">
+          <li><strong>Viewport.</strong> Mobile and coarse-pointer HOME scenes use stable <code>100svh</code>; work screens use <code>100lvh</code>. The menu uses <code>100dvh</code> and safe-area insets. Browser toolbar movement does not rebuild the scroll scene.</li>
+          <li><strong>Copy.</strong> AI brief calls <code>clipboard.writeText</code> directly from the click, preserving Safari’s user activation. Selection-based copy and Manual copy handle failures on every platform.</li>
+          <li><strong>PDF.</strong> A prepared <code>application/octet-stream</code> Blob avoids Safari’s inline PDF preview while keeping the <code>.pdf</code> filename. All platforms share this handler; the original link works before preparation.</li>
+          <li><strong>Appearance and motion.</strong> Shared tokens, native SVGs and responsive images; capability-based hover, disabled native tap overlay and visible keyboard focus. Reduced motion uses a static portrait and ordinary reading flow.</li>
+        </ul>
+        <details class="ds-naming ds-platform-sources"><summary>Implementation sources and browser references</summary><p>Player selection lives in the homepage bootstrap. Current implementations: <a href="/portrait-spin.js?v=dc744fc108e4" target="_blank" rel="noopener noreferrer">standard portrait</a>, <a href="/portrait-spin-android.js?v=9c82b3433460" target="_blank" rel="noopener noreferrer">Android portrait</a>, <a href="/app.js?v=02d9d29db390" target="_blank" rel="noopener noreferrer">HOME scenes</a>, <a href="/mobile-nav.js?v=e8652339618f" target="_blank" rel="noopener noreferrer">mobile navigation</a>, <a href="/assets/site-controls.js?v=aa16a1ece157" target="_blank" rel="noopener noreferrer">shared copy controls</a> and <a href="/resume-prefetch.js?v=8698924168bd" target="_blank" rel="noopener noreferrer">PDF download</a>.</p><p>Browser references: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer" target="_blank" rel="noopener noreferrer">primary pointer capabilities</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length#relative_length_units_based_on_viewport" target="_blank" rel="noopener noreferrer">viewport units</a> and <a href="https://webkit.org/blog/10855/async-clipboard-api/" target="_blank" rel="noopener noreferrer">WebKit clipboard activation</a>.</p></details>
+      </section>
+      <div class="ds-preview-toolbar"><div><span class="ds-label">PREVIEW VIEWPORT</span><p>Same components. Two layouts.</p></div><div class="ds-mode-switch" role="group" aria-label="Preview layout"><button type="button" data-mode="desktop" aria-pressed="true">Desktop</button><button type="button" data-mode="mobile" aria-pressed="false">Mobile · 440</button></div></div>
+      <section id="components" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">07 / INTERFACE</span><h2>Components, variants &amp; states</h2></div><p>Choose a variant or state, or interact with a preview. Use 100% to inspect native size; scroll horizontally when it exceeds the available width.</p></div><div id="component-gallery" class="ds-gallery"></div></section>
+      <section id="templates" class="ds-section"><div class="ds-section-heading"><div><span class="ds-label">08 / COMPOSITION</span><h2>Templates</h2></div><p>The current page patterns, assembled.</p></div><div id="template-gallery" class="ds-gallery"></div></section>
+      <footer class="ds-colophon"><p>Built from the current homepage, About and 404 sources.</p><p>Shared source keeps pages and this library in sync. Reuse an existing component first; extend the library when a new page needs a new pattern.</p></footer>
+    </main>
+  </div>
+  <a class="ds-code-toggle ds-contents-link" href="#library-sections" hidden>Sections ↑</a>
+  <noscript><p class="ds-noscript">Enable JavaScript to explore the palette and interactive component previews.</p></noscript>
+</body>
+</html>
