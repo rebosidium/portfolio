@@ -1,0 +1,19 @@
+/* Independent mobile composition experiment; existing Manrope and motion. */
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+  .menu-toggle:not([data-menu-icon="close"]) .menu-stroke-top{transform:translateY(-4px) rotate(0deg)}
+  .menu-toggle:not([data-menu-icon="close"]) .menu-stroke-bottom{transform:translateY(4px) rotate(0deg)}
+  html[data-mobile-nav-ready="true"] .header nav{
+    padding:calc(104px + env(safe-area-inset-top)) 32px calc(48px + env(safe-area-inset-bottom));
+    align-items:flex-start;
+    justify-content:flex-start;
+    gap:4px;
+  }
+  html[data-mobile-nav-ready="true"] .header nav a{
+    justify-content:flex-start;
+    min-height:44px;
+    padding:4px 0;
+    font-size:24px;
+    line-height:1.4;
+    text-align:left;
+  }
+}
