@@ -538,6 +538,8 @@
       const footerCover = footerCoverAt(mobilePaintedY);
       panels.forEach((panel,index) => {
         const next = panels[index+1];
+        const stickyTop=parseFloat(panel.element.style.getPropertyValue('--work-sticky-top'))||0;
+        panel.element.dataset.sceneSticky=String(mobilePaintedY>=panel.start-stickyTop&&mobilePaintedY<(next?.start??footerStart));
         const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
         set(panel.element,{autoAlpha:1-covering,scale:1-overlapRecede*covering,y:0});
@@ -655,6 +657,7 @@
       const worksVisible = mobileOverlap ? works.getBoundingClientRect().top < (window.visualViewport?.offsetTop || 0) + (window.visualViewport?.height || height) : started;
       if (!started) releasePortrait();
       if (mobileOverlap) {
+        intro.dataset.sceneSticky=String(progress>0&&progress<1);
         paintWorkPanels();
         if (!worksVisible && revealed.size) resetReveals();
         if (!started) document.body.style.removeProperty('background-color');

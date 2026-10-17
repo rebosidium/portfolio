@@ -88,7 +88,7 @@
     frame=0;
     if(root.classList.contains('mobile-menu-open')||document.hidden)return;
     if(still()){
-      page.classList.remove('reading-footer-overlap');
+      page.classList.remove('reading-footer-overlap','reading-footer-ready');
       main.style.removeProperty('opacity');main.style.removeProperty('transform');
       footer.style.removeProperty('--footer-radius');
       delete root.dataset.readingFooterCovered;delete page.dataset.readingFooterProgress;
@@ -105,13 +105,16 @@
       const headingDepth=footerTitle ? topPadding(footer)+topPadding(footerInner)+footerTitle.offsetHeight : 0;
       overlapTravel=Math.max(1,viewport-Math.min(headingDepth,viewport-1));
       page.style.setProperty('--reading-sticky-top',`${Math.min(0,overlapTravel-main.offsetHeight)}px`);
-      page.classList.add('reading-footer-overlap');
+      page.classList.add('reading-footer-ready');
       footerStart=footer.getBoundingClientRect().top+window.scrollY;
       measurePending=false;
     }
     // Sticky layout supplies the same native incoming motion as HOME. Only the
     // outgoing reading surface and the last quarter of the corners are painted.
     const cover=clamp((window.scrollY-footerStart+overlapTravel)/overlapTravel);
+    // Safari samples even inactive sticky containers for its browser fill.
+    // Keep ordinary reading in normal flow; pin only during footer overlap.
+    page.classList.toggle('reading-footer-overlap',cover>0&&cover<1);
     const flatten=clamp((cover-flattenStart)/(1-flattenStart));
     main.style.opacity=String(1-cover);
     main.style.transform=cover>0?`scale(${1-overlapRecede*cover})`:'none';

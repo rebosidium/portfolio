@@ -81,8 +81,10 @@ html:not([data-mobile-nav-ready="true"]) .intro-content{padding-top:calc(165px +
 .work-copy .work-description{grid-row:3;margin-bottom:var(--space-7)}
 .work-details,.work-actions{grid-row:4;justify-self:start}
 .mobile-overlap .scene-stage{isolation:isolate}
-.mobile-overlap .intro-screen{position:sticky;top:var(--mobile-intro-top);z-index:1;transform-origin:center bottom}
-.mobile-overlap .works-screen{--work-title-rest:40px;--work-section-title-height:140px;position:sticky;top:var(--work-sticky-top,0px);min-height:calc(var(--work-screen-height,100lvh) + var(--work-read-travel,0px));padding-bottom:var(--work-read-travel,0px);z-index:var(--work-layer,2);transform-origin:center top}
+.mobile-overlap .intro-screen{position:relative;top:auto;z-index:1;transform-origin:center bottom}
+.mobile-overlap .works-screen{--work-title-rest:40px;--work-section-title-height:140px;position:relative;top:auto;min-height:calc(var(--work-screen-height,100lvh) + var(--work-read-travel,0px));padding-bottom:var(--work-read-travel,0px);z-index:var(--work-layer,2);transform-origin:center top}
+.mobile-overlap .intro-screen[data-scene-sticky="true"]{position:sticky;top:var(--mobile-intro-top)}
+.mobile-overlap .works-screen[data-scene-sticky="true"]{position:sticky;top:var(--work-sticky-top,0px)}
 .mobile-overlap .work-screen-followup{--work-section-title-height:0px}
 .mobile-overlap .works-body{padding-top:max(32px,calc(var(--work-title-rest) - var(--work-section-title-height)))}
 .mobile-overlap[data-scene-view="works"] body{background:var(--color-surface)}
