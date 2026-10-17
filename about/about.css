@@ -40,6 +40,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-desktop-back{display:none}
   .about-page .header .name{white-space:nowrap}
   .about-main{width:calc(100% - var(--gutter-page) * 2);max-width:var(--width-mobile);padding-top:calc(104px + env(safe-area-inset-top));padding-bottom:112px}
+  .about-avatar{width:var(--size-avatar-mobile);height:var(--size-avatar-mobile)}
   .about-title-row{display:block;margin-bottom:42px}
   .about-title{width:100%}
   .about-prose{width:100%}
