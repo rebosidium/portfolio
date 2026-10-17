@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en" data-ui-revision="8963d9273cb6" data-build="47bd17a8d791">
+<head>
+  <meta charset="utf-8">
+<!-- shared:analytics-preferences:start -->
+  <script data-analytics="preferences">
+(() => {
+  'use strict';
+  const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
+  const routes = ['/', '/index.html', '/about', '/test/about/', '/test/about/index.html'];
+  const allowed = hosts.includes(location.hostname) && (routes.includes(location.pathname) || document.documentElement.dataset.pageKind === 'not-found');
+  const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
+  const qaKey = 'portfolio.analytics.qa.v1';
+  const params = new URLSearchParams(location.search);
+  const read = (storage, key) => {try {return window[storage].getItem(key);} catch {return null;}};
+  const write = (storage, key, value) => {try {window[storage].setItem(key, value); return true;} catch {return false;}};
+  let ownerExcluded = read('localStorage', ownerKey) === '1';
+  let qa = read('sessionStorage', qaKey) === '1';
+  const ownerControl = allowed && ['0', '1'].includes(params.get('analytics_owner'));
+  let ownerSaved = true;
+  if (ownerControl) {
+    ownerExcluded = params.get('analytics_owner') === '1';
+    ownerSaved = write('localStorage', ownerKey, ownerExcluded ? '1' : '0');
+  }
+  if (allowed && ['0', '1'].includes(params.get('analytics_test'))) {
+    qa = params.get('analytics_test') === '1';
+    write('sessionStorage', qaKey, qa ? '1' : '0');
+  }
+  // QA is an explicit, session-scoped delivery check. It never clears the
+  // persistent owner preference and all its events keep analytics_test=true.
+  window.portfolioAnalytics = Object.freeze({ownerExcluded, qa,
+    enabled: allowed && (!ownerExcluded || qa)});
+  document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
+  document.documentElement.dataset.analyticsMode = qa ? 'test' : ownerExcluded ? 'off' : 'normal';
+  if (ownerControl || (allowed && qa)) {
+    const clean = new URL(location.href);
+    if (qa) clean.searchParams.set('analytics_test', '1');
+    clean.searchParams.delete('analytics_owner');
+    if (clean.searchParams.get('analytics_test') === '0') clean.searchParams.delete('analytics_test');
+    try {history.replaceState(history.state, '', clean.pathname + clean.search + clean.hash);} catch {}
+  }
+  const ready = () => {
+    // Carry marked QA across page changes and new tabs, including Clarity's
+    // URL-based exclusions. Same-document hash links and PDF/external links
+    // retain their native hrefs and handlers.
+    if (allowed && qa) for (const link of document.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) continue;
+      try {
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || !routes.includes(url.pathname)
+          || url.searchParams.get('analytics_test') === '0') continue;
+        url.searchParams.set('analytics_test', '1');
+        link.setAttribute('href', url.pathname + url.search + url.hash);
+      } catch {}
+    }
+    // Only an explicit owner-setting link shows this temporary confirmation.
+    if (ownerControl) {
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.dataset.analyticsOwnerStatus = ownerExcluded ? 'excluded' : 'included';
+      status.textContent = !ownerSaved ? 'This browser could not save the analytics preference.'
+        : ownerExcluded ? 'Saved: analytics is excluded for this browser.'
+        : 'Saved: this browser is included in analytics.';
+      status.style.cssText = 'position:fixed;z-index:10000;left:16px;right:16px;bottom:16px;max-width:440px;margin:0;padding:12px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#232522;font:14px/1.5 sans-serif;box-shadow:0 2px 12px #0001';
+      document.body.append(status);
+      setTimeout(() => status.remove(), 15000);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true});
+  else ready();
+  window.addEventListener('storage', event => {
+    if (allowed && event.key === ownerKey) location.reload();
+  });
+})();
+  </script>
+  <!-- shared:analytics-preferences:end -->
+  <script type="text/javascript" data-analytics="posthog">
+    // Production HOME/About only; previews and retired NEW stay untracked.
+    const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/test/about/', '/test/about/index.html'].includes(location.pathname)) {
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
+        api_host: 'https://events.dmitryrybalka.com',
+        ui_host: 'https://us.posthog.com',
+        defaults: '2026-08-30',
+        capture_pageview: true,
+        capture_pageleave: true,
+        autocapture: true,
+        capture_heatmaps: true,
+        person_profiles: 'identified_only',
+        capture_exceptions: false,
+        enable_recording_console_log: false,
+        disable_surveys: true,
+        before_send: event => {
+          if (event?.properties) Object.assign(event.properties, {
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
+            site_path: location.pathname.startsWith('/about') ? '/test/about/' : '/', site_build: document.documentElement.dataset.build,
+            analytics_version: 2,
+            analytics_test: window.portfolioAnalytics.qa
+          });
+          return event;
+        },
+        session_recording: {
+          maskAllInputs: true,
+          recordCrossOriginIframes: false,
+          captureCanvas: {recordCanvas: false},
+          streamNetworkBody: false,
+          captureJsonLd: false
+        }
+      });
+    }
+  </script>
+  <script type="text/javascript" data-analytics="microsoft-clarity">
+    // Local previews do not track. Production QA is tagged by analytics.js.
+    const clarityTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/test/about/', '/test/about/index.html'].includes(location.pathname)) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yv8rnad266");
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="canonical" href="https://dmitryrybalka.com/about/">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <title>About Me — Dmitry Rybalka</title>
+  <meta name="description" content="A little about Dima: product design, people he has worked with, and a few things away from the screen.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check-white.svg?v=f5434dbfe8e0" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-claude.svg?v=4c02aab6dbf5" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-chatgpt-white.svg?v=31685c331afc" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-codex-blue.svg?v=688bbe62639f" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-cursor-white.svg?v=b6213bf33e0a" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/test/assets/site-ui.css?v=8abfd9d9b751">
+  <link rel="stylesheet" href="/test/about/about.css?v=bcebd22d7498">
+  <script>
+    window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  </script>
+  <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
+  <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
+  <script src="/assets/site-controls.js?v=aa16a1ece157" defer></script>
+  
+  <script src="/test/about/about.js?v=a9693fbcc4bc" defer></script>
+  <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.26.3+38b415114e9e","tokens":"1.2.0+b8254913974a","components":{"brief-dark":"1.2.0+ec88436c7c46","back":"1.2.0+ada4caf619ab","link":"1.2.0+f584ec18fcb2","footer-link":"1.2.0+732d94626949","about-title":"1.2.0+dde265b6b930","about-avatar":"1.2.0+0aa701fe8658","prose-section":"1.2.0+8693e0f87806","photo-slot":"1.2.0+449d11bdc07b","about-header":"1.2.0+804c249fcb22","footer":"1.2.0+1604e738745e","reading-page":"1.2.0+cfae7a2b29e4"},"revision":"8963d9273cb6"}</script>
+<meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+<body class="about-page" data-node-id="204:340">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <div class="identity about-identity"><a class="about-mobile-back ui-back" href="/test/" aria-label="Back to homepage"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a><a class="name" href="/test/">Dmitry Rybalka</a></div>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
+      <a class="mobile-only" href="/test/">Home</a>
+      <a aria-current="page" aria-disabled="true" tabindex="-1">About</a>
+      <a class="desktop-only" href="/test/#selected-works" data-node-id="159:892">Work</a>
+      <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="159:896">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <!-- shared:about-main:start -->
+  <main id="about" class="about-main" data-navigation-background>
+    <div class="about-title-row" style="--reading-reveal-order:0">
+      <a class="ui-back about-desktop-back" href="/test/"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""><span>Back</span></a>
+      <div class="about-title" data-node-id="204:350">
+        <div class="about-avatar" data-node-id="206:490"><img src="/assets/about-avatar-58.webp?v=a33ef1ac97e3" srcset="/assets/about-avatar-58.webp?v=a33ef1ac97e3 58w, /assets/about-avatar-116.webp?v=7c1b156277b1 116w, /assets/about-avatar-174.webp?v=f4f09943ad3f 174w, /assets/about-avatar-232.webp?v=7a0adf84cce8 232w" sizes="(max-width: 767px) 64px, (max-width: 1023px) and (pointer: coarse) 64px, 58px" width="58" height="58" alt="" decoding="async"></div>
+        <h1>About me</h1>
+      </div>
+    </div>
+    <div class="about-intro about-prose" data-node-id="207:761">
+      <p style="--reading-reveal-order:1">I’m Dima, a designer with a background in banking, classifieds, and marketplaces. I’ve worked with companies and brands including Yandex, Raiffeisen Bank, Decathlon, and Leroy Merlin, as well as small teams and startups. My projects span Russia, Cyprus, and the US.</p>
+      <p style="--reading-reveal-order:2">I like small changes that make products easier to use. There’s often a lot of thought and teamwork behind something that looks simple. I stay hands-on while shaping how design teams work.</p>
+    </div>
+    <!-- Draft photo slot from Figma. Replace only with a real photo selected by Dima. -->
+    <div class="about-photo-placeholder" role="img" aria-label="Photo placeholder — a personal photo will be added here" data-node-id="207:755" style="--reading-reveal-order:3"></div>
+    <div class="about-sections about-prose" data-node-id="207:762">
+      <section aria-labelledby="design-title">
+        <h2 id="design-title" style="--reading-reveal-order:4">How I work</h2>
+        <p style="--reading-reveal-order:5">To clarify our goals and explore how to reach them, I discuss ideas with stakeholders, review data, and talk to users. I care about how an interface works, looks, and feels — and its impact on the business.</p>
+        <p style="--reading-reveal-order:6">Having built websites myself, I’m comfortable reading code and discussing technical decisions with engineers. I also build workflows with AI agents to support design and research.</p>
+        <p style="--reading-reveal-order:7">I enjoy helping designers see their strengths and decide where to grow. Competency frameworks and individual development plans help us agree on next steps.</p>
+      </section>
+      <section aria-labelledby="away-title">
+        <h2 id="away-title" style="--reading-reveal-order:8">Outside of work</h2>
+        <p style="--reading-reveal-order:9">In my triathlon days, I ran several marathons, completed a half Ironman, and logged thousands of kilometers on Zwift. I also started a local running club.</p>
+        <p style="--reading-reveal-order:10">I enjoy skiing and cycling. When I want some time to myself, I head out on my paddleboard — I love the quiet out on the water.</p>
+      </section>
+    </div>
+  </main>
+  <!-- shared:about-main:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1" data-node-id="182:2736">Let’s Talk</h2>
+    <div class="footer-content" data-node-id="187:419">
+      <p class="footer-description" data-node-id="187:420">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Contact links" data-node-id="187:421">
+        <a href="mailto:rebosidium@gmail.com" data-node-id="187:422"><span class="footer-link-label">Email</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="187:423"><span class="footer-link-label">Resume</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="187:424"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="187:427"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="187:428">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:430">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:432">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:434">
+            <span class="footer-logo-copilot" data-node-id="187:438"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:439"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:442">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+</body>
+</html>
