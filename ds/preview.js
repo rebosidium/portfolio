@@ -19,7 +19,7 @@
   // An isolated ready-menu link has no toggle to initialise the full menu runtime.
   if(example.id==='link')document.documentElement.dataset.mobileNavReady='true';
   window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
-  const control=document.querySelector(example.kind.includes('header')?(mobile?'.menu-toggle':'.header nav a'):'.agent-button,.ui-back,.header nav a,.footer-links a');
+  const control=document.querySelector(example.kind.includes('header')?(mobile?'.menu-toggle':'.header nav a:not(.mobile-only)'):'.agent-button,.ui-back,.header nav a,.footer-links a');
   function notify(type,detail={}){
     if(parent!==window)parent.postMessage({type,component:example.id,mode,instance,...detail},location.origin);
   }
@@ -68,7 +68,7 @@
     const image=document.querySelector('.portrait img');
     image.src=source.srcset;source.remove();
   }
-  if(state==='hover'&&example.group==='template')document.querySelector('.header nav a')?.setAttribute('data-ui-state','hover');
+  if(state==='hover'&&example.group==='template')document.querySelector('.header nav a:not(.mobile-only)')?.setAttribute('data-ui-state','hover');
   function script(src,done){const node=document.createElement('script');node.src=src;node.onload=done;document.body.append(node);}
   if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.controls,()=>{
     if(example.inPlaceStates){controlsReady=true;applyBriefState(state);notify('portfolio:ds-ready');}

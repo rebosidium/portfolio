@@ -234,7 +234,7 @@
     desiredOpen = true; // Force immediate cleanup even during an unfinished close.
     setOpen(false,false,true);
     if (mobile.matches && focusedLink) toggle.focus({preventScroll:true});
-    if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links[0].focus({preventScroll:true});
+    if (!mobile.matches && (focusedToggle || (focusedLink && focused.classList.contains('mobile-only')))) links.find(link=>!link.classList.contains('mobile-only'))?.focus({preventScroll:true});
   });
   reduced.addEventListener('change',() => {
     if (reduced.matches) {
