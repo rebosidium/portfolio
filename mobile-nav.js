@@ -5,6 +5,7 @@
   const toggle = header?.querySelector('.menu-toggle');
   const nav = header?.querySelector('#main-navigation');
   const links = nav ? [...nav.querySelectorAll('a')] : [];
+  const menuLinks = links.filter(link=>!link.classList.contains('desktop-only'));
   if (!header || !toggle || !nav || !links.length) {
     root.classList.add('mobile-navigation-fallback');
     window.resolveMobileNavigationReady?.(false);
@@ -172,14 +173,14 @@
       setIcon(true,instant);
       if (returnFocus) toggle.focus({preventScroll:true});
       if (!animate) {clearAnimation();return;}
-      gsap.killTweensOf(links);
+      gsap.killTweensOf(menuLinks);
       if (!wasVisible) {
         gsap.set(nav,{opacity:0});
-        gsap.set(links,{opacity:0,y:12});
+        gsap.set(menuLinks,{opacity:0,y:12});
       }
       transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
         .to(nav,{opacity:1,duration:.28,ease:'power2.out'},0)
-        .to(links,{opacity:1,y:0,duration:.32,stagger:.055,ease:'power3.out'},.07);
+        .to(menuLinks,{opacity:1,y:0,duration:.32,stagger:.055,ease:'power3.out'},.07);
     } else {
       if (returnFocus && mobile.matches) toggle.focus({preventScroll:true});
       const finish = () => {
@@ -194,7 +195,7 @@
       window.portraitPlayer?.prepareMenuPose?.();
       // Let every link leave in reverse order before fading the full-screen panel.
       transition = gsap.timeline({onComplete:() => {transition = null;clearAnimation();}})
-        .to(links,{opacity:0,y:12,duration:.24,stagger:{each:.055,from:'end'},ease:'power3.in'},0)
+        .to(menuLinks,{opacity:0,y:12,duration:.24,stagger:{each:.055,from:'end'},ease:'power3.in'},0)
         .to(nav,{opacity:0,duration:.28,ease:'power2.inOut'})
         .call(() => {nav.inert = false;setVisible(false,returnFocus);});
     }
@@ -220,7 +221,7 @@
     event.preventDefault();
     if (!desiredOpen) {toggle.focus({preventScroll:true});return;}
     // Safari can omit links from its native Tab order; keep this dialog's cycle explicit.
-    const controls = [toggle,...links.filter(link=>link.getAttribute('aria-disabled')!=='true')];
+    const controls = [toggle,...menuLinks.filter(link=>link.getAttribute('aria-disabled')!=='true')];
     const index = controls.indexOf(document.activeElement);
     const next = index < 0 ? (event.shiftKey ? controls.length - 1 : 0)
       : (index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
