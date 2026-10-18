@@ -1,7 +1,0 @@
-/* Loading presentation belongs to the DS, not the reusable component shape. */
-.ds-page,.ds-preview{--ds-duration-asset-reveal:.24s}
-[data-ds-asset-state="pending"]{opacity:0}
-[data-ds-image-error="true"]{visibility:hidden}
-@keyframes ds-asset-enter{from{opacity:0}to{opacity:1}}
-[data-ds-asset-state="revealing"]{animation:ds-asset-enter var(--ds-duration-asset-reveal) var(--ease-out)}
-@media(prefers-reduced-motion:reduce){[data-ds-asset-state="revealing"]{animation:none}}
