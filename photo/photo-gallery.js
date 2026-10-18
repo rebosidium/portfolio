@@ -8,6 +8,7 @@
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const previewReduced=!!document.querySelector('.ds-preview[data-state="reduced-motion"]');
     const still=()=>reduced.matches||previewReduced;
+    const centerScale=1.07;
     const originals=[...field.children];
     const worldWidth=+field.dataset.worldWidth,worldHeight=+field.dataset.worldHeight;
     const records=originals.map(node=>({node,x:+node.dataset.photoX,y:+node.dataset.photoY,w:+node.dataset.photoWidth,h:+node.dataset.photoHeight}));
@@ -40,7 +41,7 @@
       // Object-fit: cover may need more source width to fill a tall box.
       const cssWidth=Math.ceil(Math.max(parseFloat(style.width),parseFloat(style.height)*+image.dataset.sourceRatio));
       if(!Number.isFinite(cssWidth)||cssWidth<=0||!image.dataset.photoSrcset)return;
-      const requiredWidth=Math.ceil(cssWidth*pixelRatio);
+      const requiredWidth=Math.ceil(cssWidth*pixelRatio*centerScale);
       const variants=photoVariants.get(card.key);
       const selected=variants.find(variant=>variant.width>=requiredWidth)||variants[variants.length-1];
       photoSizes.set(card.key,cssWidth);
@@ -65,7 +66,8 @@
         if(outside)continue;
         sizePhoto(card);
         const distance=Math.hypot(px/(width*.64),py/(height*.72));
-        const lens=1-(desktopLens ? .08 : .04)*Math.min(1,distance*distance);
+        const edgeScale=desktopLens ? .92 : .96;
+        const lens=centerScale-(centerScale-edgeScale)*Math.min(1,distance*distance);
         if(footerFade){
           const top=height/2+py-h*lens/2;
           // Resolve blur in the white-dominant half; the opacity tail stays purely linear.
@@ -107,7 +109,7 @@
       gallery.style.setProperty('--photo-viewport-width',document.documentElement.clientWidth+'px');
       width=field.clientWidth;height=field.clientHeight;
       desktopLens=width>=768&&matchMedia('(hover: hover) and (pointer: fine)').matches;
-      // Reserve full-size slots, so the stronger desktop lens cannot overlap photos.
+      // Keep the approved slot geometry; the center lens uses the existing seams.
       unit=width<768 ? .49 : desktopLens ? .75 : .68;
       unit=Math.max(unit,width/(worldWidth*1.7),height/(worldHeight*1.7));
       tileW=worldWidth*unit;tileH=worldHeight*unit;
