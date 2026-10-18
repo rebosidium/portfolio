@@ -49,7 +49,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-photo-placeholder{height:222px;margin-bottom:var(--space-7)}
   .about-sections,.about-sections section{gap:var(--space-5)}
   .about-sections h2{min-height:0}
-  html:not([data-mobile-nav-ready="true"]) .about-main{padding-top:200px}
+  html:is(:not(.navigation-js),.mobile-navigation-fallback) .about-main{padding-top:200px}
 }
 @media(max-width:359px){
   .about-page .header:not(.menu-open) .about-identity{gap:var(--space-3)}

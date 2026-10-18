@@ -1,7 +1,36 @@
 <!doctype html>
-<html lang="en" data-build="ea4a347a3daf">
+<html lang="en" data-build="92606451a600">
 <head>
   <meta charset="utf-8">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <style>html:is([data-ds-freshness="checking"],[data-ds-freshness="waiting"],[data-ds-freshness="updating"]) :is(.ds-layout,#preview-root){visibility:hidden}</style>
   <!-- shared:ds-freshness:start -->
@@ -146,16 +175,16 @@
   <!-- shared:ds-freshness:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Component preview — Dmitry Rybalka</title>
-  <link rel="stylesheet" href="/assets/site-ui.css?v=7aa880b4abd9">
-  <link rel="stylesheet" href="/styles.css?v=b0aa2dfc4ebe">
-  <link rel="stylesheet" href="/about/about.css?v=bcebd22d7498">
+  <link rel="stylesheet" href="/assets/site-ui.css?v=eb55c7a86c29">
+  <link rel="stylesheet" href="/styles.css?v=4ced0a5bcb6e">
+  <link rel="stylesheet" href="/about/about.css?v=0c4457bfb0d2">
   <link rel="stylesheet" href="/photo/photo-gallery.css?v=db01e2eb1a3d">
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
   <link rel="stylesheet" href="/ds/preview.css?v=4ec3c8b66ad6">
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <link rel="stylesheet" href="/ds/asset-loading.css?v=a9b154c7c8ab">
   <script src="/ds/asset-loading.js?v=0d319f6c36f8" defer></script>
-  <script src="/ds/examples.js?v=40fc5699d929" defer></script>
+  <script src="/ds/examples.js?v=bed74a8a40dd" defer></script>
   <script src="/ds/preview.js?v=b6cb7f2da241" defer></script>
 </head>
 <body class="ds-preview"><div id="preview-root"></div></body>
