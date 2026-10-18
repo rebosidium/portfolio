@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-ui-revision="66c5d9e5df3a" data-build="a3c8c150c0f4">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <script type="text/javascript" data-analytics="posthog">
+    // Production HOME/About only; previews and retired NEW stay untracked.
+    const posthogTrackingEnabled = true;
+    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
+        api_host: 'https://events.dmitryrybalka.com',
+        ui_host: 'https://us.posthog.com',
+        defaults: '2026-08-30',
+        capture_pageview: true,
+        capture_pageleave: true,
+        autocapture: true,
+        capture_heatmaps: true,
+        person_profiles: 'identified_only',
+        capture_exceptions: false,
+        enable_recording_console_log: false,
+        disable_surveys: true,
+        before_send: event => {
+          if (event?.properties) Object.assign(event.properties, {
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
+            site_path: location.pathname.startsWith('/about') ? '/about/' : '/', site_build: document.documentElement.dataset.build,
+            analytics_version: 2,
+            analytics_test: new URLSearchParams(location.search).get('analytics_test') === '1'
+          });
+          return event;
+        },
+        session_recording: {
+          maskAllInputs: true,
+          recordCrossOriginIframes: false,
+          captureCanvas: {recordCanvas: false},
+          streamNetworkBody: false,
+          captureJsonLd: false
+        }
+      });
+    }
+  </script>
+  <script type="text/javascript" data-analytics="microsoft-clarity">
+    // Local previews do not track. Production QA is tagged by analytics.js.
+    const clarityTrackingEnabled = true;
+    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yv8rnad266");
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://dmitryrybalka.com/work/raiffeisen-leasing/">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <title>Raiffeisen Leasing — Dmitry Rybalka</title>
+  <meta name="description" content="Design work for Raiffeisen Leasing: a leasing application and management platform for B2B clients and car dealers.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check-white.svg?v=f5434dbfe8e0" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-claude.svg?v=4c02aab6dbf5" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-chatgpt-white.svg?v=31685c331afc" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-codex-blue.svg?v=688bbe62639f" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-cursor-white.svg?v=b6213bf33e0a" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/assets/site-ui.css?v=04f90821463d">
+  <link rel="stylesheet" href="/about/about.css?v=8ed981e4ac63">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+  <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
+  <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
+  <script src="/assets/site-controls.js?v=aa16a1ece157" defer></script>
+  <script src="/analytics.js?v=cc6795f16a92" defer fetchpriority="low"></script>
+  <script src="/about/about.js?v=6ef19d67a325" defer></script>
+  <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.41.0+d2c0135eca41","tokens":"1.2.0+134c064e48dc","components":{"recommendations":"1.2.0+318c0d948551","brief-dark":"1.2.0+010b489e7a96","back":"1.2.0+a302efd28269","link":"1.2.0+fa301be78eb1","footer-link":"1.2.0+455476a3c67e","company-title":"1.2.0+920498450b57","company-page":"1.2.0+40d159f9b88c","prose-section":"1.2.0+5b077adcd9fd","about-header":"1.2.0+bfec72568b05","footer":"1.2.0+16d3fbd7c288"},"revision":"66c5d9e5df3a"}</script>
+</head>
+<body class="about-page">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <div class="identity about-identity"><a class="about-mobile-back ui-back" href="/" aria-label="Back to homepage"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a><a class="name" href="/">Dmitry Rybalka</a></div>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Main navigation">
+      <a class="mobile-only" href="/">Home</a>
+      <a href="/about/">About</a>
+      <a class="desktop-only" href="/#selected-works">Work</a>
+      <a href="mailto:rebosidium@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <!-- shared:about-main:start -->
+  <main class="about-main" data-navigation-background><div class="about-title-row" style="--reading-reveal-order:0"><a class="ui-back about-desktop-back" href="/"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""><span>Back</span></a><div class="about-title">
+        <div class="about-avatar company-logo"><img src="/assets/raiffeisen-leasing-logo.svg?v=a757b61d1748" width="58" height="58" alt="Raiffeisen Leasing" decoding="async"></div>
+        <h1>Raiffeisen Leasing</h1>
+      </div></div><div class="about-intro about-prose"><p style="--reading-reveal-order:1">Raiffeisen Leasing serves corporate clients with a €600M portfolio.</p><p style="--reading-reveal-order:2">I led design for a leasing application and management platform for B2B clients and car dealers, including hiring, design reviews and mentoring.</p></div><section class="recommendations" data-recommendations data-letter-motion="newspaper" data-duration="12000" role="region" aria-roledescription="carousel" aria-labelledby="recommendations-title" style="--reading-reveal-order:3">
+    <h2 id="recommendations-title">What people say</h2>
+    <div class="recommendations-slides"><figure class="recommendations-slide" id="recommendations-slide-1" role="group" aria-roledescription="slide" aria-label="1 of 4">
+      <blockquote cite="https://www.linkedin.com/in/ribadima/details/recommendations/"><p class="recommendations-quote-mobile">He always keeps user in mind while proposing new design. Dmitry has great experience in different products that he uses to develop the best possible solution<span aria-label="Excerpt continues">…</span></p><p class="recommendations-quote-desktop">Dmitry is a professional designer with high standards of performance. He always keeps user in mind while proposing new design. Dmitry has great experience in different products that he uses to develop the best possible solution<span aria-label="Excerpt continues">…</span></p></blockquote>
+      <figcaption><img class="recommendations-avatar" src="/assets/recommendation-maria-nosyreva.webp?v=627f4cf3a223" alt="" width="54" height="54" decoding="async" fetchpriority="low"><div class="recommendations-author"><a class="recommendations-author-name" href="https://www.linkedin.com/in/ribadima/details/recommendations/" target="_blank" rel="noopener noreferrer">Maria Nosyreva</a><span class="recommendations-author-role"><span class="recommendations-at">Then </span><span class="recommendations-role-full">Product Manager</span><abbr class="recommendations-role-compact" title="Product Manager">Product Manager</abbr><span class="recommendations-at"> at </span><a class="recommendations-company" href="https://www.linkedin.com/company/1347312/" target="_blank" rel="noopener noreferrer">Raiffeisen</a></span></div></figcaption>
+    </figure>
+<figure class="recommendations-slide" id="recommendations-slide-2" role="group" aria-roledescription="slide" aria-label="2 of 4">
+      <blockquote cite="https://www.linkedin.com/in/ribadima/details/recommendations/"><p class="recommendations-quote-mobile">Dmitry is almost the only one who tries to deep into the business processes, financial model, stakeholders’ views and other business aspects of the product<span aria-label="Excerpt continues">…</span></p><p class="recommendations-quote-desktop">I have worked with many designers and I want to mention that Dmitry is almost the only one who tries to deep into the business processes, financial model, stakeholders’ views and other business aspects of the product<span aria-label="Excerpt continues">…</span></p></blockquote>
+      <figcaption><img class="recommendations-avatar" src="/assets/recommendation-alexey-filatov.webp?v=34aa50e1e68b" alt="" width="54" height="54" decoding="async" fetchpriority="low"><div class="recommendations-author"><a class="recommendations-author-name" href="https://www.linkedin.com/in/ribadima/details/recommendations/" target="_blank" rel="noopener noreferrer">Alexey Filatov</a><span class="recommendations-author-role"><span class="recommendations-at">Then </span><span class="recommendations-role-full">Head of Digital Corporate Leasing Products Development</span><abbr class="recommendations-role-compact" title="Head of Digital Corporate Leasing Products Development">Head of Digital Leasing</abbr><span class="recommendations-at"> at </span><a class="recommendations-company" href="https://www.linkedin.com/company/2927256/" target="_blank" rel="noopener noreferrer">Raiffeisen</a></span></div></figcaption>
+    </figure>
+<figure class="recommendations-slide" id="recommendations-slide-3" role="group" aria-roledescription="slide" aria-label="3 of 4">
+      <blockquote cite="https://www.linkedin.com/in/ribadima/details/recommendations/"><p class="recommendations-quote-mobile">He successfully demonstrated a wide range of capabilities: from developing existing products to launching new services from scratch<span aria-label="Excerpt continues">…</span></p><p class="recommendations-quote-desktop">He successfully demonstrated a wide range of capabilities: from developing existing products to launching new services from scratch. He offered fresh conceptual design solutions and scalable approaches<span aria-label="Excerpt continues">…</span></p></blockquote>
+      <figcaption><img class="recommendations-avatar" src="/assets/recommendation-ilya-sergeev.webp?v=8b5745faba77" alt="" width="54" height="54" decoding="async" fetchpriority="low"><div class="recommendations-author"><a class="recommendations-author-name" href="https://www.linkedin.com/in/ribadima/details/recommendations/" target="_blank" rel="noopener noreferrer">Ilya Sergeev</a><span class="recommendations-author-role"><span class="recommendations-at">Then </span><span class="recommendations-role-full">Design Director, CIB</span><abbr class="recommendations-role-compact" title="Design Director, CIB">Design Director, CIB</abbr><span class="recommendations-at"> at </span><a class="recommendations-company" href="https://www.linkedin.com/company/2927256/" target="_blank" rel="noopener noreferrer">Raiffeisen</a></span></div></figcaption>
+    </figure>
+<figure class="recommendations-slide" id="recommendations-slide-4" role="group" aria-roledescription="slide" aria-label="4 of 4">
+      <blockquote cite="https://www.linkedin.com/in/ribadima/details/recommendations/"><p>Dmitriy consistently brings a unique perspective to product, offering unconventional solutions to achieve the desired goal</p></blockquote>
+      <figcaption><img class="recommendations-avatar" src="/assets/recommendation-yaroslav-kurenkov.webp?v=070165d5cba9" alt="" width="54" height="54" decoding="async" fetchpriority="low"><div class="recommendations-author"><a class="recommendations-author-name" href="https://www.linkedin.com/in/ribadima/details/recommendations/" target="_blank" rel="noopener noreferrer">Yaroslav Kurenkov</a><span class="recommendations-author-role"><span class="recommendations-at">Then </span><span class="recommendations-role-full">Senior QA Engineer</span><abbr class="recommendations-role-compact" title="Senior QA Engineer">Senior QA Engineer</abbr><span class="recommendations-at"> at </span><a class="recommendations-company" href="https://www.linkedin.com/company/2927256/" target="_blank" rel="noopener noreferrer">Raiffeisen</a></span></div></figcaption>
+    </figure></div>
+    <div class="recommendations-controls" hidden><div class="recommendations-dots" role="group" aria-label="Choose a recommendation"><button type="button" class="recommendations-dot" aria-label="Show recommendation 1: Maria Nosyreva" aria-controls="recommendations-slide-1" aria-current="true"><span class="recommendations-dot-track"><span class="recommendations-dot-fill"></span></span></button><button type="button" class="recommendations-dot" aria-label="Show recommendation 2: Alexey Filatov" aria-controls="recommendations-slide-2"><span class="recommendations-dot-track"><span class="recommendations-dot-fill"></span></span></button><button type="button" class="recommendations-dot" aria-label="Show recommendation 3: Ilya Sergeev" aria-controls="recommendations-slide-3"><span class="recommendations-dot-track"><span class="recommendations-dot-fill"></span></span></button><button type="button" class="recommendations-dot" aria-label="Show recommendation 4: Yaroslav Kurenkov" aria-controls="recommendations-slide-4"><span class="recommendations-dot-track"><span class="recommendations-dot-fill"></span></span></button></div></div>
+    <span class="recommendations-status" aria-live="polite" aria-atomic="true"></span>
+  </section><div class="about-sections about-prose"><section aria-labelledby="context"><h2 id="context" style="--reading-reveal-order:4">Context</h2><p style="--reading-reveal-order:5">Draft — product context, users and the challenges behind the work.</p></section><section aria-labelledby="contribution"><h2 id="contribution" style="--reading-reveal-order:6">My contribution</h2><p style="--reading-reveal-order:7">Draft — responsibilities, design decisions and collaboration with the team.</p></section><section aria-labelledby="outcomes"><h2 id="outcomes" style="--reading-reveal-order:8">Outcomes</h2><p style="--reading-reveal-order:9">Draft — confirmed results and lessons from the project.</p></section></div></main>
+  <!-- shared:about-main:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1">Let’s Talk</h2>
+    <div class="footer-content">
+      <p class="footer-description">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Contact links">
+        <a href="mailto:rebosidium@gmail.com"><span class="footer-link-label">Email</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf"><span class="footer-link-label">Resume</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status">
+          <span class="agent-button-label" aria-hidden="true"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <span class="footer-logo-copilot"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+</body>
+</html>
