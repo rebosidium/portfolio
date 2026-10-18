@@ -152,7 +152,7 @@ Email: rebosidium@gmail.com
 LinkedIn: https://www.linkedin.com/in/ribadima/
 Telegram: https://t.me/ribadima
 Portfolio: https://dmitryrybalka.com/
-Profile image: https://dmitryrybalka.com/assets/portfolio-2026/avatar/avatar.svg
+Profile image: https://dmitryrybalka.com/assets/about-avatar-232.webp
 
 ### Professional Summary
 
