@@ -1307,8 +1307,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+3ea32ba32b91",
-      "revision": "3ea32ba32b91c4b31fdb908257b2ab228064900372b94d571c1d710db7f6e772",
+      "version": "1.2.0+47a3fde7cd61",
+      "revision": "47a3fde7cd6113e6e203785960dee977413d7ef19616ff46ef9860b5052ca7bc",
       "markupRevision": "70efd27b6f2084961a4fed79f14419e85e4402fe7429159296e6c562d2205993",
       "owners": [
         "shared/photo-gallery.mjs"
@@ -1467,8 +1467,8 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "c8fbf1cc9130cab7af025f589b165d961ec9d771c8042bba06d2f8c277b8e231",
-          "revisionSha256": "c8fbf1cc9130cab7af025f589b165d961ec9d771c8042bba06d2f8c277b8e231"
+          "sha256": "e26e7ea8c9e08ac74e5594cb777e975275127ea5cd96ef6b14456f1855c7fe94",
+          "revisionSha256": "e26e7ea8c9e08ac74e5594cb777e975275127ea5cd96ef6b14456f1855c7fe94"
         },
         {
           "path": "shared/photo-gallery.js",
@@ -4772,7 +4772,7 @@
       "usage": "Photo experiment · desktop & mobile",
       "trigger": "The photo field is visible and no manual interaction is active.",
       "timing": "Right 8 px/s · up 4 px/s · resume after 3200 ms",
-      "motion": "Twenty photos form staggered periodic masonry columns, keeping crop ratios and individual size changes within the approved 20%. The field drifts diagonally up-right; drag and arrow keys pan it directly. The top and bottom 30% fades overlap adjacent prose by 30% of their depth.",
+      "motion": "Twenty photos form staggered periodic masonry columns, keeping crop ratios and individual size changes within the approved 20%. The field drifts diagonally up-right; drag and arrow keys pan it directly. The top and bottom 15% fades overlap adjacent prose by 10% of their depth.",
       "playback": "Pause/resume control, hover and keyboard focus stop the ambient motion. Manual input defers it for 3200 ms; wheel/trackpad scroll the page normally over photos. Offscreen, hidden tab and open menu stop rendering. No caption or horizontal fade.",
       "reduced": "Ambient drift and release inertia are disabled; manual direct panning remains available. The pause control is hidden.",
       "component": "photo-gallery",
@@ -4791,7 +4791,7 @@
         {
           "path": "shared/photo-gallery.css",
           "anchors": [
-            "transparent,#000 30%,#000 70%,transparent"
+            "transparent,#000 15%,#000 85%,transparent"
           ]
         }
       ]
@@ -5046,10 +5046,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.29.0",
-    "revision": "cfd2e70b241e",
-    "release": "1.29.0+cfd2e70b241e",
-    "updatedAt": "2026-10-18T00:51:39.515Z",
+    "version": "1.29.1",
+    "revision": "bb8b6e57fd03",
+    "release": "1.29.1+bb8b6e57fd03",
+    "updatedAt": "2026-10-18T00:58:45.509Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -5103,8 +5103,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "be45079a222471079eeb78b3df116b309ee0cfdd9ad6afcec0d508e06cc53348",
-        "revisionSha256": "be45079a222471079eeb78b3df116b309ee0cfdd9ad6afcec0d508e06cc53348"
+        "sha256": "d8d8027a6105127cd3ef1fb700e6dbf7f79dcb6cbdff53b10271009570215eb6",
+        "revisionSha256": "d8d8027a6105127cd3ef1fb700e6dbf7f79dcb6cbdff53b10271009570215eb6"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -5118,8 +5118,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "3f2024eb4160a52c24cebe43acc1d4e04391b03e7d501f766532d0f95e19cd1c",
-        "revisionSha256": "3f2024eb4160a52c24cebe43acc1d4e04391b03e7d501f766532d0f95e19cd1c"
+        "sha256": "89ec8d3e4547fe7574d17905f96d1bb362fdb2009091c386ae1f407cb3dc3522",
+        "revisionSha256": "89ec8d3e4547fe7574d17905f96d1bb362fdb2009091c386ae1f407cb3dc3522"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -5138,8 +5138,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "080f11ac1c26f0e9ea53e30fcc6fea4599a2d77efde077a2b4f3976bf9ba6149",
-        "revisionSha256": "080f11ac1c26f0e9ea53e30fcc6fea4599a2d77efde077a2b4f3976bf9ba6149"
+        "sha256": "eeb2fbbced004338a3aad5d9ce6d65416851d87eaf07a184263ab0b477711b15",
+        "revisionSha256": "eeb2fbbced004338a3aad5d9ce6d65416851d87eaf07a184263ab0b477711b15"
       },
       {
         "path": "shared/site-pages.mjs",
