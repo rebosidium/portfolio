@@ -74,7 +74,7 @@
     if(example.inPlaceStates){controlsReady=true;applyBriefState(state);notify('portfolio:ds-ready');}
   });
   if(document.querySelector('.work-artwork')&&state!=='image-error'){previewRoot.dataset.projectMediaAuto='';script(window.DS_CATALOG.scripts.projectMedia);}
-  if(example.id==='photo-gallery')script(window.DS_CATALOG.scripts.photoGallery);
+  if(document.querySelector('.photo-gallery'))script(window.DS_CATALOG.scripts.photoGallery);
   if(example.id==='reading-page')script(window.DS_CATALOG.scripts.reading);
   if(document.querySelector('.menu-toggle'))script(window.DS_CATALOG.scripts.navigation,()=>{if(state==='open')document.querySelector('.menu-toggle').click();});
   document.documentElement.dataset.contentReadyAt=performance.now().toFixed(1);
