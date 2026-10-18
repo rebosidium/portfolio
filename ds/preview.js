@@ -75,6 +75,10 @@
   });
   if(document.querySelector('.work-artwork')&&state!=='image-error'){previewRoot.dataset.projectMediaAuto='';script(window.DS_CATALOG.scripts.projectMedia);}
   if(document.querySelector('.photo-gallery'))script(window.DS_CATALOG.scripts.photoGallery);
+  if(document.querySelector('[data-recommendations]')){
+    const css=document.createElement('link');css.rel='stylesheet';css.href=window.DS_CATALOG.scripts.recommendationsStyle;document.head.append(css);
+    script(window.DS_CATALOG.scripts.recommendations);
+  }
   if(example.id==='reading-page')script(window.DS_CATALOG.scripts.reading);
   if(document.querySelector('.menu-toggle'))script(window.DS_CATALOG.scripts.navigation,()=>{if(state==='open')document.querySelector('.menu-toggle').click();});
   document.documentElement.dataset.contentReadyAt=performance.now().toFixed(1);

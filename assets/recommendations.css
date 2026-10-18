@@ -1,0 +1,32 @@
+/* This stylesheet is loaded only by pages/specimens rendering recommendations. */
+@font-face{font-family:Lora;src:url('lora-italic.woff?v=db7766f76df4') format('woff');font-style:italic;font-weight:400;font-display:swap}
+.recommendations{--recommendation-progress:0;--recommendation-leading:1.5;background:var(--color-surface);color:var(--color-ink);text-align:center;padding:var(--space-10) var(--space-5) var(--space-6);margin:var(--space-10) 0;font-family:var(--font-family);word-spacing:normal;touch-action:pan-y pinch-zoom;}
+.recommendations h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);margin:0 auto var(--space-10);max-width:var(--width-prose);}
+.recommendations-slides{max-width:var(--width-prose);margin-inline:auto;}
+.recommendations-slide{margin:0;}
+.recommendations-slide+.recommendations-slide{margin-top:var(--space-10);}
+.recommendations blockquote{font:italic 400 var(--type-heading)/var(--recommendation-leading) Lora,Georgia,serif;font-synthesis:none;letter-spacing:var(--tracking-body);margin:0 0 var(--space-8);text-wrap:pretty;}
+.recommendations blockquote p{margin:0;}
+.recommendations figcaption{font:var(--weight-body) var(--type-small)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);}
+.recommendations figcaption a:hover{text-decoration:underline;text-underline-offset:4px;}
+.recommendations.is-enhanced .recommendations-slides{display:grid;}
+.recommendations.is-enhanced .recommendations-slide{grid-area:1/1;display:flex;flex-direction:column;justify-content:space-between;visibility:hidden;opacity:0;transform:translateX(10px);margin:0;transition:opacity .35s ease,transform .35s ease,visibility .35s;pointer-events:none;}
+.recommendations.is-enhanced .recommendations-slide.is-current{visibility:visible;opacity:1;transform:none;pointer-events:auto;}
+.recommendations-controls:not([hidden]){display:flex;align-items:center;justify-content:center;gap:var(--space-3);margin-top:var(--space-5);}
+.recommendations-dots{display:flex;align-items:center;justify-content:center;}
+.recommendations-dot{display:flex;align-items:center;justify-content:center;box-sizing:content-box;min-width:var(--size-target);height:var(--size-target);border:0;padding:0;background:transparent;color:var(--color-ink);cursor:pointer;transition:min-width .3s ease;}
+.recommendations-dot[aria-current="true"]{min-width:74px;}
+.recommendations-dot-track{display:block;position:relative;width:var(--size-status);height:var(--size-status);overflow:hidden;border-radius:var(--radius-pill);background:var(--border-subtle-on-surface);transition:width .3s ease;}
+.recommendations-dot[aria-current="true"] .recommendations-dot-track{width:60px;}
+.recommendations-dot-fill{display:block;width:100%;height:100%;border-radius:inherit;background:var(--color-ink);transform:scaleX(0);transform-origin:left;}
+.recommendations-dot[aria-current="true"] .recommendations-dot-fill{transform:scaleX(var(--recommendation-progress));}
+.recommendations-play{font:var(--weight-body) var(--type-prompt)/var(--line-compact) var(--font-family);border:0;border-radius:var(--radius-control);color:var(--color-ink);background:transparent;min-width:var(--size-target);min-height:var(--size-target);padding:0 var(--space-2);cursor:pointer;}
+.recommendations-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+  .recommendations{margin:var(--space-7) 0;padding-top:var(--space-10);padding-bottom:var(--space-5);}
+  .recommendations blockquote{font-size:var(--type-body);margin-bottom:26px;}
+  .recommendations h2{margin-bottom:var(--space-10);}
+  .recommendations-controls:not([hidden]){gap:0;}
+}
+@media(prefers-reduced-motion:reduce){.recommendations.is-enhanced .recommendations-slide,.recommendations-dot,.recommendations-dot-track{transition:none;}}
+.ds-preview[data-state="reduced-motion"] .recommendations-slide,.ds-preview[data-state="reduced-motion"] .recommendations-dot,.ds-preview[data-state="reduced-motion"] .recommendations-dot-track{transition:none;}
