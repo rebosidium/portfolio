@@ -50,18 +50,12 @@
     }
     field.addEventListener('pointerdown',event=>{
       if(!event.isPrimary||event.button!==0)return;
-      stop();drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,lastX:event.clientX,lastY:event.clientY,time:event.timeStamp,active:event.pointerType!=='touch'};
-      // Touch keeps native vertical page scrolling. Horizontal swipes claim the field.
+      stop();drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,lastX:event.clientX,lastY:event.clientY,time:event.timeStamp,active:true};
+      // A gesture begun inside the field explores in both axes, including touch.
       if(drag.active){field.setPointerCapture(event.pointerId);gallery.dataset.dragging='';}
     });
     field.addEventListener('pointermove',event=>{
       if(!drag||event.pointerId!==drag.id)return;
-      if(!drag.active){
-        const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
-        if(Math.hypot(dx,dy)<7)return;
-        if(Math.abs(dy)>Math.abs(dx)){drag=null;return;}
-        drag.active=true;field.setPointerCapture(event.pointerId);gallery.dataset.dragging='';
-      }
       const dx=event.clientX-drag.lastX,dy=event.clientY-drag.lastY,dt=Math.max(8,event.timeStamp-drag.time);
       x=wrap(x+dx,tileW);y=wrap(y+dy,tileH);
       vx=Math.max(-3,Math.min(3,dx/dt));vy=Math.max(-3,Math.min(3,dy/dt));
@@ -76,10 +70,10 @@
     }
     field.addEventListener('pointerup',release);field.addEventListener('pointercancel',release);field.addEventListener('lostpointercapture',release);
     field.addEventListener('wheel',event=>{
-      // Ordinary vertical wheel scroll stays on the page. Trackpad horizontal or Shift scroll explores the gallery.
-      if(event.ctrlKey||(!event.shiftKey&&Math.abs(event.deltaX)<=Math.abs(event.deltaY)))return;
+      // Wheel and trackpad gestures over the field explore both axes; Ctrl keeps native zoom.
+      if(event.ctrlKey)return;
       event.preventDefault();stop();const amount=event.deltaMode===1?16:event.deltaMode===2?height:1;
-      x=wrap(x-(event.deltaX||event.deltaY)*amount,tileW);y=wrap(y-(event.shiftKey?0:event.deltaY)*amount,tileH);paint();
+      x=wrap(x-(event.shiftKey?(event.deltaX||event.deltaY):event.deltaX)*amount,tileW);y=wrap(y-(event.shiftKey?0:event.deltaY)*amount,tileH);paint();
     },{passive:false});
     field.addEventListener('keydown',event=>{
       const moves={ArrowLeft:[100,0],ArrowRight:[-100,0],ArrowUp:[0,100],ArrowDown:[0,-100]};
