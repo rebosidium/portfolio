@@ -1,0 +1,21 @@
+{
+  "preview": "/dark/",
+  "sourceBuild": "888d3b12cc7a",
+  "sources": {
+    "index.html": "9104c7e711fe",
+    "about/index.html": "5aeb119d8cd5"
+  },
+  "theme": "ce065649d951",
+  "pages": [
+    {
+      "source": "index.html",
+      "output": "index.html",
+      "route": "/dark/"
+    },
+    {
+      "source": "about/index.html",
+      "output": "about/index.html",
+      "route": "/dark/about/"
+    }
+  ]
+}

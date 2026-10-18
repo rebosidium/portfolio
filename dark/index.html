@@ -1,0 +1,563 @@
+<!doctype html>
+<html data-build="b7b60c1e933e" lang="en" data-ui-revision="aec7e9d5a941">
+<head>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <meta charset="utf-8">
+<!-- shared:analytics-preferences:start -->
+  <script data-analytics="preferences">
+(() => {
+  'use strict';
+  const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
+  const routes = ['/', '/index.html', '/about', '/about/', '/about/index.html'];
+  const allowed = hosts.includes(location.hostname) && (routes.includes(location.pathname) || document.documentElement.dataset.pageKind === 'not-found');
+  const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
+  const qaKey = 'portfolio.analytics.qa.v1';
+  const params = new URLSearchParams(location.search);
+  const read = (storage, key) => {try {return window[storage].getItem(key);} catch {return null;}};
+  const write = (storage, key, value) => {try {window[storage].setItem(key, value); return true;} catch {return false;}};
+  let ownerExcluded = read('localStorage', ownerKey) === '1';
+  let qa = read('sessionStorage', qaKey) === '1';
+  const ownerControl = allowed && ['0', '1'].includes(params.get('analytics_owner'));
+  let ownerSaved = true;
+  if (ownerControl) {
+    ownerExcluded = params.get('analytics_owner') === '1';
+    ownerSaved = write('localStorage', ownerKey, ownerExcluded ? '1' : '0');
+  }
+  if (allowed && ['0', '1'].includes(params.get('analytics_test'))) {
+    qa = params.get('analytics_test') === '1';
+    write('sessionStorage', qaKey, qa ? '1' : '0');
+  }
+  // QA is an explicit, session-scoped delivery check. It never clears the
+  // persistent owner preference and all its events keep analytics_test=true.
+  window.portfolioAnalytics = Object.freeze({ownerExcluded, qa,
+    enabled: allowed && (!ownerExcluded || qa)});
+  document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
+  document.documentElement.dataset.analyticsMode = qa ? 'test' : ownerExcluded ? 'off' : 'normal';
+  if (ownerControl || (allowed && qa)) {
+    const clean = new URL(location.href);
+    if (qa) clean.searchParams.set('analytics_test', '1');
+    clean.searchParams.delete('analytics_owner');
+    if (clean.searchParams.get('analytics_test') === '0') clean.searchParams.delete('analytics_test');
+    try {history.replaceState(history.state, '', clean.pathname + clean.search + clean.hash);} catch {}
+  }
+  const ready = () => {
+    // Carry marked QA across page changes and new tabs, including Clarity's
+    // URL-based exclusions. Same-document hash links and PDF/external links
+    // retain their native hrefs and handlers.
+    if (allowed && qa) for (const link of document.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) continue;
+      try {
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || !routes.includes(url.pathname)
+          || url.searchParams.get('analytics_test') === '0') continue;
+        url.searchParams.set('analytics_test', '1');
+        link.setAttribute('href', url.pathname + url.search + url.hash);
+      } catch {}
+    }
+    // Only an explicit owner-setting link shows this temporary confirmation.
+    if (ownerControl) {
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.dataset.analyticsOwnerStatus = ownerExcluded ? 'excluded' : 'included';
+      status.textContent = !ownerSaved ? 'This browser could not save the analytics preference.'
+        : ownerExcluded ? 'Saved: analytics is excluded for this browser.'
+        : 'Saved: this browser is included in analytics.';
+      status.style.cssText = 'position:fixed;z-index:10000;left:16px;right:16px;bottom:16px;max-width:440px;margin:0;padding:12px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#232522;font:14px/1.5 sans-serif;box-shadow:0 2px 12px #0001';
+      document.body.append(status);
+      setTimeout(() => status.remove(), 15000);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true});
+  else ready();
+  window.addEventListener('storage', event => {
+    if (allowed && event.key === ownerKey) location.reload();
+  });
+})();
+  </script>
+  <!-- shared:analytics-preferences:end -->
+  <script type="text/javascript" data-analytics="posthog">
+    // Production HOME/About only; previews and retired NEW stay untracked.
+    const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
+        api_host: 'https://events.dmitryrybalka.com',
+        ui_host: 'https://us.posthog.com',
+        defaults: '2026-08-30',
+        capture_pageview: true,
+        capture_pageleave: true,
+        autocapture: true,
+        capture_heatmaps: true,
+        person_profiles: 'identified_only',
+        capture_exceptions: false,
+        enable_recording_console_log: false,
+        disable_surveys: true,
+        before_send: event => {
+          if (event?.properties) Object.assign(event.properties, {
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
+            site_path: location.pathname.startsWith('/about') ? '/about/' : '/', site_build: document.documentElement.dataset.build,
+            analytics_version: 2,
+            analytics_test: window.portfolioAnalytics.qa
+          });
+          return event;
+        },
+        session_recording: {
+          maskAllInputs: true,
+          recordCrossOriginIframes: false,
+          captureCanvas: {recordCanvas: false},
+          streamNetworkBody: false,
+          captureJsonLd: false
+        }
+      });
+    }
+  </script>
+  <script type="text/javascript" data-analytics="microsoft-clarity">
+    // Local previews do not track. Production QA is tagged by analytics.js.
+    const clarityTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yv8rnad266");
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="canonical" href="https://dmitryrybalka.com/">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=418c2f22aafd" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/favicon-16.png?v=a50154754ffd" sizes="16x16">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <link rel="manifest" href="/assets/site.webmanifest?v=068621bc9238">
+  <title>Dmitry Rybalka — Product Design & Design Leadership</title>
+  <meta name="description" content="Product designer and design lead. Clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="/assets/portrait-start.webp?v=c93a9a36c801" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/portrait-front.webp?v=b288f612539c" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check.svg?v=c9e39ddf31b8" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/agent-claude-mobile.svg?v=6288fbeeec9d" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-openai.svg?v=2168aa4465c9" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/assets/site-ui.css?v=e755320fd6e9">
+  <link rel="stylesheet" href="/styles.css?v=4ced0a5bcb6e">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+  <script>
+    window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
+      ? '/portrait-spin-android.js?v=9c82b3433460'
+      : '/portrait-spin.js?v=dc744fc108e4';
+    const portraitPreload = document.createElement('link');
+    portraitPreload.rel = 'modulepreload';
+    portraitPreload.href = window.portraitModuleURL;
+    document.head.append(portraitPreload);
+    window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve;});
+    window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve;});
+    window.releaseNavigationFallback = () => {
+      document.documentElement.classList.remove('nav-pending');
+      document.dispatchEvent(new Event('mobile:navigation-fallback'));
+    };
+    window.releasePageFallback = () => {
+      window.releaseNavigationFallback();
+      document.documentElement.classList.remove('motion-pending');
+      window.resolvePortraitReveal(false);
+      document.dispatchEvent(new Event('mobile:page-fallback'));
+      window.deferSiteUpdates?.();
+    };
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('nav-pending','motion-pending');
+      window.navigationDeadline = setTimeout(window.releaseNavigationFallback,6500);
+      window.pageDeadline = setTimeout(window.releasePageFallback,21000);
+    }
+  </script>
+  <script type="module" src="/portrait-boot.js?v=92e1655978af" onerror="window.resolvePortraitReady(false)"></script>
+  <script defer src="/vendor/gsap.min.js?v=92bb9a96476f"></script>
+  <script defer src="/app.js?v=10e62939b4e3" onerror="window.releasePageFallback()"></script>
+  <script defer fetchpriority="low" src="/analytics.js?v=cc6795f16a92"></script>
+  <script defer src="/mobile-nav.js?v=85b9701ebe21" onerror="window.releaseMobileNavigation()"></script>
+  <template id="updates-source"><script src="/dark/updates.js?v=fa1f15d01be9"></script></template>
+  <script>
+    (() => {
+      let started = false,armed = false;
+      const root = document.documentElement;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const load = () => {
+        if (started) return;
+        started = true;
+        const script = document.createElement('script');
+        script.src = document.querySelector('#updates-source').content.querySelector('script').src;
+        script.fetchPriority = window.mobileLayout.matches ? 'high' : 'low';
+        root.dataset.updatesRequestedAt = performance.now().toFixed(1);
+        script.addEventListener('load',() => {root.dataset.updatesLoadedAt = performance.now().toFixed(1);});
+        document.head.append(script);
+      };
+      window.deferSiteUpdates = (previewReady = Promise.resolve()) => {
+        if (started || armed) return;
+        if (window.mobileLayout.matches) {load();return;}
+        armed = true;
+        let pageLoaded = document.readyState === 'complete',portraitSettled = false,previewSettled = false,unsubscribe;
+        let decodedPreview = '',previewDecoding = false;
+        const preview = document.querySelector('#selected-works .work-image');
+        const cleanup = () => {
+          unsubscribe?.();
+          window.removeEventListener('load',pageReady);
+          window.removeEventListener('resize',check);
+          preview?.removeEventListener('load',check);
+          preview?.removeEventListener('error',check);
+          document.removeEventListener('visibilitychange',check);
+          reduced.removeEventListener('change',check);
+          window.mobileLayout.removeEventListener('change',check);
+        };
+        const check = () => {
+          if (started || document.hidden) return;
+          if (window.mobileLayout.matches) {cleanup();load();return;}
+          if (!pageLoaded || !portraitSettled || !previewSettled) return;
+          const state = window.portraitPlayer?.loadingState;
+          const complete = state?.ready && state.allReady && state.quality === state.desiredQuality && state.activeDownloads === 0;
+          const terminal = !state || state.error || (!state.loading && !state.ready && state.activeDownloads === 0);
+          if (!complete && !terminal && !reduced.matches) return;
+          if (preview && !preview.complete) return;
+          const source = preview?.currentSrc;
+          if (preview?.naturalWidth && decodedPreview !== source) {
+            if (previewDecoding) return;
+            previewDecoding = true;
+            preview.decode().catch(() => {}).then(() => {
+              previewDecoding = false;
+              if (preview.complete && preview.currentSrc === source) decodedPreview = source;
+              check();
+            });
+            return;
+          }
+          cleanup();load();
+        };
+        const pageReady = () => {pageLoaded = true;check();};
+        window.addEventListener('load',pageReady);
+        window.addEventListener('resize',check);
+        preview?.addEventListener('load',check);
+        preview?.addEventListener('error',check);
+        document.addEventListener('visibilitychange',check);
+        reduced.addEventListener('change',check);
+        window.mobileLayout.addEventListener('change',check);
+        Promise.resolve(previewReady).then(() => {previewSettled = true;check();},() => {previewSettled = true;check();});
+        window.portraitReady.then(() => {
+          portraitSettled = true;
+          unsubscribe = window.portraitPlayer?.subscribeLoading(() => queueMicrotask(check));
+          check();
+        });
+      };
+      if (window.mobileLayout.matches) load();
+    })();
+  </script>
+  <template id="resume-prefetch-source"><script src="/resume-prefetch.js?v=8698924168bd"></script></template>
+  <script>
+    // No speculative download competes with the original portrait startup/rest queue.
+    window.addEventListener('load',async () => {
+      try {
+        await window.portraitReveal;
+        await window.portraitReady;
+        await window.portraitPlayer?.introFinished;
+        await window.portraitPlayer?.allFramesReady;
+      } catch {}
+      const script = document.createElement('script');
+      script.src = document.querySelector('#resume-prefetch-source').content.querySelector('script').src;
+      script.fetchPriority = 'low';
+      document.head.append(script);
+    },{once:true});
+  </script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.38.7+cc7fe94bbfa4","tokens":"1.2.0+8bf0ed2ab8ac","components":{"brief":"1.2.0+082fa18b98e8","brief-dark":"1.2.0+ae25a97cbdbe","link":"1.2.0+cf32efc609d1","footer-link":"1.2.0+f7b8b354ec2e","work-actions":"1.2.0+1f89883c1ad8","availability":"1.2.0+1f00d8fc154c","portrait":"1.2.0+89c2f75e6d7d","header":"1.2.0+3c2bda9ebd71","hero":"1.2.0+77f274e57a27","work":"1.2.0+5bedd1245c7d","work-section":"1.2.0+2c73f86b7c19","footer":"1.2.0+31698645279a"},"revision":"aec7e9d5a941"}</script>
+  <!-- shared:neighbor-prefetch:start -->
+  <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d0a646411a2d"></script></template>
+  <script>
+    (() => {
+      if (window.top !== window || !['/','/index.html','/about','/about/','/about/index.html'].includes(location.pathname)) return;
+      const start = async () => {
+        try {
+          await window.portraitReveal;
+          await window.portraitReady;
+          await window.portraitPlayer?.introFinished;
+          await window.portraitPlayer?.allFramesReady;
+        } catch {}
+        const script = document.createElement('script');
+        script.src = document.querySelector('#neighbor-prefetch-source').content.querySelector('script').src;
+        script.fetchPriority = 'low';
+        document.head.append(script);
+      };
+      if (document.readyState === 'complete') start();
+      else window.addEventListener('load',start,{once:true});
+    })();
+  </script>
+  <!-- shared:neighbor-prefetch:end -->
+  <link rel="stylesheet" href="/dark/theme.css?v=ce065649d951">
+</head>
+<body data-node-id="159:729">
+  <main class="scene-flow">
+  <div class="scene-stage">
+  <div class="intro-screen" data-scene="intro">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <a class="name identity" href="/dark/" data-node-id="159:898">Dmitry Rybalka</a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
+      <a class="mobile-only" aria-current="page" aria-disabled="true" tabindex="-1">Home</a>
+      <a href="/dark/about/">About</a>
+      <a class="desktop-only" href="#selected-works" data-node-id="159:892">Work</a>
+      <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="159:896">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <div class="intro-content">
+    <!-- shared:home-intro:start -->
+    <section class="hero" aria-labelledby="greeting" data-node-id="159:1060">
+      <div class="portrait" role="img" aria-label="Dmitry Rybalka" data-node-id="159:847">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcset="/assets/portrait-front.webp?v=b288f612539c">
+          <img src="/assets/portrait-start.webp?v=c93a9a36c801" width="270" height="270" fetchpriority="high" loading="eager" decoding="async" alt="" aria-hidden="true" draggable="false">
+        </picture>
+        <canvas width="270" height="270" aria-hidden="true"></canvas>
+      </div>
+      <div class="introduction" data-node-id="159:2150">
+        <h1 id="greeting" data-node-id="159:854">Hello, Everyone</h1>
+        <p class="summary" data-node-id="159:2151">I’m a product designer and design lead. I turn complex workflows and business requirements into clear, usable B2B and B2C products, from early discovery through launch and ongoing improvement.</p>
+        <p data-node-id="159:2148">I enjoy the stage when the problem is still taking shape: making sense of complexity and helping a team find a clear direction. My work combines hands-on design, research, and team leadership, with close attention to the small details people encounter every day.</p>
+        <!-- shared:brief-light:start -->
+<div class="agent-control" data-agent-control>
+        <button class="agent-button agent-button--light" data-agent-theme="light" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="agent-copy-status" data-node-id="162:2412">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied" data-node-id="187:312"><img src="/assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"><span data-node-id="187:292">Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="182:2717">
+            <img src="/assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2719">
+            <img src="/assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2721">
+            <img src="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2793">
+            <img src="/assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2818">
+            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" width="22.1109" height="22.0324" alt="" decoding="sync" loading="eager" fetchpriority="low"></span>
+          </span>
+        </button>
+        <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><style>.agent-button{display:none}</style><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+</div>
+  <!-- shared:brief-light:end -->
+      </div>
+    </section>
+  <!-- shared:home-intro:end -->
+  </div>
+  </div>
+  <!-- shared:home-works:start -->
+  <section class="works-screen" data-work-surface="gray" id="selected-works" aria-labelledby="works-title" data-scene="works" data-node-id="162:2545">
+    <h2 id="works-title" tabindex="-1" data-node-id="162:2491">Selected Works</h2>
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="larixon" aria-labelledby="larixon-title" data-node-id="162:2544">
+        <div class="work-copy" data-node-id="162:2526">
+          <div class="work-heading">
+          <h3 id="larixon-title" data-node-id="162:2519">Larixon Classifieds</h3>
+          <p class="work-meta" data-node-id="162:2520"><span>Classifieds</span><span aria-hidden="true">·</span><span>Aug. 2025 — Present</span></p>
+          </div>
+          <p class="work-description" data-node-id="162:2524">Larixon Classifieds is an international classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad &amp; Tobago, and Jamaica, serving 5M MAU.</p>
+          <div class="work-actions" data-node-id="182:2734">
+            <button class="work-details" type="button" disabled aria-describedby="larixon-availability" data-node-id="182:2729"><span data-node-id="182:2730">More Details</span></button>
+            <span class="work-availability" id="larixon-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt="" data-node-id="182:2732"><span data-node-id="182:2731">Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork" data-node-id="162:2516">
+          <img class="work-image" data-src="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f" data-srcset="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, /assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, /assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Project preview placeholder: Bazaraki marketplace interface">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f" srcset="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, /assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, /assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Project preview placeholder: Bazaraki marketplace interface"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-2" aria-labelledby="raiffeisen-bank-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="raiffeisen_bank" aria-labelledby="raiffeisen-bank-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 tabindex="-1" id="raiffeisen-bank-title">Raiffeisen Bank</h3>
+          <p class="work-meta"><span>Fintech</span><span aria-hidden="true">·</span><span>2021 — 2025</span></p>
+          </div>
+          <p class="work-description">Raiffeisen Bank is one of Russia’s top-10 banks and part of RBI Group. I led design for a professional trading terminal used by 500+ asset management companies and brokers, and managed a team of five designers.</p>
+          <div class="work-actions">
+            <button class="work-details" type="button" disabled aria-describedby="raiffeisen-bank-availability"><span>More Details</span></button>
+            <span class="work-availability" id="raiffeisen-bank-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork">
+          <img class="work-image" data-src="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf" data-srcset="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf 544w, /assets/work-raiffeisen-bank-1088.png?v=5a53c4e91315 1088w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Raiffeisen Bank dark investment trading terminal">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf" srcset="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf 544w, /assets/work-raiffeisen-bank-1088.png?v=5a53c4e91315 1088w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Raiffeisen Bank dark investment trading terminal"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="gray" id="selected-work-3" aria-labelledby="raiffeisen-leasing-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="raiffeisen_leasing" aria-labelledby="raiffeisen-leasing-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 tabindex="-1" id="raiffeisen-leasing-title">Raiffeisen Leasing</h3>
+          <p class="work-meta"><span>B2B Leasing</span><span aria-hidden="true">·</span><span>2021 — 2025</span></p>
+          </div>
+          <p class="work-description">Raiffeisen Leasing serves corporate clients with a €600M portfolio. I led design for a leasing application and management platform for B2B clients and car dealers, including hiring, design reviews and mentoring.</p>
+          <div class="work-actions">
+            <button class="work-details" type="button" disabled aria-describedby="raiffeisen-leasing-availability"><span>More Details</span></button>
+            <span class="work-availability" id="raiffeisen-leasing-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork">
+          <img class="work-image" data-src="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c" data-srcset="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c 544w, /assets/work-raiffeisen-leasing-1088.png?v=9604d414a93d 1088w, /assets/work-raiffeisen-leasing-1600.png?v=516ce6c3eb2a 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Raiffeisen Leasing B2B project management dashboard">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c" srcset="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c 544w, /assets/work-raiffeisen-leasing-1088.png?v=9604d414a93d 1088w, /assets/work-raiffeisen-leasing-1600.png?v=516ce6c3eb2a 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Raiffeisen Leasing B2B project management dashboard"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-4" aria-labelledby="yandex-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="yandex_market" aria-labelledby="yandex-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 tabindex="-1" id="yandex-title">Yandex.Market</h3>
+          <p class="work-meta"><span>Marketplace</span><span aria-hidden="true">·</span><span>Apr. 2020 — Jul. 2021</span></p>
+          </div>
+          <p class="work-description">At Yandex.Market, one of Russia’s largest <nobr>e-commerce</nobr> marketplaces, I worked on analytics products, seller-facing tools, vendor onboarding workflows and product taxonomy for marketplace teams and partners.</p>
+          <div class="work-actions">
+            <button class="work-details" type="button" disabled aria-describedby="yandex-availability"><span>More Details</span></button>
+            <span class="work-availability" id="yandex-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork">
+          <img class="work-image" data-src="/assets/work-yandex-market-544.png?v=2470bf616570" data-srcset="/assets/work-yandex-market-544.png?v=2470bf616570 544w, /assets/work-yandex-market-1088.png?v=aa617dbc9115 1088w, /assets/work-yandex-market-1600.png?v=23552dfae8c5 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Yandex.Market analytics dashboard">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-yandex-market-544.png?v=2470bf616570" srcset="/assets/work-yandex-market-544.png?v=2470bf616570 544w, /assets/work-yandex-market-1088.png?v=aa617dbc9115 1088w, /assets/work-yandex-market-1600.png?v=23552dfae8c5 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Yandex.Market analytics dashboard"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="gray" id="selected-work-5" aria-labelledby="gdematerial-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="gdematerial" aria-labelledby="gdematerial-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 tabindex="-1" id="gdematerial-title">GdeMaterial</h3>
+          <p class="work-meta"><span>DIY Marketplace</span><span aria-hidden="true">·</span><span>Jun. 2019 — Apr. 2020</span></p>
+          </div>
+          <p class="work-description">GdeMaterial was an early-stage DIY marketplace for construction and home improvement materials. I worked on marketplace UX, supplier-facing tools, product discovery, checkout and logistics workflows for B2B clients and suppliers.</p>
+          <div class="work-actions">
+            <button class="work-details" type="button" disabled aria-describedby="gdematerial-availability"><span>More Details</span></button>
+            <span class="work-availability" id="gdematerial-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork work-artwork-composite">
+          <img class="work-image" data-src="/assets/work-gdematerial-544.png?v=2570ce408485" data-srcset="/assets/work-gdematerial-544.png?v=2570ce408485 544w, /assets/work-gdematerial-1088.png?v=e88d6b601c4e 1088w, /assets/work-gdematerial-1600.png?v=ca9647771011 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Three mobile screens of the GdeMaterial marketplace">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-gdematerial-544.png?v=2570ce408485" srcset="/assets/work-gdematerial-544.png?v=2570ce408485 544w, /assets/work-gdematerial-1088.png?v=e88d6b601c4e 1088w, /assets/work-gdematerial-1600.png?v=ca9647771011 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Three mobile screens of the GdeMaterial marketplace"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-6" aria-labelledby="medesk-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="medesk" aria-labelledby="medesk-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 tabindex="-1" id="medesk-title">Medesk Ltd.</h3>
+          <p class="work-meta"><span>HealthTech</span><span aria-hidden="true">·</span><span>Sep. 2016 — Jun. 2019</span></p>
+          </div>
+          <p class="work-description">Medesk is a B2B HealthTech SaaS platform used by healthcare providers across 35 countries. I worked on product UX, patient-facing flows, third-party integrations and design system components.</p>
+          <div class="work-actions">
+            <button class="work-details" type="button" disabled aria-describedby="medesk-availability"><span>More Details</span></button>
+            <span class="work-availability" id="medesk-availability"><img src="/assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+          </div>
+        </div>
+        <div class="work-artwork">
+          <img class="work-image" data-src="/assets/work-medesk-544.png?v=3df4098fa73a" data-srcset="/assets/work-medesk-544.png?v=3df4098fa73a 544w, /assets/work-medesk-1088.png?v=334932fe8bc4 1088w, /assets/work-medesk-1600.png?v=b6c936d0e326 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Medesk access permissions management interface">
+          <p class="work-image-error" hidden>Preview unavailable</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-medesk-544.png?v=3df4098fa73a" srcset="/assets/work-medesk-544.png?v=3df4098fa73a 544w, /assets/work-medesk-1088.png?v=334932fe8bc4 1088w, /assets/work-medesk-1600.png?v=b6c936d0e326 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Medesk access permissions management interface"></noscript>
+        </div>
+      </article>
+    </div>
+  </section>
+  <!-- shared:home-works:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1" data-node-id="182:2736">Let’s Talk</h2>
+    <div class="footer-content" data-node-id="187:419">
+      <p class="footer-description" data-node-id="187:420">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Contact links" data-node-id="187:421">
+        <a href="mailto:rebosidium@gmail.com" data-node-id="187:422"><span class="footer-link-label">Email</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="187:423"><span class="footer-link-label">Resume</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="187:424"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="187:427"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="187:428">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:430">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:432">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:434">
+            <span class="footer-logo-copilot" data-node-id="187:438"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:439"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:442">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+  </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+/* Opt-in preview only. Production consumers keep their current palette. */
+:root { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-canvas: #171819;
+    --color-ink: #EDEEEB;
+    --color-surface: #202123;
+    --color-inverse: #101112;
+    --color-inverse-muted: #A5A5A5;
+    --color-muted: #A5A7A8;
+    --color-disabled: #777A7B;
+    --color-hover: #27292A;
+    --color-pressed: #303334;
+    --color-inverse-hover: #242628;
+    --color-inverse-pressed: #2C2F31;
+    --color-work-placeholder: #2B2D30;
+    --color-muted-on-placeholder: #B3B5B6;
+    --color-disabled-on-surface: #7D8082;
+    --border-subtle: #414447;
+    --border-subtle-on-surface: #484B4E;
+    --border-subtle-on-inverse: #333638;
+    --border-inverse: #55595D;
+    --border-control-hover: #696E72;
+    --border-control-pressed: #7A8084;
+    --border-control-hover-pressed: #8A9094;
+    --border-inverse-control-hover: #7B8186;
+    --border-inverse-control-pressed: #92999E;
+  }
+  /* Canvas becomes dark; inverse surfaces still need light foregrounds. */
+  .footer, .footer-agent, .footer-agent-button { color: #EDEEEB; }
+  .footer-agent .agent-copy-fallback textarea { --ui-focus-color: #EDEEEB; }
+  /* Preserve colored brands/photos. Adapt only monochrome light icons. */
+  .agent-button--light .agent-button-copied > img,
+  .agent-button--light img[src*="brief-openai.svg"],
+  .agent-button--light img[src*="brief-cursor.svg"],
+  .ui-back img { filter: invert(1); }
+}
