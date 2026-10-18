@@ -1307,8 +1307,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+8889bb638599",
-      "revision": "8889bb6385998b0052294f8ea662fdb01f4c93d1fab24ea12134538eaf427eeb",
+      "version": "1.2.0+cbcb6ff97c87",
+      "revision": "cbcb6ff97c87bad6c548da3eb7396651901e46048e09397850274d77af864dcf",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -2453,8 +2453,8 @@
         {
           "path": "shared/photo-gallery.js",
           "kind": "runtime",
-          "sha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0",
-          "revisionSha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0"
+          "sha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e",
+          "revisionSha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e"
         },
         {
           "path": "shared/photo-gallery.mjs",
@@ -2509,8 +2509,8 @@
     "photo-gallery-footer": {
       "componentKey": "photo-gallery",
       "variant": "footer",
-      "version": "1.2.0+14f7088b20f0",
-      "revision": "14f7088b20f06d6469f538dc680339f4b58be0db592edc61728e2fc3ae255051",
+      "version": "1.2.0+92dd9a5212e6",
+      "revision": "92dd9a5212e649baa2a707147d46ed9a9377fa63398250a97baf0ba68062b835",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -3655,8 +3655,8 @@
         {
           "path": "shared/photo-gallery.js",
           "kind": "runtime",
-          "sha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0",
-          "revisionSha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0"
+          "sha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e",
+          "revisionSha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e"
         },
         {
           "path": "shared/photo-gallery.mjs",
@@ -4769,8 +4769,8 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.2.0+d49b5845092a",
-      "revision": "d49b5845092acb3b540f0fd4a477f8cc7fd468add7e3abbebf4a2919d3d97fe9",
+      "version": "1.2.0+aeacd07a07a4",
+      "revision": "aeacd07a07a47a3499c08e5ad50355ba90d514ed45fb15c87d9991f307cf1482",
       "markupRevision": "40d806138c4f00aeff4d01b205f78c2dca4c21507599fb42cd0c8b67602d169d",
       "owners": [
         "shared/reading-page.html",
@@ -6079,8 +6079,8 @@
         {
           "path": "shared/photo-gallery.js",
           "kind": "runtime",
-          "sha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0",
-          "revisionSha256": "f287c7003b9209bc4b29531be9ce5455c642b637396b1582bce2a14cecfa0ab0"
+          "sha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e",
+          "revisionSha256": "b2f71e7fdb38028bd7b47639c00ca90a471619eea9d6d0bdf37001ff9ede644e"
         },
         {
           "path": "shared/photo-gallery.mjs",
@@ -8035,18 +8035,20 @@
       "id": "photo-drift",
       "group": "Interactions",
       "name": "Gallery / Ambient drift",
-      "usage": "Photo experiment · desktop & mobile",
+      "usage": "About · Photo experiment · desktop & mobile",
       "trigger": "The photo field is visible and no manual interaction is active.",
       "timing": "Right 8 px/s · up 4 px/s · resume after 500 ms",
-      "motion": "Twenty-seven photos tessellate the complete periodic rectangle with comparable portrait and landscape areas, preserved ratios and small 11.2px seams (92.3% coverage). Desktop photos smoothly grow toward the center: full-size center and 92% edge scale, with full-size slots reserved to prevent overlap. Mobile keeps 96% edge scale. Field height is 420px desktop and 308px mobile (30% shorter). The field drifts diagonally up-right; drag and arrow keys pan it directly. The top and bottom 15% fades stay entirely inside the gallery; prose gaps are 36px desktop and 24px mobile.",
+      "motion": "Twenty-seven photos form six staggered periodic columns with preserved ratios and 21.84px design seams. Photos smoothly grow to 107% of their base size at the field center, easing down to 92% at desktop edges and 96% on mobile. The spatial scale follows both ambient drift and direct panning. Responsive image selection reserves the full center magnification at the current screen density. Field height is 420px desktop and 308px mobile (30% shorter). The field drifts diagonally up-right; drag and arrow keys pan it directly. The standalone gallery keeps its top and bottom 15% fades inside the field with 36px desktop and 24px mobile prose gaps. About uses the footer variant with a progressive top transition and photos beneath the rounded contact-footer corners.",
       "playback": "Hover keeps ambient motion running; keyboard focus stops it. Manual input defers it for 500 ms; wheel/trackpad scroll the page normally over photos. Offscreen, hidden tab and open menu stop rendering. No caption or horizontal fade.",
       "reduced": "Ambient drift and release inertia are disabled; manual direct panning remains available. No pause/play control.",
       "component": "photo-gallery",
-      "live": "/photo/",
+      "live": "/about/",
       "sources": [
         {
           "path": "shared/photo-gallery.js",
           "anchors": [
+            "const centerScale=1.07",
+            "const lens=centerScale-(centerScale-edgeScale)*Math.min(1,distance*distance)",
             "vx+(auto ? .008 : 0)",
             "vy+(auto ? -.004 : 0)",
             "performance.now()+500",
@@ -8312,10 +8314,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.31.3",
-    "revision": "cc928a0e2132",
-    "release": "1.31.3+cc928a0e2132",
-    "updatedAt": "2026-10-18T02:57:04.866Z",
+    "version": "1.31.4",
+    "revision": "320627c9ff7a",
+    "release": "1.31.4+320627c9ff7a",
+    "updatedAt": "2026-10-18T10:16:17.813Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -8369,8 +8371,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "1c22bc50eaa283646ecf720d834ff2a1bcc01a0905f93d74dc746babca345b1c",
-        "revisionSha256": "1c22bc50eaa283646ecf720d834ff2a1bcc01a0905f93d74dc746babca345b1c"
+        "sha256": "57d72e133bd810bcd3d2fc7d582e4d4071d39cc4d6840080c132b1a734c965da",
+        "revisionSha256": "57d72e133bd810bcd3d2fc7d582e4d4071d39cc4d6840080c132b1a734c965da"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -8384,8 +8386,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "f30eed18da7cdcb459944a932dcf1d8bb2abe1fabffef31ebd199bacdc953f96",
-        "revisionSha256": "f30eed18da7cdcb459944a932dcf1d8bb2abe1fabffef31ebd199bacdc953f96"
+        "sha256": "ff6f083c1e6b2ffdd7ba51e9ff1bcc13ea15cadf047bb02d21b6952285c519ac",
+        "revisionSha256": "ff6f083c1e6b2ffdd7ba51e9ff1bcc13ea15cadf047bb02d21b6952285c519ac"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -8404,8 +8406,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "0ee0ad959f6e6047f90803f00f79b8a814897d23d340c6025feeae5510ca858f",
-        "revisionSha256": "0ee0ad959f6e6047f90803f00f79b8a814897d23d340c6025feeae5510ca858f"
+        "sha256": "7f78ec67fe507462e41326761a73a26ebe06bc3ae7bf019b4840043bbe1486c9",
+        "revisionSha256": "7f78ec67fe507462e41326761a73a26ebe06bc3ae7bf019b4840043bbe1486c9"
       },
       {
         "path": "shared/site-pages.mjs",
