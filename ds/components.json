@@ -87,8 +87,8 @@
   "components": {
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.2.0+e2f46f18b77b",
-      "revision": "e2f46f18b77b902d1fda6c60ae949585d023d8bd27e76c626ce2288892757d7c",
+      "version": "1.2.0+9cfc6d4e5fb8",
+      "revision": "9cfc6d4e5fb827e03c44863bf6d6cdc0962a917a225d5518ad8e2a4d1fa66471",
       "markupRevision": "5372fc45950958a26914899540b56921d148219210a2c4d40e55b35a0d95b43f",
       "owners": [
         "shared/recommendations.mjs",
@@ -188,8 +188,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/recommendations.css",
@@ -249,8 +249,8 @@
     "brief": {
       "componentKey": "brief",
       "variant": "light",
-      "version": "1.2.0+4816b65299c8",
-      "revision": "4816b65299c866fc1e67f4704d4fee1ff058129a08938eb72ee86f82f899e603",
+      "version": "1.2.0+9013a1bc801f",
+      "revision": "9013a1bc801fdc29b090e0c88427c281ac3182d705e6752628aea599de12095c",
       "markupRevision": "0bb3697c7dab09d51f179caf4a12a5ec24f6c1706b225468616534f8f56cacf3",
       "owners": [
         "shared/brief-light.html"
@@ -331,8 +331,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-controls.js",
@@ -375,8 +375,8 @@
     "brief-dark": {
       "componentKey": "brief",
       "variant": "dark",
-      "version": "1.2.0+d5f36d837aad",
-      "revision": "d5f36d837aad946f8905dfb8143d522c088eb19bd5aef68c12ce5c8819f88fff",
+      "version": "1.2.0+ebdde0cf4440",
+      "revision": "ebdde0cf44409968d9bc0cc66119d1589fd48b646f80899a62da8dd2f908746b",
       "markupRevision": "38e30c6b13312d555bc58ed15e6a214ee2e96474575290541182d7ba612f1edb",
       "owners": [
         "shared/brief-dark.html"
@@ -457,8 +457,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-controls.js",
@@ -503,8 +503,8 @@
     "back": {
       "componentKey": "back",
       "variant": "responsive",
-      "version": "1.2.0+308a9b1c52c8",
-      "revision": "308a9b1c52c8e7a3937f9d76d21b95a355a8dce9a16c35fb4fa73f60d1901353",
+      "version": "1.2.0+66a4b0ad31cd",
+      "revision": "66a4b0ad31cdcb4d6095da5b687cc92b2a77e496d4507e31b1572529fbd16a57",
       "markupRevision": "6718b8aae93aabb0a5a5f943003015a051601bd2dde8961f85bcd0dbfa81a127",
       "owners": [
         "shared/back.html"
@@ -561,8 +561,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -599,8 +599,8 @@
     },
     "link": {
       "componentKey": "navigation-link",
-      "version": "1.2.0+7329e15cd611",
-      "revision": "7329e15cd61190061c86907ca869e59585080837ab00022f3b30bd53d006310a",
+      "version": "1.2.0+323e655e2f66",
+      "revision": "323e655e2f66f9d3a06a55343debc59ef4d4890e0faee38db31041d42a8b5060",
       "markupRevision": "177ea6b77bf21d31aa84b535eeb7940bdd3f18d05df66db8f9ee2c55dd1c1ff2",
       "owners": [
         "shared/header.html"
@@ -663,8 +663,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -701,8 +701,8 @@
     },
     "footer-link": {
       "componentKey": "footer-link",
-      "version": "1.2.0+47e59618539c",
-      "revision": "47e59618539c401634612b2a4c78b703b803b99a6b3b555987ea783a734cb536",
+      "version": "1.2.0+17f979546f36",
+      "revision": "17f979546f36e6f7b3d4fe162dfe934237c66d52313f3a890434511a67856548",
       "markupRevision": "96974ee3c400093ef69a853505fedfad034a15928cc7430040cad08d1d1196ed",
       "owners": [
         "shared/footer.html"
@@ -753,8 +753,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -792,8 +792,8 @@
     },
     "work-actions": {
       "componentKey": "work-actions",
-      "version": "1.2.0+a945af66ef5f",
-      "revision": "a945af66ef5ffc92dc08dfebdbadcd038f3c0f4f5818c734ac392dcbace8d7d0",
+      "version": "1.2.0+44c412e597a0",
+      "revision": "44c412e597a07678d7259f0dc2f1224ced85b7a39166fae840f19d3e1e3a5ef6",
       "markupRevision": "b7d77293a8d61bd31071fbf72f25efb8bdbf192e0ca00450d83fcbe0a7b308cb",
       "owners": [
         "shared/work-actions.html"
@@ -856,8 +856,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/project-media.js",
@@ -904,8 +904,8 @@
     },
     "availability": {
       "componentKey": "availability",
-      "version": "1.2.0+0d1f63b223a6",
-      "revision": "0d1f63b223a6bb277e35341ad4f3631763777a07b5fe7737a338f6b5de5e5735",
+      "version": "1.2.0+2763d0c15567",
+      "revision": "2763d0c155674c1b45408b1e0bf9a0eaae6ce75d2367f80efb6edb3a7db90189",
       "markupRevision": "c848f243c706ee0a2d8a13c5e316803dde97cd3ff576576e02c3e7c6bb8a52c0",
       "owners": [
         "shared/work-actions.html"
@@ -968,8 +968,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/project-media.js",
@@ -1016,8 +1016,8 @@
     },
     "portrait": {
       "componentKey": "portrait",
-      "version": "1.2.0+903e86910fa1",
-      "revision": "903e86910fa14a2499228870e7e119e26b1da39623fd058a742926d51fa0d41d",
+      "version": "1.2.0+87e3c621d1b0",
+      "revision": "87e3c621d1b09ee4fcc0e07c8fa0834cda73c8e6d3da4b94440eb155e0d138dc",
       "markupRevision": "4540fecda5edc16fcd7837b6eef5d27dcb4178a546189b402f0db43f300436f5",
       "owners": [
         "shared/home-intro.html"
@@ -1236,8 +1236,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1273,9 +1273,9 @@
     "about-title": {
       "componentKey": "about-title",
       "variant": "with-avatar",
-      "version": "1.2.0+c694d9650af8",
-      "revision": "c694d9650af88cc5a1cadcefc8c1ece9f85683486203ba9f7a0e36a09d531ead",
-      "markupRevision": "9f4a70388b6b7d478f4e7aee61053ce8f74aea31c3327630b2d7b65e4ecf6b7e",
+      "version": "1.2.0+411caf5d5baa",
+      "revision": "411caf5d5baab0dfb0226b0494de769a74d4d75e6f67ebedace182f036fbee11",
+      "markupRevision": "06cc1d6fce5b74a93fdaea21c6f0bbf117959732f59cb8e974139a060939da2d",
       "owners": [
         "shared/article-heading.html",
         "shared/about-avatar.html"
@@ -1356,8 +1356,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1395,8 +1395,8 @@
     "article-title": {
       "componentKey": "about-title",
       "variant": "without-avatar",
-      "version": "1.2.0+42bbfa3fb2cb",
-      "revision": "42bbfa3fb2cbb2a63b05b17f58c266620923cf1ab28118d24f454c7fac7aca9f",
+      "version": "1.2.0+5c9b13b89975",
+      "revision": "5c9b13b899751d7d7df5cda976c73b02db8f6d7dc8e7040d40fbfd60d113f05f",
       "markupRevision": "f72b751dfe6d8e96a78aea268f97df03f6d4d3af6dfa50d3ba43b7eb17420d4a",
       "owners": [
         "shared/article-heading.html"
@@ -1447,8 +1447,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1484,8 +1484,8 @@
     },
     "about-avatar": {
       "componentKey": "about-avatar",
-      "version": "1.2.0+244339980990",
-      "revision": "2443399809909517504d463d68a83915e94b1b1070ec2f5aa40a014529519c47",
+      "version": "1.2.0+39e8dbcbff7f",
+      "revision": "39e8dbcbff7fe84f2fedee0e37d439aa4f9798c68e3529e29fc1852a94b534cb",
       "markupRevision": "66f2e53414509e35b9c7206d59f4d47aabf6f5d92bb1c339fcbaa3c84b7ddcd0",
       "owners": [
         "shared/about-avatar.html"
@@ -1560,8 +1560,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1597,8 +1597,8 @@
     },
     "prose-section": {
       "componentKey": "prose-section",
-      "version": "1.2.0+81417bce0347",
-      "revision": "81417bce0347fea900f65bc1b241571f17933de03a7832b41d0883d2d46476fe",
+      "version": "1.2.0+cab9dc6695d6",
+      "revision": "cab9dc6695d6ac7cefdb24604a9f80e0e87b405d96741b8e597de7606c0c55e6",
       "markupRevision": "a1588f614dee87cec01a557c318b6665a3329f2de8c1a027bd22f8cd4d83c5ef",
       "owners": [
         "shared/about-main.html"
@@ -1649,8 +1649,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1685,8 +1685,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+381e448d7b40",
-      "revision": "381e448d7b40617eda137f75eb831ec481e6f516f7bbe2abdc104cd2470c3d47",
+      "version": "1.2.0+e10996f2395d",
+      "revision": "e10996f2395dd6a5dfd9ae88b4e3f2c931121f966ae602701d4e95640555d29b",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -2837,8 +2837,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -2911,8 +2911,8 @@
     "photo-gallery-footer": {
       "componentKey": "photo-gallery",
       "variant": "footer",
-      "version": "1.2.0+e29ada8aafc3",
-      "revision": "e29ada8aafc3d568de73b93976fae2907f4d7ecbecf2b59a20ce49236e3e070e",
+      "version": "1.2.0+1aab3a6e1d86",
+      "revision": "1aab3a6e1d86bf407833cb3c2176367a6f1e901d11adedb7d955d1849b46fc29",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -4063,8 +4063,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -4137,8 +4137,8 @@
     "header": {
       "componentKey": "header",
       "variant": "default",
-      "version": "1.2.0+92b7f826dc2d",
-      "revision": "92b7f826dc2dbbb0708aa84c863de405b37e094c2da1f2c9d071d061249f0ce7",
+      "version": "1.2.0+426ba62de36a",
+      "revision": "426ba62de36a2da0add8922ca1153f44e25284f3eb5c1c29c479a840af40f274",
       "markupRevision": "49d57d677f35c5228504492328602a6c1b919f3fae0edab074df3bfdf2086b06",
       "owners": [
         "shared/header.html"
@@ -4207,8 +4207,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/navigation-boot.js",
@@ -4250,8 +4250,8 @@
     "about-header": {
       "componentKey": "header",
       "variant": "article",
-      "version": "1.2.0+2057c3849101",
-      "revision": "2057c384910191090706c5ab4249f45ba0cd7ffb6bbd96b737c3fc5bc28047fa",
+      "version": "1.2.0+9c879f5c677a",
+      "revision": "9c879f5c677aece7d3f6f4febb7e044c180986f39dafc9601cc81a55e18afb68",
       "markupRevision": "1adf733b859cd0e4f1e66afa99e391612685465040432b22d40570f1112ea21d",
       "owners": [
         "shared/header.html",
@@ -4339,8 +4339,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/navigation-boot.js",
@@ -4383,8 +4383,8 @@
     },
     "hero": {
       "componentKey": "homepage-intro",
-      "version": "1.2.0+7df086556af1",
-      "revision": "7df086556af11df61f85f8848bfa8c3dfa817219af9c146a863438f3a756e0b4",
+      "version": "1.2.0+33e7a934c024",
+      "revision": "33e7a934c024f8ddccf092128969e30c0d6fc949f4ff6d4ea071e60f4dc0796e",
       "markupRevision": "df68b94c36af207fdeb1a7b7d1e451b44d1f2a9455a5aa3342ed6601652c05b8",
       "owners": [
         "shared/home-intro.html",
@@ -4646,8 +4646,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/site-controls.js",
@@ -4688,8 +4688,8 @@
     },
     "work": {
       "componentKey": "work-card",
-      "version": "1.2.0+f4a0514fc62b",
-      "revision": "f4a0514fc62b2246416f4e740c276b73f4abdb6bf8e2ed676b6bd184d560a965",
+      "version": "1.2.0+bea7b1918a36",
+      "revision": "bea7b1918a36e1e80d84e8b94df36cfed0c4cf39ba76df1f5371bcc7b4f135f5",
       "markupRevision": "656bd69301b27b918f5fd87f3847989d7e2aa6be126d5dfa546f3a37008c8871",
       "owners": [
         "shared/work-card.html",
@@ -4856,8 +4856,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/project-media.js",
@@ -4916,8 +4916,8 @@
     },
     "work-section": {
       "componentKey": "work-section",
-      "version": "1.2.0+d0c068e9d6ac",
-      "revision": "d0c068e9d6aca2b7c79d99338f8beb3833c9e9326df76170073b6118f3a73566",
+      "version": "1.2.0+da0e38f7041d",
+      "revision": "da0e38f7041de713f87099ad7d1a28892341310cc2968a0ce4ef317e7dbc7658",
       "markupRevision": "dfe1ca6e23f1fbbfbcc01c84391b7161a5f2193ca31589881df75c8809e9d432",
       "owners": [
         "shared/work-section.html",
@@ -5085,8 +5085,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/project-media.js",
@@ -5152,8 +5152,8 @@
     },
     "footer": {
       "componentKey": "footer",
-      "version": "1.2.0+8da715253479",
-      "revision": "8da715253479cd5ef338558d2aadaf3ce0243f24f3ad16fddb8cef051b865b7d",
+      "version": "1.2.0+1282c92d3cee",
+      "revision": "1282c92d3cee2178dfd36669ad090d10f38f8f6e045097d802fb8b8a316c7c20",
       "markupRevision": "02cdea56a8ebb3c67acea10b12ef832c047d9246618d8a1709e5b3bd8ea83757",
       "owners": [
         "shared/footer.html",
@@ -5283,8 +5283,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -5345,9 +5345,9 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.2.0+b0eb96943f99",
-      "revision": "b0eb96943f99299199c798db26ccd049dd1adf4503d63cce81d05768de5208e3",
-      "markupRevision": "54ab22ecbcc0f93b69e931f5cbf0bc4ecc8c8bcb264b2151ccdc0a99ee9ff7a2",
+      "version": "1.2.0+73bb5a7871a4",
+      "revision": "73bb5a7871a43f9948be315a1063e3747b5353d46a89271ab88b53eb5327c0dd",
+      "markupRevision": "20b018b9a894a587f72c4ffe6863c51ca8835a8df308aeab3ac796e9cdba0a3c",
       "owners": [
         "shared/reading-page.html",
         "shared/about-main.html",
@@ -6735,8 +6735,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -6869,8 +6869,8 @@
     },
     "not-found-page": {
       "componentKey": "not-found-page",
-      "version": "1.2.0+13788697bd7a",
-      "revision": "13788697bd7ae49c7f0db2304fe82c3a37ab10fd7c8b6217a04a9e28ecd9b10f",
+      "version": "1.2.0+b50838cbaee4",
+      "revision": "b50838cbaee4a2930e1957b6454157555884a9aa9061b423375256f687592866",
       "markupRevision": "a52bdc403176c1a576cb94ed6c2c655c00bf9940ee35a87af0c738ba98b1c25a",
       "owners": [
         "shared/reading-page.html",
@@ -6960,8 +6960,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-          "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+          "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+          "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
         },
         {
           "path": "shared/reading-page.html",
@@ -7008,8 +7008,8 @@
         "light": {
           "componentKey": "icon/arrow-left",
           "variant": "light",
-          "version": "1.2.0+17bf849eddb8",
-          "revision": "17bf849eddb85d18cb5c2b98c1235bbe7bc3ad5842a90abfeac70121ccdcea34",
+          "version": "1.2.0+419daf5b5bab",
+          "revision": "419daf5b5babb96403bd1fc0ad5d763623cfcfa698216deaded190e2d26aea9f",
           "markupRevision": "ba4042f14f219a1c6d030adca16a91ba1e026d578b2f27d6fcb3749bfaad99e1",
           "owners": [
             "shared/back.html"
@@ -7066,8 +7066,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-pages.mjs",
@@ -7107,8 +7107,8 @@
         "light": {
           "componentKey": "icon/check",
           "variant": "light",
-          "version": "1.2.0+5c1467e7193f",
-          "revision": "5c1467e7193f2dadc7f8464258762930e0e0a0ccf55b350915fe5c5ba27252a5",
+          "version": "1.2.0+394aff9273f9",
+          "revision": "394aff9273f9be702c1faceec1513cb37407905f134c160eac99aef602f7db19",
           "markupRevision": "cd9f6deb1284bf5e6d706ff8d6909eff903039f285d227c4fb7fc15c6d97cea9",
           "owners": [
             "shared/brief-light.html"
@@ -7189,8 +7189,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -7230,8 +7230,8 @@
         "dark": {
           "componentKey": "icon/check",
           "variant": "dark",
-          "version": "1.2.0+168b58ca3888",
-          "revision": "168b58ca38889831bbb1a412a72b47245571504028a8fb702a02e1b61bd2c5a1",
+          "version": "1.2.0+5397aeb130a0",
+          "revision": "5397aeb130a03e42ef7ec98fc85cd1a90e1e0db1eda13eb1a5deb6797ed46467",
           "markupRevision": "b5d15c4ea83c6d573a9053ac7cf7816ace9aef20529b5504d8091589fddb2cdb",
           "owners": [
             "shared/brief-dark.html"
@@ -7312,8 +7312,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -7359,8 +7359,8 @@
         "closed": {
           "componentKey": "icon/menu",
           "variant": "closed",
-          "version": "1.2.0+e50823b87bcd",
-          "revision": "e50823b87bcdb6d973d905e6c5b0d38ab3be3747b8107fb59819c937e749f122",
+          "version": "1.2.0+35abd4305720",
+          "revision": "35abd43057208fe6b2d7cb21442b5cc432b998f4811dc69f4843d5ffedaa1d66",
           "markupRevision": "7fa6ae3a886f6e7f325cc86d7958040d2a366533fd33e07ef5a8a0b6ce7e3779",
           "owners": [
             "shared/header.html"
@@ -7417,8 +7417,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-pages.mjs",
@@ -7454,8 +7454,8 @@
         "open": {
           "componentKey": "icon/menu",
           "variant": "open",
-          "version": "1.2.0+e009b585a665",
-          "revision": "e009b585a6651bc541161128cbf9b48b97ec8c41b43cb7fdd3f55be301b7f7bd",
+          "version": "1.2.0+a318f2ba03a7",
+          "revision": "a318f2ba03a71f482b0a2e0f4585b355f0e7dd1ca1a23585e1fd1ff5f59cc151",
           "markupRevision": "ff20fc428140dc8708a95c1373d250a1a43aa2ec8b99680ea4b8d860a7b058c8",
           "owners": [
             "shared/header.html"
@@ -7512,8 +7512,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-pages.mjs",
@@ -7553,8 +7553,8 @@
         "light": {
           "componentKey": "icon/claude",
           "variant": "light",
-          "version": "1.2.0+ee0360ba2a05",
-          "revision": "ee0360ba2a05810563bdafdc7394c8aee55179e9189301b334a805fccb61e0c3",
+          "version": "1.2.0+84704cb2cdec",
+          "revision": "84704cb2cdec91310fbb2d661cbe034d1ad0e59e7f4e1865cb4194a64e9e7469",
           "markupRevision": "508041fa637d9617cb3467091c2f152617a811e5821cf96da72460b939e699d5",
           "owners": [
             "shared/brief-light.html"
@@ -7635,8 +7635,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -7676,8 +7676,8 @@
         "dark": {
           "componentKey": "icon/claude",
           "variant": "dark",
-          "version": "1.2.0+76284bf72a03",
-          "revision": "76284bf72a0363819130fe3eef37a2def9fa1b583517e93ebbe141c0a15e0692",
+          "version": "1.2.0+66f4e52e5447",
+          "revision": "66f4e52e5447eaa9a8c198adeefbeef98455bc62d1c3bf6e469b154ce99bea7f",
           "markupRevision": "d631f2ebd21f51011d9fcea7c208f454232d14e986ccb2f4fb089d3cfc73dd5c",
           "owners": [
             "shared/brief-dark.html"
@@ -7758,8 +7758,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -7805,8 +7805,8 @@
         "light": {
           "componentKey": "icon/chatgpt",
           "variant": "light",
-          "version": "1.2.0+8980d52de48b",
-          "revision": "8980d52de48b01f08bd0ed4f3b2492841d9b4e283a24083b6797cf439a8d78b0",
+          "version": "1.2.0+fb0b2cf76575",
+          "revision": "fb0b2cf7657503d0fac2ab58baed00be178406fe150a9012e4803b485549acf0",
           "markupRevision": "5ecc0bbf2c8e392a7b908b0e959ebb5ad1bf326f04d0a586a3be87680b898b94",
           "owners": [
             "shared/brief-light.html"
@@ -7887,8 +7887,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -7928,8 +7928,8 @@
         "dark": {
           "componentKey": "icon/chatgpt",
           "variant": "dark",
-          "version": "1.2.0+5f81013db0c5",
-          "revision": "5f81013db0c52a2805ff5b74d349068ff73e40a1e2b041ddf6c399a516bd9b63",
+          "version": "1.2.0+5754e1335465",
+          "revision": "5754e13354653cd768653ffffda2acd324d177113e7bf699512b11e5cf1edfc9",
           "markupRevision": "e68584ff1bdd08c3e28c623e576b10610215ce5a119482bcd176e00f41fb01b2",
           "owners": [
             "shared/brief-dark.html"
@@ -8010,8 +8010,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8057,8 +8057,8 @@
         "light": {
           "componentKey": "icon/codex",
           "variant": "light",
-          "version": "1.2.0+8df1334261ae",
-          "revision": "8df1334261aeba67c4ab946a39884c72f79ffea559a93922ab550bb9c14361f0",
+          "version": "1.2.0+cc388d1da00b",
+          "revision": "cc388d1da00bc23cad94deac4096ab50b35182bfd76bda9f6d285cc76b0349c8",
           "markupRevision": "d994a38d32891e3ace03015ab79fa6f8c19f7aae2be81bab1e23f4b6bcf88ae5",
           "owners": [
             "shared/brief-light.html"
@@ -8139,8 +8139,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8180,8 +8180,8 @@
         "dark": {
           "componentKey": "icon/codex",
           "variant": "dark",
-          "version": "1.2.0+d0f90a4b4876",
-          "revision": "d0f90a4b4876ecb81d8c9e682ccefb8b191ac99f81bfe1684e79b06386e79669",
+          "version": "1.2.0+5e541709ee58",
+          "revision": "5e541709ee5858e16e82b199e1f6a99b0a3d0c76612f2f1fa170dc791fb74b60",
           "markupRevision": "6ed75ca8d26bb8ab78a0b9f715937cdbeed956275fe86a6bbf1b1fb217d29c15",
           "owners": [
             "shared/brief-dark.html"
@@ -8262,8 +8262,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8309,8 +8309,8 @@
         "light": {
           "componentKey": "icon/cursor",
           "variant": "light",
-          "version": "1.2.0+886fe8b08cc4",
-          "revision": "886fe8b08cc4a1c47063ef54f3164e42ab3788af98a5f0b8f5e2a30daf34f47b",
+          "version": "1.2.0+78cf2c9714c1",
+          "revision": "78cf2c9714c19eed2972162a4fe99fbd7e707a7e8e21d4b56d9ab227492d1c58",
           "markupRevision": "7b91bfdb8d9bebdac2d1ac9e2567bbb4cfc3cf0e95027c5fd52cabbb62858965",
           "owners": [
             "shared/brief-light.html"
@@ -8391,8 +8391,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8432,8 +8432,8 @@
         "dark": {
           "componentKey": "icon/cursor",
           "variant": "dark",
-          "version": "1.2.0+d973aa9cd633",
-          "revision": "d973aa9cd6336ad2eb2f53eb34c641f41063cb27a0917301db9671a2c3afc901",
+          "version": "1.2.0+b8116551195c",
+          "revision": "b8116551195cb671c9565d876826e32cc6fddd18d97903adee46bb5aab382153",
           "markupRevision": "46243445444e47d173b16d53bd5bc43d798346c5ea05976c5ddd9f86b0d4647e",
           "owners": [
             "shared/brief-dark.html"
@@ -8514,8 +8514,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8561,8 +8561,8 @@
         "light": {
           "componentKey": "icon/copilot",
           "variant": "light",
-          "version": "1.2.0+ebdc3c50f1bc",
-          "revision": "ebdc3c50f1bccaae57b6b459c8e811abc83ff137ea71423521bf2281933a4708",
+          "version": "1.2.0+9249ebd0e1a9",
+          "revision": "9249ebd0e1a9dc7198fede7784a2842ffcaa97375b00bdc8a6da9d98bb888d51",
           "markupRevision": "534e8ca22c39cf606066bb86780bc9a2ffe3d10cdc3105bff4f96649ec90cb2d",
           "owners": [
             "shared/brief-light.html"
@@ -8643,8 +8643,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8684,8 +8684,8 @@
         "dark": {
           "componentKey": "icon/copilot",
           "variant": "dark",
-          "version": "1.2.0+483568e71515",
-          "revision": "483568e71515d1740f2ee6707e23475fe9a37ebe79c6e5d22abea4481db03ad9",
+          "version": "1.2.0+d3cbf7a5e192",
+          "revision": "d3cbf7a5e192d92cd0c80c4784d2c330ac8ccf1df9362e8c685941a9571dd538",
           "markupRevision": "d004d307513aa0f7edfad1b6b61cf14770a6b51168896d19506e0672cf3700d4",
           "owners": [
             "shared/brief-dark.html"
@@ -8766,8 +8766,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-controls.js",
@@ -8813,8 +8813,8 @@
         "default": {
           "componentKey": "icon/availability-dot",
           "variant": "default",
-          "version": "1.2.0+841c43b16252",
-          "revision": "841c43b162524e696d2d19e365ea9f99363ec0d5a5dbba4bccd0bc1e39bc2d75",
+          "version": "1.2.0+df89e3799846",
+          "revision": "df89e37998460c8a147c2cdefc09993c0f4a7f3b86940d3e015e02799762162f",
           "markupRevision": "b2b9303221effe6266e4c9c1edc189c02da9d4e9d2cd0523053fc3a18a34ae10",
           "owners": [
             "shared/work-actions.html"
@@ -8871,8 +8871,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a",
-              "revisionSha256": "c818e9ca395180aa1040bb1ff8756d63c5b8aa8785b6e1aeb0a193cf8f5ff20a"
+              "sha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8",
+              "revisionSha256": "35666dd156d7992073e4ceaf4146eb2146c244c1592ced1ca43430ef1809faa8"
             },
             {
               "path": "shared/site-pages.mjs",
@@ -9380,9 +9380,9 @@
     }
   ],
   "designSystem": {
-    "version": "1.38.1",
-    "revision": "e1dc0efeb9a9",
-    "release": "1.38.1+e1dc0efeb9a9",
+    "version": "1.38.2",
+    "revision": "1e8c675b17a6",
+    "release": "1.38.2+1e8c675b17a6",
     "updatedAt": "2026-10-18T15:56:44.132Z",
     "sources": [
       {
@@ -9452,8 +9452,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "2163499f0529ed95047863a27fee41852064f74d70f855acd1e68b5e70434ae5",
-        "revisionSha256": "2163499f0529ed95047863a27fee41852064f74d70f855acd1e68b5e70434ae5"
+        "sha256": "2bfd534a6c613f39d3406ac1baece11d279bb594f62bd192f7f8fd02f05ab4f0",
+        "revisionSha256": "2bfd534a6c613f39d3406ac1baece11d279bb594f62bd192f7f8fd02f05ab4f0"
       },
       {
         "path": "shared/ds-freshness.js",
