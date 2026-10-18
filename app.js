@@ -307,24 +307,22 @@
     menuTimeline = gsap.timeline({onComplete:settleMenu});
     menuTimeline.to(navigation,{y:0,opacity:1,duration:1.05,stagger:.07,delay:.14,ease:'power2.out',clearProps:'transform,opacity'});
   });
-  // Desktop reveals the small first-frame image and copy before the turn buffer.
-  // The boot module still waits for both the reveal and prepared welcome frames.
-  const heroPortraitReady = mobile.matches ? window.portraitReady : Promise.resolve(true);
-  Promise.all([menuReady,heroPortraitReady,posterReady,fontDeadline]).then(async ([_,portraitReady]) => {
-    // A window resized into mobile before its entrance keeps the mobile gate.
-    if (mobile.matches) portraitReady = await window.portraitReady;
+  // Both layouts reveal the static poster and copy before the turn buffer.
+  // portrait-boot waits for this entrance and prepared frames before turning.
+  Promise.all([menuReady,posterReady,fontDeadline]).then(() => {
+    const allowPortraitIntro = !reduced.matches && !document.hidden;
     if (heroStarted) return;
     heroStarted = true;
     stamp('heroStartedAt');
     if (!window.gsap || reduced.matches || document.hidden || !root.classList.contains('motion-pending')) {
-      settleHero(portraitReady && !reduced.matches && !document.hidden);return;
+      settleHero(allowPortraitIntro);return;
     }
     // Reserve the final layout while the existing portrait prepares its welcome poses.
     gsap.set(portrait,{y:18,opacity:0,scale:.97});
     gsap.set(copy,{y:18,opacity:0});
     root.classList.remove('motion-pending');
-    heroTimeline = gsap.timeline({defaults:{ease:'power3.out'},onComplete:() => settleHero(portraitReady)});
-    heroTimeline.to(portrait,{y:0,opacity:1,scale:1,duration:.85,clearProps:'transform,opacity',onComplete:() => window.resolvePortraitReveal(portraitReady)},.1)
+    heroTimeline = gsap.timeline({defaults:{ease:'power3.out'},onComplete:() => settleHero(allowPortraitIntro)});
+    heroTimeline.to(portrait,{y:0,opacity:1,scale:1,duration:.85,clearProps:'transform,opacity',onComplete:() => window.resolvePortraitReveal(allowPortraitIntro)},.1)
       .to(copy,{y:0,opacity:1,duration:.85,stagger:.2,clearProps:'transform,opacity'},.3);
   });
   reduced.addEventListener('change',() => {
