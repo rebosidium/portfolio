@@ -1686,8 +1686,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.2.0+6a50ab4d1b6d",
-      "revision": "6a50ab4d1b6da78aef04532b40954859cb18810e3f4492f8097cfc9baccfa7b1",
+      "version": "1.2.0+7144cafbead2",
+      "revision": "7144cafbead24163af41959fb414ef823e9aa26099b7f7ddf93bdc9992df94ef",
       "markupRevision": "45aea600ab6b2ab7c63af0243862075a66c885b054d8b8bd066108dacf44eef9",
       "owners": [
         "shared/article-heading.html",
@@ -1806,8 +1806,8 @@
         {
           "path": "shared/raiffeisen-leasing-page.json",
           "kind": "markup",
-          "sha256": "db6682da1108199ecb6dc647376f0870143f7e8d5e43f3bd1c81775afe6d5735",
-          "revisionSha256": "db6682da1108199ecb6dc647376f0870143f7e8d5e43f3bd1c81775afe6d5735"
+          "sha256": "527c8e453d66b035e9c4e93dcc8d3c52c602559816881bb726a0f80a492107e4",
+          "revisionSha256": "527c8e453d66b035e9c4e93dcc8d3c52c602559816881bb726a0f80a492107e4"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -1856,8 +1856,8 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.2.0+b1316c34d8db",
-      "revision": "b1316c34d8db1949a81860fe3a364f1f5ef1332db3920978f2d0f167823209ca",
+      "version": "1.2.0+0da204ec46e9",
+      "revision": "0da204ec46e91c980eea1fe27b8e2324f376856d215ab5828d8248896159aec6",
       "markupRevision": "2fbdec85e0bfc9588ed5a32702566ff58fd16409c260c8cfab90910087af7afe",
       "owners": [
         "shared/reading-page.html",
@@ -3243,8 +3243,8 @@
         {
           "path": "shared/raiffeisen-leasing-page.json",
           "kind": "markup",
-          "sha256": "db6682da1108199ecb6dc647376f0870143f7e8d5e43f3bd1c81775afe6d5735",
-          "revisionSha256": "db6682da1108199ecb6dc647376f0870143f7e8d5e43f3bd1c81775afe6d5735"
+          "sha256": "527c8e453d66b035e9c4e93dcc8d3c52c602559816881bb726a0f80a492107e4",
+          "revisionSha256": "527c8e453d66b035e9c4e93dcc8d3c52c602559816881bb726a0f80a492107e4"
         },
         {
           "path": "shared/reading-page.html",
@@ -11820,10 +11820,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.41.2",
-    "revision": "7b54d37ac831",
-    "release": "1.41.2+7b54d37ac831",
-    "updatedAt": "2026-10-18T20:43:28.509Z",
+    "version": "1.41.3",
+    "revision": "f28e6884f650",
+    "release": "1.41.3+f28e6884f650",
+    "updatedAt": "2026-10-18T21:58:17.603Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11877,13 +11877,13 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "cafdd64286008ec9afda8aadb3d5165c6f164092867866be454dabca51c99626",
-        "revisionSha256": "cafdd64286008ec9afda8aadb3d5165c6f164092867866be454dabca51c99626"
+        "sha256": "7714afc54835ace312e04699004e7f0ddb2875cd9c23ec5248f16ee3fce57cab",
+        "revisionSha256": "7714afc54835ace312e04699004e7f0ddb2875cd9c23ec5248f16ee3fce57cab"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "ebb058f1eb1e458af505727d9f3ee905ce229ca1b31aa776fc8a8ede174cab2c",
-        "revisionSha256": "ebb058f1eb1e458af505727d9f3ee905ce229ca1b31aa776fc8a8ede174cab2c"
+        "sha256": "f6424691c05457bf266636184efff82b7701575be985f801f560f96aad9f970b",
+        "revisionSha256": "f6424691c05457bf266636184efff82b7701575be985f801f560f96aad9f970b"
       },
       {
         "path": "shared/component-registry.mjs",
@@ -11892,8 +11892,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "6cdf9a4fc5e10036d17f2bf3e9667a9b0bc16042c65dbc6c69bd7f1bb2f911f2",
-        "revisionSha256": "6cdf9a4fc5e10036d17f2bf3e9667a9b0bc16042c65dbc6c69bd7f1bb2f911f2"
+        "sha256": "1f87743d8e2a98600fd43fffc5e787859feb5ac13b3568b51baf85dab68f0fa7",
+        "revisionSha256": "1f87743d8e2a98600fd43fffc5e787859feb5ac13b3568b51baf85dab68f0fa7"
       },
       {
         "path": "shared/ds-freshness.js",
