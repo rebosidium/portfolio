@@ -201,3 +201,25 @@
 .ds-token-index th,.ds-token-index td{overflow-wrap:anywhere}
 .ds-token-index tr[id]{scroll-margin-top:110px}
 @media(max-width:767px){.ds-token-index tr[id]{scroll-margin-top:150px}}
+
+.ds-theme-toolbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 40px;background:var(--color-canvas);border-bottom:1px solid var(--ds-border);font-size:13px}
+.ds-theme-toolbar p{margin:0;color:var(--ds-color-secondary)}
+.ds-theme-toolbar .ds-mode-switch{display:flex;flex-wrap:wrap;gap:4px}
+.ds-theme-toolbar button{min-height:44px;padding:8px 16px;border:1px solid transparent}
+.ds-theme-toolbar button[aria-pressed="true"]{background:var(--color-surface);border-color:var(--color-muted)}
+.ds-theme-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--color-canvas)}
+.ds-theme-table th,.ds-theme-table td{padding:12px;text-align:left;border-bottom:1px solid var(--ds-border)}
+.ds-theme-table code{overflow-wrap:anywhere}
+.ds-theme-swatch{display:inline-block;width:24px;height:24px;vertical-align:middle;border-radius:6px;border:1px solid #888;margin-right:8px}
+.ds-theme-table-wrap{overflow:auto;border:1px solid var(--ds-border);border-radius:12px}
+@media(max-width:767px){.ds-theme-toolbar{padding:12px 20px;gap:8px}.ds-theme-toolbar>div{width:100%}.ds-theme-toolbar button{padding-inline:13px}}
+/* Variant galleries deliberately show both original asset backgrounds. */
+.ds-icon-preview[data-surface="light"]{background:#FFFFFF;color:#232522;--color-ink:#232522;--color-canvas:#FFFFFF}
+.ds-icon-preview[data-surface="dark"]{background:#101112;color:#EDEEEB;--color-ink:#EDEEEB;--color-canvas:#EDEEEB}
+.ds-theme-toolbar button[aria-pressed="true"]{color:var(--color-ink)}
+.ds-main section{scroll-margin-top:160px}
+
+/* Theme and viewport are independent global preview controls. */
+.ds-theme-toolbar{display:grid;grid-template-columns:max-content max-content;justify-content:space-between;gap:24px}
+.ds-toolbar-group{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0}
+@media(max-width:900px){.ds-theme-toolbar{grid-template-columns:1fr;gap:8px}.ds-theme-toolbar>div{width:auto}.ds-toolbar-group .ds-mode-switch{flex-wrap:nowrap}.ds-toolbar-group button{padding-inline:12px}.ds-toolbar-group>strong{font-size:12px}}

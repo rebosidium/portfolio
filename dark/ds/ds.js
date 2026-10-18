@@ -156,7 +156,7 @@
   function load(item){
     item.frame.title=`${item.base.title}${item.variant.label?' · '+item.variant.label:''}, ${mode}, ${labels[item.state]||item.state}`;
     item.ready=false;item.manualVisible=false;item.instance=String(++navigationId);
-    item.frame.src=`/dark/ds/preview.html?component=${encodeURIComponent(item.example.id)}&theme=${document.documentElement.dataset.themePreference||'system'}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}&_visit=${encodeURIComponent(visit)}`;
+    item.frame.src=`/dark/ds/preview.html?component=${encodeURIComponent(item.example.id)}&theme=${document.documentElement.dataset.themePreference||'system'}&theme=${document.documentElement.dataset.themePreference||'system'}&mode=${mode}&state=${encodeURIComponent(item.state)}&instance=${item.instance}&v=${revision}&_visit=${encodeURIComponent(visit)}`;
     item.code?.refresh();
     resize(item);
   }

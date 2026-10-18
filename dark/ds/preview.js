@@ -63,11 +63,8 @@
     const artwork=document.querySelector('.work-artwork');artwork.classList.add('image-failed');artwork.dataset.imageState='failed';artwork.querySelector('.work-image-error').hidden=false;
   }
   if(state==='paused')document.querySelector('[data-pulse-visible]')?.setAttribute('data-pulse-visible','false');
-  if(['front','reduced-motion'].includes(state)&&example.id==='portrait'){
-    const source=document.querySelector('.portrait source');
-    const image=document.querySelector('.portrait img');
-    image.src=source.srcset;source.remove();
-  }
+  // Theme-specific picture sources keep both front and initial states native.
+
   if(state==='hover'&&example.group==='template')document.querySelector('.header nav a[href]:not(.mobile-only)')?.setAttribute('data-ui-state','hover');
   function script(src,done){const node=document.createElement('script');node.src=src;node.onload=done;document.body.append(node);}
   if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.controls,()=>{
