@@ -1307,8 +1307,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+4ed1d480da38",
-      "revision": "4ed1d480da38b9042e569a10ff7f485d2dd41aac3c5a866c9be8d20a296c8ac2",
+      "version": "1.2.0+8dbbf9f7d5ea",
+      "revision": "8dbbf9f7d5ea52416fd2df90e498e73ac77de6e849c434fb9c860593c2b81c98",
       "markupRevision": "27433c464b97fff61c69b7d8e2e5d9c3fe1673a39de395fece8e235fb975a438",
       "owners": [
         "shared/photo-gallery.mjs"
@@ -1419,14 +1419,14 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "df3e6db1871410bdb2d417a5c4434db545bb3a02baf9364353d0ee8feeaf80f3",
-          "revisionSha256": "df3e6db1871410bdb2d417a5c4434db545bb3a02baf9364353d0ee8feeaf80f3"
+          "sha256": "e77b5ecaf5f60eeddf54b796c64ccfbe12eb77e7fe9e7e43ecf6600e12f6fc99",
+          "revisionSha256": "e77b5ecaf5f60eeddf54b796c64ccfbe12eb77e7fe9e7e43ecf6600e12f6fc99"
         },
         {
           "path": "shared/photo-gallery.js",
           "kind": "runtime",
-          "sha256": "3c1bd3c99f0f10a07761a826e39e4ca4bab79cd3d253eaaef131b68b2819cda0",
-          "revisionSha256": "3c1bd3c99f0f10a07761a826e39e4ca4bab79cd3d253eaaef131b68b2819cda0"
+          "sha256": "c5c651026012b1e3678e3eab4542ce1eba0fedc9b888f4d4ad5950da077c3165",
+          "revisionSha256": "c5c651026012b1e3678e3eab4542ce1eba0fedc9b888f4d4ad5950da077c3165"
         },
         {
           "path": "shared/photo-gallery.mjs",
@@ -4967,10 +4967,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.27.0",
-    "revision": "ca3a3511d28e",
-    "release": "1.27.0+ca3a3511d28e",
-    "updatedAt": "2026-10-18T01:00:00.000Z",
+    "version": "1.27.1",
+    "revision": "b68ef385c68a",
+    "release": "1.27.1+b68ef385c68a",
+    "updatedAt": "2026-10-18T01:35:00.000Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -5024,8 +5024,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "7c5470f581355d79df679a0aed5687105419e89f95c40ef3aa6bb7c79da37811",
-        "revisionSha256": "7c5470f581355d79df679a0aed5687105419e89f95c40ef3aa6bb7c79da37811"
+        "sha256": "454d7763b769325678865aee2dae5fa08b6bb409337910cb5381a364c742b41c",
+        "revisionSha256": "454d7763b769325678865aee2dae5fa08b6bb409337910cb5381a364c742b41c"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -5039,8 +5039,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "1faba3e82cc9930559a2c996c3cef6eb576afbf068b4a1ecef519f4085c95bbe",
-        "revisionSha256": "1faba3e82cc9930559a2c996c3cef6eb576afbf068b4a1ecef519f4085c95bbe"
+        "sha256": "6f60fc73ca31a0db6e517851969ede52b3ea471fe2e23d32afc9f3b3c0f3f2bb",
+        "revisionSha256": "6f60fc73ca31a0db6e517851969ede52b3ea471fe2e23d32afc9f3b3c0f3f2bb"
       },
       {
         "path": "shared/ds-freshness.js",
