@@ -40,6 +40,7 @@
         "about-header",
         "footer",
         "reading-page",
+        "photo-gallery",
         "photo-gallery-footer",
         "recommendations"
       ]
@@ -61,25 +62,6 @@
         "footer",
         "company-page",
         "recommendations"
-      ]
-    },
-    {
-      "route": "/photo/",
-      "label": "Photo experiment",
-      "documents": [
-        "photo/index.html"
-      ],
-      "components": [
-        "brief-dark",
-        "back",
-        "link",
-        "footer-link",
-        "about-title",
-        "about-avatar",
-        "about-header",
-        "footer",
-        "reading-page",
-        "photo-gallery"
       ]
     },
     {
@@ -107,8 +89,8 @@
   "components": {
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.2.0+c2bc8b140952",
-      "revision": "c2bc8b1409521dc58183804469e8a322b0bd4fb65397b55a45deb6eedd192a61",
+      "version": "1.2.0+2771a774ebe6",
+      "revision": "2771a774ebe615b71f37d225f21d360dc2418100691027bb38f1cc44f0f095b4",
       "markupRevision": "b9a729a946ceaa454248ff24adc8005ee642a7f34589be82ed9a64a45d847833",
       "owners": [
         "shared/recommendations.mjs",
@@ -244,8 +226,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -288,8 +270,8 @@
     "brief": {
       "componentKey": "brief",
       "variant": "light",
-      "version": "1.2.0+8b5803759a5f",
-      "revision": "8b5803759a5f7805e40778128fab517e862964b233fd450a10c93618cf06bd96",
+      "version": "1.2.0+3b416d9bd962",
+      "revision": "3b416d9bd96291626a493a05bcc215398718a219941e65d3fe9a8d82a61f286d",
       "markupRevision": "0bb3697c7dab09d51f179caf4a12a5ec24f6c1706b225468616534f8f56cacf3",
       "owners": [
         "shared/brief-light.html"
@@ -382,8 +364,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -426,8 +408,8 @@
     "brief-dark": {
       "componentKey": "brief",
       "variant": "dark",
-      "version": "1.2.0+010b489e7a96",
-      "revision": "010b489e7a964672315715ad18a38d43a69929e8165e57c7f3f7f70a865a212b",
+      "version": "1.2.0+eba07857f7bd",
+      "revision": "eba07857f7bd0a5eeb0e4b150618be7f15f23485adb4210d3749d8ac2d33f191",
       "markupRevision": "38e30c6b13312d555bc58ed15e6a214ee2e96474575290541182d7ba612f1edb",
       "owners": [
         "shared/brief-dark.html"
@@ -520,8 +502,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -557,8 +539,7 @@
       "usedBy": [
         "/",
         "/about/",
-        "/work/raiffeisen-leasing/",
-        "/photo/"
+        "/work/raiffeisen-leasing/"
       ],
       "name": "Button / AI brief",
       "displayName": "Button / AI brief · Dark",
@@ -567,8 +548,8 @@
     "back": {
       "componentKey": "back",
       "variant": "responsive",
-      "version": "1.2.0+a302efd28269",
-      "revision": "a302efd28269e9555b19af67a64ee2e92a09b6bcf8fc23d308eb693a20b9dde9",
+      "version": "1.2.0+6e5c0d8f2536",
+      "revision": "6e5c0d8f2536e0cf0783f96badfe154d532fb9c36c16814b5a1f0918b95f3cc6",
       "markupRevision": "6718b8aae93aabb0a5a5f943003015a051601bd2dde8961f85bcd0dbfa81a127",
       "owners": [
         "shared/back.html"
@@ -631,8 +612,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -668,7 +649,6 @@
       "usedBy": [
         "/about/",
         "/work/raiffeisen-leasing/",
-        "/photo/",
         "/404/"
       ],
       "name": "Link / Back",
@@ -676,8 +656,8 @@
     },
     "link": {
       "componentKey": "navigation-link",
-      "version": "1.2.0+fa301be78eb1",
-      "revision": "fa301be78eb15440d26a172aa1a374fabaeb5a79cb45186ec60aa72f13ccd603",
+      "version": "1.2.0+99d6aabe89b0",
+      "revision": "99d6aabe89b08e0400503e92a45041109ec291cc2e51409561d820c9f99716e1",
       "markupRevision": "177ea6b77bf21d31aa84b535eeb7940bdd3f18d05df66db8f9ee2c55dd1c1ff2",
       "owners": [
         "shared/header.html"
@@ -746,8 +726,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -783,16 +763,15 @@
       "usedBy": [
         "/",
         "/about/",
-        "/work/raiffeisen-leasing/",
-        "/photo/"
+        "/work/raiffeisen-leasing/"
       ],
       "name": "Link / Navigation",
       "displayName": "Link / Navigation"
     },
     "footer-link": {
       "componentKey": "footer-link",
-      "version": "1.2.0+455476a3c67e",
-      "revision": "455476a3c67e309e9237fa97d484f5196d6b41b41d3e65b0ec1014a9235b00dd",
+      "version": "1.2.0+e1871d02d74d",
+      "revision": "e1871d02d74d371453a416ab42fb4f7ab9c2b7855e6b2dc4c9c9a6ea3ba52931",
       "markupRevision": "96974ee3c400093ef69a853505fedfad034a15928cc7430040cad08d1d1196ed",
       "owners": [
         "shared/footer.html"
@@ -849,8 +828,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -886,8 +865,7 @@
       "usedBy": [
         "/",
         "/about/",
-        "/work/raiffeisen-leasing/",
-        "/photo/"
+        "/work/raiffeisen-leasing/"
       ],
       "name": "Link / Contact",
       "displayName": "Link / Contact · Dark",
@@ -895,8 +873,8 @@
     },
     "work-actions": {
       "componentKey": "work-actions",
-      "version": "1.2.0+3c29f96bfcd0",
-      "revision": "3c29f96bfcd043b65553c197205b3b05ec4b20a50b98a124639ddd64c4de3b1d",
+      "version": "1.2.0+6049ec861d05",
+      "revision": "6049ec861d05b04023ef254b7c456d4d353c5b1aa304676f6d2192894ff427f3",
       "markupRevision": "b7d77293a8d61bd31071fbf72f25efb8bdbf192e0ca00450d83fcbe0a7b308cb",
       "owners": [
         "shared/work-actions.html",
@@ -984,8 +962,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -1032,8 +1010,8 @@
     },
     "availability": {
       "componentKey": "availability",
-      "version": "1.2.0+4e146857eb58",
-      "revision": "4e146857eb580a046c487746cf17c87294b6750717b5294c07bb7033559709a0",
+      "version": "1.2.0+0f63e5ec67cd",
+      "revision": "0f63e5ec67cdd3cfbcc2b45b0c525fe11e5f4752009ac426dde40b06c76b54f5",
       "markupRevision": "c848f243c706ee0a2d8a13c5e316803dde97cd3ff576576e02c3e7c6bb8a52c0",
       "owners": [
         "shared/work-actions.html"
@@ -1108,8 +1086,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -1156,8 +1134,8 @@
     },
     "portrait": {
       "componentKey": "portrait",
-      "version": "1.2.0+2cf9b770973d",
-      "revision": "2cf9b770973dec861764613b2398c1899c42f19f10cc3708f58c2f1296f390ae",
+      "version": "1.2.0+977872bfaeb2",
+      "revision": "977872bfaeb240a8cfa3dd380aa3eacfd4d19de53e6956a94e66b75411fcc9b5",
       "markupRevision": "02acaa204eb65b41492993c13c2d7e8d576585c8af0aa64c15ebfb2bdfbbe59b",
       "owners": [
         "shared/home-intro.html",
@@ -1509,8 +1487,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -1552,8 +1530,8 @@
     "about-title": {
       "componentKey": "about-title",
       "variant": "with-avatar",
-      "version": "1.2.0+ce3b994ce8d0",
-      "revision": "ce3b994ce8d0d9a7b2317d58a4545adab032d33e466c43234bd2dccddaf55f84",
+      "version": "1.2.0+bc33afa79059",
+      "revision": "bc33afa79059505873ff06f35e12e4dfe90196e25528afe440629030ac0e872c",
       "markupRevision": "45aea600ab6b2ab7c63af0243862075a66c885b054d8b8bd066108dacf44eef9",
       "owners": [
         "shared/article-heading.html",
@@ -1641,8 +1619,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -1676,8 +1654,7 @@
         }
       ],
       "usedBy": [
-        "/about/",
-        "/photo/"
+        "/about/"
       ],
       "name": "Heading / Article",
       "displayName": "Heading / Article",
@@ -1686,8 +1663,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.2.0+7144cafbead2",
-      "revision": "7144cafbead24163af41959fb414ef823e9aa26099b7f7ddf93bdc9992df94ef",
+      "version": "1.2.0+d558ae057c2a",
+      "revision": "d558ae057c2a3950aac1db800758a1553c27c0d9643b0b3e8a276878834764f6",
       "markupRevision": "45aea600ab6b2ab7c63af0243862075a66c885b054d8b8bd066108dacf44eef9",
       "owners": [
         "shared/article-heading.html",
@@ -1812,8 +1789,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -1856,8 +1833,8 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.2.0+0da204ec46e9",
-      "revision": "0da204ec46e91c980eea1fe27b8e2324f376856d215ab5828d8248896159aec6",
+      "version": "1.2.0+515f7ea92ad3",
+      "revision": "515f7ea92ad37c5394cb1fcb8a23206e9b35d3799a3eb147e52caacdcaf7497c",
       "markupRevision": "2fbdec85e0bfc9588ed5a32702566ff58fd16409c260c8cfab90910087af7afe",
       "owners": [
         "shared/reading-page.html",
@@ -3285,8 +3262,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -3329,8 +3306,8 @@
     "article-title": {
       "componentKey": "about-title",
       "variant": "without-avatar",
-      "version": "1.2.0+61af432310d8",
-      "revision": "61af432310d80117121514b1f581342f48acf2120bb3441098fb8d403c4da6b5",
+      "version": "1.2.0+bfdfa39e5f84",
+      "revision": "bfdfa39e5f842c3ff9d147d897dc58ca3b4b7ce9737833820e7cbcd530720eeb",
       "markupRevision": "f72b751dfe6d8e96a78aea268f97df03f6d4d3af6dfa50d3ba43b7eb17420d4a",
       "owners": [
         "shared/article-heading.html"
@@ -3387,8 +3364,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -3430,8 +3407,8 @@
     },
     "about-avatar": {
       "componentKey": "about-avatar",
-      "version": "1.2.0+ea9001d946e5",
-      "revision": "ea9001d946e5ab107e3b0f69636025d81e64ba25922d07a2305346d1938ebb32",
+      "version": "1.2.0+010bd07b9329",
+      "revision": "010bd07b93292261650b93dca4bbd7ed59ca0195a3a0db60b764a6ff83df8570",
       "markupRevision": "51ed243f4b69681c3d7da274e6ca2a5df8b21a6c7eba09b082e539d6845c7be2",
       "owners": [
         "shared/about-avatar.html"
@@ -3512,8 +3489,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -3547,16 +3524,15 @@
         }
       ],
       "usedBy": [
-        "/about/",
-        "/photo/"
+        "/about/"
       ],
       "name": "Avatar / Static",
       "displayName": "Avatar / Static"
     },
     "prose-section": {
       "componentKey": "prose-section",
-      "version": "1.2.0+5b077adcd9fd",
-      "revision": "5b077adcd9fd65017331d4279608a4c9c46f35a9f33abd48ae783629419d5adc",
+      "version": "1.2.0+d5bda25228fa",
+      "revision": "d5bda25228fa855fae4037745568257aba5f88709ca7453769463f5a9ecdafde",
       "markupRevision": "a1588f614dee87cec01a557c318b6665a3329f2de8c1a027bd22f8cd4d83c5ef",
       "owners": [
         "shared/about-main.html"
@@ -3613,8 +3589,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -3656,8 +3632,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+cea88c8c0980",
-      "revision": "cea88c8c09805c03bc613fdaec67d62b578be3d38ed958cf4c0df9755e986b3b",
+      "version": "1.2.0+6910257486e6",
+      "revision": "6910257486e63980a55696a1d2261565cf6aee2708c0744795bb7b02f2fc6dd9",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -4850,8 +4826,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -4885,7 +4861,7 @@
         }
       ],
       "usedBy": [
-        "/photo/"
+        "/about/"
       ],
       "name": "Gallery / Infinite photos",
       "displayName": "Gallery / Infinite photos",
@@ -4894,8 +4870,8 @@
     "photo-gallery-footer": {
       "componentKey": "photo-gallery",
       "variant": "footer",
-      "version": "1.2.0+d635d296d850",
-      "revision": "d635d296d8508b5accf3938ef4cc5ac415714c6833f18593e30be32c3094664c",
+      "version": "1.2.0+1af7d23019d9",
+      "revision": "1af7d23019d925feb7ba5cf50d475531fd1b1d74b2307a3e13f2981b877218e5",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -6088,8 +6064,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -6132,8 +6108,8 @@
     "header": {
       "componentKey": "header",
       "variant": "default",
-      "version": "1.2.0+61629e40aa4a",
-      "revision": "61629e40aa4a35d9e5dc356ad4a51a0e852e8aef014192a6ebeb000a26ebc182",
+      "version": "1.2.0+6e70fd5821a2",
+      "revision": "6e70fd5821a226b3de7da3d73d262db695129b9be55074c5ef229faaf7649fb1",
       "markupRevision": "49d57d677f35c5228504492328602a6c1b919f3fae0edab074df3bfdf2086b06",
       "owners": [
         "shared/header.html"
@@ -6214,8 +6190,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -6257,8 +6233,8 @@
     "about-header": {
       "componentKey": "header",
       "variant": "article",
-      "version": "1.2.0+bfec72568b05",
-      "revision": "bfec72568b05f2f6541d0263c54ebf305071f07210dacfa893db5605c55732a4",
+      "version": "1.2.0+7ea521918905",
+      "revision": "7ea5219189053b42b8cff14cba132a12fc555efab4958c01cd156502a45204c9",
       "markupRevision": "1adf733b859cd0e4f1e66afa99e391612685465040432b22d40570f1112ea21d",
       "owners": [
         "shared/header.html",
@@ -6358,8 +6334,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -6394,8 +6370,7 @@
       ],
       "usedBy": [
         "/about/",
-        "/work/raiffeisen-leasing/",
-        "/photo/"
+        "/work/raiffeisen-leasing/"
       ],
       "name": "Header / Site",
       "displayName": "Header / Site · With Back link",
@@ -6403,8 +6378,8 @@
     },
     "hero": {
       "componentKey": "homepage-intro",
-      "version": "1.2.0+4b3a477b455f",
-      "revision": "4b3a477b455f63f5261907d1cda31733b4558397e5ac52c3b7e4b195ab404e46",
+      "version": "1.2.0+438e6371d31e",
+      "revision": "438e6371d31ebacb4c497489322ddc47c42aa82e37886247bb3ab75f294bfab5",
       "markupRevision": "17671f9b77f8d7742d127aae4a5fa01f78a2f30d7dff8091f99a44ca97088e11",
       "owners": [
         "shared/home-intro.html",
@@ -6805,8 +6780,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -6847,8 +6822,8 @@
     },
     "work": {
       "componentKey": "work-card",
-      "version": "1.2.0+12f5b0002845",
-      "revision": "12f5b0002845e69208684afbb866b2df2656230aa4378edd4c15597a0db02747",
+      "version": "1.2.0+10778f157e3b",
+      "revision": "10778f157e3b04880d39cbf61726e211d9f820173cf167e42b3c3ddcb49be80e",
       "markupRevision": "260651caaae60a6dc9bbf1480961d2a6402b1e19a0430a1f85fd15c463411d51",
       "owners": [
         "shared/work-card.html",
@@ -7033,8 +7008,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -7093,8 +7068,8 @@
     },
     "work-section": {
       "componentKey": "work-section",
-      "version": "1.2.0+850893b2fbb7",
-      "revision": "850893b2fbb7fb112430046fdaad34e62be7a580aa83b59441798629bfdf0ca8",
+      "version": "1.2.0+bf5221202909",
+      "revision": "bf5221202909daa2147a1ef1756ac76f5db8b1576a4cda05c86529c23be4e84d",
       "markupRevision": "9777b49f453db29231939a1a8f29bf64078aae19a0ec48d9b6656a28e347fe1b",
       "owners": [
         "shared/work-section.html",
@@ -7274,8 +7249,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -7341,8 +7316,8 @@
     },
     "footer": {
       "componentKey": "footer",
-      "version": "1.2.0+b1d573252aa1",
-      "revision": "b1d573252aa1ac1b2f145865874b839d4c105f8f32aedeab2b2c003fb69ec0dd",
+      "version": "1.2.0+449f161ca7d3",
+      "revision": "449f161ca7d3d1cf9ffbc650daea046970fc885a419d4bb6e33a64f71a6490e3",
       "markupRevision": "02cdea56a8ebb3c67acea10b12ef832c047d9246618d8a1709e5b3bd8ea83757",
       "owners": [
         "shared/footer.html",
@@ -7502,8 +7477,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -7539,16 +7514,15 @@
       "usedBy": [
         "/",
         "/about/",
-        "/work/raiffeisen-leasing/",
-        "/photo/"
+        "/work/raiffeisen-leasing/"
       ],
       "name": "Footer / Contact",
       "displayName": "Footer / Contact"
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.2.0+cd8475f682fc",
-      "revision": "cd8475f682fc0f53f218b56b1679a787bda757be62354c4e888b0745ac46c06e",
+      "version": "1.2.0+dd480792bb42",
+      "revision": "dd480792bb4235dfca9104ce203072615dcac60ff7da32bc7fa2b584ec417b56",
       "markupRevision": "2fbdec85e0bfc9588ed5a32702566ff58fd16409c260c8cfab90910087af7afe",
       "owners": [
         "shared/reading-page.html",
@@ -9045,8 +9019,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -9080,8 +9054,7 @@
         }
       ],
       "usedBy": [
-        "/about/",
-        "/photo/"
+        "/about/"
       ],
       "name": "Page / Reading",
       "displayName": "Page / Reading · About",
@@ -9089,8 +9062,8 @@
     },
     "not-found-page": {
       "componentKey": "not-found-page",
-      "version": "1.2.0+16671cdf7985",
-      "revision": "16671cdf7985434bee110b4b21bdb2d27d26d8833cbadb9e60f1de3543cac906",
+      "version": "1.2.0+d60e0aacd5c1",
+      "revision": "d60e0aacd5c16e291bd66d15929c95b55c227d328d4b6706f89dcf79781b0686",
       "markupRevision": "a52bdc403176c1a576cb94ed6c2c655c00bf9940ee35a87af0c738ba98b1c25a",
       "owners": [
         "shared/reading-page.html",
@@ -9192,8 +9165,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-          "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+          "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+          "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
         },
         {
           "path": "shared/site-ui.css",
@@ -9240,8 +9213,8 @@
         "light": {
           "componentKey": "icon/arrow-left",
           "variant": "light",
-          "version": "1.2.0+b0f6a10fec77",
-          "revision": "b0f6a10fec77f3b9bc79fb29a6187d9c35e1b197f1f96f13a2e0b83bb898cc66",
+          "version": "1.2.0+b25c9ed9051e",
+          "revision": "b25c9ed9051e4eda70d322061f44c3cb65592577b0707eadc2100a0459c9be9a",
           "markupRevision": "ba4042f14f219a1c6d030adca16a91ba1e026d578b2f27d6fcb3749bfaad99e1",
           "owners": [
             "shared/back.html"
@@ -9304,8 +9277,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9341,7 +9314,6 @@
           "usedBy": [
             "/about/",
             "/work/raiffeisen-leasing/",
-            "/photo/",
             "/404/"
           ]
         }
@@ -9352,8 +9324,8 @@
         "light": {
           "componentKey": "icon/check",
           "variant": "light",
-          "version": "1.2.0+d1d4e2729e0f",
-          "revision": "d1d4e2729e0f415257c6b5678ef4c33abeb2e908b96b8556b3a231f8b78f275e",
+          "version": "1.2.0+0f972a770750",
+          "revision": "0f972a770750df08415fb8dd887a9d6a5902446eeaa280524ed4c435136454e7",
           "markupRevision": "cd9f6deb1284bf5e6d706ff8d6909eff903039f285d227c4fb7fc15c6d97cea9",
           "owners": [
             "shared/brief-light.html"
@@ -9446,8 +9418,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9487,8 +9459,8 @@
         "dark": {
           "componentKey": "icon/check",
           "variant": "dark",
-          "version": "1.2.0+14755efebbe3",
-          "revision": "14755efebbe3ed9968289cf8da98eda94702bd3f994a452bd1ce6d91f1984b74",
+          "version": "1.2.0+33f6606a1d0c",
+          "revision": "33f6606a1d0cb7a6c3c0384d46126e252759d77af433f58f819f3e0398ee9316",
           "markupRevision": "b5d15c4ea83c6d573a9053ac7cf7816ace9aef20529b5504d8091589fddb2cdb",
           "owners": [
             "shared/brief-dark.html"
@@ -9581,8 +9553,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9618,8 +9590,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -9629,8 +9600,8 @@
         "closed": {
           "componentKey": "icon/menu",
           "variant": "closed",
-          "version": "1.2.0+fc4faf7ef5c3",
-          "revision": "fc4faf7ef5c39d3894299b3c401eb16ff10c1f756e22b409e57beaad6b91baa0",
+          "version": "1.2.0+b306c1d9668a",
+          "revision": "b306c1d9668a1e6abf3a02d2b862d95da3c05e491a7f2fbb1a737b6bdb14fb68",
           "markupRevision": "7fa6ae3a886f6e7f325cc86d7958040d2a366533fd33e07ef5a8a0b6ce7e3779",
           "owners": [
             "shared/header.html"
@@ -9693,8 +9664,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9730,15 +9701,14 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         },
         "open": {
           "componentKey": "icon/menu",
           "variant": "open",
-          "version": "1.2.0+cf65543b25cf",
-          "revision": "cf65543b25cfb84cb95294019f528488aef4f8c01d48dd351a4ce56c7bd21fff",
+          "version": "1.2.0+7ad31a3a822b",
+          "revision": "7ad31a3a822b4262f8bbb347e73b5900f105f1f8ac3f4c0e50a54793c05aae92",
           "markupRevision": "ff20fc428140dc8708a95c1373d250a1a43aa2ec8b99680ea4b8d860a7b058c8",
           "owners": [
             "shared/header.html"
@@ -9801,8 +9771,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9838,8 +9808,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -9849,8 +9818,8 @@
         "light": {
           "componentKey": "icon/claude",
           "variant": "light",
-          "version": "1.2.0+18b30c483536",
-          "revision": "18b30c48353658cf47b91ac9016dd843d29007c23767a39680715cc46bd73df6",
+          "version": "1.2.0+21fe5b0110db",
+          "revision": "21fe5b0110dbec72086eb17ce04c29bf57da61488b916d3fd2f67473347f357b",
           "markupRevision": "508041fa637d9617cb3467091c2f152617a811e5821cf96da72460b939e699d5",
           "owners": [
             "shared/brief-light.html"
@@ -9943,8 +9912,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -9984,8 +9953,8 @@
         "dark": {
           "componentKey": "icon/claude",
           "variant": "dark",
-          "version": "1.2.0+e0317ebeac55",
-          "revision": "e0317ebeac55951c6bf8671be8fc2fd22a9a1a85bf58845f5e40d1ebf2ba538c",
+          "version": "1.2.0+49604664d265",
+          "revision": "49604664d265051c7ac88d4db23da7b6a1496a6cdd7f6a831ba1f91159aa0489",
           "markupRevision": "d631f2ebd21f51011d9fcea7c208f454232d14e986ccb2f4fb089d3cfc73dd5c",
           "owners": [
             "shared/brief-dark.html"
@@ -10078,8 +10047,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10115,8 +10084,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -10126,8 +10094,8 @@
         "light": {
           "componentKey": "icon/chatgpt",
           "variant": "light",
-          "version": "1.2.0+964ecbe9d6dd",
-          "revision": "964ecbe9d6dd295077b11ec320265194c2c071daf7ce9f2bf79edbdfe011b072",
+          "version": "1.2.0+7001904347c4",
+          "revision": "7001904347c4fe6326f79b6065eb44dca0f8a8f095accd07f0ea6f326de07988",
           "markupRevision": "5ecc0bbf2c8e392a7b908b0e959ebb5ad1bf326f04d0a586a3be87680b898b94",
           "owners": [
             "shared/brief-light.html"
@@ -10220,8 +10188,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10261,8 +10229,8 @@
         "dark": {
           "componentKey": "icon/chatgpt",
           "variant": "dark",
-          "version": "1.2.0+db5e22b115d3",
-          "revision": "db5e22b115d385156ec8e1b673d99f204b075c5a13f9ce68ec1ab0f008751949",
+          "version": "1.2.0+261411816f1a",
+          "revision": "261411816f1afc27a3586c039ad6536ce5fe43d1a39e4b6c1ca2cb8ebebb003f",
           "markupRevision": "e68584ff1bdd08c3e28c623e576b10610215ce5a119482bcd176e00f41fb01b2",
           "owners": [
             "shared/brief-dark.html"
@@ -10355,8 +10323,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10392,8 +10360,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -10403,8 +10370,8 @@
         "light": {
           "componentKey": "icon/codex",
           "variant": "light",
-          "version": "1.2.0+cc3e20d9083e",
-          "revision": "cc3e20d9083ea026f452fe2ab1858580f70920c4d586db648883e41fc27db2bd",
+          "version": "1.2.0+e06647db5b07",
+          "revision": "e06647db5b071020790666976c9f73ff6d233eb49d500e02eafca5ff7d9e8371",
           "markupRevision": "d994a38d32891e3ace03015ab79fa6f8c19f7aae2be81bab1e23f4b6bcf88ae5",
           "owners": [
             "shared/brief-light.html"
@@ -10497,8 +10464,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10538,8 +10505,8 @@
         "dark": {
           "componentKey": "icon/codex",
           "variant": "dark",
-          "version": "1.2.0+10fd05c8eefd",
-          "revision": "10fd05c8eefd4b4ea00ef9f3b5af777bb42bcd3b060cecd4b3d20adc4bd3536e",
+          "version": "1.2.0+01e211818027",
+          "revision": "01e21181802703f7dc41eba2c969e8dee4b2ee83d4248eda3f0fdfef4d78f833",
           "markupRevision": "6ed75ca8d26bb8ab78a0b9f715937cdbeed956275fe86a6bbf1b1fb217d29c15",
           "owners": [
             "shared/brief-dark.html"
@@ -10632,8 +10599,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10669,8 +10636,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -10680,8 +10646,8 @@
         "light": {
           "componentKey": "icon/cursor",
           "variant": "light",
-          "version": "1.2.0+02daf9e4688b",
-          "revision": "02daf9e4688b69121dd98c3a9ae03aed66f727925e90feb2d7f6efacdfba3805",
+          "version": "1.2.0+a148d3211574",
+          "revision": "a148d3211574f33cc9b5938f7e36209b50da9329ea2eb284b2f8b8a24e3e6f13",
           "markupRevision": "7b91bfdb8d9bebdac2d1ac9e2567bbb4cfc3cf0e95027c5fd52cabbb62858965",
           "owners": [
             "shared/brief-light.html"
@@ -10774,8 +10740,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10815,8 +10781,8 @@
         "dark": {
           "componentKey": "icon/cursor",
           "variant": "dark",
-          "version": "1.2.0+b0961920b48d",
-          "revision": "b0961920b48daa7252e6e2f11dc1c1e31cf77ae25143800ce82213e467a865ff",
+          "version": "1.2.0+8cd1adca6242",
+          "revision": "8cd1adca62420d641a47a29ac25e6ebfdb1441cc8804758e22f2a5c4e31790bd",
           "markupRevision": "46243445444e47d173b16d53bd5bc43d798346c5ea05976c5ddd9f86b0d4647e",
           "owners": [
             "shared/brief-dark.html"
@@ -10909,8 +10875,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -10946,8 +10912,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -10957,8 +10922,8 @@
         "light": {
           "componentKey": "icon/copilot",
           "variant": "light",
-          "version": "1.2.0+c99b88725269",
-          "revision": "c99b88725269a420e299226b62704718f219415b895bc991d817b982f357f12c",
+          "version": "1.2.0+4b38e36562fa",
+          "revision": "4b38e36562fa02d2e6a402d50180f73fe58460d2e6ff7d09fb652a45cf9f7511",
           "markupRevision": "534e8ca22c39cf606066bb86780bc9a2ffe3d10cdc3105bff4f96649ec90cb2d",
           "owners": [
             "shared/brief-light.html"
@@ -11051,8 +11016,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -11092,8 +11057,8 @@
         "dark": {
           "componentKey": "icon/copilot",
           "variant": "dark",
-          "version": "1.2.0+6914d3bab187",
-          "revision": "6914d3bab1875f6ca5a546ed010c24f09af0a7a2eb3bc83ef4b9c38b8c4fcfe7",
+          "version": "1.2.0+a1df5422796e",
+          "revision": "a1df5422796e59d2d9cb0ca26de51afba45f08980efff98852d7be85c76a232a",
           "markupRevision": "d004d307513aa0f7edfad1b6b61cf14770a6b51168896d19506e0672cf3700d4",
           "owners": [
             "shared/brief-dark.html"
@@ -11186,8 +11151,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -11223,8 +11188,7 @@
           "usedBy": [
             "/",
             "/about/",
-            "/work/raiffeisen-leasing/",
-            "/photo/"
+            "/work/raiffeisen-leasing/"
           ]
         }
       }
@@ -11234,8 +11198,8 @@
         "default": {
           "componentKey": "icon/availability-dot",
           "variant": "default",
-          "version": "1.2.0+d0df441a0051",
-          "revision": "d0df441a0051141cf19b6a26d8a971d406d9da7e567980f3697d83207572b389",
+          "version": "1.2.0+fc9ee422de73",
+          "revision": "fc9ee422de73c2cecfd059827240afa262fab7593736a9e8d818006d4e36b4cf",
           "markupRevision": "b2b9303221effe6266e4c9c1edc189c02da9d4e9d2cd0523053fc3a18a34ae10",
           "owners": [
             "shared/work-actions.html"
@@ -11298,8 +11262,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-              "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+              "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+              "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
             },
             {
               "path": "shared/site-ui.css",
@@ -11820,9 +11784,9 @@
     }
   ],
   "designSystem": {
-    "version": "1.41.3",
-    "revision": "f28e6884f650",
-    "release": "1.41.3+f28e6884f650",
+    "version": "1.41.4",
+    "revision": "31c4382bcfc7",
+    "release": "1.41.4+31c4382bcfc7",
     "updatedAt": "2026-10-18T21:58:17.603Z",
     "sources": [
       {
@@ -11892,8 +11856,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "1f87743d8e2a98600fd43fffc5e787859feb5ac13b3568b51baf85dab68f0fa7",
-        "revisionSha256": "1f87743d8e2a98600fd43fffc5e787859feb5ac13b3568b51baf85dab68f0fa7"
+        "sha256": "efcf022afff80ecc10167c429cfa137048a6ba0dcd8f5f4d138766b68127d930",
+        "revisionSha256": "efcf022afff80ecc10167c429cfa137048a6ba0dcd8f5f4d138766b68127d930"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -11927,8 +11891,8 @@
       },
       {
         "path": "shared/site-pages.mjs",
-        "sha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44",
-        "revisionSha256": "6015149d50bff51f95f8e3b72d492356404ecec2f2110ec390b318e17481ba44"
+        "sha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7",
+        "revisionSha256": "072c3d05749b259a572c9b3b8ff900ff4cba3c939a60b2b1ad9a6d7991b66dd7"
       },
       {
         "path": "shared/theme-dark.css",
