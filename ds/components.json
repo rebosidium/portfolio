@@ -1307,9 +1307,9 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+bfaa97cf83e2",
-      "revision": "bfaa97cf83e2c9abd8bd0eb2f4b26711481d6098efbbe2a9935f3a2015c71853",
-      "markupRevision": "27433c464b97fff61c69b7d8e2e5d9c3fe1673a39de395fece8e235fb975a438",
+      "version": "1.2.0+e98af20423e7",
+      "revision": "e98af20423e7b00299e01d337dc3096d8e39bfcdec767989198d4da68e4a5123",
+      "markupRevision": "c7ae87888b70dfcf1a0cbbc4b3eccb4665c188dadef6c05f8b3cfebf40aa9f77",
       "owners": [
         "shared/photo-gallery.mjs"
       ],
@@ -1363,6 +1363,12 @@
           "revisionSha256": "d909e2889765910870907a9fd130fd9edef200901a518c29fef02fd932ba8e8a"
         },
         {
+          "path": "home/assets/photo-bike.jpg",
+          "kind": "asset",
+          "sha256": "c6da750ac95fd08c20315130211a94b68a46ab461b7f56f35b08675257eb1a6e",
+          "revisionSha256": "c6da750ac95fd08c20315130211a94b68a46ab461b7f56f35b08675257eb1a6e"
+        },
+        {
           "path": "home/assets/photo-ca5dc.svg",
           "kind": "asset",
           "sha256": "06cc5a20d882f11d607725405abe7d96bb3090b5742adfe5cba1f8ad98f0be5e",
@@ -1405,6 +1411,30 @@
           "revisionSha256": "3b5a5a91983ff2d2abe5887b5ca65d6ed50944b2311b1ade5ec7b6369ebe3dc5"
         },
         {
+          "path": "home/assets/photo-rain.jpg",
+          "kind": "asset",
+          "sha256": "c256438a49827d9990385355596da729c1496a579a9fe6e2c97dc1e554cc5375",
+          "revisionSha256": "c256438a49827d9990385355596da729c1496a579a9fe6e2c97dc1e554cc5375"
+        },
+        {
+          "path": "home/assets/photo-road.jpg",
+          "kind": "asset",
+          "sha256": "37255e692cf65d7599c0299a0117a2d43b532321c72f9f5db65d2d73b860584f",
+          "revisionSha256": "37255e692cf65d7599c0299a0117a2d43b532321c72f9f5db65d2d73b860584f"
+        },
+        {
+          "path": "home/assets/photo-ski.jpg",
+          "kind": "asset",
+          "sha256": "fad0fd7888aa7f9c36da9182609ef5248cd3bf9aae5fba540f9516b86b7886db",
+          "revisionSha256": "fad0fd7888aa7f9c36da9182609ef5248cd3bf9aae5fba540f9516b86b7886db"
+        },
+        {
+          "path": "home/assets/photo-start.jpg",
+          "kind": "asset",
+          "sha256": "0b141fdf1c3c1afa041fb2d781611a43f5003b087ef0d09762fbcf585dab9046",
+          "revisionSha256": "0b141fdf1c3c1afa041fb2d781611a43f5003b087ef0d09762fbcf585dab9046"
+        },
+        {
           "path": "home/assets/project-media.js",
           "kind": "asset",
           "sha256": "e7dd2ab04fe3db39c95f4b6f8abe639b5c173e366aaff9560b0146b907e0fc75",
@@ -1431,8 +1461,8 @@
         {
           "path": "shared/photo-gallery.mjs",
           "kind": "markup",
-          "sha256": "1d913bc4efd48c506f02f4d9546269337a7adcaaa6acf48ee62e973aeaee64fc",
-          "revisionSha256": "1d913bc4efd48c506f02f4d9546269337a7adcaaa6acf48ee62e973aeaee64fc"
+          "sha256": "706d0ee65b8036cea6be6946422c4dc051f2811bf4f077d9e8a0fc4f09c6ffcf",
+          "revisionSha256": "706d0ee65b8036cea6be6946422c4dc051f2811bf4f077d9e8a0fc4f09c6ffcf"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -4967,10 +4997,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.27.2",
-    "revision": "06de1f6cb041",
-    "release": "1.27.2+06de1f6cb041",
-    "updatedAt": "2026-10-18T01:40:00.000Z",
+    "version": "1.27.3",
+    "revision": "05da7f583121",
+    "release": "1.27.3+05da7f583121",
+    "updatedAt": "2026-10-18T01:45:00.000Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -5039,8 +5069,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "8d589365b3586bcfb3f6dd33eb34c9843f7ae6e12007db49d4b5945013fc61da",
-        "revisionSha256": "8d589365b3586bcfb3f6dd33eb34c9843f7ae6e12007db49d4b5945013fc61da"
+        "sha256": "490255a44c49ebfc9c6428522278473bf739bab2e7388d86ea0c36fef15cd624",
+        "revisionSha256": "490255a44c49ebfc9c6428522278473bf739bab2e7388d86ea0c36fef15cd624"
       },
       {
         "path": "shared/ds-freshness.js",
