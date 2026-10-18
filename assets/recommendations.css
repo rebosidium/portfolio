@@ -8,7 +8,7 @@
 .recommendations blockquote{font:italic 400 var(--type-quote)/var(--recommendation-leading) Lora,Georgia,serif;font-synthesis:none;letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body);margin:0 0 var(--space-8);text-wrap:pretty;}
 .recommendations blockquote p{margin:0;}
 .recommendations .recommendations-quote-desktop{display:none;}
-.recommendations figcaption{display:flex;align-items:center;gap:var(--space-4);min-height:calc(var(--type-small) * var(--line-copy) * 2);font:var(--weight-body) var(--type-small)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);}
+.recommendations figcaption{display:flex;align-items:center;gap:var(--space-4);min-height:calc(var(--type-body) * var(--line-copy) * 2);font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);}
 .recommendations-avatar{display:block;flex:none;width:var(--size-recommendation-avatar);height:var(--size-recommendation-avatar);border-radius:var(--radius-pill);object-fit:cover;background:var(--border-subtle-on-surface);}
 .recommendations-author{flex:1;min-width:0;}
 .recommendations-author-name{display:table;font-weight:var(--weight-semibold);}
@@ -51,5 +51,5 @@
   .recommendations-role-compact{display:inline;}
 }
 @media(prefers-reduced-motion:reduce){.recommendations.is-enhanced .recommendations-slide,.recommendations-dot,.recommendations-dot-track{transition:none;}}
-@media(max-width:359px){.recommendations-author-role{min-height:calc(var(--type-small) * var(--line-copy) * 2);}}
+@media(max-width:359px){.recommendations-author-role{min-height:calc(var(--type-body) * var(--line-copy) * 2);}}
 .ds-preview[data-state="reduced-motion"] .recommendations-slide,.ds-preview[data-state="reduced-motion"] .recommendations-dot,.ds-preview[data-state="reduced-motion"] .recommendations-dot-track{transition:none;}
