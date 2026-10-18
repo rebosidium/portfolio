@@ -9,10 +9,9 @@
     const status=root.querySelector('.recommendations-status');
     if(slides.length<2||dots.length!==slides.length||fills.some(fill=>!fill))return;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-    const hoverPointer=matchMedia('(hover: hover) and (pointer: fine)');
     const previewPaused=['paused','reduced-motion'].includes(root.closest('.ds-preview')?.dataset.state);
     const duration=Math.max(4000,Number(root.dataset.duration)||12000);
-    let index=0,visible=false,hovered=false,focused=false,keyboardMode=false,gesture=null;
+    let index=0,visible=false,focused=false,keyboardMode=false,gesture=null;
     let animation=null,generation=0,deadline=0,visibilityFrame=0,canAnimate=typeof fills[0].animate==='function';
     let ink=null;
     const inkPace=1.25;
@@ -108,7 +107,6 @@
       if(document.hidden)return 'hidden';
       if(!visible)return 'offscreen';
       if(document.documentElement.classList.contains('mobile-menu-open'))return 'menu';
-      if(hovered&&hoverPointer.matches)return 'hover';
       if(focused)return 'keyboard-focus';
       if(gesture?.dragging)return 'swipe';
       return '';
@@ -193,7 +191,7 @@
     },true);
     document.addEventListener('pointerdown',event=>{
       gesture=null;
-      keyboardMode=false;hovered=event.pointerType==='mouse'&&hoverPointer.matches&&root.contains(event.target);
+      keyboardMode=false;
       updateFocus();
     },true);
     root.addEventListener('keydown',event=>{
@@ -204,17 +202,12 @@
     });
     root.addEventListener('focusin',updateFocus);
     root.addEventListener('focusout',()=>queueMicrotask(updateFocus));
-    root.addEventListener('pointerenter',event=>{
-      if(event.pointerType==='mouse'&&hoverPointer.matches){hovered=true;schedule();}
-    });
-    root.addEventListener('pointerleave',()=>{hovered=false;schedule();});
     root.addEventListener('pointerdown',event=>{
       if(event.pointerType==='mouse'||!event.isPrimary||event.target.closest('button,a'))return;
       gesture={id:event.pointerId,x:event.clientX,y:event.clientY,dragging:false};
       // A resting finger or native vertical scroll does not pause the timer.
     },{passive:true});
     root.addEventListener('pointermove',event=>{
-      if(event.pointerType==='mouse'&&hoverPointer.matches&&!hovered){hovered=true;schedule();}
       if(!gesture||gesture.id!==event.pointerId||gesture.dragging)return;
       const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
       if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3){gesture.dragging=true;schedule();}
@@ -236,12 +229,11 @@
     window.visualViewport?.addEventListener('resize',syncVisibility,{passive:true});
     new MutationObserver(()=>{if(document.documentElement.classList.contains('mobile-menu-open'))stopInk();schedule();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     document.addEventListener('visibilitychange',()=>{
-      stopInk();gesture=null;hovered=false;updateVisibility();schedule();
+      stopInk();gesture=null;updateVisibility();schedule();
     });
-    window.addEventListener('pagehide',()=>{stopInk();visible=false;gesture=null;hovered=false;schedule();});
-    window.addEventListener('pageshow',()=>{gesture=null;hovered=false;updateVisibility();schedule();});
-    window.addEventListener('blur',()=>{gesture=null;hovered=false;schedule();});
-    hoverPointer.addEventListener('change',()=>{if(!hoverPointer.matches)hovered=false;schedule();});
+    window.addEventListener('pagehide',()=>{stopInk();visible=false;gesture=null;schedule();});
+    window.addEventListener('pageshow',()=>{gesture=null;updateVisibility();schedule();});
+    window.addEventListener('blur',()=>{gesture=null;schedule();});
     reduced.addEventListener('change',()=>{stopInk();schedule();});
     document.fonts?.addEventListener('loadingdone',stopInk);
   });
