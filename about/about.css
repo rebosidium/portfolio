@@ -15,6 +15,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .about-prose{width:var(--width-prose);margin-inline:auto;text-wrap:pretty;overflow-wrap:break-word}
 .about-prose p{margin:0}
 .about-intro{display:flex;flex-direction:column;gap:var(--space-4);margin-bottom:var(--space-6)}
+.about-main>.recommendations{width:100%;}
 .about-photo-placeholder{width:100%;height:290px;margin-bottom:var(--space-6);border-radius:var(--radius-placeholder);background:var(--color-surface)}
 .about-sections{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections section{display:flex;flex-direction:column;gap:var(--space-4)}
@@ -46,6 +47,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-title{width:100%}
   .about-prose{width:100%}
   .about-intro{gap:var(--space-5);margin-bottom:var(--space-7)}
+  .about-main>.recommendations{width:100vw;margin-inline:calc((100% - 100vw) / 2)}
   .about-photo-placeholder{height:222px;margin-bottom:var(--space-7)}
   .about-sections,.about-sections section{gap:var(--space-5)}
   .about-sections h2{min-height:0}
