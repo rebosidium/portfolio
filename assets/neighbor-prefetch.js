@@ -34,7 +34,7 @@ const fine=matchMedia('(hover: hover) and (pointer: fine)');
 const coarse=matchMedia('(pointer: coarse)');
 const done=new Set(),failed=new Map(),retryAt=new Map(),events=[];
 let active=null,timer=0,idle=null,departed=false,lastActivity=performance.now(),ownReady=false;
-let preparedLayout='',ownImagesStarted=false,ownWork=null,ownWorkFailed=new WeakSet(),fontsReady=false;
+let preparedLayout='',ownImagesStarted=false,ownWork=null,ownWorkFailed=new WeakSet(),fontsReady=false,galleryPreparation=null;
 const quietMs=750;
 const absolute=url=>new URL(url,location.origin).href;
 function status(value){root.dataset.neighborPrefetch=value;}
@@ -144,8 +144,19 @@ function check(){
   if(active&&!list.some(task=>absolute(task.url)===active.url)){pause('policy');schedule();return;}
   if(active||idle!==null)return;
   const next=list.find(task=>!done.has(absolute(task.url))&&(failed.get(absolute(task.url))||0)<2);
+  const gallery=window.PortfolioPhotoGallery;
+  if(!home&&next?.stage!=='current-photos'&&gallery&&!gallery.settled){
+    status('current-photo-decode');
+    if(!galleryPreparation){
+      const unavailable=[...failed].filter(([,attempts])=>attempts>=2).map(([url])=>url);
+      galleryPreparation=gallery.prepare({unavailable}).catch(()=>{}).finally(()=>{
+        galleryPreparation=null;record(gallery.settled?'current-gallery-settled':'current-gallery-paused');lastActivity=performance.now();schedule();
+      });
+    }
+    return;
+  }
   if(!next){
-    const failures=list.filter(task=>!done.has(absolute(task.url))).length;
+    const failures=list.filter(task=>!done.has(absolute(task.url))).length+(!home&&gallery?gallery.snapshot().reduce((n,state)=>n+state.failed,0):0);
     status(failures?'complete-with-errors':'ready');
     root.dataset.neighborPrefetchReadyAt=performance.now().toFixed(1);
     return;
@@ -187,7 +198,7 @@ async function download(task){
   }finally{clearTimeout(timeout);active=null;schedule();}
 }
 window.PortfolioNeighborPrefetch={snapshot:()=>({route:home?'/':'/about/',status:root.dataset.neighborPrefetch,
-  fullPortrait:fullPortraitPermitted(),ownReady:ownReady&&!currentBusy(),active:active?.url||null,
+  fullPortrait:fullPortraitPermitted(),ownReady:ownReady&&!currentBusy()&&(home||!window.PortfolioPhotoGallery||window.PortfolioPhotoGallery.settled),active:active?.url||null,
   planned:tasks(),completed:[...done],failed:[...failed],events:[...events]})};
 // Only actual image/script source changes invalidate readiness, not animation
 // styles, photo transforms or our diagnostic attributes.
