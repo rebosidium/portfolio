@@ -14,13 +14,12 @@
 .recommendations.is-enhanced .recommendations-slide.is-current{visibility:visible;opacity:1;transform:none;pointer-events:auto;}
 .recommendations-controls:not([hidden]){display:flex;align-items:center;justify-content:center;gap:var(--space-3);margin-top:var(--space-5);}
 .recommendations-dots{display:flex;align-items:center;justify-content:center;}
-.recommendations-dot{display:flex;align-items:center;justify-content:center;box-sizing:content-box;min-width:var(--size-target);height:var(--size-target);border:0;padding:0;background:transparent;color:var(--color-ink);cursor:pointer;transition:min-width .3s ease;}
+.recommendations-dot{display:flex;align-items:center;justify-content:center;box-sizing:content-box;min-width:26px;height:var(--size-target);border:0;padding:0;background:transparent;color:var(--color-ink);cursor:pointer;transition:min-width .3s ease;}
 .recommendations-dot[aria-current="true"]{min-width:74px;}
 .recommendations-dot-track{display:block;position:relative;width:var(--size-status);height:var(--size-status);overflow:hidden;border-radius:var(--radius-pill);background:var(--border-subtle-on-surface);transition:width .3s ease;}
 .recommendations-dot[aria-current="true"] .recommendations-dot-track{width:60px;}
-.recommendations-dot-fill{display:block;width:100%;height:100%;border-radius:inherit;background:var(--color-ink);transform:scaleX(0);transform-origin:left;}
-.recommendations-dot[aria-current="true"] .recommendations-dot-fill{transform:scaleX(var(--recommendation-progress));}
-.recommendations-play{font:var(--weight-body) var(--type-prompt)/var(--line-compact) var(--font-family);border:0;border-radius:var(--radius-control);color:var(--color-ink);background:transparent;min-width:var(--size-target);min-height:var(--size-target);padding:0 var(--space-2);cursor:pointer;}
+.recommendations-dot-fill{display:block;width:0;height:100%;background:var(--color-ink);}
+.recommendations-dot[aria-current="true"] .recommendations-dot-fill{width:calc(100% * var(--recommendation-progress));}
 .recommendations-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 /* Desktop Figma232:733:944px card,64px insets,816px quote field. */
 @media(min-width:768px) and (pointer:fine), (min-width:1024px){
