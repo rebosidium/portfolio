@@ -23,6 +23,7 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
   return saveData||physical<=600?'600':physical<=800?'800':'1200';
 }
 
+  const controllers=[];
   for(const gallery of document.querySelectorAll('.photo-gallery')){
     const field=gallery.querySelector('.photo-gallery-field');
     if(!field||field.dataset.ready)continue;
@@ -30,6 +31,7 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
     const footerFade=gallery.classList.contains('photo-gallery-footer');
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const previewReduced=!!document.querySelector('.ds-preview[data-state="reduced-motion"]');
+    const selfPrepares=!/^\/about(?:\/|$)/.test(location.pathname);
     const still=()=>reduced.matches||previewReduced;
     const originals=[...field.children];
     const worldWidth=+field.dataset.worldWidth,worldHeight=+field.dataset.worldHeight;
@@ -52,21 +54,27 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
     gallery.classList.add('photo-gallery-enhanced');
     const wrap=(n,size)=>((n+size/2)%size+size)%size-size/2;
     let width=0,height=0,unit=1,tileW=1,tileH=1,x=0,y=0,vx=0,vy=0,frame=0,previous=0,visible=false,drag=null,desktopLens=false;
-    let focused=false,departed=false,manualUntil=0,resumeTimer=0;
+    let focused=false,departed=false,manualUntil=0,resumeTimer=0,near=false;
     let pixelRatio=window.devicePixelRatio||1;
+    let sourceSignature='',sourceEpoch=0,settledEpoch=-1,preparation=null,failedPhotos=0;
     const allowed=()=>visible&&!departed&&!document.hidden&&!document.documentElement.classList.contains('mobile-menu-open');
     const drifting=now=>!still()&&!(focused&&field.matches(':focus-visible'))&&!drag&&now>=manualUntil;
-    function sizePhoto(card){
-      if(photoSizes.has(card.key))return;
+    function sourceFor(card){
       const image=card.image;
       // Match the untransformed image box, including the original Figma crops.
       // Object-fit: cover may need more source width to fill a tall box.
       const crop=[...card.node.classList].find(name=>name.startsWith('photo-crop-'))?.slice('photo-crop-'.length)||'cover';
       const cssWidth=photoCSSWidth({width:card.w,height:card.h,crop,aspect:+image.dataset.sourceRatio},unit);
-      if(!Number.isFinite(cssWidth)||cssWidth<=0||!image.dataset.photoSrcset)return;
+      if(!Number.isFinite(cssWidth)||cssWidth<=0||!image.dataset.photoSrcset)return null;
       const requiredWidth=Math.ceil(cssWidth*pixelRatio);
       const variants=photoVariants.get(card.key);
       const selected=variants.find(variant=>variant.width>=requiredWidth)||variants[variants.length-1];
+      return {cssWidth,requiredWidth,selected};
+    }
+    function sizePhoto(card){
+      if(photoSizes.has(card.key))return;
+      const source=sourceFor(card);if(!source)return;
+      const {cssWidth,requiredWidth,selected}=source;
       photoSizes.set(card.key,cssWidth);
       for(const peer of photoImages.get(card.key)){
         peer.dataset.photoCssWidth=cssWidth;
@@ -77,6 +85,56 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
         if(peer.getAttribute('src')!==selected.url)peer.src=selected.url;
       }
     }
+    function loadAndDecode(image){
+      return new Promise((resolve,reject)=>{
+        const timer=setTimeout(()=>finish(Error('Photo preparation timed out')),10000);
+        const finish=error=>{clearTimeout(timer);image.removeEventListener('load',loaded);image.removeEventListener('error',failed);error?reject(error):resolve();};
+        const failed=()=>finish(Error('Photo unavailable'));
+        const loaded=()=>{
+          image.removeEventListener('load',loaded);image.removeEventListener('error',failed);
+          Promise.resolve().then(()=>image.decode?.()).then(()=>finish(),finish);
+        };
+        image.addEventListener('load',loaded);image.addEventListener('error',failed);
+        image.fetchPriority='low';image.loading='eager';
+        if(image.complete){if(image.naturalWidth)loaded();else failed();}
+      });
+    }
+    function snapshot(){return {generation:sourceEpoch,signature:sourceSignature,settled:settledEpoch===sourceEpoch,failed:failedPhotos,
+      photos:photoImages.size,images:cards.length,complete:cards.filter(card=>card.image.complete&&card.image.naturalWidth>0).length};}
+    function prepare({unavailable=[]}={}){
+      const signature=sourceSignature;
+      const epoch=sourceEpoch;
+      if(settledEpoch===epoch)return Promise.resolve(snapshot());
+      if(preparation?.epoch===epoch)return preparation.promise;
+      const preceding=preparation?.promise;
+      const job={signature,epoch,promise:null};
+      job.promise=Promise.resolve(preceding).catch(()=>{}).then(async()=>{
+        if(epoch!==sourceEpoch||departed||document.hidden)return snapshot();
+        const skip=new Set(unavailable.map(url=>new URL(url,location.href).href));
+        let next=0,failed=0;
+        gallery.dataset.mediaReady='preparing';
+        async function worker(){
+          while(next<records.length&&epoch===sourceEpoch&&!departed&&!document.hidden){
+            const record=records[next++],card=cards.find(card=>card.node===record.node),source=sourceFor(card);
+            if(!source||skip.has(new URL(source.selected.url,location.href).href)){failed++;continue;}
+            sizePhoto(card);
+            // Prepare the real repeated image elements, not just a detached
+            // bitmap. Lazy hidden clones otherwise begin loading on first pan
+            // even when their encoded source is already in the HTTP cache.
+            const results=await Promise.allSettled(photoImages.get(card.key).map(loadAndDecode));
+            if(results.some(result=>result.status==='rejected'))failed++;
+          }
+        }
+        await Promise.all([worker(),worker()]);
+        if(epoch===sourceEpoch&&!departed&&!document.hidden&&next>=records.length){
+          failedPhotos=failed;settledEpoch=epoch;
+          gallery.dataset.mediaReady=failed?'ready-with-errors':'true';
+        }else if(epoch===sourceEpoch)gallery.dataset.mediaReady='paused';
+        return snapshot();
+      }).finally(()=>{if(preparation===job)preparation=null;});
+      preparation=job;return job.promise;
+    }
+    controllers.push({prepare,snapshot});
     function paint(){
       const currentRatio=window.devicePixelRatio||1;
       if(currentRatio!==pixelRatio){pixelRatio=currentRatio;photoSizes.clear();}
@@ -139,7 +197,10 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
         card.node.style.width=card.cssW+'px';card.node.style.height=card.cssH+'px';
       }
       photoSizes.clear();
+      const signature=records.map(record=>sourceFor(cards.find(card=>card.node===record.node))?.selected.url||'').join('|');
+      if(signature!==sourceSignature){sourceSignature=signature;sourceEpoch++;settledEpoch=-1;failedPhotos=0;gallery.dataset.mediaReady='false';}
       x=wrap(x,tileW);y=wrap(y,tileH);paint();resume();
+      if(selfPrepares&&near&&!navigator.connection?.saveData)prepare();
     }
     field.addEventListener('focusin',()=>{focused=!drag&&field.matches(':focus-visible');if(focused)stop();});
     field.addEventListener('focusout',event=>{if(!field.contains(event.relatedTarget)){focused=false;resume();}});
@@ -183,11 +244,19 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
     function densityChanged(){watchDensity();measure();}
     watchDensity();
     new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)resume();else suspend();}).observe(field);
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)suspend();else resume();});
+    // The standalone photo page and DS have no neighbor queue to hand off
+    // encoded-photo readiness; prepare their real image pool near the viewport.
+    if(selfPrepares)new IntersectionObserver(entries=>{
+      near=entries.some(entry=>entry.isIntersecting);
+      if(near&&!navigator.connection?.saveData)prepare();
+    },{rootMargin:'500px'}).observe(field);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)suspend();else {resume();if(selfPrepares&&near&&!navigator.connection?.saveData)prepare();}});
     new MutationObserver(()=>{if(document.documentElement.classList.contains('mobile-menu-open'))suspend();else resume();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     reduced.addEventListener('change',()=>{suspend();resume();});
     window.addEventListener('pagehide',()=>{departed=true;suspend();});
     window.addEventListener('pageshow',()=>{departed=false;measure();});
     measure();
   }
+  window.PortfolioPhotoGallery={prepare:options=>Promise.all(controllers.map(controller=>controller.prepare(options))),
+    snapshot:()=>controllers.map(controller=>controller.snapshot()),get settled(){return controllers.every(controller=>controller.snapshot().settled);}};
 })();
