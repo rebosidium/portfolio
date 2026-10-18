@@ -14,6 +14,89 @@
     const duration=Math.max(4000,Number(root.dataset.duration)||12000);
     let index=0,visible=false,hovered=false,focused=false,keyboardMode=false,gesture=null;
     let animation=null,generation=0,deadline=0,visibilityFrame=0,canAnimate=typeof fills[0].animate==='function';
+    let ink=null;
+    const segmenter=typeof Intl.Segmenter==='function'?new Intl.Segmenter('en',{granularity:'grapheme'}):null;
+    const noise=n=>{const value=Math.sin(n*12.9898)*43758.5453;return value-Math.floor(value);};
+    function stopInk(){
+      const current=ink;ink=null;
+      current?.animations.forEach(item=>item.cancel());current?.layer.remove();
+      root.classList.remove('is-ink-changing');root.dataset.inkTransition='idle';
+    }
+    function measureLetters(slide){
+      const paragraph=slide.querySelector('blockquote p'),style=getComputedStyle(paragraph);
+      const walker=document.createTreeWalker(paragraph,NodeFilter.SHOW_TEXT),range=document.createRange(),letters=[];
+      let node;
+      while((node=walker.nextNode())){
+        let offset=0;
+        const parts=segmenter?[...segmenter.segment(node.data)].map(part=>part.segment):Array.from(node.data);
+        for(const text of parts){
+          const start=offset;offset+=text.length;if(!text.trim())continue;
+          range.setStart(node,start);range.setEnd(node,offset);
+          const box=range.getBoundingClientRect();
+          if(box.width&&box.height)letters.push({text,x:box.left,y:box.top});
+        }
+      }
+      return {letters,style};
+    }
+    function canPlayInk(){
+      return root.dataset.letterMotion==='newspaper'&&canAnimate&&!reduced.matches&&
+        root.closest('.ds-preview')?.dataset.state!=='reduced-motion'&&visible&&!document.hidden&&
+        !document.documentElement.classList.contains('mobile-menu-open')&&
+        (!document.fonts||document.fonts.check('italic 400 18px Lora'));
+    }
+    function playInk(from,to){
+      const layer=document.createElement('div');layer.className='recommendations-ink';
+      layer.setAttribute('aria-hidden','true');layer.inert=true;
+      for(const property of ['fontFamily','fontSize','fontStyle','fontWeight','lineHeight','letterSpacing','fontFeatureSettings','fontVariationSettings','fontKerning','fontSynthesis'])layer.style[property]=to.style[property];
+      root.querySelector('.recommendations-slides').append(layer);
+      const current={layer,animations:[]};ink=current;
+      const origin=layer.getBoundingClientRect(),fragment=document.createDocumentFragment(),jobs=[];
+      const available=new Map();
+      from.letters.forEach(letter=>{if(!available.has(letter.text))available.set(letter.text,[]);available.get(letter.text).push(letter);});
+      const travel=parseFloat(to.style.fontSize)*6;
+      to.letters.forEach((target,i)=>{
+        const candidates=available.get(target.text)||[];let match=-1,best=travel*travel;
+        candidates.forEach((letter,n)=>{const distance=(target.x-letter.x)**2+((target.y-letter.y)*1.3)**2;if(distance<best){best=distance;match=n;}});
+        const source=match<0?null:candidates.splice(match,1)[0];
+        jobs.push({source,target,seed:i+index*373+1});
+      });
+      for(const letters of available.values())letters.forEach((source,i)=>jobs.push({source,target:null,seed:i+source.x+source.y}));
+      for(const job of jobs){
+        const span=document.createElement('span');span.className='recommendations-ink-letter';span.textContent=(job.source||job.target).text;
+        job.element=span;fragment.append(span);
+      }
+      layer.append(fragment);
+      // Align the copied glyph baseline with the browser's actual text range.
+      const probe=jobs[0]?.element;if(!probe){stopInk();return;}
+      const range=document.createRange();range.selectNodeContents(probe);
+      const textBox=range.getBoundingClientRect(),probeBox=probe.getBoundingClientRect();
+      const insetX=textBox.left-probeBox.left,insetY=textBox.top-probeBox.top;
+      root.classList.add('is-ink-changing');root.dataset.inkTransition='running';
+      const pose=(x,y,angle=0,scale=1)=>`translate3d(${x}px,${y}px,0) rotate(${angle}deg) scale(${scale})`;
+      for(const {source,target,seed,element} of jobs){
+        const start=source||target,sway=(noise(seed)-.5)*24,lift=(noise(seed+11)-.5)*26,angle=(noise(seed+29)-.5)*16;
+        element.style.left=(start.x-origin.left-insetX)+'px';element.style.top=(start.y-origin.top-insetY)+'px';
+        let frames,timing;
+        if(source&&target){
+          const dx=target.x-source.x,dy=target.y-source.y;
+          frames=[{opacity:1,transform:pose(0,0)},{offset:.38,opacity:.55,transform:pose(dx*.4+sway,dy*.4+lift,angle,.96)},{offset:.82,opacity:1,transform:pose(dx*.96,dy*.96,-angle*.08)},{opacity:1,transform:pose(dx,dy)}];
+          timing={duration:850,delay:noise(seed+5)*130};
+        }else if(source){
+          frames=[{opacity:1,transform:pose(0,0)},{opacity:0,transform:pose(sway,lift-8,angle,.9)}];
+          timing={duration:380,delay:noise(seed+5)*100};
+        }else{
+          frames=[{opacity:0,transform:pose(sway,lift+6,angle,.94)},{offset:.7,opacity:1,transform:pose(-sway*.08,-lift*.08,-angle*.1)},{opacity:1,transform:pose(0,0)}];
+          timing={duration:650,delay:220+noise(seed+5)*130};
+        }
+        const movement=element.animate(frames,{...timing,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
+        movement.id='recommendation-ink-letter';current.animations.push(movement);
+      }
+      const caption=slides[index].querySelector('figcaption').animate([{opacity:0},{opacity:1}],{duration:320,delay:300,easing:'ease-out',fill:'both'});
+      caption.id='recommendation-ink-caption';
+      current.animations.push(caption);
+      // Cancellation is expected during rapid selection and lifecycle changes.
+      Promise.allSettled(current.animations.map(item=>item.finished)).then(()=>{if(ink===current)stopInk();});
+    }
     const pauseReason=()=>{
       if(!canAnimate)return 'unsupported';
       if(previewPaused)return 'preview';
@@ -28,13 +111,17 @@
     };
     const clearDeadline=()=>{clearTimeout(deadline);deadline=0;};
     function select(next,announce=false){
+      const previous=index,target=(next+slides.length)%slides.length;
+      stopInk();
+      const outgoing=target!==previous&&canPlayInk()?measureLetters(slides[previous]):null;
       clearDeadline();generation++;
       animation?.cancel();animation=null;
-      index=(next+slides.length)%slides.length;
+      index=target;
       slides.forEach((slide,i)=>{slide.classList.toggle('is-current',i===index);slide.inert=i!==index;slide.setAttribute('aria-hidden',String(i!==index));});
       dots.forEach((dot,i)=>{if(i===index)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current');});
       root.dataset.activeSlide=String(index+1);
       if(announce)status.textContent=`Recommendation ${index+1} of ${slides.length}`;
+      if(outgoing)try{playInk(outgoing,measureLetters(slides[index]));}catch(_){stopInk();}
       if(canAnimate){
         try{
           // One native timeline paints the fill and owns the slide deadline.
@@ -76,6 +163,7 @@
       visibilityFrame=requestAnimationFrame(()=>{
         visibilityFrame=0;
         const wasVisible=visible;updateVisibility();
+        if(!visible)stopInk();
         if(visible!==wasVisible)schedule();
       });
     }
@@ -135,21 +223,22 @@
     window.addEventListener('touchcancel',event=>finishGesture(event,true),{capture:true,passive:true});
     window.addEventListener('touchstart',event=>{if(event.touches.length>1){gesture=null;schedule();}},{capture:true,passive:true});
     if(typeof IntersectionObserver==='function')new IntersectionObserver(()=>{
-      updateVisibility();schedule();
+      updateVisibility();if(!visible)stopInk();schedule();
     },{threshold:0}).observe(root);
     // First entry and Safari's changing browser chrome must not depend on a
     // second IntersectionObserver notification. Only scroll/resize schedules this.
     window.addEventListener('scroll',syncVisibility,{capture:true,passive:true});
-    window.addEventListener('resize',syncVisibility,{passive:true});
+    window.addEventListener('resize',()=>{stopInk();syncVisibility();},{passive:true});
     window.visualViewport?.addEventListener('resize',syncVisibility,{passive:true});
-    new MutationObserver(schedule).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+    new MutationObserver(()=>{if(document.documentElement.classList.contains('mobile-menu-open'))stopInk();schedule();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     document.addEventListener('visibilitychange',()=>{
-      gesture=null;hovered=false;updateVisibility();schedule();
+      stopInk();gesture=null;hovered=false;updateVisibility();schedule();
     });
-    window.addEventListener('pagehide',()=>{visible=false;gesture=null;hovered=false;schedule();});
+    window.addEventListener('pagehide',()=>{stopInk();visible=false;gesture=null;hovered=false;schedule();});
     window.addEventListener('pageshow',()=>{gesture=null;hovered=false;updateVisibility();schedule();});
     window.addEventListener('blur',()=>{gesture=null;hovered=false;schedule();});
     hoverPointer.addEventListener('change',()=>{if(!hoverPointer.matches)hovered=false;schedule();});
-    reduced.addEventListener('change',schedule);
+    reduced.addEventListener('change',()=>{stopInk();schedule();});
+    document.fonts?.addEventListener('loadingdone',stopInk);
   });
 })();
