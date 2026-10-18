@@ -10,10 +10,10 @@
 .photo-crop-coffee img{position:absolute;left:-39.05%;top:-.03%;height:100.06%;width:168.66%;max-width:none}
 .photo-crop-paddle .photo-gallery-crop{inset:-18.21% -35% -29.35% -27.37%}
 .photo-gallery-enhanced{width:min(calc(100vw - 40px),1264px);left:50%;transform:translateX(-50%)}
-.photo-gallery-enhanced .photo-gallery-field{display:block;height:var(--photo-field-height);max-height:none;padding:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;mask-image:linear-gradient(to bottom,transparent,#000 15%,#000 82%,transparent)}
+.photo-gallery-enhanced .photo-gallery-field{display:block;height:var(--photo-field-height);max-height:none;padding:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}
 .photo-gallery-enhanced .photo-gallery-card{position:absolute;left:0;top:0;will-change:transform;transform-origin:center;contain:layout paint;}
 .photo-gallery-enhanced[data-dragging] .photo-gallery-field{cursor:grabbing}
-.photo-gallery-field:focus-visible{outline:var(--focus-width) solid var(--color-text);outline-offset:4px}
+.photo-gallery-field:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:4px}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .photo-gallery-field{grid-template-columns:repeat(2,minmax(0,1fr))}
  .photo-gallery{--photo-field-height:440px}
@@ -22,8 +22,17 @@
 .photo-crop-coffee{mask-image:url('/assets/photo-128fa.svg');mask-size:100% 100%;mask-repeat:no-repeat}
 .photo-crop-paddle{mask-image:url('/assets/photo-ca5dc.svg');mask-size:100% 100%;mask-repeat:no-repeat}
 
-/* Half of each expanded fade sits under the adjacent paragraph. Text retains
+/* Thirty percent of each fade sits under the adjacent paragraph. Text retains
    its own native scrolling/selection surface above the photo layer. */
 .photo-page .about-main{isolation:isolate}
 .photo-page .about-intro{position:relative;z-index:2;margin-bottom:0}
-.photo-page .photo-gallery-enhanced{z-index:1;margin-top:calc(var(--photo-field-height) * -.075);margin-bottom:calc(var(--photo-field-height) * -.09)}
+.photo-page .photo-gallery-enhanced{z-index:1;margin-top:calc(var(--photo-field-height) * -.09);margin-bottom:calc(var(--photo-field-height) * -.09)}
+
+.photo-gallery-toggle{position:absolute;right:14px;bottom:calc(var(--photo-field-height) * .2);z-index:3;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:var(--color-canvas);color:var(--color-ink);cursor:pointer;opacity:.8}
+.photo-gallery-toggle[hidden]{display:none}
+.photo-gallery-toggle:hover,.photo-gallery-toggle:focus-visible{opacity:1}
+.photo-gallery-toggle:focus-visible{outline:var(--focus-width) solid currentColor;outline-offset:4px}
+.photo-gallery-pause-icon{width:12px;height:14px;border-inline:4px solid currentColor;box-sizing:border-box}
+.photo-gallery-play-icon{display:none;width:0;height:0;border-block:7px solid transparent;border-left:11px solid currentColor;margin-left:3px}
+.photo-gallery-toggle[aria-pressed="true"] .photo-gallery-pause-icon{display:none}
+.photo-gallery-toggle[aria-pressed="true"] .photo-gallery-play-icon{display:block}
