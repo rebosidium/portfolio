@@ -24,7 +24,7 @@
       root.classList.remove('is-ink-changing');root.dataset.inkTransition='idle';
     }
     function measureLetters(slide){
-      const paragraph=slide.querySelector('blockquote p'),style=getComputedStyle(paragraph);
+      const paragraph=[...slide.querySelectorAll('blockquote p')].find(p=>getComputedStyle(p).display!=='none'),style=getComputedStyle(paragraph);
       const walker=document.createTreeWalker(paragraph,NodeFilter.SHOW_TEXT),range=document.createRange(),letters=[];
       let node;
       while((node=walker.nextNode())){
