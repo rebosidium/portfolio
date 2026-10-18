@@ -12,7 +12,7 @@
 .recommendations-avatar{display:block;flex:none;width:var(--size-recommendation-avatar);height:var(--size-recommendation-avatar);border-radius:var(--radius-pill);object-fit:cover;background:var(--border-subtle-on-surface);}
 .recommendations-author{flex:1;min-width:0;}
 .recommendations-author-name{display:table;font-weight:var(--weight-semibold);}
-.recommendations-author-role{display:block;}
+.recommendations-author-role{display:block;font-size:var(--type-small);}
 .recommendations-at{opacity:.6;}
 .recommendations-company{white-space:nowrap;}
 .recommendations-role-compact{display:none;text-decoration:none;}
