@@ -5,7 +5,6 @@
     const slides=[...root.querySelectorAll('.recommendations-slide')];
     const dots=[...root.querySelectorAll('.recommendations-dot')];
     const controls=root.querySelector('.recommendations-controls');
-    const play=root.querySelector('.recommendations-play');
     const status=root.querySelector('.recommendations-status');
     if(slides.length<2||dots.length!==slides.length)return;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -36,13 +35,11 @@
       root.dataset.autoplay=blocked()?'paused':'playing';
     }
     function setPaused(value){
-      paused=value;play.textContent=paused?'Play':'Pause';
-      play.setAttribute('aria-label',paused?'Start automatic recommendations':'Pause automatic recommendations');schedule();
+      paused=value;schedule();
     }
     root.classList.add('is-enhanced');controls.hidden=false;
     select(0);setPaused(paused);root.dataset.recommendationsReady='true';
     dots.forEach((dot,i)=>dot.addEventListener('click',()=>select(i,true)));
-    play.addEventListener('click',()=>setPaused(!paused));
     root.addEventListener('keydown',event=>{
       if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
       event.preventDefault();
