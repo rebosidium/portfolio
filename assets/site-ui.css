@@ -197,10 +197,10 @@ body.mobile-menu-open{position:fixed;inset-inline:0;top:var(--menu-scroll-y);wid
 .header nav a.desktop-only{display:none}
 .header nav a::after{display:none}
 .header nav a{--ui-focus-offset:0px;--ui-focus-radius:var(--radius-control)}
-html:not([data-mobile-nav-ready="true"]) .header{flex-wrap:wrap;gap:var(--space-2);right:var(--gutter-page)}
-html:not([data-mobile-nav-ready="true"]) .menu-toggle{display:none}
-html:not([data-mobile-nav-ready="true"]) .header nav{display:flex;position:static;inset:auto;width:100%;height:auto;min-height:0;padding:0;background:none;flex-direction:row;flex-wrap:wrap;gap:var(--space-2) var(--space-4);justify-content:flex-start;overflow:visible;z-index:auto}
-html:not([data-mobile-nav-ready="true"]) .header nav a{min-height:var(--size-target);padding:4px 0;font-size:var(--type-small)}
+html:is(:not(.navigation-js),.mobile-navigation-fallback) .header{flex-wrap:wrap;gap:var(--space-2);right:var(--gutter-page)}
+html:is(:not(.navigation-js),.mobile-navigation-fallback) .menu-toggle{display:none}
+html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav{display:flex;position:static;inset:auto;width:100%;height:auto;min-height:0;padding:0;background:none;flex-direction:row;flex-wrap:wrap;gap:var(--space-2) var(--space-4);justify-content:flex-start;overflow:visible;z-index:auto}
+html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-height:var(--size-target);padding:4px 0;font-size:var(--type-small)}
 .agent-button,.work-details{height:var(--height-control-spacious);padding-top:10px;padding-bottom:10px}
 .agent-button{margin-top:8px;padding-inline:clamp(8px,calc((100vw - 303px) / 2),24px)}
 }

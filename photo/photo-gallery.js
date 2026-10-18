@@ -1,5 +1,28 @@
 (() => {
   'use strict';
+// Pure sizing policy shared by the live gallery and the background warmer.
+// Crop factors mirror photo-gallery.css; browser checks compare actual boxes.
+function galleryUnit(width,height,worldWidth,worldHeight,finePointer){
+  const base=width<768 ? .49 : finePointer ? .75 : .68;
+  return Math.max(base,width/(worldWidth*1.7),height/(worldHeight*1.7));
+}
+function photoCSSWidth(photo,unit){
+  let width=photo.width*unit,height=photo.height*unit;
+  if(photo.crop==='balloons')width*=2.2658;
+  if(photo.crop==='coast'){width*=1.0017;height*=1.2093;}
+  if(photo.crop==='coffee'){width*=1.3843*1.6866;height*=1.1857*1.0006;}
+  if(photo.crop==='paddle'){width*=1.6237;height*=1.4756;}
+  return Math.ceil(Math.max(width,height*photo.aspect));
+}
+function photoVariant(photo,unit,dpr){
+  const required=Math.ceil(photoCSSWidth(photo,unit)*Math.max(1,dpr));
+  return photo.variants.find(item=>item.width>=required)||photo.variants.at(-1);
+}
+function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
+  const physical=cssWidth*Math.max(1,Math.min(dpr,androidTouch?2:Infinity));
+  return saveData||physical<=600?'600':physical<=800?'800':'1200';
+}
+
   for(const gallery of document.querySelectorAll('.photo-gallery')){
     const field=gallery.querySelector('.photo-gallery-field');
     if(!field||field.dataset.ready)continue;
@@ -35,10 +58,11 @@
     const drifting=now=>!still()&&!(focused&&field.matches(':focus-visible'))&&!drag&&now>=manualUntil;
     function sizePhoto(card){
       if(photoSizes.has(card.key))return;
-      const image=card.image,style=getComputedStyle(image);
-      // Read the untransformed image box, including the original Figma crops.
+      const image=card.image;
+      // Match the untransformed image box, including the original Figma crops.
       // Object-fit: cover may need more source width to fill a tall box.
-      const cssWidth=Math.ceil(Math.max(parseFloat(style.width),parseFloat(style.height)*+image.dataset.sourceRatio));
+      const crop=[...card.node.classList].find(name=>name.startsWith('photo-crop-'))?.slice('photo-crop-'.length)||'cover';
+      const cssWidth=photoCSSWidth({width:card.w,height:card.h,crop,aspect:+image.dataset.sourceRatio},unit);
       if(!Number.isFinite(cssWidth)||cssWidth<=0||!image.dataset.photoSrcset)return;
       const requiredWidth=Math.ceil(cssWidth*pixelRatio);
       const variants=photoVariants.get(card.key);
@@ -108,8 +132,7 @@
       width=field.clientWidth;height=field.clientHeight;
       desktopLens=width>=768&&matchMedia('(hover: hover) and (pointer: fine)').matches;
       // Reserve full-size slots, so the stronger desktop lens cannot overlap photos.
-      unit=width<768 ? .49 : desktopLens ? .75 : .68;
-      unit=Math.max(unit,width/(worldWidth*1.7),height/(worldHeight*1.7));
+      unit=galleryUnit(width,height,worldWidth,worldHeight,desktopLens);
       tileW=worldWidth*unit;tileH=worldHeight*unit;
       for(const card of cards){
         card.cssW=card.w*unit;card.cssH=card.h*unit;
