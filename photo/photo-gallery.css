@@ -26,3 +26,16 @@
 .photo-page .about-main{isolation:isolate}
 .photo-page .about-intro{position:relative;z-index:2;margin-bottom:0}
 .photo-page .photo-gallery-enhanced{z-index:1;margin-block:var(--photo-prose-gap)}
+
+/* About: the text stays sharp above the progressive white/blur transition. */
+.about-main.about-gallery-main{padding-bottom:0;isolation:isolate}
+.about-gallery-main .about-sections{position:relative;z-index:2}
+.photo-gallery.photo-gallery-footer{--photo-text-overlap:calc(var(--type-body) * var(--line-copy) * 2);z-index:1;margin-block:calc(-1 * var(--photo-text-overlap)) 0}
+.photo-gallery-footer.photo-gallery-enhanced .photo-gallery-field{mask-image:none;height:calc(var(--photo-field-height) + var(--radius-panel) + var(--photo-text-overlap) + var(--photo-prose-gap))}
+.photo-gallery-top-fade{display:none}
+.photo-gallery-enhanced .photo-gallery-top-fade{display:block;position:absolute;inset:0 0 auto;height:180px;pointer-events:none;z-index:2}
+.photo-gallery-top-fade::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgb(255 255 255 / 0) 0%,var(--color-canvas) 100%)}
+/* Blur is clipped to each photo, so image colors cannot spill into white seams. */
+.photo-gallery-footer .photo-gallery-card[data-top-blur]::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;-webkit-backdrop-filter:blur(100px);backdrop-filter:blur(100px);mask-image:linear-gradient(to bottom,#000 var(--photo-fade-start),transparent var(--photo-fade-end))}
+/* Continue photos beneath the rounded corners instead of exposing white ears. */
+.about-gallery-main + .footer{margin-top:calc(-1 * var(--radius-panel))}

@@ -4,6 +4,7 @@
     const field=gallery.querySelector('.photo-gallery-field');
     if(!field||field.dataset.ready)continue;
     field.dataset.ready='true';
+    const footerFade=gallery.classList.contains('photo-gallery-footer');
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const previewReduced=!!document.querySelector('.ds-preview[data-state="reduced-motion"]');
     const still=()=>reduced.matches||previewReduced;
@@ -65,6 +66,16 @@
         sizePhoto(card);
         const distance=Math.hypot(px/(width*.64),py/(height*.72));
         const lens=1-(desktopLens ? .08 : .04)*Math.min(1,distance*distance);
+        if(footerFade){
+          const top=height/2+py-h*lens/2;
+          // Resolve blur in the white-dominant half; the opacity tail stays purely linear.
+          const blurred=top<90&&top+h*lens>0;
+          card.node.toggleAttribute('data-top-blur',blurred);
+          if(blurred){
+            card.node.style.setProperty('--photo-fade-start',`${-top/lens}px`);
+            card.node.style.setProperty('--photo-fade-end',`${(90-top)/lens}px`);
+          }
+        }
         card.node.style.transform=`translate3d(${width/2+px-w/2}px,${height/2+py-h/2}px,0) scale(${lens})`;
       }
     }
