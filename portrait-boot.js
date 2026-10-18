@@ -3,7 +3,7 @@ try {
   const {mountSeedancePortrait} = await import(window.portraitModuleURL || originalPlayerURL)
     .catch(() => import(originalPlayerURL));
   const player = mountSeedancePortrait(document.querySelector('.portrait'),{
-    interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=0fa3c98f0a79',
+    interaction:'cursor',manifestURL:'assets/seedance-manifest.json?v=5918924ff1f0',
     mobileLayout:window.mobileLayout,mobileScrollStart:.28,
     mobileCoverTop:() => document.documentElement.classList.contains('mobile-overlap')
       ? document.querySelector('.works-screen')?.getBoundingClientRect().top ?? null : null
