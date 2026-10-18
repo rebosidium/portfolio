@@ -95,6 +95,13 @@
       // Soften the temporary copies; the original quote stays sharp at rest.
       const softness=layer.animate([{filter:'blur(0px)'},{offset:.38,filter:'blur(.65px)'},{offset:.72,filter:'blur(.35px)'},{filter:'blur(0px)'}],{duration:1000*inkPace,easing:'ease-in-out',fill:'both'});
       softness.id='recommendation-ink-softness';current.animations.push(softness);
+      // Isolated glyphs differ from a shaped text run (kerning and rasterization).
+      // Hand back to that exact original while the last copies are still settling,
+      // so removing the temporary layer never replaces visible glyphs in one frame.
+      for(const [element,frames] of [[layer,[{opacity:1},{opacity:0}]],[slides[index].querySelector('blockquote'),[{opacity:0},{opacity:1}]]]){
+        const settle=element.animate(frames,{duration:250,delay:1000,easing:'ease-in-out',fill:'both'});
+        settle.id='recommendation-ink-settle';current.animations.push(settle);
+      }
       const caption=slides[index].querySelector('figcaption').animate([{opacity:0},{opacity:1}],{duration:320*inkPace,delay:300*inkPace,easing:'ease-out',fill:'both'});
       caption.id='recommendation-ink-caption';
       current.animations.push(caption);
