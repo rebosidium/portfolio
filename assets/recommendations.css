@@ -22,6 +22,13 @@
 .recommendations-dot[aria-current="true"] .recommendations-dot-fill{transform:scaleX(var(--recommendation-progress));}
 .recommendations-play{font:var(--weight-body) var(--type-prompt)/var(--line-compact) var(--font-family);border:0;border-radius:var(--radius-control);color:var(--color-ink);background:transparent;min-width:var(--size-target);min-height:var(--size-target);padding:0 var(--space-2);cursor:pointer;}
 .recommendations-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+/* Desktop Figma232:733:944px card,64px insets,816px quote field. */
+@media(min-width:768px) and (pointer:fine), (min-width:1024px){
+  .recommendations{max-width:var(--width-page);min-height:343px;margin-inline:auto;padding:0 64px 23px;border-radius:var(--space-3);}
+  .recommendations h2{display:flex;align-items:center;justify-content:center;min-height:120px;margin:0 auto;}
+  .recommendations-slides{max-width:none;}
+  .recommendations blockquote{font-size:var(--type-body);margin-bottom:26px;}
+}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
   .recommendations{margin:var(--space-7) 0;padding-top:var(--space-10);padding-bottom:var(--space-5);}
   .recommendations blockquote{font-size:var(--type-body);margin-bottom:26px;}
