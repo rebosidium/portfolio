@@ -30,7 +30,10 @@
 /* About: the text stays sharp above the progressive white/blur transition. */
 .about-main.about-gallery-main{padding-bottom:0;isolation:isolate}
 .about-gallery-main .about-sections{position:relative;z-index:2}
-.photo-gallery.photo-gallery-footer{--photo-text-overlap:calc(var(--type-body) * var(--line-copy) * 2);z-index:1;margin-block:calc(-1 * var(--photo-text-overlap)) 0}
+.photo-gallery.photo-gallery-footer{--photo-field-height:var(--height-about-photo-desktop);--photo-background-offset:var(--offset-about-photo-background);--photo-text-overlap:calc(var(--type-body) * var(--line-copy) * 2);z-index:1;margin-block:calc(var(--photo-background-offset) - var(--photo-text-overlap)) 0}
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+ .photo-gallery.photo-gallery-footer{--photo-field-height:var(--height-about-photo-mobile)}
+}
 .photo-gallery-footer.photo-gallery-enhanced .photo-gallery-field{mask-image:none;height:calc(var(--photo-field-height) + var(--radius-panel) + var(--photo-text-overlap) + var(--photo-prose-gap))}
 .photo-gallery-top-fade{display:none}
 .photo-gallery-enhanced .photo-gallery-top-fade{display:block;position:absolute;inset:0 0 auto;height:180px;pointer-events:none;z-index:2}

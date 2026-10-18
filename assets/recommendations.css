@@ -5,7 +5,7 @@
 .recommendations-slides{max-width:var(--width-prose);margin-inline:auto;}
 .recommendations-slide{margin:0;}
 .recommendations-slide+.recommendations-slide{margin-top:var(--space-10);}
-.recommendations blockquote{font:italic 400 var(--type-heading)/var(--recommendation-leading) Lora,Georgia,serif;font-synthesis:none;letter-spacing:var(--tracking-body);margin:0 0 var(--space-8);text-wrap:pretty;}
+.recommendations blockquote{font:italic 400 var(--type-heading)/var(--recommendation-leading) Lora,Georgia,serif;font-synthesis:none;letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body);margin:0 0 var(--space-8);text-wrap:pretty;}
 .recommendations blockquote p{margin:0;}
 .recommendations figcaption{font:var(--weight-body) var(--type-small)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);}
 .recommendations figcaption a:hover{text-decoration:underline;text-underline-offset:4px;}
