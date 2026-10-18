@@ -1,5 +1,5 @@
 /* Original photographs remain browsable without JavaScript. */
-.photo-gallery{--photo-field-height:420px;margin-block:var(--space-7);width:100%;position:relative}
+.photo-gallery{--photo-field-height:420px;--photo-prose-gap:36px;margin-block:var(--space-7);width:100%;position:relative}
 .photo-gallery-field{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:20px;max-height:620px;overflow:auto;border-radius:var(--radius-placeholder);outline-offset:6px}
 .photo-gallery-card{position:relative;overflow:hidden;border-radius:12px;aspect-ratio:var(--photo-ratio);background:var(--color-surface);isolation:isolate}
 .photo-gallery-crop{position:absolute;inset:0;overflow:hidden;border-radius:12px}
@@ -16,7 +16,7 @@
 .photo-gallery-field:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:4px}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .photo-gallery-field{grid-template-columns:repeat(2,minmax(0,1fr))}
- .photo-gallery{--photo-field-height:308px}
+ .photo-gallery{--photo-field-height:308px;--photo-prose-gap:24px}
 }
 
 .photo-crop-coffee{mask-image:url('/assets/photo-128fa.svg');mask-size:100% 100%;mask-repeat:no-repeat}
@@ -25,4 +25,4 @@
 /* Keep both fades entirely inside the gallery, clear of adjacent prose. */
 .photo-page .about-main{isolation:isolate}
 .photo-page .about-intro{position:relative;z-index:2;margin-bottom:0}
-.photo-page .photo-gallery-enhanced{z-index:1;margin-block:0}
+.photo-page .photo-gallery-enhanced{z-index:1;margin-block:var(--photo-prose-gap)}

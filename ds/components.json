@@ -1306,9 +1306,9 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+6c38ae5e84c2",
-      "revision": "6c38ae5e84c2c740c1744688f65d37a8ff6f0f1e7ccebd7d697a2e2cc945d0c5",
-      "markupRevision": "0187b52d74c8071ab6c5d2c9a9fe4c038e859461fc8802add016b9a4a70e020b",
+      "version": "1.2.0+ed52d77f26d4",
+      "revision": "ed52d77f26d405b1a67dc72788f4ae50acf811a6675000d6202ab790d59cf3c1",
+      "markupRevision": "f1228eed6a9dd033ed162949ea01b0da2a292111b4e0992b733812283e69e320",
       "owners": [
         "shared/photo-gallery.mjs",
         "shared/photo-layout.json",
@@ -1988,6 +1988,36 @@
           "revisionSha256": "5734619958af5549bd75b0931d8cfe2d29822d42fd89d0914f8cdfd8af4025b8"
         },
         {
+          "path": "home/assets/photo-helmet-240.webp",
+          "kind": "asset",
+          "sha256": "f77f88262ff21bdd6eb02ffd6a57065aaa969c95f39eb1a1620bd295c841e01d",
+          "revisionSha256": "f77f88262ff21bdd6eb02ffd6a57065aaa969c95f39eb1a1620bd295c841e01d"
+        },
+        {
+          "path": "home/assets/photo-helmet-360.webp",
+          "kind": "asset",
+          "sha256": "78a1b4b11e88b2f14405ff531e6b0d22edddd8367b08537f94228e73cf16672b",
+          "revisionSha256": "78a1b4b11e88b2f14405ff531e6b0d22edddd8367b08537f94228e73cf16672b"
+        },
+        {
+          "path": "home/assets/photo-helmet-480.webp",
+          "kind": "asset",
+          "sha256": "eddf6b1bc15bf7bd714158eb0d28d7c425720d23a0b79286d99e1052e0e06a45",
+          "revisionSha256": "eddf6b1bc15bf7bd714158eb0d28d7c425720d23a0b79286d99e1052e0e06a45"
+        },
+        {
+          "path": "home/assets/photo-helmet-640.webp",
+          "kind": "asset",
+          "sha256": "4899c5a95b5cd5720b5435d215a3da894661b3213e692e750e2a4214ff6c6067",
+          "revisionSha256": "4899c5a95b5cd5720b5435d215a3da894661b3213e692e750e2a4214ff6c6067"
+        },
+        {
+          "path": "home/assets/photo-helmet.webp",
+          "kind": "asset",
+          "sha256": "239752d85b61fb3a0dc575d519ef721a8e142e9bf58adea2bbf475dee05bc7f5",
+          "revisionSha256": "239752d85b61fb3a0dc575d519ef721a8e142e9bf58adea2bbf475dee05bc7f5"
+        },
+        {
           "path": "home/assets/photo-logs-240.webp",
           "kind": "asset",
           "sha256": "9f994385ff31768c07ff9152b226b4f2577ad81fbf1d7d85a1963e15ff0a1212",
@@ -2366,6 +2396,42 @@
           "revisionSha256": "c34ab2135abc4591dd061cf5e187ee020b833c25337a819351aa3745a62cdb4c"
         },
         {
+          "path": "home/assets/photo-team-240.webp",
+          "kind": "asset",
+          "sha256": "00edf6a78cbf635634854a98ef4df9b15795d4d409a200a1a43274a9f3cda4d9",
+          "revisionSha256": "00edf6a78cbf635634854a98ef4df9b15795d4d409a200a1a43274a9f3cda4d9"
+        },
+        {
+          "path": "home/assets/photo-team-360.webp",
+          "kind": "asset",
+          "sha256": "fe6dce186bcc03438ecd403ea1b02b2c1b6d30c7992d80b04fd31bd6b3502760",
+          "revisionSha256": "fe6dce186bcc03438ecd403ea1b02b2c1b6d30c7992d80b04fd31bd6b3502760"
+        },
+        {
+          "path": "home/assets/photo-team-480.webp",
+          "kind": "asset",
+          "sha256": "5a24298914fbce108ec2829090d7abc316fc612d9aba0b2aaf73f5621ea32e2d",
+          "revisionSha256": "5a24298914fbce108ec2829090d7abc316fc612d9aba0b2aaf73f5621ea32e2d"
+        },
+        {
+          "path": "home/assets/photo-team-640.webp",
+          "kind": "asset",
+          "sha256": "c419c8e4a34d3eaa338c95e0a4eb87cc32943e2c3cb723fab3fdefe2827ad306",
+          "revisionSha256": "c419c8e4a34d3eaa338c95e0a4eb87cc32943e2c3cb723fab3fdefe2827ad306"
+        },
+        {
+          "path": "home/assets/photo-team-800.webp",
+          "kind": "asset",
+          "sha256": "56e9ee7142d9ce1a9c275769fb1ea03c38a404607a1b5b2ed8c39c94a3ecbbe3",
+          "revisionSha256": "56e9ee7142d9ce1a9c275769fb1ea03c38a404607a1b5b2ed8c39c94a3ecbbe3"
+        },
+        {
+          "path": "home/assets/photo-team.webp",
+          "kind": "asset",
+          "sha256": "323c3117e86f2de01cdda96b6f6223bc197a284dffdc1d77230ac7ac875d35f5",
+          "revisionSha256": "323c3117e86f2de01cdda96b6f6223bc197a284dffdc1d77230ac7ac875d35f5"
+        },
+        {
           "path": "home/assets/project-media.js",
           "kind": "asset",
           "sha256": "e7dd2ab04fe3db39c95f4b6f8abe639b5c173e366aaff9560b0146b907e0fc75",
@@ -2380,32 +2446,32 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "d55ea267b1d892a2f9b1ac1b9a300bd1c50cac0941b2040b2161c0fee474ec43",
-          "revisionSha256": "d55ea267b1d892a2f9b1ac1b9a300bd1c50cac0941b2040b2161c0fee474ec43"
+          "sha256": "7cd00784dbbdfd0cbc6be535097db814cd2dee7f448d3d4695558fb25ac1122f",
+          "revisionSha256": "7cd00784dbbdfd0cbc6be535097db814cd2dee7f448d3d4695558fb25ac1122f"
         },
         {
           "path": "shared/photo-gallery.js",
           "kind": "runtime",
-          "sha256": "403f1f8ae0e93d84398acc42596e765f21a158707476ae434b64f9e209d75dc1",
-          "revisionSha256": "403f1f8ae0e93d84398acc42596e765f21a158707476ae434b64f9e209d75dc1"
+          "sha256": "4f142cae7735586bdca716563cb49cc2818d5f5c5c830d12c6a93ae4429fda94",
+          "revisionSha256": "4f142cae7735586bdca716563cb49cc2818d5f5c5c830d12c6a93ae4429fda94"
         },
         {
           "path": "shared/photo-gallery.mjs",
           "kind": "markup",
-          "sha256": "3d35c54e3dfda91c8d281f5e23f3d8454b65b275449bfac17c7add93c41b94a9",
-          "revisionSha256": "3d35c54e3dfda91c8d281f5e23f3d8454b65b275449bfac17c7add93c41b94a9"
+          "sha256": "d9e7217e7a1e2f774b5425acef5c35da90bb452ce688c7908ad93a2ca6f6ad4b",
+          "revisionSha256": "d9e7217e7a1e2f774b5425acef5c35da90bb452ce688c7908ad93a2ca6f6ad4b"
         },
         {
           "path": "shared/photo-layout.json",
           "kind": "markup",
-          "sha256": "50a7692334b656eb5cc36fa7924512c6d975a7e309d7a57f1360198ea090b5c2",
-          "revisionSha256": "50a7692334b656eb5cc36fa7924512c6d975a7e309d7a57f1360198ea090b5c2"
+          "sha256": "a8789d169e978f47669b65d5c2e8bf8ac640de35755f672d1aa1ba5318813165",
+          "revisionSha256": "a8789d169e978f47669b65d5c2e8bf8ac640de35755f672d1aa1ba5318813165"
         },
         {
           "path": "shared/photo-renditions.json",
           "kind": "markup",
-          "sha256": "f55389d05b879e59a7f848bdf7b87ae96cb3054d05f9dbd1a3dcb98d0c117c9b",
-          "revisionSha256": "f55389d05b879e59a7f848bdf7b87ae96cb3054d05f9dbd1a3dcb98d0c117c9b"
+          "sha256": "fef3a731431a9c3a6eefaad66a88e446c2f11de03cd3eb9144af5da6eac0d1b0",
+          "revisionSha256": "fef3a731431a9c3a6eefaad66a88e446c2f11de03cd3eb9144af5da6eac0d1b0"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -5625,9 +5691,9 @@
       "name": "Gallery / Ambient drift",
       "usage": "Photo experiment · desktop & mobile",
       "trigger": "The photo field is visible and no manual interaction is active.",
-      "timing": "Right 8 px/s · up 4 px/s · resume after 3200 ms",
-      "motion": "Twenty-five photos form an asymmetric periodic mosaic with comparable portrait and landscape areas, preserved crop ratios and small size variations. Desktop photos smoothly grow toward the center: full-size center and 68% edge scale, with full-size slots reserved to prevent overlap. Mobile keeps 82% edge scale. Field height is 420px desktop and 308px mobile (30% shorter). The field drifts diagonally up-right; drag and arrow keys pan it directly. The top and bottom 15% fades stay entirely inside the gallery and do not overlap prose.",
-      "playback": "Hover keeps ambient motion running; keyboard focus stops it. Manual input defers it for 3200 ms; wheel/trackpad scroll the page normally over photos. Offscreen, hidden tab and open menu stop rendering. No caption or horizontal fade.",
+      "timing": "Right 8 px/s · up 4 px/s · resume after 500 ms",
+      "motion": "Twenty-seven photos tessellate the complete periodic rectangle with comparable portrait and landscape areas, preserved ratios and small 11.2px seams (92.3% coverage). Desktop photos smoothly grow toward the center: full-size center and 92% edge scale, with full-size slots reserved to prevent overlap. Mobile keeps 96% edge scale. Field height is 420px desktop and 308px mobile (30% shorter). The field drifts diagonally up-right; drag and arrow keys pan it directly. The top and bottom 15% fades stay entirely inside the gallery; prose gaps are 36px desktop and 24px mobile.",
+      "playback": "Hover keeps ambient motion running; keyboard focus stops it. Manual input defers it for 500 ms; wheel/trackpad scroll the page normally over photos. Offscreen, hidden tab and open menu stop rendering. No caption or horizontal fade.",
       "reduced": "Ambient drift and release inertia are disabled; manual direct panning remains available. No pause/play control.",
       "component": "photo-gallery",
       "live": "/photo/",
@@ -5637,7 +5703,7 @@
           "anchors": [
             "vx+(auto ? .008 : 0)",
             "vy+(auto ? -.004 : 0)",
-            "performance.now()+3200",
+            "performance.now()+500",
             "{passive:true}",
             "if(auto||(!drag&&Math.hypot(vx,vy)>.015))"
           ]
@@ -5900,10 +5966,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.30.1",
-    "revision": "8c5686d75811",
-    "release": "1.30.1+8c5686d75811",
-    "updatedAt": "2026-10-18T01:06:13.548Z",
+    "version": "1.30.2",
+    "revision": "095e00a9ec1d",
+    "release": "1.30.2+095e00a9ec1d",
+    "updatedAt": "2026-10-18T01:52:19.079Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -5957,8 +6023,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "d82f94e92c24f0ef37a43b3bf17be50a7f07e296cb97b6e08f238b36661b0e80",
-        "revisionSha256": "d82f94e92c24f0ef37a43b3bf17be50a7f07e296cb97b6e08f238b36661b0e80"
+        "sha256": "4fcca04ed031dac376a49909b6e8969e033652896d8eb8fcd2ec4da44b2d0c0d",
+        "revisionSha256": "4fcca04ed031dac376a49909b6e8969e033652896d8eb8fcd2ec4da44b2d0c0d"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -5972,8 +6038,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "758f486808f1e38ca71e3025ea0da5fc5bdff0002815c3b00a99473fb85d191f",
-        "revisionSha256": "758f486808f1e38ca71e3025ea0da5fc5bdff0002815c3b00a99473fb85d191f"
+        "sha256": "9a014473f1b265d07ea1dd3d5eb814e43178c6a76b5891e978fc32bee8a4cd14",
+        "revisionSha256": "9a014473f1b265d07ea1dd3d5eb814e43178c6a76b5891e978fc32bee8a4cd14"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -5992,8 +6058,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "18ff5f9a5fda3cc1a99666ce61268de84062e4c56d6e9025df9bd7373151611c",
-        "revisionSha256": "18ff5f9a5fda3cc1a99666ce61268de84062e4c56d6e9025df9bd7373151611c"
+        "sha256": "0ee0ad959f6e6047f90803f00f79b8a814897d23d340c6025feeae5510ca858f",
+        "revisionSha256": "0ee0ad959f6e6047f90803f00f79b8a814897d23d340c6025feeae5510ca858f"
       },
       {
         "path": "shared/site-pages.mjs",
