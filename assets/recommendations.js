@@ -15,6 +15,7 @@
     let index=0,visible=false,hovered=false,focused=false,keyboardMode=false,gesture=null;
     let animation=null,generation=0,deadline=0,visibilityFrame=0,canAnimate=typeof fills[0].animate==='function';
     let ink=null;
+    const inkPace=1.25;
     const segmenter=typeof Intl.Segmenter==='function'?new Intl.Segmenter('en',{granularity:'grapheme'}):null;
     const noise=n=>{const value=Math.sin(n*12.9898)*43758.5453;return value-Math.floor(value);};
     function stopInk(){
@@ -88,10 +89,13 @@
           frames=[{opacity:0,transform:pose(sway,lift+6,angle,.94)},{offset:.7,opacity:1,transform:pose(-sway*.08,-lift*.08,-angle*.1)},{opacity:1,transform:pose(0,0)}];
           timing={duration:650,delay:220+noise(seed+5)*130};
         }
-        const movement=element.animate(frames,{...timing,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
+        const movement=element.animate(frames,{duration:timing.duration*inkPace,delay:timing.delay*inkPace,easing:'cubic-bezier(.45,0,.25,1)',fill:'both'});
         movement.id='recommendation-ink-letter';current.animations.push(movement);
       }
-      const caption=slides[index].querySelector('figcaption').animate([{opacity:0},{opacity:1}],{duration:320,delay:300,easing:'ease-out',fill:'both'});
+      // Soften the temporary copies; the original quote stays sharp at rest.
+      const softness=layer.animate([{filter:'blur(0px)'},{offset:.38,filter:'blur(.65px)'},{offset:.72,filter:'blur(.35px)'},{filter:'blur(0px)'}],{duration:1000*inkPace,easing:'ease-in-out',fill:'both'});
+      softness.id='recommendation-ink-softness';current.animations.push(softness);
+      const caption=slides[index].querySelector('figcaption').animate([{opacity:0},{opacity:1}],{duration:320*inkPace,delay:300*inkPace,easing:'ease-out',fill:'both'});
       caption.id='recommendation-ink-caption';
       current.animations.push(caption);
       // Cancellation is expected during rapid selection and lifecycle changes.
