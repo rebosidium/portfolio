@@ -6,6 +6,7 @@
     field.dataset.ready='true';
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const originals=[...field.children];
+    const worldWidth=+field.dataset.worldWidth,worldHeight=+field.dataset.worldHeight;
     const records=originals.map(node=>({node,x:+node.dataset.photoX,y:+node.dataset.photoY,w:+node.dataset.photoWidth,h:+node.dataset.photoHeight}));
     // A fixed 3 × 3 pool is recycled in both directions; DOM and memory never grow.
     const cards=[];
@@ -19,14 +20,14 @@
     let width=0,height=0,unit=1,tileW=1,tileH=1,x=0,y=0,vx=0,vy=0,frame=0,previous=0,visible=true,drag=null;
     function paint(){
       for(const card of cards){
-        const px=(card.x+card.w/2-953)*unit+card.col*tileW+x;
-        const py=(card.y+card.h/2-785)*unit+card.row*tileH+y;
+        const px=(card.x+card.w/2-worldWidth/2)*unit+card.col*tileW+x;
+        const py=(card.y+card.h/2-worldHeight/2)*unit+card.row*tileH+y;
         const w=card.w*unit,h=card.h*unit;
         const outside=Math.abs(px)>width/2+w/2||Math.abs(py)>height/2+h/2;
         card.node.hidden=outside;
         if(outside)continue;
         const distance=Math.hypot(px/(width*.64),py/(height*.72));
-        const lens=1-.4*Math.min(1,distance*distance);
+        const lens=1-.18*Math.min(1,distance*distance);
         card.node.style.width=w+'px';card.node.style.height=h+'px';
         card.node.style.transform=`translate3d(${width/2+px-w/2}px,${height/2+py-h/2}px,0) scale(${lens})`;
       }
@@ -43,9 +44,9 @@
     function request(){if(!frame)frame=requestAnimationFrame(tick);}
     function measure(){
       width=field.clientWidth;height=field.clientHeight;unit=width<768?.49:.68;
-      tileW=1740*unit;tileH=1350*unit;
+      tileW=worldWidth*unit;tileH=worldHeight*unit;
       // Ensure three pooled tiles cover even an unusually wide specimen.
-      unit=Math.max(unit,width/3000,height/2400);tileW=1740*unit;tileH=1350*unit;
+      unit=Math.max(unit,width/(worldWidth*1.7),height/(worldHeight*1.7));tileW=worldWidth*unit;tileH=worldHeight*unit;
       x=wrap(x,tileW);y=wrap(y,tileH);paint();
     }
     field.addEventListener('pointerdown',event=>{
