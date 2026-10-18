@@ -1,6 +1,6 @@
 /* This stylesheet is loaded only by pages/specimens rendering recommendations. */
 @font-face{font-family:Lora;src:url('lora-italic.woff?v=db7766f76df4') format('woff');font-style:italic;font-weight:400;font-display:swap}
-.recommendations{--recommendation-progress:0;--recommendation-leading:1.5;background:var(--color-surface);color:var(--color-ink);text-align:center;padding:var(--space-10) var(--space-5) var(--space-6);margin:var(--space-10) 0;font-family:var(--font-family);word-spacing:normal;touch-action:pan-y pinch-zoom;}
+.recommendations{--recommendation-leading:1.5;background:var(--color-surface);color:var(--color-ink);text-align:center;padding:var(--space-10) var(--space-5) var(--space-6);margin:var(--space-10) 0;font-family:var(--font-family);word-spacing:normal;touch-action:pan-y pinch-zoom;}
 .recommendations h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);margin:0 auto var(--space-10);max-width:var(--width-prose);}
 .recommendations-slides{max-width:var(--width-prose);margin-inline:auto;}
 .recommendations-slide{margin:0;}
@@ -18,8 +18,7 @@
 .recommendations-dot[aria-current="true"]{min-width:74px;}
 .recommendations-dot-track{display:block;position:relative;width:var(--size-status);height:var(--size-status);overflow:hidden;border-radius:var(--radius-pill);background:var(--border-subtle-on-surface);transition:width .3s ease;}
 .recommendations-dot[aria-current="true"] .recommendations-dot-track{width:60px;}
-.recommendations-dot-fill{display:block;width:0;height:100%;background:var(--color-ink);}
-.recommendations-dot[aria-current="true"] .recommendations-dot-fill{width:calc(100% * var(--recommendation-progress));}
+.recommendations-dot-fill{display:block;width:100%;height:100%;background:var(--color-ink);transform:scaleX(0);transform-origin:left center;will-change:transform;}
 .recommendations-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 /* Desktop Figma232:733:944px card,64px insets,816px quote field. */
 @media(min-width:768px) and (pointer:fine), (min-width:1024px){
