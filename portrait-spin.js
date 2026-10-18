@@ -19,7 +19,6 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const cleanup=[];
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const colorScheme=window.matchMedia('(prefers-color-scheme: dark)');
   const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
   const FOLLOW_MAX_ANGLE=49,FOLLOW_DAMPING_MS=95,FOLLOW_DEAD_ZONE=8,FOLLOW_SOFT_RADIUS=1.5;
   let cursorPoint=null,followVisible=true,followPaused=false;
@@ -628,7 +627,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function chooseVariant(){
     const physical=(stage.clientWidth||311)*Math.max(1,window.devicePixelRatio||1);
     const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
-    return getComputedStyle(stage).colorScheme==='dark'?quality+'-dark':quality;
+    // Shared cleaned set; historical filenames stay exact for cache/rollback.
+    return quality+'-dark';
   }
   function prepareVariant(data,key){
     const value=data.variants?.[key],count=data.frames;
@@ -743,7 +743,6 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(checkResize):null;
   resizeObserver?.observe(stage);
   listen(window,'resize',()=>{checkResize();applyCursorTarget()});
-  listen(colorScheme,'change',()=>{notifyLoading();checkResize()});
   let densityQuery;
   const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
   function watchDensity(){

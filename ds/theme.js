@@ -17,10 +17,6 @@
     for(const source of document.querySelectorAll('source[data-portrait-motion="reduce"]:not([data-portrait-theme])')){
       const media=front?'all':'(prefers-reduced-motion: reduce)';if(source.media!==media)source.media=media;
     }
-    for(const source of document.querySelectorAll('source[data-portrait-theme="dark"]')){
-      const media=resolved()==='dark'?(source.dataset.portraitMotion==='reduce'&&!front?'(prefers-reduced-motion: reduce)':'all'):'not all';
-      if(source.media!==media)source.media=media;
-    }
     const style=getComputedStyle(root);
     for(const row of document.querySelectorAll('#token-reference tr')){
       const key=row.querySelector('td a')?.textContent;

@@ -63,7 +63,7 @@
     const artwork=document.querySelector('.work-artwork');artwork.classList.add('image-failed');artwork.dataset.imageState='failed';artwork.querySelector('.work-image-error').hidden=false;
   }
   if(state==='paused')document.querySelector('[data-pulse-visible]')?.setAttribute('data-pulse-visible','false');
-  // Theme-specific picture sources keep both front and initial states native.
+  // One cleaned portrait set serves both palettes; native sources select motion state.
 
   if(state==='hover'&&example.group==='template')document.querySelector('.header nav a[href]:not(.mobile-only)')?.setAttribute('data-ui-state','hover');
   function script(src,done){const node=document.createElement('script');node.src=src;node.onload=done;document.body.append(node);}

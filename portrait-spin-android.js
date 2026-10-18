@@ -19,7 +19,6 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const cleanup=[];
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const colorScheme=window.matchMedia('(prefers-color-scheme: dark)');
   const coarsePointer=window.matchMedia('(pointer: coarse)');
   canvas.dataset.variant='touch-responsive-raw-bitmap';
   const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
@@ -690,7 +689,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
     const physical=(stage.clientWidth||311)*ratio;
     const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
-    return getComputedStyle(stage).colorScheme==='dark'?quality+'-dark':quality;
+    // Shared cleaned set; historical filenames stay exact for cache/rollback.
+    return quality+'-dark';
   }
   function prepareVariant(data,key){
     const value=data.variants?.[key],count=data.frames;
@@ -805,7 +805,6 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(checkResize):null;
   resizeObserver?.observe(stage);
   listen(window,'resize',()=>{checkResize();applyCursorTarget()});
-  listen(colorScheme,'change',()=>{notifyLoading();checkResize()});
   let densityQuery;
   const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
   function watchDensity(){
