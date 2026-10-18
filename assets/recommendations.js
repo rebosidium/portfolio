@@ -6,6 +6,7 @@
     const dots=[...root.querySelectorAll('.recommendations-dot')];
     const fills=dots.map(dot=>dot.querySelector('.recommendations-dot-fill'));
     const controls=root.querySelector('.recommendations-controls');
+    const dotStrip=root.querySelector('.recommendations-dots');
     const status=root.querySelector('.recommendations-status');
     if(slides.length<2||dots.length!==slides.length||fills.some(fill=>!fill))return;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -112,6 +113,12 @@
       return '';
     };
     const clearDeadline=()=>{clearTimeout(deadline);deadline=0;};
+    function keepIndicatorVisible(){
+      if(!dotStrip||dotStrip.scrollWidth<=dotStrip.clientWidth)return;
+      const dot=dots[index],left=dot.offsetLeft,right=left+dot.offsetWidth;
+      if(left<dotStrip.scrollLeft)dotStrip.scrollLeft=left;
+      else if(right>dotStrip.scrollLeft+dotStrip.clientWidth)dotStrip.scrollLeft=right-dotStrip.clientWidth;
+    }
     function select(next,announce=false){
       const previous=index,target=(next+slides.length)%slides.length;
       stopInk();
@@ -122,6 +129,7 @@
       slides.forEach((slide,i)=>{slide.classList.toggle('is-current',i===index);slide.inert=i!==index;slide.setAttribute('aria-hidden',String(i!==index));});
       dots.forEach((dot,i)=>{if(i===index)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current');});
       root.dataset.activeSlide=String(index+1);
+      keepIndicatorVisible();
       if(announce)status.textContent=`Recommendation ${index+1} of ${slides.length}`;
       if(outgoing)try{playInk(outgoing,measureLetters(slides[index]));}catch(_){stopInk();}
       if(canAnimate){
@@ -184,6 +192,7 @@
     root.classList.add('is-enhanced');controls.hidden=false;
     updateVisibility();select(0);root.dataset.recommendationsReady='true';
     dots.forEach((dot,i)=>dot.addEventListener('click',()=>select(i,true)));
+    dotStrip?.addEventListener('transitionend',event=>{if(event.propertyName==='min-width')keepIndicatorVisible();});
     // Touch focus must not be confused with keyboard focus by Safari's heuristics.
     document.addEventListener('keydown',event=>{
       if(event.metaKey||event.ctrlKey||event.altKey)return;
@@ -225,7 +234,7 @@
     // First entry and Safari's changing browser chrome must not depend on a
     // second IntersectionObserver notification. Only scroll/resize schedules this.
     window.addEventListener('scroll',syncVisibility,{capture:true,passive:true});
-    window.addEventListener('resize',()=>{stopInk();syncVisibility();},{passive:true});
+    window.addEventListener('resize',()=>{stopInk();keepIndicatorVisible();syncVisibility();},{passive:true});
     window.visualViewport?.addEventListener('resize',syncVisibility,{passive:true});
     new MutationObserver(()=>{if(document.documentElement.classList.contains('mobile-menu-open'))stopInk();schedule();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     document.addEventListener('visibilitychange',()=>{
