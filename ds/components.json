@@ -87,9 +87,9 @@
   "components": {
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.2.0+9cfc6d4e5fb8",
-      "revision": "9cfc6d4e5fb827e03c44863bf6d6cdc0962a917a225d5518ad8e2a4d1fa66471",
-      "markupRevision": "5372fc45950958a26914899540b56921d148219210a2c4d40e55b35a0d95b43f",
+      "version": "1.2.0+5c01d1d9f6da",
+      "revision": "5c01d1d9f6da237d2526bd6b0a94180589faa92bbec970198177e757a749c351",
+      "markupRevision": "5e148f262433a928b56fa3c702ff1ed661d6ee7420c3a9f5c08da8169d82bd71",
       "owners": [
         "shared/recommendations.mjs",
         "shared/recommendations.json"
@@ -206,8 +206,8 @@
         {
           "path": "shared/recommendations.json",
           "kind": "markup",
-          "sha256": "48523588cbcef73895f4d45b74393d29cb59733bf00afc5907aa81b4a827f821",
-          "revisionSha256": "48523588cbcef73895f4d45b74393d29cb59733bf00afc5907aa81b4a827f821"
+          "sha256": "21d146336ff003f6ba9df81dc213f81786c948f988e13c3a0cb4ac6169a0235a",
+          "revisionSha256": "21d146336ff003f6ba9df81dc213f81786c948f988e13c3a0cb4ac6169a0235a"
         },
         {
           "path": "shared/recommendations.mjs",
@@ -1685,8 +1685,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.2.0+e10996f2395d",
-      "revision": "e10996f2395dd6a5dfd9ae88b4e3f2c931121f966ae602701d4e95640555d29b",
+      "version": "1.2.0+2e930e36259f",
+      "revision": "2e930e36259faa2c32871101920939fb813eca25f6be98bd6667679954d5d415",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -2849,8 +2849,8 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266",
-          "revisionSha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266"
+          "sha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee",
+          "revisionSha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee"
         },
         {
           "path": "shared/photo-gallery.js",
@@ -2911,8 +2911,8 @@
     "photo-gallery-footer": {
       "componentKey": "photo-gallery",
       "variant": "footer",
-      "version": "1.2.0+1aab3a6e1d86",
-      "revision": "1aab3a6e1d86bf407833cb3c2176367a6f1e901d11adedb7d955d1849b46fc29",
+      "version": "1.2.0+b258bbf2103b",
+      "revision": "b258bbf2103b0158cad869b79dc040bf2cbc679c22ab20aa1a046efb24bd084f",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -4075,8 +4075,8 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266",
-          "revisionSha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266"
+          "sha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee",
+          "revisionSha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee"
         },
         {
           "path": "shared/photo-gallery.js",
@@ -5345,9 +5345,9 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.2.0+73bb5a7871a4",
-      "revision": "73bb5a7871a43f9948be315a1063e3747b5353d46a89271ab88b53eb5327c0dd",
-      "markupRevision": "20b018b9a894a587f72c4ffe6863c51ca8835a8df308aeab3ac796e9cdba0a3c",
+      "version": "1.2.0+12ccc9fbdee2",
+      "revision": "12ccc9fbdee2ceadfc9d304d49c92505df59452350a2f7d1337f9b0b353b43d0",
+      "markupRevision": "b9c9a9016d6e36c4d09a4cc3030206efeb6780fb9dcf8d5af9ef645bbcaf49d6",
       "owners": [
         "shared/reading-page.html",
         "shared/about-main.html",
@@ -6765,8 +6765,8 @@
         {
           "path": "shared/photo-gallery.css",
           "kind": "styles",
-          "sha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266",
-          "revisionSha256": "528d46c2d345ae4d4af8b9b82ff3f5ad262bfd9e73fc72dcd78f1a50fc067266"
+          "sha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee",
+          "revisionSha256": "a6682451405408b2565f54224e6d0a84cab90a246656f090d6610618c0bd8dee"
         },
         {
           "path": "shared/photo-gallery.js",
@@ -6819,8 +6819,8 @@
         {
           "path": "shared/recommendations.json",
           "kind": "markup",
-          "sha256": "48523588cbcef73895f4d45b74393d29cb59733bf00afc5907aa81b4a827f821",
-          "revisionSha256": "48523588cbcef73895f4d45b74393d29cb59733bf00afc5907aa81b4a827f821"
+          "sha256": "21d146336ff003f6ba9df81dc213f81786c948f988e13c3a0cb4ac6169a0235a",
+          "revisionSha256": "21d146336ff003f6ba9df81dc213f81786c948f988e13c3a0cb4ac6169a0235a"
         },
         {
           "path": "shared/recommendations.mjs",
@@ -9380,10 +9380,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.38.2",
-    "revision": "1e8c675b17a6",
-    "release": "1.38.2+1e8c675b17a6",
-    "updatedAt": "2026-10-18T15:56:44.132Z",
+    "version": "1.38.3",
+    "revision": "bacac10092ce",
+    "release": "1.38.3+bacac10092ce",
+    "updatedAt": "2026-10-18T16:08:35.677Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -9437,13 +9437,13 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "941fdf6b5a84700e0a3fcaa23c8ae7e6a11ad96020343447710088620c03ec22",
-        "revisionSha256": "941fdf6b5a84700e0a3fcaa23c8ae7e6a11ad96020343447710088620c03ec22"
+        "sha256": "b28345df372ae2ae3f0761190828272673c8a2e718aaad0c7d9fa44f2d1c68e0",
+        "revisionSha256": "b28345df372ae2ae3f0761190828272673c8a2e718aaad0c7d9fa44f2d1c68e0"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "847dd80d99c708ce9294175322a02a3b790f0ac7102f5f567666f9b0765a0530",
-        "revisionSha256": "847dd80d99c708ce9294175322a02a3b790f0ac7102f5f567666f9b0765a0530"
+        "sha256": "6f22f0e0c8a2f92abbdb5e81b84d26be6fcf050ace22bf1f3e20f690179c2ecd",
+        "revisionSha256": "6f22f0e0c8a2f92abbdb5e81b84d26be6fcf050ace22bf1f3e20f690179c2ecd"
       },
       {
         "path": "shared/component-registry.mjs",
@@ -9452,8 +9452,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "2bfd534a6c613f39d3406ac1baece11d279bb594f62bd192f7f8fd02f05ab4f0",
-        "revisionSha256": "2bfd534a6c613f39d3406ac1baece11d279bb594f62bd192f7f8fd02f05ab4f0"
+        "sha256": "3da0809ba3bbb5970a4168fcbf283835365d33b67ae614e57e9747c16a35c516",
+        "revisionSha256": "3da0809ba3bbb5970a4168fcbf283835365d33b67ae614e57e9747c16a35c516"
       },
       {
         "path": "shared/ds-freshness.js",
