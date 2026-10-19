@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="cd8bd99296aa" data-build="457daa9e4bd7">
+<html lang="en" data-page-kind="not-found" data-ui-revision="dc0fe5197e0d" data-build="f7b6b63c8b72">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"}];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial"},{"route":"/work/medesk/","type":"article","project":"medesk"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -168,7 +168,7 @@
   <!-- shared:navigation-boot:end -->
   <script src="/analytics.js?v=03fb5fa11117" defer fetchpriority="low"></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.45.0+bc8a54c423b7","tokens":"1.4.0+4e00918e173c","components":{"back":"1.4.0+d0e73b44db12","article-title":"1.4.0+0e25c15018ff","not-found-page":"1.4.0+2a574b81f725"},"revision":"cd8bd99296aa"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.46.0+ac65adc6fbad","tokens":"1.4.0+4e00918e173c","components":{"back":"1.4.0+e03c8a7ac6e3","article-title":"1.4.0+9e71a2196a1a","not-found-page":"1.4.0+b7379d6bbe8c"},"revision":"dc0fe5197e0d"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->
