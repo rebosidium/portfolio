@@ -90,8 +90,9 @@
     const projectLink = target.closest('[data-analytics-work] .work-actions a[href]');
     if (projectLink) {
       const url = new URL(projectLink.href, location.href);
-      if (url.origin === location.origin && url.pathname === '/work/raiffeisen-leasing/')
-        capture('project_opened', {...common, project: 'raiffeisen-leasing', destination: url.pathname, placement: 'selected_works'}, true);
+      const destinationProject = policy.projectRoutes?.[url.pathname];
+      if (url.origin === location.origin && destinationProject)
+        capture('project_opened', {...common, project: destinationProject, destination: url.pathname, placement: 'selected_works'}, true);
       return;
     }
     const dot = target.closest('.recommendations-dot');

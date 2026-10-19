@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="1c8f095f3127" data-build="983d06904f41">
+<html lang="en" data-ui-revision="aee7a3d1df92" data-build="457daa9e4bd7">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"}];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -50,6 +50,7 @@
   // Test storage survives same-tab navigation; owner preference survives browser restarts.
   const reason = !allowed ? 'untracked' : ownerExcluded ? 'owner' : qa ? 'test' : automation ? 'automation' : 'visitor';
   window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
+    projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
     sitePath: notFound ? '/404/' : page?.route || location.pathname,
     pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
     enabled: allowed && !ownerExcluded && !qa && !automation});
@@ -166,7 +167,7 @@
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-cursor-white.svg?v=b6213bf33e0a" fetchpriority="low">
   <!-- shared:brief-preloads:end -->
-  <link rel="stylesheet" href="/assets/site-ui.css?v=dec04a350579">
+  <link rel="stylesheet" href="/assets/site-ui.css?v=00321753d112">
   <link rel="stylesheet" href="/about/about.css?v=a42acd253415">
   <!-- shared:navigation-boot:start -->
   <script>
@@ -199,10 +200,10 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
   <script src="/assets/site-controls.js?v=aa16a1ece157" defer></script>
-  <script src="/analytics.js?v=435c75b941b4" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=03fb5fa11117" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=6ef19d67a325" defer></script>
   <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.3.0","designSystem":"1.44.2+ca7fa1febc58","tokens":"1.3.0+a7e6dc6efb77","components":{"recommendations":"1.3.0+d09b95c9bd3a","brief-dark":"1.3.0+58949d3ca1cf","back":"1.3.0+5da35c4b5bfe","link":"1.3.0+c3f17d437fe4","footer-link":"1.3.0+38b10b352421","company-title":"1.3.0+556a9489cc53","company-page":"1.3.0+520d1018f9de","prose-section":"1.3.0+4419c98b15bf","about-header":"1.3.0+b3bfaffe5f31","footer":"1.3.0+d2f6e67511bb"},"revision":"1c8f095f3127"}</script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.45.0+bc8a54c423b7","tokens":"1.4.0+4e00918e173c","components":{"recommendations":"1.4.0+4386d560796f","brief-dark":"1.4.0+bae1e18268b5","back":"1.4.0+d0e73b44db12","link":"1.4.0+d5671346ed1e","footer-link":"1.4.0+ed60abe2d637","company-title":"1.4.0+e396a271f01e","company-page":"1.4.0+61be0d0747fe","prose-section":"1.4.0+65a9d4f9d6a1","about-header":"1.4.0+1716ae6394fe","footer":"1.4.0+ce654d99f69d"},"revision":"aee7a3d1df92"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->

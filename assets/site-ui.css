@@ -4,6 +4,7 @@
   --type-body: 18px;
   --type-quote: 22px;
   --type-heading: 24px;
+  --type-case-heading: 22px;
   --type-heading-compact: 22px;
   --type-small: 16px;
   --type-helper: 14px;
@@ -119,13 +120,14 @@ a{color:inherit;text-decoration:none}
 .ui-title,.about-title h1,.footer h2{font:var(--weight-semibold) var(--type-heading)/var(--line-prose) var(--font-family);letter-spacing:var(--tracking-heading)}
 .ui-strong-label,.introduction h1,.work-copy h3,.about-sections>section>h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
 /* Main case sections have their own hierarchy; nested carousel headings retain their component recipe. */
-.ui-case-heading,.article-sections>section>h2{font:var(--weight-extrabold) var(--type-heading)/var(--line-prose) var(--font-family);letter-spacing:normal}
+.ui-case-heading,.article-sections>section>h2{font:var(--weight-bold) var(--type-case-heading)/var(--line-prose) var(--font-family);letter-spacing:normal}
 .ui-control-label,.agent-button,.work-details,.ui-back,.work-availability{font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body)}
 /* Optional structured article copy; existing paragraph/section geometry stays shared. */
-.prose-subheading{margin:0;font:var(--weight-extrabold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
+.prose-subheading{margin:0;font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
 .prose-list{margin:0;padding-inline-start:var(--space-6)}
 .prose-list li+li{margin-block-start:var(--space-2)}
 .prose-list strong{font-weight:var(--weight-bold)}
+.article-source-link{text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere}
 .prose-recommendations{align-self:center;width:min(var(--width-page),calc(100vw - var(--gutter-page) * 2))}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
 .prose-recommendations{width:100vw}
