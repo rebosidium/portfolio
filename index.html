@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="7b5725a19ffc" data-build="983d06904f41">
+<html lang="en" data-ui-revision="3e09d1246a25" data-build="457daa9e4bd7">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"}];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -50,6 +50,7 @@
   // Test storage survives same-tab navigation; owner preference survives browser restarts.
   const reason = !allowed ? 'untracked' : ownerExcluded ? 'owner' : qa ? 'test' : automation ? 'automation' : 'visitor';
   window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
+    projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
     sitePath: notFound ? '/404/' : page?.route || location.pathname,
     pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
     enabled: allowed && !ownerExcluded && !qa && !automation});
@@ -171,7 +172,7 @@
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
   <!-- shared:brief-preloads:end -->
-  <link rel="stylesheet" href="assets/site-ui.css?v=dec04a350579">
+  <link rel="stylesheet" href="assets/site-ui.css?v=00321753d112">
   <link rel="stylesheet" href="styles.css?v=4ced0a5bcb6e">
   <!-- shared:navigation-boot:start -->
   <script>
@@ -231,7 +232,7 @@
   <script type="module" src="portrait-boot.js?v=cc8c2e4d09bb" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=e7dea47d514e" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=435c75b941b4"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=03fb5fa11117"></script>
   <script defer src="mobile-nav.js?v=85b9701ebe21" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
@@ -322,7 +323,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.3.0","designSystem":"1.44.2+ca7fa1febc58","tokens":"1.3.0+a7e6dc6efb77","components":{"work-logo":"1.3.0+1569587c048d","brief":"1.3.0+64adcdcf6a4d","brief-dark":"1.3.0+58949d3ca1cf","link":"1.3.0+c3f17d437fe4","footer-link":"1.3.0+38b10b352421","work-actions":"1.3.0+7d4f399d902a","availability":"1.3.0+6a91a80e8d93","portrait":"1.3.0+26e8a3822965","header":"1.3.0+4d0882308e67","hero":"1.3.0+8b2c8af01458","work":"1.3.0+46708768def0","work-section":"1.3.0+bc5ad38e11eb","footer":"1.3.0+d2f6e67511bb"},"revision":"7b5725a19ffc"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.45.0+bc8a54c423b7","tokens":"1.4.0+4e00918e173c","components":{"work-logo":"1.4.0+3a29c98d14aa","brief":"1.4.0+f2d64017ad0c","brief-dark":"1.4.0+bae1e18268b5","link":"1.4.0+d5671346ed1e","footer-link":"1.4.0+ed60abe2d637","work-actions":"1.4.0+0ce98ffd9933","availability":"1.4.0+20ab3f3a8f51","portrait":"1.4.0+b776ab12ce20","header":"1.4.0+2df2adcf7caf","hero":"1.4.0+1d4ff5703682","work":"1.4.0+ee84282c4c7b","work-section":"1.4.0+b0cf554bcc46","footer":"1.4.0+ce654d99f69d"},"revision":"3e09d1246a25"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>
@@ -422,8 +423,7 @@
           </div>
           <p class="work-description" data-node-id="162:2524">Larixon Classifieds is an international classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad &amp; Tobago, and Jamaica, serving 5M MAU.</p>
           <div class="work-actions" data-node-id="182:2734">
-            <button class="work-details" type="button" disabled aria-describedby="larixon-availability" data-node-id="182:2729"><span data-node-id="182:2730">More Details</span></button>
-            <span class="work-availability" id="larixon-availability"><img src="assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt="" data-node-id="182:2732"><span data-node-id="182:2731">Coming Soon</span></span>
+            <a class="work-details ui-project-link" href="/work/larixon/"><span>View Project</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
           </div>
         </div>
         <div class="work-artwork" data-node-id="162:2516">
