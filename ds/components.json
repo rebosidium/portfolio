@@ -1908,8 +1908,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.4.0+44ce92d1f535",
-      "revision": "44ce92d1f53532953ea22dfb922cd30bf50b0bfd58fbfbc2b78be96af9900d67",
+      "version": "1.4.0+02d8c546dcdc",
+      "revision": "02d8c546dcdc49ae1bd01582ecec0e9af69db8b4d56cf9b756e9dccbbe112061",
       "markupRevision": "ba4d0fedf5491707128e2d9235531c52ca60ca992f1cf907a5ec74b29dd892ce",
       "owners": [
         "shared/article-heading.html",
@@ -2043,6 +2043,12 @@
           "revisionSha256": "b345717eaa738334d20538aebcda3be8878e3c74919a6c7573024bb483bdfae6"
         },
         {
+          "path": "home/assets/recommendation-yaroslav-kurenkov.webp",
+          "kind": "asset",
+          "sha256": "070165d5cba9bb0296e1a53c76dc363e01ef712d98f15035481900faf8578385",
+          "revisionSha256": "070165d5cba9bb0296e1a53c76dc363e01ef712d98f15035481900faf8578385"
+        },
+        {
           "path": "home/assets/recommendations.css",
           "kind": "asset",
           "sha256": "adec95b945b264a344cf6c5e28e92ea49c9437206ffb3946095a3e1412ae20d0",
@@ -2099,8 +2105,8 @@
         {
           "path": "shared/raiffeisen-leasing-page.json",
           "kind": "markup",
-          "sha256": "1c52ae054e2a9da6090c5015830958ca4b1e796a69c4e57cfd7290c739d30c31",
-          "revisionSha256": "1c52ae054e2a9da6090c5015830958ca4b1e796a69c4e57cfd7290c739d30c31"
+          "sha256": "a008241bb4d9f3006ebc5ecc53ddbb37c928d9389732da7bf96750ee13b9b997",
+          "revisionSha256": "a008241bb4d9f3006ebc5ecc53ddbb37c928d9389732da7bf96750ee13b9b997"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -2160,9 +2166,9 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.4.0+76651cb3ef1f",
-      "revision": "76651cb3ef1f31455d280c53dbbc74e1d4c02d05f65ca5e062e40fd7b2d37532",
-      "markupRevision": "a3222715a7c7f70ae595b304f6da4db8d5653a2791f182a96117c9b4339091d6",
+      "version": "1.4.0+dfad66e401b4",
+      "revision": "dfad66e401b464d01f1a6442a2328880aa2d8b5cbe211f32eafcd08f1eb1aebd",
+      "markupRevision": "29b4b9b1e4599f7f416933f40a3d0ecf74b655ba5b7041920d765a04a903661c",
       "owners": [
         "shared/reading-page.html",
         "shared/raiffeisen-leasing-page.json",
@@ -2374,6 +2380,12 @@
           "revisionSha256": "8fac7fc8849d8bae8be5f515cf888e8a6a157301a0f6bb011e1b6dcf2d5e12fc"
         },
         {
+          "path": "home/assets/recommendation-yaroslav-kurenkov.webp",
+          "kind": "asset",
+          "sha256": "070165d5cba9bb0296e1a53c76dc363e01ef712d98f15035481900faf8578385",
+          "revisionSha256": "070165d5cba9bb0296e1a53c76dc363e01ef712d98f15035481900faf8578385"
+        },
+        {
           "path": "home/assets/recommendations.css",
           "kind": "asset",
           "sha256": "adec95b945b264a344cf6c5e28e92ea49c9437206ffb3946095a3e1412ae20d0",
@@ -2478,8 +2490,8 @@
         {
           "path": "shared/raiffeisen-leasing-page.json",
           "kind": "markup",
-          "sha256": "1c52ae054e2a9da6090c5015830958ca4b1e796a69c4e57cfd7290c739d30c31",
-          "revisionSha256": "1c52ae054e2a9da6090c5015830958ca4b1e796a69c4e57cfd7290c739d30c31"
+          "sha256": "a008241bb4d9f3006ebc5ecc53ddbb37c928d9389732da7bf96750ee13b9b997",
+          "revisionSha256": "a008241bb4d9f3006ebc5ecc53ddbb37c928d9389732da7bf96750ee13b9b997"
         },
         {
           "path": "shared/reading-page.html",
@@ -11193,10 +11205,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.47.0",
-    "revision": "b9220374c06c",
-    "release": "1.47.0+b9220374c06c",
-    "updatedAt": "2026-10-19T03:29:13.648Z",
+    "version": "1.47.1",
+    "revision": "1de4fbd9098b",
+    "release": "1.47.1+1de4fbd9098b",
+    "updatedAt": "2026-10-19T09:51:11.739Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11265,8 +11277,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "e3448b54edf09bb3b85560016d29c7d76453acd2da7d345d654ffcbe0581fe0a",
-        "revisionSha256": "e3448b54edf09bb3b85560016d29c7d76453acd2da7d345d654ffcbe0581fe0a"
+        "sha256": "f39951f45c34d33e88eca2a0665dd55af12ae03bd005d0fb93dab2eaf8044197",
+        "revisionSha256": "f39951f45c34d33e88eca2a0665dd55af12ae03bd005d0fb93dab2eaf8044197"
       },
       {
         "path": "shared/ds-freshness.js",
