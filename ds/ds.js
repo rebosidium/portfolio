@@ -128,14 +128,13 @@
     const definition=document.createElement('td');definition.textContent=value;
     row.append(name,token,definition);tokenReference.append(row);
   }
-  function revealTokenReference(){
-    if(!location.hash.startsWith('#token-'))return;
+  function revealDisclosureTarget(){
     const target=document.getElementById(location.hash.slice(1));
     const disclosure=target?.closest('details');
     if(disclosure){disclosure.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
   }
-  window.addEventListener('hashchange',revealTokenReference);
-  revealTokenReference();
+  window.addEventListener('hashchange',revealDisclosureTarget);
+  revealDisclosureTarget();
   document.querySelector('#spacing-scale').innerHTML=[2,3,4,5,6,7,8,10].map(n=>`<div class="ds-space-item"><div class="ds-space-bar" style="width:var(--space-${n})"></div><span>${tokenName('space-'+n)}</span><code>--space-${n}</code><span>${tokens['space-'+n]}</span></div>`).join('');
   const revision=document.documentElement.dataset.build||'';
   const visit=window.DSFreshness?.visit||String(Date.now());
