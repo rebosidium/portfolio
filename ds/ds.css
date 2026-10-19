@@ -124,8 +124,8 @@
 .ds-version-table{width:100%;border-collapse:collapse;text-align:left;font-size:12px;line-height:1.8}.ds-version-table caption{text-align:left;padding:16px;font-weight:600}.ds-version-table th,.ds-version-table td{padding:12px 16px;border-top:1px solid var(--ds-border);vertical-align:top}.ds-version-table th{font-weight:600}.ds-version-table td:nth-child(2){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;overflow-wrap:anywhere}
 @media(max-width:767px){.ds-version-table th,.ds-version-table td{padding:10px 8px}.ds-version-table td{overflow-wrap:anywhere}.ds-component-version{font-size:10px}}
 
-.ds-version-table a{text-decoration:underline;text-underline-offset:3px}.ds-specimen{scroll-margin-top:110px}.ds-token-roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0}.ds-token-roles>div{padding:16px;border:1px solid var(--ds-border);border-radius:8px;background:var(--color-canvas)}.ds-token-roles dt{font-size:12px;font-weight:600}.ds-token-roles dd{margin:6px 0 0;font-size:11px;line-height:1.8;color:var(--ds-color-secondary);overflow-wrap:anywhere}
-@media(max-width:767px){.ds-token-roles{grid-template-columns:1fr}.ds-specimen{scroll-margin-top:150px}}
+.ds-version-table a{text-decoration:underline;text-underline-offset:3px}.ds-specimen,#component-work-logo{scroll-margin-top:110px}.ds-token-roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0}.ds-token-roles>div{padding:16px;border:1px solid var(--ds-border);border-radius:8px;background:var(--color-canvas)}.ds-token-roles dt{font-size:12px;font-weight:600}.ds-token-roles dd{margin:6px 0 0;font-size:11px;line-height:1.8;color:var(--ds-color-secondary);overflow-wrap:anywhere}
+@media(max-width:767px){.ds-token-roles{grid-template-columns:1fr}.ds-specimen,#component-work-logo{scroll-margin-top:150px}}
 
 .ds-release{flex:none;font-size:11px;color:var(--color-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ds-release:hover{text-decoration:underline;text-underline-offset:4px}
