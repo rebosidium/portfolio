@@ -116,8 +116,17 @@ button,input,select,textarea{word-spacing:inherit}
 a{color:inherit;text-decoration:none}
 /* Shared type recipes; page rules own geometry and responsive variants. */
 .ui-title,.about-title h1,.footer h2{font:var(--weight-semibold) var(--type-heading)/var(--line-prose) var(--font-family);letter-spacing:var(--tracking-heading)}
-.ui-strong-label,.introduction h1,.work-copy h3,.about-sections h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
+.ui-strong-label,.introduction h1,.work-copy h3,.about-sections>section>h2{font:var(--weight-bold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
 .ui-control-label,.agent-button,.work-details,.ui-back,.work-availability{font:var(--weight-body) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:var(--tracking-body);word-spacing:var(--word-spacing-body)}
+/* Optional structured article copy; existing paragraph/section geometry stays shared. */
+.prose-subheading{margin:0;font:var(--weight-semibold) var(--type-body)/var(--line-copy) var(--font-family);letter-spacing:normal}
+.prose-list{margin:0;padding-inline-start:var(--space-6)}
+.prose-list li+li{margin-block-start:var(--space-2)}
+.prose-list strong{font-weight:var(--weight-bold)}
+.prose-recommendations{align-self:center;width:min(var(--width-page),calc(100vw - var(--gutter-page) * 2))}
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+.prose-recommendations{width:100vw}
+}
 /* One ring recipe, with component-owned offset/color/corner variants. */
 :where(a,button,textarea):is(:focus-visible,[data-ui-state="focus"]),:where(select,summary,[tabindex]):focus-visible{outline:var(--focus-width) solid var(--ui-focus-color,currentColor);outline-offset:var(--ui-focus-offset,var(--focus-offset-link));border-radius:var(--ui-focus-radius,var(--radius-focus-link))}
 .header{position:absolute;inset:var(--header-top) 0 auto;width:var(--content-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;font-size:var(--type-body);line-height:var(--line-compact);font-weight:var(--weight-semibold)}
