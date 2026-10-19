@@ -1908,8 +1908,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.4.0+0a93a4a5cd31",
-      "revision": "0a93a4a5cd31759541f696db803290e7e3235068ff7ebaeec1b2b73f7f63a292",
+      "version": "1.4.0+9c8e70aa73b0",
+      "revision": "9c8e70aa73b027bf14d611dbfa2a005ad651d362309dcc4501c4592a10ef3a72",
       "markupRevision": "ba4d0fedf5491707128e2d9235531c52ca60ca992f1cf907a5ec74b29dd892ce",
       "owners": [
         "shared/article-heading.html",
@@ -2099,8 +2099,8 @@
         {
           "path": "shared/raiffeisen-bank-page.json",
           "kind": "markup",
-          "sha256": "6f66151a5a7ffffe6f9c0526c7cd68fc2fb2bc64e58bd514b7b28e54e1e37f26",
-          "revisionSha256": "6f66151a5a7ffffe6f9c0526c7cd68fc2fb2bc64e58bd514b7b28e54e1e37f26"
+          "sha256": "ec4e77327c53a331c7a7cc3a1321cb5e60a46b12f66b27232d41a73a5df151f1",
+          "revisionSha256": "ec4e77327c53a331c7a7cc3a1321cb5e60a46b12f66b27232d41a73a5df151f1"
         },
         {
           "path": "shared/raiffeisen-leasing-page.json",
@@ -2166,9 +2166,9 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.4.0+70f16dbd81b9",
-      "revision": "70f16dbd81b98f8904c4c0573c77f226549705b4a14d4f33dbcec67be5ccf866",
-      "markupRevision": "af77f88589197b4c210129b4b98beb2ff9999b572aebdd63f7dc3997f7235fb2",
+      "version": "1.4.0+252bd6f79d05",
+      "revision": "252bd6f79d0561833b6442ffcaecc5e3354717d748359846067cfef835625cfb",
+      "markupRevision": "5525d969a293f95f9990381497aa40fdaaf9cb91db608d16ba76430510939352",
       "owners": [
         "shared/reading-page.html",
         "shared/raiffeisen-leasing-page.json",
@@ -2484,8 +2484,8 @@
         {
           "path": "shared/raiffeisen-bank-page.json",
           "kind": "markup",
-          "sha256": "6f66151a5a7ffffe6f9c0526c7cd68fc2fb2bc64e58bd514b7b28e54e1e37f26",
-          "revisionSha256": "6f66151a5a7ffffe6f9c0526c7cd68fc2fb2bc64e58bd514b7b28e54e1e37f26"
+          "sha256": "ec4e77327c53a331c7a7cc3a1321cb5e60a46b12f66b27232d41a73a5df151f1",
+          "revisionSha256": "ec4e77327c53a331c7a7cc3a1321cb5e60a46b12f66b27232d41a73a5df151f1"
         },
         {
           "path": "shared/raiffeisen-leasing-page.json",
@@ -11205,10 +11205,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.50.1",
-    "revision": "f4ecbdd20184",
-    "release": "1.50.1+f4ecbdd20184",
-    "updatedAt": "2026-10-19T21:31:29.995Z",
+    "version": "1.50.2",
+    "revision": "08efd8b30314",
+    "release": "1.50.2+08efd8b30314",
+    "updatedAt": "2026-10-20T00:00:00.000Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11277,13 +11277,13 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "2c7a2c06e5c494adc7133138968327aa1381eae810b3e27c7022b01d54a8f8c8",
-        "revisionSha256": "2c7a2c06e5c494adc7133138968327aa1381eae810b3e27c7022b01d54a8f8c8"
+        "sha256": "c1e2983c7465ce6f8c18d1c257848116419943b1843a95512bab3b99015f46f9",
+        "revisionSha256": "c1e2983c7465ce6f8c18d1c257848116419943b1843a95512bab3b99015f46f9"
       },
       {
         "path": "shared/ds-changelog.json",
-        "sha256": "f9774add8717354dbfb4dfc3df50113179ed6e6541c52a6434015eec0089ae99",
-        "revisionSha256": "f9774add8717354dbfb4dfc3df50113179ed6e6541c52a6434015eec0089ae99"
+        "sha256": "8c9964456d2438467193969e394a15db16f7b4ea988e09450e0290de760f029c",
+        "revisionSha256": "8c9964456d2438467193969e394a15db16f7b4ea988e09450e0290de760f029c"
       },
       {
         "path": "shared/ds-changelog.mjs",
