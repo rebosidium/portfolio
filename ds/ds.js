@@ -27,7 +27,7 @@
   for(const button of document.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode));
   let navigationId=0;
   const items=[];
-  document.querySelector('#specimen-count').textContent=`${specimens.length} live specimens`;
+  document.querySelector('#specimen-count').textContent=`${specimens.filter(example=>example.group!=='asset').length} live specimens`;
   document.querySelector('#icon-count').textContent=`${icons.length} current icons · ${icons.reduce((count,icon)=>count+icon.variants.length,0)} used variants`;
   for(const icon of icons){
     const card=document.createElement('article');card.className='ds-icon-card';card.dataset.icon=icon.id;
@@ -41,6 +41,21 @@
       triggerParent:card.querySelectorAll('.ds-icon-variant')[index],panelParent:card,
       kind:'icon',id:icon.id,variant:variant.id,label:icon.name+' · '+iconVariant(variant.id)
     });
+  }
+  const companyLogos=examples.find(example=>example.id==='work-logo');
+  for(const logo of companyLogos.logos){
+    const state=logo.id==='larixon'?'default':logo.id;
+    const html=companyLogos.htmlByState?.[state]||companyLogos.html;
+    const template=document.createElement('template');template.innerHTML=html;
+    const image=template.content.querySelector('img');
+    const size=image.getAttribute('width')+' × '+image.getAttribute('height')+' px';
+    const asset=image.getAttribute('src'),filename=asset.split('/').pop().split('?')[0];
+    const card=document.createElement('article');card.className='ds-icon-card';card.dataset.companyLogo=logo.id;
+    const markup=`<h4>${logo.name}</h4><p>Homepage · Works<br>Original SVG · ${size}</p><div class="ds-icon-variants">${['light','dark'].map(theme=>`<div class="ds-icon-variant"><div class="ds-icon-preview" data-surface="${theme}">${html}</div><span>${theme==='light'?'Light':'Dark'} background</span></div>`).join('')}</div><a class="ds-icon-asset" href="${asset}" target="_blank" rel="noopener noreferrer">${filename}</a><p class="ds-component-version">${versionLabel(companyLogos.release)}</p>`;
+    if(window.DSAssets)card.append(window.DSAssets.stage(markup));else card.innerHTML=markup;
+    document.querySelector('#company-logo-gallery').append(card);
+    window.DSAssets?.prepare(card);
+    window.DSCode?.attach({triggerParent:card,panelParent:card,id:companyLogos.id,label:logo.name,getContext:()=>({mode,state,exampleId:companyLogos.id})});
   }
   for(const asset of favicons.files){
     const card=document.createElement('article');card.className='ds-icon-card ds-favicon-card';
@@ -206,12 +221,12 @@
     item.card.querySelector('.ds-preview-meta>p').textContent=item.example.note||'Shared source · working interaction';
     states(item);load(item);
   }
-  for(const example of specimens){
+  for(const example of specimens.filter(example=>example.group!=='asset')){
     const variants=variantsFor(example),variant=variants[0],grouped=variants.length>1;
     const card=document.createElement('article');card.className='ds-specimen';card.id='component-'+example.id;card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
     if(grouped)card.dataset.activeVariant=variant.id;
     card.innerHTML=`<div class="ds-specimen-head"><div class="ds-component-heading"><h3>${example.title}</h3><code class="ds-api-key">${example.release.componentKey}${example.release.variant?' · '+example.release.variant:''}</code><p class="ds-component-version">${versionLabel(example.release)}</p></div><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div>${grouped?`<div class="ds-variant-switch ds-state-switch" role="group" aria-label="${example.title} variants"><span class="ds-switch-label">Variant</span></div>`:''}<div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
-    document.querySelector(example.group==='template'?'#template-gallery':example.group==='asset'?'#company-logo-gallery':'#component-gallery').append(card);
+    document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
     const item={base:example,example:variant.example,variants,variant,card,state:example.states[0],switch:card.querySelector('.ds-state-switch:not(.ds-variant-switch)'),variantSwitch:card.querySelector('.ds-variant-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
     if(grouped)for(const variant of variants){
       const button=document.createElement('button');button.type='button';button.textContent=variant.label;button.dataset.variant=variant.id;button.setAttribute('aria-pressed',String(variant===item.variant));
