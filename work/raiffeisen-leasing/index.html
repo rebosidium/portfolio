@@ -1,14 +1,108 @@
 <!doctype html>
-<html lang="en" data-ui-revision="3444263c0cf1" data-build="6e5c1d5afedd">
+<html lang="en" data-ui-revision="0d4ba38ee97c" data-build="b2d0ccacdfb8">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <!-- shared:analytics-preferences:start -->
+  <script data-analytics="preferences">
+(() => {
+  'use strict';
+  const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"}];
+  const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
+  const routes = definitions.flatMap(page => aliases(page.route));
+  const page = definitions.find(page => aliases(page.route).includes(location.pathname));
+  const notFound = document.documentElement.dataset.pageKind === 'not-found';
+  const production = hosts.includes(location.hostname);
+  const allowed = production && (!!page || notFound);
+  const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
+  const qaKey = 'portfolio.analytics.qa.v1';
+  const params = new URLSearchParams(location.search);
+  const read = (storage, key) => {try {return window[storage].getItem(key);} catch {return null;}};
+  const write = (storage, key, value) => {try {window[storage].setItem(key, value); return true;} catch {return false;}};
+  const cookieName = 'portfolio_analytics_excluded';
+  const cookieExcluded = () => {try {return document.cookie.split(';').some(value => value.trim() === cookieName + '=1');} catch {return false;}};
+  const saveCookie = excluded => {try {
+    document.cookie = cookieName + '=' + (excluded ? '1' : '0') + '; Max-Age=31536000; Path=/; Domain=dmitryrybalka.com; SameSite=Lax; Secure';
+    return cookieExcluded() === excluded;
+  } catch {return false;}};
+  let ownerExcluded = read('localStorage', ownerKey) === '1' || cookieExcluded();
+  let qa = read('sessionStorage', qaKey) === '1';
+  const ownerControl = production && ['0', '1'].includes(params.get('analytics_owner'));
+  let ownerSaved = true;
+  if (ownerControl) {
+    ownerExcluded = params.get('analytics_owner') === '1';
+    const localSaved = write('localStorage', ownerKey, ownerExcluded ? '1' : '0');
+    ownerSaved = saveCookie(ownerExcluded) || localSaved;
+  }
+  if (allowed && ['0', '1'].includes(params.get('analytics_test'))) {
+    qa = params.get('analytics_test') === '1';
+    write('sessionStorage', qaKey, qa ? '1' : '0');
+  }
+  if (allowed && (params.has('analytics_run') || params.has('analytics_migration'))) {
+    qa = true;
+    write('sessionStorage', qaKey, '1');
+  }
+  const automation = navigator.webdriver === true || /HeadlessChrome|Playwright|PhantomJS|Selenium/i.test(navigator.userAgent || '');
+  // QA is excluded at source, including owners: never load events, heatmaps or replay.
+  // Test storage survives same-tab navigation; owner preference survives browser restarts.
+  const reason = !allowed ? 'untracked' : ownerExcluded ? 'owner' : qa ? 'test' : automation ? 'automation' : 'visitor';
+  window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
+    sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
+    enabled: allowed && !ownerExcluded && !qa && !automation});
+  document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
+  document.documentElement.dataset.analyticsMode = window.portfolioAnalytics.enabled ? 'normal' : reason;
+  document.documentElement.dataset.analyticsExclusion = reason;
+  if (ownerControl || (allowed && qa)) {
+    const clean = new URL(location.href);
+    if (qa) clean.searchParams.set('analytics_test', '1');
+    clean.searchParams.delete('analytics_owner');
+    if (clean.searchParams.get('analytics_test') === '0') clean.searchParams.delete('analytics_test');
+    try {history.replaceState(history.state, '', clean.pathname + clean.search + clean.hash);} catch {}
+  }
+  const ready = () => {
+    // Carry marked QA across page changes and new tabs, including Clarity's
+    // URL-based exclusions. Same-document hash links and PDF/external links
+    // retain their native hrefs and handlers.
+    if (allowed && qa) for (const link of document.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) continue;
+      try {
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || !routes.includes(url.pathname)
+          || url.searchParams.get('analytics_test') === '0') continue;
+        url.searchParams.set('analytics_test', '1');
+        link.setAttribute('href', url.pathname + url.search + url.hash);
+      } catch {}
+    }
+    // Only an explicit owner-setting link shows this temporary confirmation.
+    if (ownerControl) {
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.dataset.analyticsOwnerStatus = ownerExcluded ? 'excluded' : 'included';
+      status.textContent = !ownerSaved ? 'This browser could not save the analytics preference.'
+        : ownerExcluded ? 'Saved: analytics is excluded for this browser.'
+        : 'Saved: this browser is included in analytics.';
+      status.style.cssText = 'position:fixed;z-index:10000;left:16px;right:16px;bottom:16px;max-width:440px;margin:0;padding:12px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#232522;font:14px/1.5 sans-serif;box-shadow:0 2px 12px #0001';
+      document.body.append(status);
+      setTimeout(() => status.remove(), 15000);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true});
+  else ready();
+  window.addEventListener('storage', event => {
+    if (allowed && event.key === ownerKey) location.reload();
+  });
+})();
+  </script>
+  <!-- shared:analytics-preferences:end -->
   <script type="text/javascript" data-analytics="posthog">
-    // Production HOME/About only; previews and retired NEW stay untracked.
-    const posthogTrackingEnabled = true;
-    if (posthogTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+    // One early shared gate covers every registered production page.
+    const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (posthogTrackingEnabled) {
       !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
       posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
         api_host: 'https://events.dmitryrybalka.com',
@@ -23,11 +117,15 @@
         enable_recording_console_log: false,
         disable_surveys: true,
         before_send: event => {
+          if (!window.portfolioAnalytics?.enabled) return null;
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
-            site_path: location.pathname.startsWith('/about') ? '/about/' : '/', site_build: document.documentElement.dataset.build,
-            analytics_version: 2,
-            analytics_test: new URLSearchParams(location.search).get('analytics_test') === '1'
+            site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
+            analytics_version: 3,
+            analytics_test: false
+          });
+          if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
+            requested_path: location.pathname, error_preview: ['/404', '/404/', '/404/index.html', '/404.html'].includes(location.pathname)
           });
           return event;
         },
@@ -41,10 +139,10 @@
       });
     }
   </script>
-  <script type="text/javascript" data-analytics="microsoft-clarity">
-    // Local previews do not track. Production QA is tagged by analytics.js.
-    const clarityTrackingEnabled = true;
-    if (clarityTrackingEnabled && ['dmitryrybalka.com','www.dmitryrybalka.com'].includes(location.hostname) && ['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname)) {
+<script type="text/javascript" data-analytics="microsoft-clarity">
+    // Owner, QA and detected automation never load either provider.
+    const clarityTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (clarityTrackingEnabled) {
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -101,10 +199,10 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
   <script src="/assets/site-controls.js?v=aa16a1ece157" defer></script>
-  <script src="/analytics.js?v=cc6795f16a92" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=c4b0e104e301" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=6ef19d67a325" defer></script>
   <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.41.6+b68e866620d0","tokens":"1.2.0+134c064e48dc","components":{"recommendations":"1.2.0+e8c9a06bcee1","brief-dark":"1.2.0+ecd3212f1838","back":"1.2.0+1f10eb623ff0","link":"1.2.0+f694aa68afb5","footer-link":"1.2.0+92b7de741b4d","company-title":"1.2.0+8b281098b43b","company-page":"1.2.0+2a80cb4efc9c","prose-section":"1.2.0+75f2f62e3314","about-header":"1.2.0+c9535b0faf13","footer":"1.2.0+1c7e9105a45f"},"revision":"3444263c0cf1"}</script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.2.0","designSystem":"1.42.0+043c11eb4c13","tokens":"1.2.0+134c064e48dc","components":{"recommendations":"1.2.0+04634dad825b","brief-dark":"1.2.0+7281fd21db5c","back":"1.2.0+ab2ed54a0063","link":"1.2.0+0d908c5e5ca5","footer-link":"1.2.0+e8442723fdb9","company-title":"1.2.0+e3b2119bd98b","company-page":"1.2.0+50d518ed4b73","prose-section":"1.2.0+1ef40476b7c3","about-header":"1.2.0+23094a264e8c","footer":"1.2.0+d3b252389cfc"},"revision":"0d4ba38ee97c"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->
