@@ -10913,14 +10913,14 @@
       "id": "photo-drift",
       "group": "Interactions",
       "name": "Gallery / Ambient drift",
-      "usage": "Photo experiment · About · desktop & mobile",
+      "usage": "About · desktop & mobile",
       "trigger": "The photo field is visible and no manual interaction is active.",
       "timing": "Right 8 px/s · up 4 px/s · resume after 500 ms",
       "motion": "Twenty-seven photos repeat in six staggered columns with comparable portrait and landscape areas, preserved ratios and 21.84px design-space seams (86.4% coverage). Desktop photos smoothly grow toward the center: full-size center and 92% edge scale, with full-size slots reserved to prevent overlap. Mobile keeps 96% edge scale. The experiment keeps a 420px desktop / 308px mobile field. About uses 460px desktop / 338px mobile base height, plus the existing prose and footer allowances (600.8px / 466.8px total). Its background starts 20px farther below the preceding text, leaving 44.8px of overlap. The field drifts diagonally up-right; drag and arrow keys pan it directly. The experiment keeps internal top/bottom 15% fades and 36px desktop / 24px mobile prose gaps. About uses a 180px top white/blur fade, no bottom fade and 40px of photo content behind the rounded footer corners.",
       "playback": "Hover keeps ambient motion running; keyboard focus stops it. Manual input defers it for 500 ms; wheel/trackpad scroll the page normally over photos. Offscreen, hidden tab and open menu stop rendering. No caption or horizontal fade.",
       "reduced": "Ambient drift and release inertia are disabled; manual direct panning remains available. No pause/play control.",
       "component": "photo-gallery",
-      "live": "/photo/",
+      "live": "/about/",
       "sources": [
         {
           "path": "shared/photo-gallery.js",
@@ -11193,10 +11193,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.48.0",
-    "revision": "5681dfb1407e",
-    "release": "1.48.0+5681dfb1407e",
-    "updatedAt": "2026-10-19T11:03:04.174Z",
+    "version": "1.49.0",
+    "revision": "45085f0c49e0",
+    "release": "1.49.0+45085f0c49e0",
+    "updatedAt": "2026-10-19T11:12:31.902Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11215,13 +11215,13 @@
       },
       {
         "path": "home/ds/ds.css",
-        "sha256": "c46a0fbbc36ccfe03d6ca5d6a0e21f13946bc960ad094f4a372c9b400ba41b86",
-        "revisionSha256": "c46a0fbbc36ccfe03d6ca5d6a0e21f13946bc960ad094f4a372c9b400ba41b86"
+        "sha256": "e276abcde0be4173a3d74ce7859ad178eb7299464b7090195bc8e3ebb5dd4a17",
+        "revisionSha256": "e276abcde0be4173a3d74ce7859ad178eb7299464b7090195bc8e3ebb5dd4a17"
       },
       {
         "path": "home/ds/ds.js",
-        "sha256": "c34b9f8a3728c92eb69021b43a142f083a276ce36260005b37c09bad9118d889",
-        "revisionSha256": "c34b9f8a3728c92eb69021b43a142f083a276ce36260005b37c09bad9118d889"
+        "sha256": "22748214dffcab432f28aeb41736e4180ef181c79fe80fe745712e724a9c6d86",
+        "revisionSha256": "22748214dffcab432f28aeb41736e4180ef181c79fe80fe745712e724a9c6d86"
       },
       {
         "path": "home/ds/freshness-worker.js",
@@ -11230,7 +11230,7 @@
       },
       {
         "path": "home/ds/index.html",
-        "revisionSha256": "1cef7c9552ab1511421f3dd6126ead717b903f55f74b48ea03e679d0ed282bcd",
+        "revisionSha256": "aa16dbe24f050aafd0203c7ca28d01ba6010d0cf6da25e69828525dd39d01dad",
         "hashBasis": "normalized-authored-document"
       },
       {
@@ -11250,13 +11250,13 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "b70495c4a422eefa338e7e070c0f638367a53adea9649c82bbe3141b1ad1abb3",
-        "revisionSha256": "b70495c4a422eefa338e7e070c0f638367a53adea9649c82bbe3141b1ad1abb3"
+        "sha256": "101c505b3fd48ebef883760cab492bee962211257b1c7eefa6c7897a609050d7",
+        "revisionSha256": "101c505b3fd48ebef883760cab492bee962211257b1c7eefa6c7897a609050d7"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "53752f25e35953906937f55c53344a76c25822f08dd9fca51c40ad5f8aeea5b5",
-        "revisionSha256": "53752f25e35953906937f55c53344a76c25822f08dd9fca51c40ad5f8aeea5b5"
+        "sha256": "a86b05d96bbbebf1a2222c4b2eb6409ae295b3cbf3a275aaf924842d7c15caf1",
+        "revisionSha256": "a86b05d96bbbebf1a2222c4b2eb6409ae295b3cbf3a275aaf924842d7c15caf1"
       },
       {
         "path": "shared/component-registry.mjs",
@@ -11265,13 +11265,13 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "91c93c832d27339e03fe765993a378af807004aec8bdd10ffcaf98fce37fef08",
-        "revisionSha256": "91c93c832d27339e03fe765993a378af807004aec8bdd10ffcaf98fce37fef08"
+        "sha256": "32c76ee410c574a4b25658dfbe804ccae80c07fd0f3d74d371e22f4a385166ec",
+        "revisionSha256": "32c76ee410c574a4b25658dfbe804ccae80c07fd0f3d74d371e22f4a385166ec"
       },
       {
         "path": "shared/ds-changelog.json",
-        "sha256": "30a75cdd19ba1f1c5089d5483061c2ba2ddb5e68b9bd6fb7e1eec2f42841808a",
-        "revisionSha256": "30a75cdd19ba1f1c5089d5483061c2ba2ddb5e68b9bd6fb7e1eec2f42841808a"
+        "sha256": "d95b5059d2882d3dee3cb5aa9eddfcff3d68452a30555e10f30d311f10be5baf",
+        "revisionSha256": "d95b5059d2882d3dee3cb5aa9eddfcff3d68452a30555e10f30d311f10be5baf"
       },
       {
         "path": "shared/ds-changelog.mjs",
@@ -11285,8 +11285,8 @@
       },
       {
         "path": "shared/ds-names.mjs",
-        "sha256": "f195d60e368eb68e2d9fdba538a3af5a1896bfc9bdcce66b3928ab4221e85d3e",
-        "revisionSha256": "f195d60e368eb68e2d9fdba538a3af5a1896bfc9bdcce66b3928ab4221e85d3e"
+        "sha256": "98d3e046dd19967d8f1ad50ea68fd90da33aa7198157db9dd8aed73310107faa",
+        "revisionSha256": "98d3e046dd19967d8f1ad50ea68fd90da33aa7198157db9dd8aed73310107faa"
       },
       {
         "path": "shared/ds-release.mjs",
@@ -11300,8 +11300,8 @@
       },
       {
         "path": "shared/motion-catalog.mjs",
-        "sha256": "e8992c60deb46e9ad1f7be8307426b4f4968e1b529f075c426fe56cc9c0f7e71",
-        "revisionSha256": "e8992c60deb46e9ad1f7be8307426b4f4968e1b529f075c426fe56cc9c0f7e71"
+        "sha256": "ac6d003714950db6a54e255acda655be73bd411c067f426ba05998062ea271d8",
+        "revisionSha256": "ac6d003714950db6a54e255acda655be73bd411c067f426ba05998062ea271d8"
       },
       {
         "path": "shared/navigation-boot.js",

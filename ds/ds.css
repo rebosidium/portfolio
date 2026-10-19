@@ -232,3 +232,6 @@
 .ds-changelog-entry h4{margin:12px 0 8px;font-size:15px;font-weight:600}
 .ds-changelog-entry ul{padding-left:20px;margin:0}.ds-changelog-entry li+li{margin-top:6px}
 .ds-changelog-archive{margin-top:20px}.ds-changelog-archive>summary{cursor:pointer;font-weight:600;padding:12px 0}.ds-changelog-archive[open]>summary{margin-bottom:8px}
+
+/* Keep every library destination reachable in shorter desktop windows. */
+@media(min-width:768px){.ds-sidebar{overflow-y:auto;overscroll-behavior:contain}}
