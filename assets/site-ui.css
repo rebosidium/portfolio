@@ -58,6 +58,8 @@
   --height-control: 50px;
   --height-control-spacious: 54px;
   --size-target: 44px;
+  --size-work-logo: 28px;
+  --width-work-logo-wide: 34px;
   --size-icon: 24px;
   --size-menu-glyph: 28px;
   --offset-menu-glyph: 0px;
@@ -254,6 +256,12 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
 @media(prefers-reduced-motion:reduce){
 .footer-link-label::after{transition:none}
 }
+
+/* Works company identities retain native colors and SVG aspect ratios. */
+.work-company-title{display:flex;align-items:center;gap:var(--space-2)}
+.work-company-title>span{min-width:0}
+.work-company-logo{display:block;flex:none;width:var(--size-work-logo);height:var(--size-work-logo);object-fit:contain}
+.work-company-logo-wide{width:var(--width-work-logo-wide)}
 
 :root { color-scheme: light; }
 :root[data-color-scheme="dark"] {
