@@ -309,9 +309,9 @@
     },
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.4.0+51ff9804ceca",
-      "revision": "51ff9804ceca6852a86fe35e0e3e7428ff82607bb205b6e992f07b6cbd480829",
-      "markupRevision": "7f9e03d9781715ddcb15c23b6aeed5dbecd21b070549aec49ad21dc30c9b353f",
+      "version": "1.4.0+68dbdc2dbd22",
+      "revision": "68dbdc2dbd221951cdad30699f048ff4c4581b712f1a50f7006a219db22b3ebd",
+      "markupRevision": "4642750ba2f566c0e298112519efd10df1a67e01a74d7ecfea52a1648e9f5268",
       "owners": [
         "shared/recommendations.mjs",
         "shared/recommendations.json"
@@ -440,8 +440,8 @@
         {
           "path": "shared/recommendations.mjs",
           "kind": "markup",
-          "sha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102",
-          "revisionSha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102"
+          "sha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4",
+          "revisionSha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4"
         },
         {
           "path": "shared/site-pages.mjs",
@@ -2166,9 +2166,9 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.4.0+88582f394aa6",
-      "revision": "88582f394aa6b4375f36e18bf55e3bc4fb4ae50baf4351ba515a44c67c7c2299",
-      "markupRevision": "8fc367f2364d6a1aab9f1c951d81399f8c84b05facbfa77846271293463b5171",
+      "version": "1.4.0+cfa1c4c7b497",
+      "revision": "cfa1c4c7b497e32e803f21f0133fd4a99efdfa54c0cf60afe4b0b99b804179f9",
+      "markupRevision": "8a2b91a4b64577759a1812fe644561eef334a323f90734c6433c99aae834ad6f",
       "owners": [
         "shared/reading-page.html",
         "shared/raiffeisen-leasing-page.json",
@@ -2520,8 +2520,8 @@
         {
           "path": "shared/recommendations.mjs",
           "kind": "markup",
-          "sha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102",
-          "revisionSha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102"
+          "sha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4",
+          "revisionSha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4"
         },
         {
           "path": "shared/site-controls.js",
@@ -6885,9 +6885,9 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.4.0+91fe26f7d92a",
-      "revision": "91fe26f7d92a789d3f0832f25f2828f10551e7e22226df1eddcc4d34ad0454ec",
-      "markupRevision": "fecbfe9b23e75d858363c00710b9dfdae3d24b2f249b319c702a5d984a2f3168",
+      "version": "1.4.0+22d4f6f05b94",
+      "revision": "22d4f6f05b94fab0bc1e212843e91a4aeb0696a7797607f3ef6b1383b369d7fb",
+      "markupRevision": "0b989858d9a01dc710509c353b3d957bb49016d017154400afbd756b4863c596",
       "owners": [
         "shared/reading-page.html",
         "shared/about-main.html",
@@ -8371,8 +8371,8 @@
         {
           "path": "shared/recommendations.mjs",
           "kind": "markup",
-          "sha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102",
-          "revisionSha256": "9622adc97b0e968178452a1df589e85b7a86a1e405606d465a38d16ec25af102"
+          "sha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4",
+          "revisionSha256": "cbd11c6c253e8d524863ab22a7c125e26c9da7d57d90a0e0965ecb65068ad8c4"
         },
         {
           "path": "shared/site-controls.js",
@@ -11193,10 +11193,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.47.4",
-    "revision": "3b5823bcff4e",
-    "release": "1.47.4+3b5823bcff4e",
-    "updatedAt": "2026-10-19T10:55:02.447Z",
+    "version": "1.47.5",
+    "revision": "8aa6fe291f58",
+    "release": "1.47.5+8aa6fe291f58",
+    "updatedAt": "2026-10-19T10:58:42.103Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11250,13 +11250,13 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "ae30cda25ea62cb250fa68f52d787e04ff207af9d1cd5c8e9d24281e90d3e68f",
-        "revisionSha256": "ae30cda25ea62cb250fa68f52d787e04ff207af9d1cd5c8e9d24281e90d3e68f"
+        "sha256": "d0e23fead462f319244092019a24e8d02bf9768691b3b8fa387962048c7f919c",
+        "revisionSha256": "d0e23fead462f319244092019a24e8d02bf9768691b3b8fa387962048c7f919c"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "5c2487fea9c2be1c4f286e95c3f0627f82024f0288d2f50dcb02855f593b7897",
-        "revisionSha256": "5c2487fea9c2be1c4f286e95c3f0627f82024f0288d2f50dcb02855f593b7897"
+        "sha256": "53752f25e35953906937f55c53344a76c25822f08dd9fca51c40ad5f8aeea5b5",
+        "revisionSha256": "53752f25e35953906937f55c53344a76c25822f08dd9fca51c40ad5f8aeea5b5"
       },
       {
         "path": "shared/component-registry.mjs",
@@ -11265,8 +11265,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "d6e345bcd09f7d3423a29b5522c258ea36a8c216e6e83815eb53fc1fabdc6be7",
-        "revisionSha256": "d6e345bcd09f7d3423a29b5522c258ea36a8c216e6e83815eb53fc1fabdc6be7"
+        "sha256": "6fda146ea8e7cf03dae6794cb0e0d107f030c386aa4d8a0680ae4287608c9b6d",
+        "revisionSha256": "6fda146ea8e7cf03dae6794cb0e0d107f030c386aa4d8a0680ae4287608c9b6d"
       },
       {
         "path": "shared/ds-freshness.js",
