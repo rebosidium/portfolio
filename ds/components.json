@@ -1118,9 +1118,9 @@
     },
     "work-actions": {
       "componentKey": "work-actions",
-      "version": "1.4.0+b92110a6f152",
-      "revision": "b92110a6f152392d65ab98337e441eac876853b13cfc89d64db57b1a34288b0e",
-      "markupRevision": "80c85878311a7e29324ab30729638a1dec92591e647719e72268b7cd15e6e225",
+      "version": "1.4.0+a9dcb6a3553e",
+      "revision": "a9dcb6a3553eccefc49ba27922f1cb3dfd97effb33516b88df3e5cd7c5cffaf9",
+      "markupRevision": "b7d77293a8d61bd31071fbf72f25efb8bdbf192e0ca00450d83fcbe0a7b308cb",
       "owners": [
         "shared/work-actions.html",
         "shared/project-link.html"
@@ -6113,9 +6113,9 @@
     },
     "work": {
       "componentKey": "work-card",
-      "version": "1.4.0+ab73faffedb5",
-      "revision": "ab73faffedb5c23992cb338d896a924fde4ad707958f01f50622d044b208edac",
-      "markupRevision": "cabda4874ed91a636b70d7df7c524d66848d039fa1d965f0867e99d592a614d7",
+      "version": "1.4.0+4c960c9f1e5b",
+      "revision": "4c960c9f1e5b0bc8747b4d32fb4e6bc81b537f4494745fd9b557c75417f1cd9c",
+      "markupRevision": "251523bf1df827069402367ca2868091f98a30fd67e4be65e34c05895da0932b",
       "owners": [
         "shared/work-card.html",
         "shared/work-actions.html",
@@ -6170,12 +6170,6 @@
           "kind": "asset",
           "sha256": "db7766f76df4978c7f04e4368f39096cc1065201b372ec549c3fe34b3b3763e8",
           "revisionSha256": "db7766f76df4978c7f04e4368f39096cc1065201b372ec549c3fe34b3b3763e8"
-        },
-        {
-          "path": "home/assets/lucide-arrow-left.svg",
-          "kind": "asset",
-          "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
-          "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
         },
         {
           "path": "home/assets/manrope.woff2",
@@ -6384,8 +6378,8 @@
         {
           "path": "shared/work-projects.json",
           "kind": "markup",
-          "sha256": "e0f86090cfb61e97f4901839bd925d1dcbacdbb07beb9cc88d07975e1d483e18",
-          "revisionSha256": "63892ea2e23c20e32b0c2179bdfec929571128c100b8c51f598c161f8eaf6a5d"
+          "sha256": "ef53e867685df4cdfb818d0e50b604d30a23975964692339185b8ad51a3a4e27",
+          "revisionSha256": "302ba34a49e44ce55aed2b2b8b0db242ea221265282ae97077909cb7c823da92"
         }
       ],
       "usedBy": [
@@ -6396,9 +6390,9 @@
     },
     "work-section": {
       "componentKey": "work-section",
-      "version": "1.4.0+b79dbcca8f9e",
-      "revision": "b79dbcca8f9ed24a2c2e6f6eff601c63968913c779e912f718e4365dfd0e74eb",
-      "markupRevision": "6d236eb91331bedcd4819a0c4ee687bf8018b69c0465831686b87005c1ff1bc2",
+      "version": "1.4.0+6353881ff737",
+      "revision": "6353881ff73784a77b7b8a5aeb3d758ff86e2d0ab4715fa57e1344b3bc8e5051",
+      "markupRevision": "cd61c41376e51d6e63f10c9150f6c48cc658d0f814560966f0f58da2fcda5220",
       "owners": [
         "shared/work-section.html",
         "shared/work-card.html",
@@ -6456,12 +6450,6 @@
           "revisionSha256": "db7766f76df4978c7f04e4368f39096cc1065201b372ec549c3fe34b3b3763e8"
         },
         {
-          "path": "home/assets/lucide-arrow-left.svg",
-          "kind": "asset",
-          "sha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c",
-          "revisionSha256": "9cf7179f03345166ddde38238050eb4d3474084bf2f40109d753845b431de02c"
-        },
-        {
           "path": "home/assets/manrope.woff2",
           "kind": "asset",
           "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
@@ -6668,8 +6656,8 @@
         {
           "path": "shared/work-projects.json",
           "kind": "markup",
-          "sha256": "e0f86090cfb61e97f4901839bd925d1dcbacdbb07beb9cc88d07975e1d483e18",
-          "revisionSha256": "63892ea2e23c20e32b0c2179bdfec929571128c100b8c51f598c161f8eaf6a5d"
+          "sha256": "ef53e867685df4cdfb818d0e50b604d30a23975964692339185b8ad51a3a4e27",
+          "revisionSha256": "302ba34a49e44ce55aed2b2b8b0db242ea221265282ae97077909cb7c823da92"
         },
         {
           "path": "shared/work-section.html",
@@ -11205,10 +11193,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.47.2",
-    "revision": "789aa5dba1f4",
-    "release": "1.47.2+789aa5dba1f4",
-    "updatedAt": "2026-10-19T09:55:24.636Z",
+    "version": "1.47.3",
+    "revision": "e73c98e9ef8a",
+    "release": "1.47.3+e73c98e9ef8a",
+    "updatedAt": "2026-10-19T10:04:08.730Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11277,8 +11265,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "3d3bdb8d7d5e8068d0e33f5751cf0d89b22d6a385839c43bb93977ec7ea825f3",
-        "revisionSha256": "3d3bdb8d7d5e8068d0e33f5751cf0d89b22d6a385839c43bb93977ec7ea825f3"
+        "sha256": "cee5f861eefaeccd01fee43e81537782fbf8e6246975c2d966aa59972678e287",
+        "revisionSha256": "cee5f861eefaeccd01fee43e81537782fbf8e6246975c2d966aa59972678e287"
       },
       {
         "path": "shared/ds-freshness.js",
