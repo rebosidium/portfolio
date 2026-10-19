@@ -309,9 +309,9 @@
     },
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.4.0+a3348dc98a73",
-      "revision": "a3348dc98a733bcc2b836d9d12612dc3b05ff262f342342bd1c77fa346f76b69",
-      "markupRevision": "b9a729a946ceaa454248ff24adc8005ee642a7f34589be82ed9a64a45d847833",
+      "version": "1.4.0+51ff9804ceca",
+      "revision": "51ff9804ceca6852a86fe35e0e3e7428ff82607bb205b6e992f07b6cbd480829",
+      "markupRevision": "7f9e03d9781715ddcb15c23b6aeed5dbecd21b070549aec49ad21dc30c9b353f",
       "owners": [
         "shared/recommendations.mjs",
         "shared/recommendations.json"
@@ -434,8 +434,8 @@
         {
           "path": "shared/recommendations.json",
           "kind": "markup",
-          "sha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe",
-          "revisionSha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe"
+          "sha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793",
+          "revisionSha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793"
         },
         {
           "path": "shared/recommendations.mjs",
@@ -1908,8 +1908,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.4.0+02d8c546dcdc",
-      "revision": "02d8c546dcdc49ae1bd01582ecec0e9af69db8b4d56cf9b756e9dccbbe112061",
+      "version": "1.4.0+6b29afb9210b",
+      "revision": "6b29afb9210b6b011cf7dcc9f5ddea537504c612c316e21ab88c6c17f7720998",
       "markupRevision": "ba4d0fedf5491707128e2d9235531c52ca60ca992f1cf907a5ec74b29dd892ce",
       "owners": [
         "shared/article-heading.html",
@@ -2081,8 +2081,8 @@
         {
           "path": "shared/larixon-page.json",
           "kind": "markup",
-          "sha256": "87294cf7f3d57590755dbfdd58db31a1b95739cdfaf5b57ce84596a88af181bd",
-          "revisionSha256": "87294cf7f3d57590755dbfdd58db31a1b95739cdfaf5b57ce84596a88af181bd"
+          "sha256": "cc86c9f70a0269e64feb3418b9e608ac1eb3b13ac26f877e72ad8860e95ed78c",
+          "revisionSha256": "cc86c9f70a0269e64feb3418b9e608ac1eb3b13ac26f877e72ad8860e95ed78c"
         },
         {
           "path": "shared/library.mjs",
@@ -2093,8 +2093,8 @@
         {
           "path": "shared/medesk-page.json",
           "kind": "markup",
-          "sha256": "d007dd845b95475ddfe16499534cb81e75149bd58ca17ebf7142a4f3ae4d2a42",
-          "revisionSha256": "d007dd845b95475ddfe16499534cb81e75149bd58ca17ebf7142a4f3ae4d2a42"
+          "sha256": "5dbf78157e32b0992034ff70bf08e05de0ffa24fbd82016495566eed8f203a57",
+          "revisionSha256": "5dbf78157e32b0992034ff70bf08e05de0ffa24fbd82016495566eed8f203a57"
         },
         {
           "path": "shared/raiffeisen-bank-page.json",
@@ -2166,9 +2166,9 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.4.0+dfad66e401b4",
-      "revision": "dfad66e401b464d01f1a6442a2328880aa2d8b5cbe211f32eafcd08f1eb1aebd",
-      "markupRevision": "29b4b9b1e4599f7f416933f40a3d0ecf74b655ba5b7041920d765a04a903661c",
+      "version": "1.4.0+e970554b9b21",
+      "revision": "e970554b9b21ee945008f320d50d0e797acde2b73baf80b606399edc177850cc",
+      "markupRevision": "25dda1348fd463658f95242f05fd13c4ab44473c37b56fc4b73cca66a76609b9",
       "owners": [
         "shared/reading-page.html",
         "shared/raiffeisen-leasing-page.json",
@@ -2460,8 +2460,8 @@
         {
           "path": "shared/larixon-page.json",
           "kind": "markup",
-          "sha256": "87294cf7f3d57590755dbfdd58db31a1b95739cdfaf5b57ce84596a88af181bd",
-          "revisionSha256": "87294cf7f3d57590755dbfdd58db31a1b95739cdfaf5b57ce84596a88af181bd"
+          "sha256": "cc86c9f70a0269e64feb3418b9e608ac1eb3b13ac26f877e72ad8860e95ed78c",
+          "revisionSha256": "cc86c9f70a0269e64feb3418b9e608ac1eb3b13ac26f877e72ad8860e95ed78c"
         },
         {
           "path": "shared/library.mjs",
@@ -2472,8 +2472,8 @@
         {
           "path": "shared/medesk-page.json",
           "kind": "markup",
-          "sha256": "d007dd845b95475ddfe16499534cb81e75149bd58ca17ebf7142a4f3ae4d2a42",
-          "revisionSha256": "d007dd845b95475ddfe16499534cb81e75149bd58ca17ebf7142a4f3ae4d2a42"
+          "sha256": "5dbf78157e32b0992034ff70bf08e05de0ffa24fbd82016495566eed8f203a57",
+          "revisionSha256": "5dbf78157e32b0992034ff70bf08e05de0ffa24fbd82016495566eed8f203a57"
         },
         {
           "path": "shared/navigation-boot.js",
@@ -2514,8 +2514,8 @@
         {
           "path": "shared/recommendations.json",
           "kind": "markup",
-          "sha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe",
-          "revisionSha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe"
+          "sha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793",
+          "revisionSha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793"
         },
         {
           "path": "shared/recommendations.mjs",
@@ -6897,9 +6897,9 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.4.0+8df64167d60b",
-      "revision": "8df64167d60b1c221eb66d1980835fd3fa98767a7605afe5e6bb28e70e91db0a",
-      "markupRevision": "2fbdec85e0bfc9588ed5a32702566ff58fd16409c260c8cfab90910087af7afe",
+      "version": "1.4.0+91fe26f7d92a",
+      "revision": "91fe26f7d92a789d3f0832f25f2828f10551e7e22226df1eddcc4d34ad0454ec",
+      "markupRevision": "fecbfe9b23e75d858363c00710b9dfdae3d24b2f249b319c702a5d984a2f3168",
       "owners": [
         "shared/reading-page.html",
         "shared/about-main.html",
@@ -8377,8 +8377,8 @@
         {
           "path": "shared/recommendations.json",
           "kind": "markup",
-          "sha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe",
-          "revisionSha256": "d9af17f52ad0531e63a7bc606f90c86354c9204168dd9e4440218bd014479ebe"
+          "sha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793",
+          "revisionSha256": "0619c1b92a8ba476ec9ba42477c518bbdd055a997dd53e9719d50d0bcf728793"
         },
         {
           "path": "shared/recommendations.mjs",
@@ -11205,10 +11205,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.47.1",
-    "revision": "1de4fbd9098b",
-    "release": "1.47.1+1de4fbd9098b",
-    "updatedAt": "2026-10-19T09:51:11.739Z",
+    "version": "1.47.2",
+    "revision": "789aa5dba1f4",
+    "release": "1.47.2+789aa5dba1f4",
+    "updatedAt": "2026-10-19T09:55:24.636Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11262,13 +11262,13 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "c06cbc003ffed7f46b794a4423584a1b9cd7af4a7e4969c58070a53179ecbea4",
-        "revisionSha256": "c06cbc003ffed7f46b794a4423584a1b9cd7af4a7e4969c58070a53179ecbea4"
+        "sha256": "ae30cda25ea62cb250fa68f52d787e04ff207af9d1cd5c8e9d24281e90d3e68f",
+        "revisionSha256": "ae30cda25ea62cb250fa68f52d787e04ff207af9d1cd5c8e9d24281e90d3e68f"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "a3d647b02999905760001f988dbe4d8170021e99bc4e4892800b367b25ac6a44",
-        "revisionSha256": "a3d647b02999905760001f988dbe4d8170021e99bc4e4892800b367b25ac6a44"
+        "sha256": "5c2487fea9c2be1c4f286e95c3f0627f82024f0288d2f50dcb02855f593b7897",
+        "revisionSha256": "5c2487fea9c2be1c4f286e95c3f0627f82024f0288d2f50dcb02855f593b7897"
       },
       {
         "path": "shared/component-registry.mjs",
@@ -11277,8 +11277,8 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "f39951f45c34d33e88eca2a0665dd55af12ae03bd005d0fb93dab2eaf8044197",
-        "revisionSha256": "f39951f45c34d33e88eca2a0665dd55af12ae03bd005d0fb93dab2eaf8044197"
+        "sha256": "3d3bdb8d7d5e8068d0e33f5751cf0d89b22d6a385839c43bb93977ec7ea825f3",
+        "revisionSha256": "3d3bdb8d7d5e8068d0e33f5751cf0d89b22d6a385839c43bb93977ec7ea825f3"
       },
       {
         "path": "shared/ds-freshness.js",
