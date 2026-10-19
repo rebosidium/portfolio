@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="3e09d1246a25" data-build="457daa9e4bd7">
+<html lang="en" data-ui-revision="cd68cbf9c497" data-build="f7b6b63c8b72">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"}];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial"},{"route":"/work/medesk/","type":"article","project":"medesk"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -323,7 +323,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.45.0+bc8a54c423b7","tokens":"1.4.0+4e00918e173c","components":{"work-logo":"1.4.0+3a29c98d14aa","brief":"1.4.0+f2d64017ad0c","brief-dark":"1.4.0+bae1e18268b5","link":"1.4.0+d5671346ed1e","footer-link":"1.4.0+ed60abe2d637","work-actions":"1.4.0+0ce98ffd9933","availability":"1.4.0+20ab3f3a8f51","portrait":"1.4.0+b776ab12ce20","header":"1.4.0+2df2adcf7caf","hero":"1.4.0+1d4ff5703682","work":"1.4.0+ee84282c4c7b","work-section":"1.4.0+b0cf554bcc46","footer":"1.4.0+ce654d99f69d"},"revision":"3e09d1246a25"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.46.0+ac65adc6fbad","tokens":"1.4.0+4e00918e173c","components":{"work-logo":"1.4.0+4b2529b69e1a","brief":"1.4.0+51829e7a2b96","brief-dark":"1.4.0+f4e239a9f6c3","link":"1.4.0+247c2c51ef80","footer-link":"1.4.0+d1e92c1ad49b","work-actions":"1.4.0+00cfdbb1db17","availability":"1.4.0+3a801ff665de","portrait":"1.4.0+6ab3e02a5485","header":"1.4.0+ba6100e31ee2","hero":"1.4.0+52b5133e46fb","work":"1.4.0+ad69c2d1198f","work-section":"1.4.0+1af08710cadb","footer":"1.4.0+509b782fd773"},"revision":"cd68cbf9c497"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>
@@ -444,8 +444,7 @@
           </div>
           <p class="work-description">Raiffeisen Bank is one of Russia’s top-10 banks and part of RBI Group. I led design for a professional trading terminal used by 500+ asset management companies and brokers, and managed a team of five designers.</p>
           <div class="work-actions">
-            <button class="work-details" type="button" disabled aria-describedby="raiffeisen-bank-availability"><span>More Details</span></button>
-            <span class="work-availability" id="raiffeisen-bank-availability"><img src="assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+            <a class="work-details ui-project-link" href="/work/raiffeisen-bank/"><span>View Project</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
           </div>
         </div>
         <div class="work-artwork">
@@ -487,8 +486,7 @@
           </div>
           <p class="work-description">At Yandex.Market, one of Russia’s largest <nobr>e-commerce</nobr> marketplaces, I worked on analytics products, seller-facing tools, vendor onboarding workflows and product taxonomy for marketplace teams and partners.</p>
           <div class="work-actions">
-            <button class="work-details" type="button" disabled aria-describedby="yandex-availability"><span>More Details</span></button>
-            <span class="work-availability" id="yandex-availability"><img src="assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+            <a class="work-details ui-project-link" href="/work/yandex-market/"><span>View Project</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
           </div>
         </div>
         <div class="work-artwork">
@@ -509,8 +507,7 @@
           </div>
           <p class="work-description">GdeMaterial was an early-stage DIY marketplace for construction and home improvement materials. I worked on marketplace UX, supplier-facing tools, product discovery, checkout and logistics workflows for B2B clients and suppliers.</p>
           <div class="work-actions">
-            <button class="work-details" type="button" disabled aria-describedby="gdematerial-availability"><span>More Details</span></button>
-            <span class="work-availability" id="gdematerial-availability"><img src="assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+            <a class="work-details ui-project-link" href="/work/gdematerial/"><span>View Project</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
           </div>
         </div>
         <div class="work-artwork work-artwork-composite">
@@ -531,8 +528,7 @@
           </div>
           <p class="work-description">Medesk is a B2B HealthTech SaaS platform used by healthcare providers across 35 countries. I worked on product UX, patient-facing flows, third-party integrations and design system components.</p>
           <div class="work-actions">
-            <button class="work-details" type="button" disabled aria-describedby="medesk-availability"><span>More Details</span></button>
-            <span class="work-availability" id="medesk-availability"><img src="assets/coming-soon-dot.svg?v=64b918f624e3" width="12" height="12" alt=""><span>Coming Soon</span></span>
+            <a class="work-details ui-project-link" href="/work/medesk/"><span>View Project</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
           </div>
         </div>
         <div class="work-artwork">

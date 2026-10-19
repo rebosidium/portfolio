@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="afe7385edf7d" data-build="457daa9e4bd7">
+<html lang="en" data-ui-revision="a3a437826cc1" data-build="f7b6b63c8b72">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"}];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial"},{"route":"/work/medesk/","type":"article","project":"medesk"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -203,7 +203,7 @@
   <script src="/analytics.js?v=03fb5fa11117" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=6ef19d67a325" defer></script>
   <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.45.0+bc8a54c423b7","tokens":"1.4.0+4e00918e173c","components":{"recommendations":"1.4.0+4386d560796f","brief-dark":"1.4.0+bae1e18268b5","back":"1.4.0+d0e73b44db12","link":"1.4.0+d5671346ed1e","footer-link":"1.4.0+ed60abe2d637","about-title":"1.4.0+001ac5eb3f45","about-avatar":"1.4.0+a58fe0d40792","prose-section":"1.4.0+65a9d4f9d6a1","photo-gallery":"1.4.0+ca3e52ed05e2","photo-gallery-footer":"1.4.0+eb1828cabebf","about-header":"1.4.0+1716ae6394fe","footer":"1.4.0+ce654d99f69d","reading-page":"1.4.0+09525e6a2a51"},"revision":"afe7385edf7d"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.46.0+ac65adc6fbad","tokens":"1.4.0+4e00918e173c","components":{"recommendations":"1.4.0+90f121727c62","brief-dark":"1.4.0+f4e239a9f6c3","back":"1.4.0+e03c8a7ac6e3","link":"1.4.0+247c2c51ef80","footer-link":"1.4.0+d1e92c1ad49b","about-title":"1.4.0+3a974cff2547","about-avatar":"1.4.0+a55f28494054","prose-section":"1.4.0+9192f783b38c","photo-gallery":"1.4.0+e9ccf7585af8","photo-gallery-footer":"1.4.0+61a76e75a114","about-header":"1.4.0+a1d5f304bbec","footer":"1.4.0+509b782fd773","reading-page":"1.4.0+05aaf75c1c01"},"revision":"a3a437826cc1"}</script>
   <!-- shared:photo-gallery-assets:start -->
   <link rel="stylesheet" href="/photo/photo-gallery.css?v=a66824514054"><script src="/photo/photo-gallery.js?v=db6df2622cfa" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>
   <!-- shared:photo-gallery-assets:end -->

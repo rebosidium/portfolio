@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-ui-revision="1f11a12e20a1" data-build="f7b6b63c8b72">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <!-- shared:analytics-preferences:start -->
+  <script data-analytics="preferences">
+(() => {
+  'use strict';
+  const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
+  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial"},{"route":"/work/medesk/","type":"article","project":"medesk"}];
+  const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
+  const routes = definitions.flatMap(page => aliases(page.route));
+  const page = definitions.find(page => aliases(page.route).includes(location.pathname));
+  const notFound = document.documentElement.dataset.pageKind === 'not-found';
+  const production = hosts.includes(location.hostname);
+  const allowed = production && (!!page || notFound);
+  const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
+  const qaKey = 'portfolio.analytics.qa.v1';
+  const params = new URLSearchParams(location.search);
+  const read = (storage, key) => {try {return window[storage].getItem(key);} catch {return null;}};
+  const write = (storage, key, value) => {try {window[storage].setItem(key, value); return true;} catch {return false;}};
+  const cookieName = 'portfolio_analytics_excluded';
+  const cookieExcluded = () => {try {return document.cookie.split(';').some(value => value.trim() === cookieName + '=1');} catch {return false;}};
+  const saveCookie = excluded => {try {
+    document.cookie = cookieName + '=' + (excluded ? '1' : '0') + '; Max-Age=31536000; Path=/; Domain=dmitryrybalka.com; SameSite=Lax; Secure';
+    return cookieExcluded() === excluded;
+  } catch {return false;}};
+  let ownerExcluded = read('localStorage', ownerKey) === '1' || cookieExcluded();
+  let qa = read('sessionStorage', qaKey) === '1';
+  const ownerControl = production && ['0', '1'].includes(params.get('analytics_owner'));
+  let ownerSaved = true;
+  if (ownerControl) {
+    ownerExcluded = params.get('analytics_owner') === '1';
+    const localSaved = write('localStorage', ownerKey, ownerExcluded ? '1' : '0');
+    ownerSaved = saveCookie(ownerExcluded) || localSaved;
+  }
+  if (allowed && ['0', '1'].includes(params.get('analytics_test'))) {
+    qa = params.get('analytics_test') === '1';
+    write('sessionStorage', qaKey, qa ? '1' : '0');
+  }
+  if (allowed && (params.has('analytics_run') || params.has('analytics_migration'))) {
+    qa = true;
+    write('sessionStorage', qaKey, '1');
+  }
+  const automation = navigator.webdriver === true || /HeadlessChrome|Playwright|PhantomJS|Selenium/i.test(navigator.userAgent || '');
+  // QA is excluded at source, including owners: never load events, heatmaps or replay.
+  // Test storage survives same-tab navigation; owner preference survives browser restarts.
+  const reason = !allowed ? 'untracked' : ownerExcluded ? 'owner' : qa ? 'test' : automation ? 'automation' : 'visitor';
+  window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
+    projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
+    sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
+    enabled: allowed && !ownerExcluded && !qa && !automation});
+  document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
+  document.documentElement.dataset.analyticsMode = window.portfolioAnalytics.enabled ? 'normal' : reason;
+  document.documentElement.dataset.analyticsExclusion = reason;
+  if (ownerControl || (allowed && qa)) {
+    const clean = new URL(location.href);
+    if (qa) clean.searchParams.set('analytics_test', '1');
+    clean.searchParams.delete('analytics_owner');
+    if (clean.searchParams.get('analytics_test') === '0') clean.searchParams.delete('analytics_test');
+    try {history.replaceState(history.state, '', clean.pathname + clean.search + clean.hash);} catch {}
+  }
+  const ready = () => {
+    // Carry marked QA across page changes and new tabs, including Clarity's
+    // URL-based exclusions. Same-document hash links and PDF/external links
+    // retain their native hrefs and handlers.
+    if (allowed && qa) for (const link of document.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) continue;
+      try {
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || !routes.includes(url.pathname)
+          || url.searchParams.get('analytics_test') === '0') continue;
+        url.searchParams.set('analytics_test', '1');
+        link.setAttribute('href', url.pathname + url.search + url.hash);
+      } catch {}
+    }
+    // Only an explicit owner-setting link shows this temporary confirmation.
+    if (ownerControl) {
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.dataset.analyticsOwnerStatus = ownerExcluded ? 'excluded' : 'included';
+      status.textContent = !ownerSaved ? 'This browser could not save the analytics preference.'
+        : ownerExcluded ? 'Saved: analytics is excluded for this browser.'
+        : 'Saved: this browser is included in analytics.';
+      status.style.cssText = 'position:fixed;z-index:10000;left:16px;right:16px;bottom:16px;max-width:440px;margin:0;padding:12px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#232522;font:14px/1.5 sans-serif;box-shadow:0 2px 12px #0001';
+      document.body.append(status);
+      setTimeout(() => status.remove(), 15000);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true});
+  else ready();
+  window.addEventListener('storage', event => {
+    if (allowed && event.key === ownerKey) location.reload();
+  });
+})();
+  </script>
+  <!-- shared:analytics-preferences:end -->
+  <script type="text/javascript" data-analytics="posthog">
+    // One early shared gate covers every registered production page.
+    const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (posthogTrackingEnabled) {
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
+        api_host: 'https://events.dmitryrybalka.com',
+        ui_host: 'https://us.posthog.com',
+        defaults: '2026-08-30',
+        capture_pageview: true,
+        capture_pageleave: true,
+        autocapture: true,
+        capture_heatmaps: true,
+        person_profiles: 'identified_only',
+        capture_exceptions: false,
+        enable_recording_console_log: false,
+        disable_surveys: true,
+        before_send: event => {
+          if (!window.portfolioAnalytics?.enabled) return null;
+          if (event?.properties) Object.assign(event.properties, {
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
+            site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
+            analytics_version: 3,
+            analytics_test: false
+          });
+          if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
+            requested_path: location.pathname, error_preview: ['/404', '/404/', '/404/index.html', '/404.html'].includes(location.pathname)
+          });
+          return event;
+        },
+        session_recording: {
+          maskAllInputs: true,
+          recordCrossOriginIframes: false,
+          captureCanvas: {recordCanvas: false},
+          streamNetworkBody: false,
+          captureJsonLd: false
+        }
+      });
+    }
+  </script>
+<script type="text/javascript" data-analytics="microsoft-clarity">
+    // Owner, QA and detected automation never load either provider.
+    const clarityTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (clarityTrackingEnabled) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yv8rnad266");
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://dmitryrybalka.com/work/raiffeisen-bank/">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <title>Raiffeisen Bank — Dmitry Rybalka</title>
+  <meta name="description" content="Leading product design for a professional trading terminal and investment tools at Raiffeisen Bank, alongside design strategy and mentoring across two product teams.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check-white.svg?v=f5434dbfe8e0" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-claude.svg?v=4c02aab6dbf5" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-chatgpt-white.svg?v=31685c331afc" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-codex-blue.svg?v=688bbe62639f" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-cursor-white.svg?v=b6213bf33e0a" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/assets/site-ui.css?v=00321753d112">
+  <link rel="stylesheet" href="/about/about.css?v=a42acd253415">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+  <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
+  <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
+  <script src="/assets/site-controls.js?v=aa16a1ece157" defer></script>
+  <script src="/analytics.js?v=03fb5fa11117" defer fetchpriority="low"></script>
+  <script src="/about/about.js?v=6ef19d67a325" defer></script>
+  <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.4.0","designSystem":"1.46.0+ac65adc6fbad","tokens":"1.4.0+4e00918e173c","components":{"brief-dark":"1.4.0+f4e239a9f6c3","back":"1.4.0+e03c8a7ac6e3","link":"1.4.0+247c2c51ef80","footer-link":"1.4.0+d1e92c1ad49b","company-title":"1.4.0+fa77ce923b8f","company-page":"1.4.0+e2e284afdf19","prose-section":"1.4.0+9192f783b38c","about-header":"1.4.0+a1d5f304bbec","footer":"1.4.0+509b782fd773"},"revision":"1f11a12e20a1"}</script>
+</head>
+<body class="about-page">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <div class="identity about-identity"><a class="about-mobile-back ui-back" href="/" aria-label="Back to homepage"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a><a class="name" href="/">Dmitry Rybalka</a></div>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Main navigation">
+      <a class="mobile-only" href="/">Home</a>
+      <a href="/about/">About</a>
+      <a class="desktop-only" href="/#selected-works">Work</a>
+      <a href="mailto:rebosidium@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <!-- shared:about-main:start -->
+  <main class="about-main" data-navigation-background><div class="about-title-row" style="--reading-reveal-order:0"><a class="ui-back about-desktop-back" href="/"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""><span>Back</span></a><div class="about-title">
+        <div class="about-avatar company-logo"><img src="/assets/logo-raiffeisen.svg?v=74f1746e3599" width="58" height="58" alt="Raiffeisen Bank" decoding="async"></div>
+        <h1>Raiffeisen Bank</h1>
+      </div></div><div class="about-intro about-prose"><p style="--reading-reveal-order:1">Leading design for institutional trading and investment products</p></div><div class="about-sections about-prose article-sections"><section aria-labelledby="project-role"><h2 id="project-role" style="--reading-reveal-order:2">Project &amp; role</h2><p style="--reading-reveal-order:3">From August 2024 to August 2025, I worked as Lead Product Designer on trading and investment products at Raiffeisen Bank Russia. My work included a professional trading terminal serving 500+ institutional client organisations, including asset managers and brokers.</p><p style="--reading-reveal-order:4">This was the final year of my broader 2021–2025 tenure at Raiffeisen. Alongside hands-on terminal UX, I defined product design strategy across 5+ tools and supported five designers across two product teams.</p></section><section aria-labelledby="context"><h2 id="context" style="--reading-reveal-order:5">The challenge</h2><p style="--reading-reveal-order:6">The brief combined a specialist trading experience with a broader investment product ecosystem. I needed to connect work on the terminal with design priorities across several tools, aligning business goals with the needs of institutional clients.</p></section><section aria-labelledby="research"><h2 id="research" style="--reading-reveal-order:7">Research &amp; process</h2><p style="--reading-reveal-order:8">I used LLM-powered tools to support research preparation, synthesise insights and explore early hypotheses.</p><p style="--reading-reveal-order:9">Design reviews and one-on-ones complemented the hands-on work. I used these sessions to discuss design decisions, mentor colleagues and support the quality of work across both teams.</p></section><section aria-labelledby="contribution"><h2 id="contribution" style="--reading-reveal-order:10">The solution</h2><h3 class="prose-subheading" style="--reading-reveal-order:11">A professional trading experience</h3><p style="--reading-reveal-order:12">I led UX for a professional trading terminal for institutional clients, including asset managers and brokers.</p><h3 class="prose-subheading" style="--reading-reveal-order:13">Design direction across investment tools</h3><p style="--reading-reveal-order:14">Across 5+ investment tools, I defined product design strategy around business goals, user needs and product hypotheses.</p></section><section aria-labelledby="outcomes"><h2 id="outcomes" style="--reading-reveal-order:15">Outcomes</h2><ul class="prose-list" style="--reading-reveal-order:16"><li>Led UX for a professional trading terminal serving 500+ institutional client organisations.</li><li>Defined product design strategy across 5+ trading and investment tools.</li><li>Mentored five designers and supported design reviews and hiring across two product teams.</li></ul></section><section aria-labelledby="behind-scenes"><h2 id="behind-scenes" style="--reading-reveal-order:17">Behind the scenes</h2><h3 class="prose-subheading" style="--reading-reveal-order:18">Supporting the people doing the work</h3><p style="--reading-reveal-order:19">Alongside product design, I ran one-on-ones, mentored designers and supported hiring. This leadership work was part of my responsibility across two product teams.</p><h3 class="prose-subheading" style="--reading-reveal-order:20">Public product context</h3><p style="--reading-reveal-order:21">The bank’s financial-institutions site provides context for its institutional client segment. The project scope above describes my own work during 2024–2025.</p><ul class="prose-list" style="--reading-reveal-order:22"><li><a class="article-source-link" href="https://www.raiffeisen.ru/financial/" target="_blank" rel="noopener noreferrer">Raiffeisen Bank — services for financial institutions</a></li></ul></section></div></main>
+  <!-- shared:about-main:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1">Let’s Talk</h2>
+    <div class="footer-content">
+      <p class="footer-description">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Contact links">
+        <a href="mailto:rebosidium@gmail.com"><span class="footer-link-label">Email</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf"><span class="footer-link-label">Resume</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status">
+          <span class="agent-button-label" aria-hidden="true"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <span class="footer-logo-copilot"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+</body>
+</html>
