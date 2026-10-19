@@ -206,7 +206,8 @@
   const sections = {'works-title': 'selected_works', 'footer-title': 'contact',
     'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
     'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',
-    ...(project ? {context: 'project_context', contribution: 'project_contribution', outcomes: 'project_outcomes'} : {})};
+    ...(project ? {'project-role': 'project_role', context: 'project_context', research: 'project_research',
+      contribution: 'project_contribution', outcomes: 'project_outcomes', 'behind-scenes': 'project_behind_scenes'} : {})};
   const identify = element => {
     const work = element.closest('[data-analytics-work]')?.dataset.analyticsWork;
     return workNames.includes(work) ? ['work_viewed', {work}]
