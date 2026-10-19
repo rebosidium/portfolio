@@ -1,11 +1,11 @@
 (() => {
   'use strict';
-  // Optional observers never participate in a page's startup promises.
-  const notFound = document.documentElement.dataset.pageKind === 'not-found';
-  if (!['dmitryrybalka.com', 'www.dmitryrybalka.com'].includes(location.hostname)
-    || (!notFound && !['/', '/index.html', '/about', '/about/', '/about/index.html'].includes(location.pathname))) return;
-  const sitePath = notFound ? '/404/' : location.pathname.startsWith('/about') ? '/about/' : '/';
-  if (window.portfolioAnalytics?.enabled === false) return;
+  // Both providers share the exact head decision; unknown routes fail closed.
+  const policy = window.portfolioAnalytics;
+  if (!policy?.enabled) return;
+  const notFound = policy.pageType === 'not-found';
+  const sitePath = policy.sitePath;
+  const project = policy.project;
   const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
     && typeof window.posthog?.capture === 'function';
   const clarityActive = typeof clarityTrackingEnabled !== 'undefined' && clarityTrackingEnabled
@@ -15,7 +15,7 @@
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: sitePath,
-    site_build: document.documentElement.dataset.build, analytics_version: 2, analytics_test: qa});
+    site_build: document.documentElement.dataset.build, analytics_version: 3, analytics_test: qa, page_type: policy.pageType, project});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
   const tag = (key, value) => {
@@ -24,8 +24,9 @@
   };
   const syncContext = properties => {
     if (!clarityActive) return;
-    for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test']) tag(key, properties[key]);
-    tag('clarity_events_version', 2);
+    for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test', 'page_type']) tag(key, properties[key]);
+    tag('clarity_events_version', 3);
+    if (project) tag('project', project);
   };
   const workNames = ['larixon', 'raiffeisen_bank', 'raiffeisen_leasing', 'yandex_market', 'gdematerial', 'medesk'];
   const clarityName = (name, properties) => {
@@ -86,6 +87,24 @@
     const target = event.composedPath().find(node => node instanceof Element);
     if (!target) return;
     const common = {input_method: inputMethod(event)};
+    const projectLink = target.closest('[data-analytics-work] .work-actions a[href]');
+    if (projectLink) {
+      const url = new URL(projectLink.href, location.href);
+      if (url.origin === location.origin && url.pathname === '/work/raiffeisen-leasing/')
+        capture('project_opened', {...common, project: 'raiffeisen-leasing', destination: url.pathname, placement: 'selected_works'}, true);
+      return;
+    }
+    const dot = target.closest('.recommendations-dot');
+    if (dot) {
+      const dots = [...dot.closest('[data-recommendations]').querySelectorAll('.recommendations-dot')];
+      capture('recommendation_selected', {...common, recommendation_index: dots.indexOf(dot) + 1, placement: 'recommendations'});
+      return;
+    }
+    const recommendationLink = target.closest('.recommendations-author-name, .recommendations-company');
+    if (recommendationLink) {
+      capture('recommendation_link_clicked', {...common, destination: recommendationLink.classList.contains('recommendations-author-name') ? 'author' : 'company'}, true);
+      return;
+    }
     const toggle = target.closest('.menu-toggle');
     if (toggle) {
       if (mobile.matches && toggle.getAttribute('aria-expanded') !== 'true') capture('menu_opened', common);
@@ -99,7 +118,7 @@
       capture('briefing_clicked', properties);
       return;
     }
-    const back = sitePath === '/about/' && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
+    const back = (sitePath === '/about/' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
     if (back) {
       capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
       return;
@@ -111,16 +130,18 @@
     try {const url = new URL(href, location.href); isWork = url.origin === location.origin
       && ['/', '/index.html'].includes(url.pathname) && url.hash === '#selected-works';} catch {}
     const destination = link.hasAttribute('data-background-prefetch') && link.hasAttribute('download') ? 'resume'
+      : href === '/about/' || href.startsWith('/about/?') ? 'about'
       : isWork ? 'work'
       : href.startsWith('mailto:') ? 'email'
       : href.startsWith('https://www.linkedin.com/in/ribadima/') ? 'linkedin'
       : href === 'https://t.me/ribadima' ? 'telegram' : null;
-    if (!['work', 'email', 'linkedin', 'resume', 'telegram'].includes(destination)) return;
+    if (!['about', 'work', 'email', 'linkedin', 'resume', 'telegram'].includes(destination)) return;
     const properties = {...common, placement: placement(link)};
     if (mobile.matches && !link.closest('.footer') && document.querySelector('.menu-toggle')?.getAttribute('aria-expanded') === 'true')
       capture('menu_link_clicked', {...properties, destination}, true);
     if (['email', 'telegram'].includes(destination)) capture('contact_clicked', {...properties, channel: destination}, true);
     else if (destination === 'resume') capture('resume_opened', properties, true);
+    else if (destination === 'about') capture('about_opened', properties, true);
     else if (destination === 'work') capture('portfolio_opened', properties, true);
     else if (destination === 'linkedin') capture('linkedin_opened', properties, true);
   }, true);
@@ -183,7 +204,9 @@
     return hit === element || element.contains(hit);
   };
   const sections = {'works-title': 'selected_works', 'footer-title': 'contact',
-    'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away'};
+    'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
+    'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',
+    ...(project ? {context: 'project_context', contribution: 'project_contribution', outcomes: 'project_outcomes'} : {})};
   const identify = element => {
     const work = element.closest('[data-analytics-work]')?.dataset.analyticsWork;
     return workNames.includes(work) ? ['work_viewed', {work}]
@@ -211,7 +234,7 @@
       }
       schedule();
     }, {threshold: [.5]});
-    document.querySelectorAll('[data-analytics-work] .work-heading h3, #works-title, #footer-title, #design-title, #people-title, #away-title').forEach(element => observer.observe(element));
+    document.querySelectorAll('[data-analytics-work] .work-heading h3, ' + Object.keys(sections).map(id => '#' + id).join(', ')).forEach(element => observer.observe(element));
   }
   document.addEventListener('visibilitychange', () => {
     clearDrag();
