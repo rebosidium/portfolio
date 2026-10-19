@@ -223,3 +223,12 @@
 .ds-theme-toolbar{display:grid;grid-template-columns:max-content max-content;justify-content:space-between;gap:24px}
 .ds-toolbar-group{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0}
 @media(max-width:900px){.ds-theme-toolbar{grid-template-columns:1fr;gap:8px}.ds-theme-toolbar>div{width:auto}.ds-toolbar-group .ds-mode-switch{flex-wrap:nowrap}.ds-toolbar-group button{padding-inline:12px}.ds-toolbar-group>strong{font-size:12px}}
+
+/* Release history stays separate from component guidance. */
+.ds-changelog-list{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.ds-changelog-entry{padding:24px;border:1px solid var(--ds-border);border-radius:12px;background:var(--color-canvas)}
+.ds-changelog-entry header{display:flex;align-items:baseline;flex-wrap:wrap;justify-content:space-between;gap:8px 20px}
+.ds-changelog-entry h3{margin:0;font-size:18px}.ds-changelog-entry time{font-size:13px;color:var(--ds-color-secondary)}
+.ds-changelog-entry h4{margin:12px 0 8px;font-size:15px;font-weight:600}
+.ds-changelog-entry ul{padding-left:20px;margin:0}.ds-changelog-entry li+li{margin-top:6px}
+.ds-changelog-archive{margin-top:20px}.ds-changelog-archive>summary{cursor:pointer;font-weight:600;padding:12px 0}.ds-changelog-archive[open]>summary{margin-bottom:8px}

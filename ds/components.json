@@ -11193,10 +11193,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.47.5",
-    "revision": "8aa6fe291f58",
-    "release": "1.47.5+8aa6fe291f58",
-    "updatedAt": "2026-10-19T10:58:42.103Z",
+    "version": "1.48.0",
+    "revision": "5681dfb1407e",
+    "release": "1.48.0+5681dfb1407e",
+    "updatedAt": "2026-10-19T11:03:04.174Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -11215,13 +11215,13 @@
       },
       {
         "path": "home/ds/ds.css",
-        "sha256": "e1cf2623ffc93f585cb3cbe4a1f03fa3b80e870d9984ffd9c76dd476704f8f71",
-        "revisionSha256": "e1cf2623ffc93f585cb3cbe4a1f03fa3b80e870d9984ffd9c76dd476704f8f71"
+        "sha256": "c46a0fbbc36ccfe03d6ca5d6a0e21f13946bc960ad094f4a372c9b400ba41b86",
+        "revisionSha256": "c46a0fbbc36ccfe03d6ca5d6a0e21f13946bc960ad094f4a372c9b400ba41b86"
       },
       {
         "path": "home/ds/ds.js",
-        "sha256": "45f661773684c139f454e1f0c621d7ee7eed37c8a618c05edd090c8181ccc340",
-        "revisionSha256": "45f661773684c139f454e1f0c621d7ee7eed37c8a618c05edd090c8181ccc340"
+        "sha256": "c34b9f8a3728c92eb69021b43a142f083a276ce36260005b37c09bad9118d889",
+        "revisionSha256": "c34b9f8a3728c92eb69021b43a142f083a276ce36260005b37c09bad9118d889"
       },
       {
         "path": "home/ds/freshness-worker.js",
@@ -11230,7 +11230,7 @@
       },
       {
         "path": "home/ds/index.html",
-        "revisionSha256": "4ecbe865899c8ba5da901efbe53ca9baf9883559e87844257856354d3f2db5fe",
+        "revisionSha256": "1cef7c9552ab1511421f3dd6126ead717b903f55f74b48ea03e679d0ed282bcd",
         "hashBasis": "normalized-authored-document"
       },
       {
@@ -11250,8 +11250,8 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "d0e23fead462f319244092019a24e8d02bf9768691b3b8fa387962048c7f919c",
-        "revisionSha256": "d0e23fead462f319244092019a24e8d02bf9768691b3b8fa387962048c7f919c"
+        "sha256": "b70495c4a422eefa338e7e070c0f638367a53adea9649c82bbe3141b1ad1abb3",
+        "revisionSha256": "b70495c4a422eefa338e7e070c0f638367a53adea9649c82bbe3141b1ad1abb3"
       },
       {
         "path": "shared/code-catalog.mjs",
@@ -11265,8 +11265,18 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "6fda146ea8e7cf03dae6794cb0e0d107f030c386aa4d8a0680ae4287608c9b6d",
-        "revisionSha256": "6fda146ea8e7cf03dae6794cb0e0d107f030c386aa4d8a0680ae4287608c9b6d"
+        "sha256": "91c93c832d27339e03fe765993a378af807004aec8bdd10ffcaf98fce37fef08",
+        "revisionSha256": "91c93c832d27339e03fe765993a378af807004aec8bdd10ffcaf98fce37fef08"
+      },
+      {
+        "path": "shared/ds-changelog.json",
+        "sha256": "30a75cdd19ba1f1c5089d5483061c2ba2ddb5e68b9bd6fb7e1eec2f42841808a",
+        "revisionSha256": "30a75cdd19ba1f1c5089d5483061c2ba2ddb5e68b9bd6fb7e1eec2f42841808a"
+      },
+      {
+        "path": "shared/ds-changelog.mjs",
+        "sha256": "f64b11a7346c2c3c61309affc99cac2f7f8846919b2bfa60fe07efe30f02a082",
+        "revisionSha256": "f64b11a7346c2c3c61309affc99cac2f7f8846919b2bfa60fe07efe30f02a082"
       },
       {
         "path": "shared/ds-freshness.js",
@@ -11280,8 +11290,8 @@
       },
       {
         "path": "shared/ds-release.mjs",
-        "sha256": "b25dbf99b2eb248c022a5aacba4705bbe1a93d9705cb03b9522ff92bbede6736",
-        "revisionSha256": "b25dbf99b2eb248c022a5aacba4705bbe1a93d9705cb03b9522ff92bbede6736"
+        "sha256": "8fcc7f2d2da46926b117b5874d98965336422b64b7b8137501391c78b265e8cf",
+        "revisionSha256": "8fcc7f2d2da46926b117b5874d98965336422b64b7b8137501391c78b265e8cf"
       },
       {
         "path": "shared/ds-theme.js",

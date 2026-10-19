@@ -212,7 +212,7 @@
     const card=document.createElement('article');card.className='ds-specimen';card.id='component-'+example.id;card.dataset.component=example.id;card.dataset.previewSurface=example.kind.split(' ').includes('dark')?'dark':'light';
     if(grouped)card.dataset.activeVariant=variant.id;
     card.innerHTML=`<div class="ds-specimen-head"><div class="ds-component-heading"><h3>${example.title}</h3><code class="ds-api-key">${example.release.componentKey}${example.release.variant?' · '+example.release.variant:''}</code><p class="ds-component-version">${versionLabel(example.release)}</p></div><div class="ds-head-actions"><span class="ds-source">${example.source}</span></div></div>${grouped?`<div class="ds-variant-switch ds-state-switch" role="group" aria-label="${example.title} variants"><span class="ds-switch-label">Variant</span></div>`:''}<div class="ds-state-switch" role="group" aria-label="${example.title} states"></div><div class="ds-preview-stage"><iframe class="ds-preview-frame" loading="lazy" allow="clipboard-write"></iframe></div><div class="ds-preview-meta"><p>${example.note||'Shared source · working interaction'}</p><span></span></div>`;
-    document.querySelector(example.group==='template'?'#template-gallery':'#component-gallery').append(card);
+    document.querySelector(example.group==='template'?'#template-gallery':example.group==='asset'?'#company-logo-gallery':'#component-gallery').append(card);
     const item={base:example,example:variant.example,variants,variant,card,state:example.states[0],switch:card.querySelector('.ds-state-switch:not(.ds-variant-switch)'),variantSwitch:card.querySelector('.ds-variant-switch'),stage:card.querySelector('.ds-preview-stage'),frame:card.querySelector('iframe'),size:card.querySelector('.ds-preview-meta>span')};
     if(grouped)for(const variant of variants){
       const button=document.createElement('button');button.type='button';button.textContent=variant.label;button.dataset.variant=variant.id;button.setAttribute('aria-pressed',String(variant===item.variant));
@@ -251,7 +251,7 @@
   let sectionFrame=0;
   function updateSection(){
     sectionFrame=0;
-    const marker=Math.min(innerHeight*.2,140);
+    const marker=Math.max(Math.min(innerHeight*.2,140),parseFloat(getComputedStyle(sections[1]).scrollMarginTop)||0)+1;
     let current=0;
     sections.forEach((section,index)=>{if(section.getBoundingClientRect().top<=marker)current=index;});
     if(scrollY+innerHeight>=document.documentElement.scrollHeight-2)current=sections.length-1;
