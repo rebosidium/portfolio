@@ -11,7 +11,7 @@
   const still=()=>reduced.matches||page.matches('.ds-preview[data-state="reduced-motion"]');
   // CSS handles the first paint. Only prepare blocks still below the viewport:
   // a late script must never hide text the visitor has already started reading.
-  const revealTargets=[...main.querySelectorAll('.about-title-row,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
+  const revealTargets=[...main.querySelectorAll('.about-title-row,.case-study-title,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
   if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
   if(!still()&&typeof IntersectionObserver==='function'){
     let observer;
