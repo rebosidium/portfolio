@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="00769ed8402d" data-build="bdd5a338735a">
+<html lang="en" data-page-kind="not-found" data-ui-revision="2671dfd97cd2" data-build="186562f8488b">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -16,7 +16,17 @@
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
   const notFound = document.documentElement.dataset.pageKind === 'not-found';
   const production = hosts.includes(location.hostname);
-  const allowed = production && (!!page || notFound);
+  // Exclude technical namespaces before the shared 404 exception. Decode even
+  // partially malformed escapes, so an invalid suffix cannot bypass the prefix.
+  let technicalPath = location.pathname;
+  while (/%[0-9a-f]{2}/i.test(technicalPath)) {
+    const decoded = technicalPath.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    if (decoded === technicalPath) break;
+    technicalPath = decoded;
+  }
+  technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
+  const technical = /^\/(?:ds|old)(?:\/|$)/i.test(technicalPath);
+  const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
   const params = new URLSearchParams(location.search);
@@ -192,7 +202,7 @@
   <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
   <script src="/assets/arrow-controls.js?v=937144b31f0b" defer></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.1+13b7f7cfc0ee","tokens":"1.8.0+fa9a3c5a4e82","components":{"back":"1.8.0+41190b416118","article-title":"1.8.0+6567d334508b","not-found-page":"1.8.0+a24d0d531339"},"revision":"00769ed8402d"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.2+b565d0484d3e","tokens":"1.8.0+fa9a3c5a4e82","components":{"back":"1.8.0+41190b416118","article-title":"1.8.0+6567d334508b","not-found-page":"1.8.0+a24d0d531339"},"revision":"2671dfd97cd2"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->
