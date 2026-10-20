@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="f84d9b5beba6" data-build="2758a7a5bf56">
+<html lang="en" data-ui-revision="f84d9b5beba6" data-build="611c5b2e948c">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -204,6 +204,82 @@
       });
     }
   </script>
+<script data-analytics="sentry">
+(() => {
+  'use strict';
+  if (!true || window.portfolioAnalytics?.enabled !== true) return;
+  const config = {"enabled":true,"dsn":"https://edef21d4201fe725e9b40b57d2eb95a0@o4512290628698112.ingest.de.sentry.io/4512290661859408","sdkUrl":"https://browser.sentry-cdn.com/11.8.0/bundle.min.js","integrity":"sha384-H8JEvxJFgnBT9bZucmagyEBKdF3nGnS+LaekpC73o3oRMWpjjMSDksIoLuDRsj/b"};
+  const pending = [];
+  const rememberError = event => {if (pending.length < 10 && event.error) pending.push(event.error);};
+  const rememberRejection = event => {if (pending.length < 10 && event.reason instanceof Error) pending.push(event.reason);};
+  window.addEventListener('error', rememberError);
+  window.addEventListener('unhandledrejection', rememberRejection);
+  const detach = () => {
+    window.removeEventListener('error', rememberError);
+    window.removeEventListener('unhandledrejection', rememberRejection);
+  };
+  const cleanText = value => String(value || '').replace(/https?:\/\/[^\s)"'<>]+/g, raw => {
+    try {const url = new URL(raw);return url.origin + url.pathname;} catch {return '[URL]';}
+  }).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[email]').slice(0, 1000);
+  let sent = 0;
+  const counts = new Map();
+  const sdk = document.createElement('script');
+  sdk.src = config.sdkUrl;
+  sdk.integrity = config.integrity;
+  sdk.crossOrigin = 'anonymous';
+  sdk.async = true;
+  sdk.fetchPriority = 'low';
+  sdk.onerror = () => {detach();pending.length = 0;};
+  sdk.onload = () => {
+    detach();
+    if (window.portfolioAnalytics?.enabled !== true || !window.Sentry?.init) {pending.length = 0;return;}
+    try {
+      const Sentry = window.Sentry;
+      Sentry.init({
+        dsn: config.dsn,
+        environment: 'production',
+        release: 'portfolio@' + (document.documentElement.dataset.build || 'unknown'),
+        defaultIntegrations: false,
+        integrations: [Sentry.globalHandlersIntegration(), Sentry.browserApiErrorsIntegration(), Sentry.dedupeIntegration()],
+        autoSessionTracking: false,
+        sendClientReports: false,
+        enableLogs: false,
+        maxBreadcrumbs: 0,
+        tracesSampleRate: 0,
+        replaysSessionSampleRate: 0,
+        replaysOnErrorSampleRate: 0,
+        dataCollection: {userInfo: false, cookies: false, httpHeaders: false, httpBodies: [], urlQueryParams: false,
+          graphQL: {document: false, variables: false}, genAI: {inputs: false, outputs: false},
+          databaseQueryData: false, queues: false, stackFrameVariables: false, frameContextLines: 0},
+        beforeSend(event) {
+          if (window.portfolioAnalytics?.enabled !== true || sent >= 10) return null;
+          const frames = (event.exception?.values || []).flatMap(value => value.stacktrace?.frames || []);
+          // Only application stack frames; extensions and third-party widgets are noise.
+          if (frames.length && !frames.some(frame => {
+            try {return new URL(frame.filename).origin === location.origin;} catch {return false;}
+          })) return null;
+          for (const frame of frames) if (frame.filename) frame.filename = cleanText(frame.filename);
+          for (const value of event.exception?.values || []) if (value.value) value.value = cleanText(value.value);
+          if (event.message) event.message = cleanText(event.message);
+          const signature = JSON.stringify(event.exception?.values?.map(value => [value.type, value.value]) || event.message);
+          const count = counts.get(signature) || 0;
+          if (count >= 3) return null;
+          counts.set(signature, count + 1);sent += 1;
+          delete event.user;delete event.breadcrumbs;delete event.extra;
+          event.request = {url: location.origin + location.pathname};
+          const policy = window.portfolioAnalytics;
+          event.tags = {...event.tags, site_path: policy.sitePath, page_type: policy.pageType,
+            project: policy.project || 'none', site_build: document.documentElement.dataset.build,
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'};
+          return event;
+        }
+      });
+      for (const error of pending.splice(0)) Sentry.captureException(error);
+    } catch {pending.length = 0;}
+  };
+  document.head.appendChild(sdk);
+})();
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://dmitryrybalka.com/work/raiffeisen-bank/">

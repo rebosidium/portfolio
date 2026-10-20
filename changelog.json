@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.4.0",
+    "date": "2026-10-20",
+    "title": "Sentry browser error monitoring",
+    "changes": [
+      "Capture browser errors with release and responsive page context while excluding owner, test, automation and retired routes.",
+      "Keep replay, tracing, logs and automatic personal-data collection disabled."
+    ]
+  },
+  {
     "version": "1.3.1",
     "date": "2026-10-20",
     "title": "Exclude retired route errors from analytics",
