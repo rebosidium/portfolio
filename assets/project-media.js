@@ -2,7 +2,8 @@
   'use strict';
   const pending = new WeakMap();
   function prepare(image) {
-    if (image.closest('[data-photo-repeat]')) image.loading='eager';
+    // Once this scene is requested, prepare every repeated element before reveal.
+    if (image.closest('[data-photo-mosaic]')) image.loading='eager';
     const loaded = new Promise((resolve,reject) => {
       const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
       const onLoad = () => {clear();resolve();};
@@ -18,6 +19,19 @@
   }
   function load(artwork) {
     if (pending.has(artwork)) return pending.get(artwork);
+    const period=artwork.querySelector('.home-about-photo-page');
+    if(period&&!artwork.hasAttribute('data-photo-pool-ready')){
+      for(const row of [0,1])for(const col of [-1,0,1]){
+        if(!row&&!col)continue;
+        const copy=period.cloneNode(true);
+        copy.setAttribute('data-photo-repeat','');copy.setAttribute('aria-hidden','true');
+        if(row)copy.setAttribute('data-photo-row-repeat','');
+        copy.style.translate=`${col*100}% ${row*100}%`;
+        copy.querySelectorAll('img').forEach(image=>{image.alt='';});
+        period.parentElement.append(copy);
+      }
+      artwork.setAttribute('data-photo-pool-ready','');
+    }
     const images = [...artwork.querySelectorAll('.work-image')];
     const error = artwork.querySelector('.work-image-error');
     if (!images.length) return Promise.resolve();
