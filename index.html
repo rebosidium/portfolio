@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="62baf15e0b5c" data-build="bdd5a338735a">
+<html lang="en" data-ui-revision="393276eef04d" data-build="186562f8488b">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -16,7 +16,17 @@
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
   const notFound = document.documentElement.dataset.pageKind === 'not-found';
   const production = hosts.includes(location.hostname);
-  const allowed = production && (!!page || notFound);
+  // Exclude technical namespaces before the shared 404 exception. Decode even
+  // partially malformed escapes, so an invalid suffix cannot bypass the prefix.
+  let technicalPath = location.pathname;
+  while (/%[0-9a-f]{2}/i.test(technicalPath)) {
+    const decoded = technicalPath.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    if (decoded === technicalPath) break;
+    technicalPath = decoded;
+  }
+  technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
+  const technical = /^\/(?:ds|old)(?:\/|$)/i.test(technicalPath);
+  const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
   const params = new URLSearchParams(location.search);
@@ -346,7 +356,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.1+13b7f7cfc0ee","tokens":"1.8.0+fa9a3c5a4e82","components":{"home-about":"1.8.0+b502614d7a0b","work-logo":"1.8.0+294a12c33686","brief":"1.8.0+878076a29aa8","brief-dark":"1.8.0+6ae8e692f30d","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","work-actions":"1.8.0+805c46edf58a","availability":"1.8.0+97408bd6917b","portrait":"1.8.0+04a573516d44","header":"1.8.0+f052533b175b","hero":"1.8.0+454880d5484c","work":"1.8.0+9f47af3786af","work-section":"1.8.0+520861804802","footer":"1.8.0+4f7f2c7a176b"},"revision":"62baf15e0b5c"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.2+b565d0484d3e","tokens":"1.8.0+fa9a3c5a4e82","components":{"home-about":"1.8.0+b502614d7a0b","work-logo":"1.8.0+294a12c33686","brief":"1.8.0+878076a29aa8","brief-dark":"1.8.0+6ae8e692f30d","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","work-actions":"1.8.0+805c46edf58a","availability":"1.8.0+97408bd6917b","portrait":"1.8.0+04a573516d44","header":"1.8.0+f052533b175b","hero":"1.8.0+454880d5484c","work":"1.8.0+9f47af3786af","work-section":"1.8.0+520861804802","footer":"1.8.0+4f7f2c7a176b"},"revision":"393276eef04d"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>

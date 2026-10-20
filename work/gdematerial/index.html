@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="82b28acb3ae8" data-build="bdd5a338735a">
+<html lang="en" data-ui-revision="bd89c167cabd" data-build="186562f8488b">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -16,7 +16,17 @@
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
   const notFound = document.documentElement.dataset.pageKind === 'not-found';
   const production = hosts.includes(location.hostname);
-  const allowed = production && (!!page || notFound);
+  // Exclude technical namespaces before the shared 404 exception. Decode even
+  // partially malformed escapes, so an invalid suffix cannot bypass the prefix.
+  let technicalPath = location.pathname;
+  while (/%[0-9a-f]{2}/i.test(technicalPath)) {
+    const decoded = technicalPath.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    if (decoded === technicalPath) break;
+    technicalPath = decoded;
+  }
+  technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
+  const technical = /^\/(?:ds|old)(?:\/|$)/i.test(technicalPath);
+  const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
   const params = new URLSearchParams(location.search);
@@ -226,7 +236,7 @@
   <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=49b2429a45d3" defer></script>
   <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.1+13b7f7cfc0ee","tokens":"1.8.0+fa9a3c5a4e82","components":{"related-cases":"1.8.0+d5bde94b07fb","recommendations":"1.8.0+a9c4e110b7c4","brief-dark":"1.8.0+6ae8e692f30d","back":"1.8.0+41190b416118","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","case-study-title":"1.8.0+1fc4e95955c8","company-title":"1.8.0+79e0175033ab","company-page":"1.8.0+929e6d857139","prose-section":"1.8.0+a260fabe32a9","about-header":"1.8.0+845d99b58e14","footer":"1.8.0+4f7f2c7a176b"},"revision":"82b28acb3ae8"}</script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.2+b565d0484d3e","tokens":"1.8.0+fa9a3c5a4e82","components":{"related-cases":"1.8.0+d5bde94b07fb","recommendations":"1.8.0+a9c4e110b7c4","brief-dark":"1.8.0+6ae8e692f30d","back":"1.8.0+41190b416118","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","case-study-title":"1.8.0+1fc4e95955c8","company-title":"1.8.0+79e0175033ab","company-page":"1.8.0+929e6d857139","prose-section":"1.8.0+a260fabe32a9","about-header":"1.8.0+845d99b58e14","footer":"1.8.0+4f7f2c7a176b"},"revision":"bd89c167cabd"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->
