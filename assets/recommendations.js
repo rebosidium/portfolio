@@ -12,7 +12,7 @@
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     const previewPaused=['paused','reduced-motion'].includes(root.closest('.ds-preview')?.dataset.state);
     const duration=Math.max(4000,Number(root.dataset.duration)||12000);
-    let index=0,visible=false,focused=false,keyboardMode=false,gesture=null;
+    let index=root.hasAttribute('data-random-start')?Math.floor(Math.random()*slides.length):0,visible=false,focused=false,keyboardMode=false,gesture=null;
     let animation=null,generation=0,deadline=0,visibilityFrame=0,canAnimate=typeof fills[0].animate==='function';
     let ink=null;
     const inkPace=1.25;
@@ -197,7 +197,7 @@
       else schedule();
     }
     root.classList.add('is-enhanced');controls.hidden=false;
-    updateVisibility();select(0);root.dataset.recommendationsReady='true';
+    updateVisibility();select(index);root.dataset.recommendationsReady='true';
     dots.forEach((dot,i)=>dot.addEventListener('click',()=>select(i,true)));
     dotStrip?.addEventListener('transitionend',event=>{if(event.propertyName==='min-width')keepIndicatorVisible();});
     // Touch focus must not be confused with keyboard focus by Safari's heuristics.

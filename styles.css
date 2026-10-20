@@ -113,7 +113,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .intro-content{padding
 @media(prefers-reduced-motion:reduce){.home-about-track{animation:none!important}.home-about-photo-page[data-photo-repeat]{display:none!important}}
 .ds-preview[data-state="reduced-motion"] .home-about-track{animation:none!important}
 .ds-preview[data-state="reduced-motion"] [data-photo-repeat]{display:none!important}
-.home-about-card .home-about-copy{display:flex;flex-direction:column;gap:var(--space-6);width:auto;padding-block:var(--space-6)}
+.home-about-card .home-about-copy{display:flex;flex-direction:column;gap:var(--space-6);width:auto;padding-block:var(--space-6) var(--space-8)}
 .home-about-summary{display:flex;flex-direction:column}
 .home-about-card .home-about-heading{gap:0;margin:0}
 .home-about-heading h3{display:flex;align-items:center;min-height:120px;font-size:var(--type-body);font-weight:var(--weight-extrabold);line-height:var(--line-copy);letter-spacing:var(--tracking-body)}
