@@ -53,6 +53,7 @@
           : properties.ready_ms <= 6000 ? '3_to_6s' : 'over_6s');
       }
       callClarity('event', clarityName(name, properties));
+      if (name === 'project_opened' && properties.placement === 'related_cases') callClarity('event', 'project_opened_related_cases');
       // Aggregate API signals let native goals include all current/future
       // destinations and placements while retaining the detailed event names.
       if (['contact_clicked', 'menu_link_clicked', 'project_opened', 'about_opened', 'portfolio_opened'].includes(name)) callClarity('event', name);
@@ -92,6 +93,14 @@
     const aboutTeaser = target.closest('.home-about-card .work-actions a[href]');
     if (aboutTeaser) {
       capture('about_opened', {...common, placement: 'home_teaser', destination: '/about/'}, true);
+      return;
+    }
+    const relatedCase = target.closest('.related-case-card[href]');
+    if (relatedCase) {
+      const url = new URL(relatedCase.href, location.href);
+      const destinationProject = policy.projectRoutes?.[url.pathname];
+      if (url.origin === location.origin && destinationProject)
+        capture('project_opened', {...common, project: destinationProject, source_project: project, destination: url.pathname, placement: 'related_cases'}, true);
       return;
     }
     const projectLink = target.closest('[data-analytics-work] .work-actions a[href]');
@@ -211,7 +220,7 @@
     const hit = document.elementFromPoint(x, y);
     return hit === element || element.contains(hit);
   };
-  const sections = {'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'footer-title': 'contact',
+  const sections = {'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'more-cases-title': 'related_cases', 'footer-title': 'contact',
     'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
     'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',
     ...(project ? {'project-role': 'project_role', context: 'project_context', research: 'project_research',

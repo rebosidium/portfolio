@@ -28,11 +28,11 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 /* Individual translate preserves the gallery's independent horizontal centering. */
 @keyframes reading-content-enter{from{opacity:0;translate:0 var(--offset-reading-reveal)}to{opacity:1;translate:none}}
 @media(prefers-reduced-motion:no-preference){
-  .about-main :where(.about-title-row,.case-study-title,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer){animation:reading-content-enter var(--duration-reading-reveal) var(--ease-reading-reveal) var(--reading-reveal-delay,calc(var(--delay-reading-step) * var(--reading-reveal-order,0))) backwards}
+  .about-main :where(.about-title-row,.case-study-title,.related-cases,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer){animation:reading-content-enter var(--duration-reading-reveal) var(--ease-reading-reveal) var(--reading-reveal-delay,calc(var(--delay-reading-step) * var(--reading-reveal-order,0))) backwards}
   .about-main [data-reading-reveal="pending"]{animation:none;opacity:0;translate:0 var(--offset-reading-reveal)}
   .about-main [data-reading-reveal="shown"]{animation:none}
 }
-.ds-preview[data-state="reduced-motion"] .about-main :is(.about-title-row,.case-study-title,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer){animation:none;opacity:1;translate:none}
+.ds-preview[data-state="reduced-motion"] .about-main :is(.about-title-row,.case-study-title,.related-cases,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer){animation:none;opacity:1;translate:none}
 @media(max-width:983px) and (min-width:768px) and (pointer:fine){
   .about-main{width:calc(100% - var(--gutter-page) * 2)}
   .about-title-row{grid-template-columns:120px minmax(0,1fr);gap:var(--space-10)}
@@ -84,4 +84,23 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
  .case-study-title{min-height:0;border-radius:0;padding:var(--space-7) var(--space-5);margin-bottom:var(--space-7)}
  .case-study-title .about-prose{width:100%;gap:var(--space-3)}
  .case-study-title h2{font-size:var(--type-case-title-mobile)}
+}
+
+/* Related case links stay in the reading surface and share its footer overlap. */
+.about-main.has-related-cases{padding-bottom:0}
+.has-related-cases>.related-cases{margin-top:86px}
+.related-cases{position:relative;background:var(--color-case-surface);box-shadow:0 0 0 100vmax var(--color-case-surface);clip-path:inset(0 -100vmax);padding-bottom:96px}
+.related-cases>h2{display:flex;align-items:center;justify-content:center;min-height:140px;margin:0;font-size:var(--type-heading);font-weight:var(--weight-semibold);line-height:var(--line-prose);letter-spacing:var(--tracking-heading);text-align:center}
+.related-cases-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:46px var(--space-4);align-items:start}
+.related-case-card{display:flex;flex-direction:column;gap:var(--space-4);min-width:0;color:var(--color-ink);text-decoration:none;font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:var(--tracking-body);word-spacing:normal;text-wrap:pretty;overflow-wrap:break-word;--ui-focus-radius:var(--radius-artwork)}
+.related-case-image{display:block;width:100%;height:auto;aspect-ratio:544 / 294;object-fit:contain;border-radius:var(--radius-artwork);background:var(--color-canvas)}
+.related-case-copy{display:flex;flex-direction:column;gap:var(--space-2)}
+.related-case-copy h3,.related-case-copy p{margin:0;font-size:inherit;line-height:inherit}
+.related-case-copy h3{font-weight:var(--weight-bold)}
+.related-case-card:is(:hover,:focus-visible) h3{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+ .has-related-cases>.related-cases{margin-top:112px}
+ .related-cases-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-2)}
+ .related-case-card{font-size:var(--type-small)}
+ .related-case-copy p{line-height:var(--line-contact)}
 }
