@@ -51,7 +51,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-title{width:100%}
   .about-prose{width:100%}
   .about-intro{gap:var(--space-5);margin-bottom:var(--space-7)}
-  .about-main>.recommendations{width:100vw;margin-inline:calc((100% - 100vw) / 2)}
+  .about-main>.recommendations,.about-main>.case-study-title{width:100vw;margin-inline:calc((100% - 100vw) / 2)}
   .about-photo-placeholder{height:222px;margin-bottom:var(--space-7)}
   .about-sections,.about-sections>section{gap:var(--space-5)}
   .about-sections>section>h2{min-height:0}
@@ -81,7 +81,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 @media(max-width:983px) and (min-width:768px) and (pointer:fine){.case-study-title .about-prose{width:min(var(--width-prose),calc(100% - var(--space-8) * 2))}}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .case-study-page .about-title-row{margin-bottom:42px}
- .case-study-title{min-height:0;padding:var(--space-7) var(--space-5);margin-bottom:var(--space-7)}
+ .case-study-title{min-height:0;border-radius:0;padding:var(--space-7) var(--space-5);margin-bottom:var(--space-7)}
  .case-study-title .about-prose{width:100%;gap:var(--space-3)}
  .case-study-title h2{font-size:var(--type-case-title-mobile)}
 }
