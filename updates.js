@@ -68,8 +68,9 @@
       });
       if (!response.ok) return;
       const manifest = await response.json();
-      if (!manifest || !validVersion(manifest.version)) return;
-      const version = manifest.version.toLowerCase();
+      const revision = manifest?.revision ?? manifest?.version;
+      if (!validVersion(revision)) return;
+      const version = revision.toLowerCase();
       const now = Date.now();
       if (version === currentVersion || recentlyAttempted(version, now)) return;
       // Recheck visibility after the request so a background tab never refreshes.

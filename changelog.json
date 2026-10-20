@@ -1,0 +1,11 @@
+[
+  {
+    "version": "1.0.0",
+    "date": "2026-10-20",
+    "title": "Independent site releases",
+    "changes": [
+      "Introduced semantic site versions with automatic content revisions and the exact design-system release recorded in version.json.",
+      "Update checks continue to compare build revisions, including compatibility with the previous hash-only manifest."
+    ]
+  }
+]
