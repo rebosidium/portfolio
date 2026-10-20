@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.4.1",
+    "date": "2026-10-20",
+    "title": "Prioritize the initial render before analytics SDKs",
+    "changes": [
+      "Keep Clarity early and defer PostHog, Google Analytics, Yandex Metrika and Sentry SDK requests until after the initial render opportunity, with a bounded fallback.",
+      "Preserve early event queues, error capture and all owner, QA and technical-route exclusions."
+    ]
+  },
+  {
     "version": "1.4.0",
     "date": "2026-10-20",
     "title": "Sentry browser error monitoring",
