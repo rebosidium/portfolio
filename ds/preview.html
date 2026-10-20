@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="dbfa1c419cfc">
+<html lang="en" data-build="f4db59a07aa0">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -84,7 +84,8 @@
     status(!settled || ['checking','waiting','updating'].includes(state) ? 'checking' : 'checking-background','Checking for updates…');
     try {
       if (!valid(build) || navigator.onLine === false) throw Error('Cannot verify');
-      const version = JSON.parse(await fresh(new URL('/version.json',location.origin))).version;
+      const manifest = JSON.parse(await fresh(new URL('/version.json',location.origin)));
+      const version = manifest?.revision ?? manifest?.version;
       if (!valid(version)) throw Error('Invalid version');
       if (version === build) {
         if (owner && owner.document.documentElement.dataset.build !== build) {
@@ -187,7 +188,7 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <link rel="stylesheet" href="/ds/asset-loading.css?v=a9b154c7c8ab">
   <script src="/ds/asset-loading.js?v=0d319f6c36f8" defer></script>
-  <script src="/ds/examples.js?v=10b9dbbd4dbd" defer></script>
+  <script src="/ds/examples.js?v=b6973ac99f99" defer></script>
   <script src="/ds/preview.js?v=187d9d8363df" defer></script>
   <script src="/ds/theme.js?v=ba6cbcf00e03"></script>
 </head>
