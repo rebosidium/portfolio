@@ -15,7 +15,7 @@
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: sitePath,
-    site_build: document.documentElement.dataset.build, analytics_version: 3, analytics_test: qa, page_type: policy.pageType, project});
+    site_build: document.documentElement.dataset.build, analytics_version: 4, analytics_test: qa, page_type: policy.pageType, project});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
   const tag = (key, value) => {
@@ -25,13 +25,15 @@
   const syncContext = properties => {
     if (!clarityActive) return;
     for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test', 'page_type']) tag(key, properties[key]);
-    tag('clarity_events_version', 3);
+    tag('clarity_events_version', 4);
     if (project) tag('project', project);
   };
   const workNames = ['larixon', 'raiffeisen_bank', 'raiffeisen_leasing', 'yandex_market', 'gdematerial', 'medesk'];
   const clarityName = (name, properties) => {
     if (name === 'contact_clicked') return name + '_' + properties.channel + '_' + properties.placement;
     if (name === 'menu_link_clicked') return name + '_' + properties.destination;
+    if (name === 'project_opened') return name + '_' + properties.project.replaceAll('-', '_');
+    if (['about_opened', 'portfolio_opened'].includes(name)) return name + '_' + properties.placement;
     if (name === 'work_viewed') return name + '_' + properties.work;
     if (name === 'section_viewed') return name + '_' + properties.section;
     if (['briefing_clicked', 'briefing_copied', 'briefing_copy_failed'].includes(name)) return name + '_' + properties.placement;
@@ -53,7 +55,7 @@
       callClarity('event', clarityName(name, properties));
       // Aggregate API signals let native goals include all current/future
       // destinations and placements while retaining the detailed event names.
-      if (['contact_clicked', 'menu_link_clicked'].includes(name)) callClarity('event', name);
+      if (['contact_clicked', 'menu_link_clicked', 'project_opened', 'about_opened', 'portfolio_opened'].includes(name)) callClarity('event', name);
     }
   };
   syncContext(context());
@@ -87,6 +89,11 @@
     const target = event.composedPath().find(node => node instanceof Element);
     if (!target) return;
     const common = {input_method: inputMethod(event)};
+    const aboutTeaser = target.closest('.home-about-card .work-actions a[href]');
+    if (aboutTeaser) {
+      capture('about_opened', {...common, placement: 'home_teaser', destination: '/about/'}, true);
+      return;
+    }
     const projectLink = target.closest('[data-analytics-work] .work-actions a[href]');
     if (projectLink) {
       const url = new URL(projectLink.href, location.href);
@@ -143,7 +150,7 @@
     if (['email', 'telegram'].includes(destination)) capture('contact_clicked', {...properties, channel: destination}, true);
     else if (destination === 'resume') capture('resume_opened', properties, true);
     else if (destination === 'about') capture('about_opened', properties, true);
-    else if (destination === 'work') capture('portfolio_opened', properties, true);
+    else if (destination === 'work') capture('portfolio_opened', {...properties, destination: '/#selected-works'}, true);
     else if (destination === 'linkedin') capture('linkedin_opened', properties, true);
   }, true);
 
@@ -204,7 +211,7 @@
     const hit = document.elementFromPoint(x, y);
     return hit === element || element.contains(hit);
   };
-  const sections = {'works-title': 'selected_works', 'footer-title': 'contact',
+  const sections = {'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'footer-title': 'contact',
     'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
     'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',
     ...(project ? {'project-role': 'project_role', context: 'project_context', research: 'project_research',

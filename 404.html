@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="8f72b38bd68c" data-build="6e1ac848fcb7">
+<html lang="en" data-page-kind="not-found" data-ui-revision="58bf9c1c66ca" data-build="97145d508a5d">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -122,7 +122,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 3,
+            analytics_version: 4,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -166,9 +166,9 @@
   <link rel="stylesheet" href="/about/about.css?v=16654313b499">
   <!-- shared:navigation-boot:start -->
   <!-- shared:navigation-boot:end -->
-  <script src="/analytics.js?v=03fb5fa11117" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=527e35839438" defer fetchpriority="low"></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.7.0","designSystem":"1.53.0+6a91caf764d9","tokens":"1.7.0+edf4800c6a41","components":{"back":"1.7.0+43fc6166a37b","article-title":"1.7.0+05b903f8ecda","not-found-page":"1.7.0+7378f1978728"},"revision":"8f72b38bd68c"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.7.0","designSystem":"1.53.1+2309be74ba71","tokens":"1.7.0+edf4800c6a41","components":{"back":"1.7.0+43fc6166a37b","article-title":"1.7.0+05b903f8ecda","not-found-page":"1.7.0+7378f1978728"},"revision":"58bf9c1c66ca"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->
