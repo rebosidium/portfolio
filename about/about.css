@@ -73,13 +73,12 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .article-work .work-artwork{height:auto;aspect-ratio:544 / 294}
 }
 
-/* Case title panel uses the same page and prose columns as the reading shell. */
+/* Case title and testimonial panels share the desktop text inset. */
 .case-study-page .about-title-row{margin-bottom:57px}
-.case-study-title{box-sizing:border-box;width:100%;min-height:230px;margin:0 0 36px;padding:36px 0 52px;border-radius:var(--radius-placeholder);background:var(--color-case-surface)}
-.case-study-title .about-prose{display:flex;flex-direction:column;gap:14px}
+.case-study-title{box-sizing:border-box;width:100%;min-height:230px;margin:0 0 36px;padding:36px calc(var(--space-8) * 2) 52px;border-radius:var(--radius-placeholder);background:var(--color-case-surface)}
+.case-study-title .about-prose{width:100%;display:flex;flex-direction:column;gap:14px}
 .case-study-label{margin:0;font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:var(--tracking-body);color:var(--color-muted)}
 .case-study-title h2{margin:0;font-size:var(--type-case-title);font-weight:var(--weight-semibold);line-height:var(--line-compact);letter-spacing:normal;overflow-wrap:break-word}
-@media(max-width:983px) and (min-width:768px) and (pointer:fine){.case-study-title .about-prose{width:min(var(--width-prose),calc(100% - var(--space-8) * 2))}}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .case-study-page .about-title-row{margin-bottom:42px}
  .case-study-title{min-height:0;border-radius:0;padding:var(--space-7) var(--space-5) var(--space-10);margin-bottom:var(--space-7)}

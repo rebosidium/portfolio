@@ -36,7 +36,7 @@
 .recommendations-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 /* Desktop Figma232:733:944px card,64px insets,816px quote field. */
 @media(min-width:768px) and (pointer:fine), (min-width:1024px){
-  .recommendations{max-width:var(--width-page);min-height:343px;margin-inline:auto;padding:0 64px 23px;border-radius:var(--space-3);}
+  .recommendations{max-width:var(--width-page);min-height:343px;margin-inline:auto;padding:0 calc(var(--space-8) * 2) 23px;border-radius:var(--space-3);}
   .recommendations:has(.recommendations-slide:only-child){padding-bottom:var(--space-8);min-height:calc(343px + var(--space-3));}
   .recommendations h2{justify-content:flex-start;}
   .recommendations-slides{max-width:none;}
