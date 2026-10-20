@@ -5,7 +5,8 @@
   'use strict';
   const pending = new WeakMap();
   function prepare(image) {
-    if (image.closest('[data-photo-repeat]')) image.loading='eager';
+    // Once this scene is requested, prepare every repeated element before reveal.
+    if (image.closest('[data-photo-mosaic]')) image.loading='eager';
     const loaded = new Promise((resolve,reject) => {
       const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
       const onLoad = () => {clear();resolve();};
@@ -21,6 +22,19 @@
   }
   function load(artwork) {
     if (pending.has(artwork)) return pending.get(artwork);
+    const period=artwork.querySelector('.home-about-photo-page');
+    if(period&&!artwork.hasAttribute('data-photo-pool-ready')){
+      for(const row of [0,1])for(const col of [-1,0,1]){
+        if(!row&&!col)continue;
+        const copy=period.cloneNode(true);
+        copy.setAttribute('data-photo-repeat','');copy.setAttribute('aria-hidden','true');
+        if(row)copy.setAttribute('data-photo-row-repeat','');
+        copy.style.translate=`${col*100}% ${row*100}%`;
+        copy.querySelectorAll('img').forEach(image=>{image.alt='';});
+        period.parentElement.append(copy);
+      }
+      artwork.setAttribute('data-photo-pool-ready','');
+    }
     const images = [...artwork.querySelectorAll('.work-image')];
     const error = artwork.querySelector('.work-image-error');
     if (!images.length) return Promise.resolve();
@@ -537,7 +551,11 @@
         let titleTop = 0;
         for (let element=readingStart||panel.element.querySelector('h3');element && element!==panel.element;element=element.offsetParent) titleTop += element.offsetTop;
         const titleRest = parseFloat(getComputedStyle(panel.element).getPropertyValue('--work-title-rest')) || 40;
-        panel.element.style.setProperty('--work-read-travel',`${readingStart ? 0 : Math.max(0,titleTop-titleRest)}px`);
+        if(panels[index+1]?.element.dataset.scrollEntry==='flow'){
+          const style=getComputedStyle(panel.element),space=parseFloat(style.getPropertyValue('--space-8'))||32,safe=parseFloat(style.getPropertyValue('--scene-safe-bottom'))||0;
+          panel.element.style.setProperty('--work-flow-top-gap',`${Math.max(titleRest,(workHeight-panel.card.offsetHeight+Math.max(space,titleRest)-space-safe)/2)}px`);
+        }
+        panel.element.style.setProperty('--work-read-travel',`${readingStart || panels[index+1]?.element.dataset.scrollEntry==='flow' ? 0 : Math.max(0,titleTop-titleRest)}px`);
         const style = getComputedStyle(panel.element);
         panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
         panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,(index===panels.length-1 ? height-footerLead : workHeight)-panel.height)}px`);
@@ -585,10 +603,10 @@
       const viewport = window.visualViewport,visibleTop = viewport?.offsetTop || 0,visibleHeight = viewport?.height || height,visibleBottom = visibleTop+visibleHeight;
       const footerCover = footerCoverAt(mobilePaintedY);
       panels.forEach((panel,index) => {
-        const next = panels[index+1];
+        const next = panels[index+1],flowExit=next?.element.dataset.scrollEntry==='flow';
         const stickyTop=parseFloat(panel.element.style.getPropertyValue('--work-sticky-top'))||0;
-        panel.element.dataset.sceneSticky=String(mobilePaintedY>=panel.start-stickyTop&&mobilePaintedY<(next?.start??footerStart));
-        const covering = next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
+        panel.element.dataset.sceneSticky=String(!flowExit&&mobilePaintedY>=panel.start-stickyTop&&mobilePaintedY<(next?.start??footerStart));
+        const covering = flowExit ? 0 : next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
         set(panel.element,{autoAlpha:1-covering,scale:1-overlapRecede*covering,y:0});
         panel.element.inert = covering>=.999;
@@ -623,15 +641,17 @@
       const footerIncoming = Math.max(0,Math.min(1,(desktopPaintedY-footerStart+height)/height));
       const footerCover = footerCoverAt(desktopPaintedY);
       panels.forEach((panel,index)=>{
+        const flowExit=panels[index+1]?.element.dataset.scrollEntry==='flow';
         const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
         const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : footerCover;
         const visible=entering>0 && covering<.999;
-        set(panel.element,{autoAlpha:entering>0 ? 1-covering : 0,y:height*(1-entering)-(index===panels.length-1 ? Math.min(footerLead,footerIncoming*height) : 0),scale:1-overlapRecede*covering});
+        // A flow entry shares its edge with the outgoing work instead of covering it.
+        set(panel.element,{autoAlpha:entering>0 ? flowExit ? Number(covering<1) : 1-covering : 0,y:height*(1-entering)-(flowExit ? height*covering : index===panels.length-1 ? Math.min(footerLead,footerIncoming*height) : 0),scale:flowExit ? 1 : 1-overlapRecede*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
         panel.element.dataset.coverProgress=covering.toFixed(4);
         if (entering>=.5) visibleIndex=index;
         if (entering>=.999) backgroundIndex=index;
-        if (index>0 && entering>0 && entering<1) overlapping=true;
+        if (index>0 && entering>0 && entering<1 && panel.element.dataset.scrollEntry!=='flow') overlapping=true;
         if (!visible) return;
         loadImage(true,panel);
         const title=panel.element.querySelector('h2');
