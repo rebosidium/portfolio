@@ -52,10 +52,27 @@
   window.PortfolioProjectMedia = {load};
   // Pause photo transforms outside the visible scene, hidden tab and open menu.
   document.querySelectorAll('[data-photo-mosaic]').forEach(artwork=>{
-    let visible=false;
-    const sync=()=>{artwork.dataset.photosVisible=String(visible&&!document.hidden);};
-    if (window.IntersectionObserver) new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(artwork);
-    else {visible=true;sync();}
+    const scene=artwork.closest('.home-about-screen[data-scroll-entry="flow"]');
+    const flowScene=scene&&document.querySelector('.footer') ? scene : null;
+    let visible=false,sceneVisible=false,visibleTop=0;
+    const sync=()=>{
+      // Safari can still paint passed photos through its translucent toolbar.
+      // Keep only this flow gallery moving until its section leaves or is covered.
+      const passed=sceneVisible&&artwork.getBoundingClientRect().bottom<=visibleTop;
+      artwork.dataset.photosVisible=String((visible||passed)&&!document.hidden);
+    };
+    if (window.IntersectionObserver) {
+      const observer=new IntersectionObserver(entries=>{
+        for(const entry of entries){
+          visibleTop=entry.rootBounds?.top||0;
+          if(entry.target===artwork)visible=entry.isIntersecting;
+          else sceneVisible=entry.isIntersecting;
+        }
+        sync();
+      });
+      observer.observe(artwork);
+      if(flowScene)observer.observe(flowScene);
+    } else {visible=true;sync();}
     document.addEventListener('visibilitychange',sync);
   });
   // HOME chooses request timing itself; reading pages own only their cards.

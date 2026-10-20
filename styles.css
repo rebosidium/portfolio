@@ -100,7 +100,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .intro-content{padding
 .home-about-screen{min-height:var(--scene-height,740px)}
 .home-about-screen .works-body{padding-bottom:0}
 .home-about-card{display:grid;grid-template-columns:442px minmax(0,1fr);gap:38px;min-height:383px;padding-right:48px;border-radius:var(--space-3);overflow:hidden;background:var(--color-about-teaser)}
-.home-about-card .home-about-artwork{width:442px;height:383px;margin:0;border-radius:0;background:var(--color-about-teaser)}
+.home-about-card .home-about-artwork{width:442px;height:auto;align-self:stretch;margin:0;border-radius:0;background:var(--color-about-teaser)}
 .home-about-mosaic{position:absolute;left:50%;top:50%;width:var(--photo-period-width);aspect-ratio:var(--photo-ratio);translate:-50% -50%}
 .home-about-track,.home-about-photo-page{position:absolute;inset:0}
 .home-about-artwork[data-photo-pool-ready] .home-about-track{animation:home-photo-stream 80s linear infinite paused,home-photo-rise 160s linear infinite paused}
