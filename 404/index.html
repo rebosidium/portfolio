@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="1ef732070558" data-build="3ddd8afb895e">
+<html lang="en" data-page-kind="not-found" data-ui-revision="93d1c1a7de97" data-build="909bcbb9509a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -132,7 +132,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 4,
+            analytics_version: 5,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -219,10 +219,10 @@
   <link rel="stylesheet" href="/about/about.css?v=0a2622c0fdb8">
   <!-- shared:navigation-boot:start -->
   <!-- shared:navigation-boot:end -->
-  <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=e39d4f5c5141" defer fetchpriority="low"></script>
   <script src="/assets/arrow-controls.js?v=082520116856" defer></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+29425f5c8f51","tokens":"1.9.0+ab8ce19cd2ff","components":{"back":"1.9.0+76a0d0c6d79e","article-title":"1.9.0+676b17555989","not-found-page":"1.9.0+5a1a78bd816e"},"revision":"1ef732070558"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+8de0e67f81c7","tokens":"1.9.0+ab8ce19cd2ff","components":{"back":"1.9.0+76a0d0c6d79e","article-title":"1.9.0+676b17555989","not-found-page":"1.9.0+5a1a78bd816e"},"revision":"93d1c1a7de97"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->

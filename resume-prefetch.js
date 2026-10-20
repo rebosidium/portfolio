@@ -107,7 +107,8 @@
     const link = event.target.closest?.('a[data-background-prefetch]');
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const url = prepared.get(link.href);
-    if (!url) return; // The ordinary HTTP download remains available immediately.
+    if (event.isTrusted) document.dispatchEvent(new CustomEvent('portfolio:resume-result', {detail:{status:url ? 'prepared_download' : 'native_download_requested'}}));
+    if (!url) return; // Native download outcome is not observable.
     event.preventDefault();
     const download = document.createElement('a');
     download.href = url;
