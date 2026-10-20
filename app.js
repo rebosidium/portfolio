@@ -4,12 +4,8 @@
 (() => {
   'use strict';
   const pending = new WeakMap();
-  function load(artwork) {
-    if (pending.has(artwork)) return pending.get(artwork);
-    const image = artwork.querySelector('.work-image');
-    const error = artwork.querySelector('.work-image-error');
-    if (!image) return Promise.resolve();
-    artwork.dataset.imageState = 'loading';
+  function prepare(image) {
+    if (image.closest('[data-photo-repeat]')) image.loading='eager';
     const loaded = new Promise((resolve,reject) => {
       const clear = () => {image.removeEventListener('load',onLoad);image.removeEventListener('error',onError);};
       const onLoad = () => {clear();resolve();};
@@ -21,18 +17,36 @@
       else if (image.complete && (image.currentSrc || image.getAttribute('src'))) onError();
     });
     // Decode after load: WebKit can reject an early decode of a lazy image.
-    const ready = loaded.then(() => image.decode?.().catch(failure => {if (!image.naturalWidth) throw failure;}))
-      .then(() => {
-        artwork.dataset.imageState = 'ready';artwork.classList.remove('image-failed');
-        if (error) error.hidden = true;
-      },failure => {
-        artwork.dataset.imageState = 'failed';artwork.classList.add('image-failed');
-        if (error) error.hidden = false;
-        throw failure;
-      });
+    return loaded.then(() => image.decode?.().catch(failure => {if (!image.naturalWidth) throw failure;}));
+  }
+  function load(artwork) {
+    if (pending.has(artwork)) return pending.get(artwork);
+    const images = [...artwork.querySelectorAll('.work-image')];
+    const error = artwork.querySelector('.work-image-error');
+    if (!images.length) return Promise.resolve();
+    artwork.dataset.imageState = 'loading';
+    const ready = Promise.allSettled(images.map(prepare)).then(results => {
+      const successful=results.filter(result=>result.status==='fulfilled').length;
+      if (!successful) {
+        artwork.dataset.imageState='failed';artwork.classList.add('image-failed');
+        if (error) error.hidden=false;
+        throw Error('Work preview unavailable');
+      }
+      results.forEach((result,index)=>{if(result.status==='rejected')images[index].closest('[data-mosaic-photo]')?.setAttribute('hidden','');});
+      artwork.dataset.imageState='ready';artwork.classList.remove('image-failed');
+      if (error) error.hidden=true;
+    });
     pending.set(artwork,ready);return ready;
   }
   window.PortfolioProjectMedia = {load};
+  // Pause photo transforms outside the visible scene, hidden tab and open menu.
+  document.querySelectorAll('[data-photo-mosaic]').forEach(artwork=>{
+    let visible=false;
+    const sync=()=>{artwork.dataset.photosVisible=String(visible&&!document.hidden);};
+    if (window.IntersectionObserver) new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(artwork);
+    else {visible=true;sync();}
+    document.addEventListener('visibilitychange',sync);
+  });
   // HOME chooses request timing itself; reading pages own only their cards.
   document.querySelectorAll('.article-work .work-artwork,[data-project-media-auto] .work-artwork').forEach(artwork => {load(artwork).catch(() => {});});
 })();
@@ -481,7 +495,7 @@
         panel.imageReady = true;artwork.dataset.imageState = 'placeholder';revealArtwork(panel);
         return panel.imagePending ||= Promise.resolve();
       }
-      if (eager) image.loading = 'eager';
+      if (eager) artwork.querySelectorAll('.work-image').forEach(image=>{image.loading='eager';});
       // Warm desktop previews independently of the portrait. When their card
       // enters view, promote even an already pending request before returning.
       if (!mobile.matches && (eager || !panel.imagePending)) image.fetchPriority = priority;
@@ -517,12 +531,13 @@
       root.dataset.workViewportHeight = workHeight.toFixed(1);
       let start = base + intro.offsetHeight;
       panels.forEach((panel,index) => {
-        // Keep a full screen of content and the requested space above its title.
-        // Longer copy can still scroll naturally until its actions are readable.
+        // Default work cards read from their title; image-first cards declare
+        // their first content anchor so its height cannot become trailing space.
+        const readingStart=panel.element.querySelector('[data-work-reading-start]');
         let titleTop = 0;
-        for (let element=panel.element.querySelector('h3');element && element!==panel.element;element=element.offsetParent) titleTop += element.offsetTop;
+        for (let element=readingStart||panel.element.querySelector('h3');element && element!==panel.element;element=element.offsetParent) titleTop += element.offsetTop;
         const titleRest = parseFloat(getComputedStyle(panel.element).getPropertyValue('--work-title-rest')) || 40;
-        panel.element.style.setProperty('--work-read-travel',`${Math.max(0,titleTop-titleRest)}px`);
+        panel.element.style.setProperty('--work-read-travel',`${readingStart ? 0 : Math.max(0,titleTop-titleRest)}px`);
         const style = getComputedStyle(panel.element);
         panel.start = start;panel.height = parseFloat(style.height) || panel.element.offsetHeight;start += panel.height;
         panel.element.style.setProperty('--work-sticky-top',`${Math.min(0,(index===panels.length-1 ? height-footerLead : workHeight)-panel.height)}px`);
@@ -562,6 +577,9 @@
       if (effect>0 && effect<1) root.dataset.sceneState='overlap';
       if (cover>=.999) root.dataset.sceneView='footer';
     }
+    function setSceneBackdrop(surface) {
+      document.body.style.backgroundColor=surface;stage.style.backgroundColor=surface;
+    }
     function paintWorkPanels() {
       let visibleIndex = 0,backgroundIndex = 0;
       const viewport = window.visualViewport,visibleTop = viewport?.offsetTop || 0,visibleHeight = viewport?.height || height,visibleBottom = visibleTop+visibleHeight;
@@ -595,7 +613,9 @@
         }
       });
       root.dataset.workSceneIndex = String(visibleIndex);
-      document.body.style.backgroundColor = panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
+      // The footer can enter a tall visual viewport before the short last card rests.
+      if (footerStart-mobilePaintedY<visibleBottom) backgroundIndex=panels.length-1;
+      setSceneBackdrop(panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)');
       paintFooter(Math.max(0,Math.min(1,(mobilePaintedY-footerStart+height)/height)),false,footerCover);
     }
     function paintDesktopPanels() {
@@ -621,8 +641,8 @@
       });
       root.dataset.workSceneIndex=String(visibleIndex);
       if (overlapping) root.dataset.sceneState='overlap';
-      if (progress>0) document.body.style.backgroundColor=panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)';
-      else document.body.style.removeProperty('background-color');
+      if (progress>0) setSceneBackdrop(panels[backgroundIndex].element.dataset.workSurface==='white' ? 'var(--color-canvas)' : 'var(--color-surface)');
+      else {document.body.style.removeProperty('background-color');stage.style.removeProperty('background-color');}
       paintFooter(footerIncoming,true,footerCover);
     }
     function nativeWorkPose(y) {
