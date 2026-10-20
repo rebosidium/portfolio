@@ -78,7 +78,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .case-study-title{box-sizing:border-box;width:100%;min-height:230px;margin:0 0 36px;padding:36px 0 52px;border-radius:var(--radius-placeholder);background:var(--color-case-surface)}
 .case-study-title .about-prose{display:flex;flex-direction:column;gap:14px}
 .case-study-label{margin:0;font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:var(--tracking-body);color:var(--color-muted)}
-.case-study-title h2{margin:0;font-size:var(--type-case-title);font-weight:var(--weight-body);line-height:var(--line-compact);letter-spacing:normal;overflow-wrap:break-word}
+.case-study-title h2{margin:0;font-size:var(--type-case-title);font-weight:var(--weight-semibold);line-height:var(--line-compact);letter-spacing:normal;overflow-wrap:break-word}
 @media(max-width:983px) and (min-width:768px) and (pointer:fine){.case-study-title .about-prose{width:min(var(--width-prose),calc(100% - var(--space-8) * 2))}}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .case-study-page .about-title-row{margin-bottom:42px}
@@ -95,13 +95,10 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .related-cases-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:46px var(--space-4);align-items:start}
 .related-case-card{display:flex;flex-direction:column;gap:var(--space-4);min-width:0;color:var(--color-ink);text-decoration:none;font-size:var(--type-body);font-weight:var(--weight-body);line-height:var(--line-copy);letter-spacing:var(--tracking-body);word-spacing:normal;text-wrap:pretty;overflow-wrap:break-word;--ui-focus-radius:var(--radius-artwork)}
 .related-case-image{display:block;width:100%;height:auto;aspect-ratio:544 / 294;object-fit:contain;border-radius:var(--radius-artwork);background:var(--color-canvas)}
-.related-case-copy{display:flex;flex-direction:column;gap:var(--space-2)}
-.related-case-copy h3,.related-case-copy p{margin:0;font-size:inherit;line-height:inherit}
-.related-case-copy h3{font-weight:var(--weight-bold)}
-.related-case-card:is(:hover,:focus-visible) h3{text-decoration:underline;text-underline-offset:3px}
+.related-case-copy{margin:0;font:inherit}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
  .has-related-cases>.related-cases{margin-top:112px}
  .related-cases-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-2)}
  .related-case-card{font-size:var(--type-small)}
- .related-case-copy p{line-height:var(--line-contact)}
+ .related-case-copy{line-height:var(--line-contact)}
 }

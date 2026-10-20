@@ -37,6 +37,7 @@
 /* Desktop Figma232:733:944px card,64px insets,816px quote field. */
 @media(min-width:768px) and (pointer:fine), (min-width:1024px){
   .recommendations{max-width:var(--width-page);min-height:343px;margin-inline:auto;padding:0 64px 23px;border-radius:var(--space-3);}
+  .recommendations:has(.recommendations-slide:only-child){padding-bottom:var(--space-8);min-height:calc(343px + var(--space-3));}
   .recommendations h2{justify-content:flex-start;}
   .recommendations-slides{max-width:none;}
   .recommendations blockquote{margin-bottom:26px;}
@@ -45,6 +46,7 @@
 }
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
   .recommendations{margin:var(--space-7) 0;padding-bottom:var(--space-5);}
+  .recommendations:has(.recommendations-slide:only-child){padding-bottom:var(--space-7);}
   .recommendations blockquote{margin-bottom:26px;}
   .recommendations-controls:not([hidden]){gap:0;}
   .recommendations-role-full{display:none;}

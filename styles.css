@@ -132,7 +132,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .intro-content{padding
  .home-about-card{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:0}
  .home-about-card .home-about-artwork{width:100%;height:auto;aspect-ratio:442 / 301;margin:0}
  .home-about-mosaic{width:var(--photo-mobile-period-width);aspect-ratio:var(--photo-mobile-ratio);top:0;translate:-50% 0}
- .home-about-artwork .home-about-photo{left:var(--photo-mobile-x);top:var(--photo-mobile-y);width:var(--photo-mobile-width);height:var(--photo-mobile-height);rotate:var(--photo-mobile-angle)}
+ .home-about-artwork .home-about-photo{top:var(--photo-mobile-y);height:var(--photo-mobile-height)}
  .home-about-photo[data-photo-mobile-hidden]{display:none}
  .home-about-artwork[data-photo-pool-ready] .home-about-track{animation:home-photo-stream 80s linear infinite paused}
  .home-about-photo-page[data-photo-row-repeat]{display:none}
