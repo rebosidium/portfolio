@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="61d441f3cb52" data-build="6e1ac848fcb7">
+<html lang="en" data-ui-revision="53a21613535a" data-build="97145d508a5d">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -122,7 +122,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 3,
+            analytics_version: 4,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -232,7 +232,7 @@
   <script type="module" src="portrait-boot.js?v=cc8c2e4d09bb" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=25866fa166e2" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=03fb5fa11117"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=527e35839438"></script>
   <script defer src="mobile-nav.js?v=85b9701ebe21" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
   <script>
@@ -323,7 +323,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.7.0","designSystem":"1.53.0+6a91caf764d9","tokens":"1.7.0+edf4800c6a41","components":{"home-about":"1.7.0+6c213561e204","work-logo":"1.7.0+984af9ed59c6","brief":"1.7.0+e5f07f1259dd","brief-dark":"1.7.0+5ef61ef8e1a3","link":"1.7.0+fb966e924a97","footer-link":"1.7.0+974ec203f10d","work-actions":"1.7.0+efdcc0ee892e","availability":"1.7.0+8ff9138b9b9c","portrait":"1.7.0+c6d48343cbbc","header":"1.7.0+73279807e580","hero":"1.7.0+a99280fd8455","work":"1.7.0+1d1f39c9c3fd","work-section":"1.7.0+e6a233d2d65c","footer":"1.7.0+c263c8ccb2a9"},"revision":"61d441f3cb52"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.7.0","designSystem":"1.53.1+2309be74ba71","tokens":"1.7.0+edf4800c6a41","components":{"home-about":"1.7.0+6c213561e204","work-logo":"1.7.0+984af9ed59c6","brief":"1.7.0+e5f07f1259dd","brief-dark":"1.7.0+5ef61ef8e1a3","link":"1.7.0+fb966e924a97","footer-link":"1.7.0+974ec203f10d","work-actions":"1.7.0+efdcc0ee892e","availability":"1.7.0+8ff9138b9b9c","portrait":"1.7.0+c6d48343cbbc","header":"1.7.0+73279807e580","hero":"1.7.0+a99280fd8455","work":"1.7.0+1d1f39c9c3fd","work-section":"1.7.0+e6a233d2d65c","footer":"1.7.0+c263c8ccb2a9"},"revision":"53a21613535a"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>
