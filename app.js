@@ -443,7 +443,7 @@
     const stage = document.querySelector('.scene-stage');
     const flow = document.querySelector('.scene-flow');
     const hero = document.querySelector('.hero');
-    const workLink = document.querySelector('.header nav a[href="#selected-works"]');
+    const workLinks = document.querySelectorAll('.header nav a[href="#selected-works"], .footer-links a[href="/#selected-works"]');
     const heading = document.querySelector('#works-title');
     const workCard = document.querySelector('.work-card');
     const panels = [...document.querySelectorAll('.works-screen')].map(element => ({
@@ -959,10 +959,10 @@
       const units = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
       window.scrollBy(0,event.deltaY * units);paintScene();
     }
-    workLink.addEventListener('click',event => {
+    workLinks.forEach(link=>link.addEventListener('click',event => {
       if ((!enhanced && !mobileOverlap) || root.classList.contains('mobile-menu-open') || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       event.preventDefault();if (location.hash !== '#selected-works') history.pushState(null,'','#selected-works');goToWorks(true);
-    });
+    }));
     panels.forEach(panel=>panel.element.addEventListener('focusin',event => {
       if ((enhanced || mobileOverlap) && progress<.999 && event.target!==heading && panel===panels[0]) goToWorks();
       else if (mobileOverlap || enhanced) scheduleScroll();
