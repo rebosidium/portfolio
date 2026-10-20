@@ -4,6 +4,8 @@
   --type-body: 18px;
   --type-quote: 22px;
   --type-heading: 24px;
+  --type-case-title: 34px;
+  --type-case-title-mobile: 28px;
   --type-case-heading: 22px;
   --type-heading-compact: 22px;
   --type-small: 16px;
@@ -28,6 +30,7 @@
   --tracking-heading: .24px;
   --color-canvas: #FFFFFF;
   --color-ink: #232522;
+  --color-case-surface: #F8F8F8;
   --color-surface: #F5F5F7;
   --color-inverse: #1D1D1F;
   --color-inverse-muted: #A5A5A5;
@@ -282,6 +285,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
     color-scheme: dark;
     --color-canvas: #171819;
     --color-ink: #EDEEEB;
+    --color-case-surface: #202123;
     --color-surface: #202123;
     --color-inverse: #101112;
     --color-inverse-muted: #A5A5A5;
@@ -315,6 +319,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
     color-scheme: dark;
     --color-canvas: #171819;
     --color-ink: #EDEEEB;
+    --color-case-surface: #202123;
     --color-surface: #202123;
     --color-inverse: #101112;
     --color-inverse-muted: #A5A5A5;
