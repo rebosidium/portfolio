@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="01819c2f5a1f" data-build="5e8ec1be2143">
+<html lang="en" data-ui-revision="82b28acb3ae8" data-build="bdd5a338735a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -151,6 +151,29 @@
       })(window, document, "clarity", "script", "yv8rnad266");
     }
   </script>
+<script data-analytics="google-analytics">
+    const ga4MeasurementId = "G-PEZ2YDZQW0";
+    const ga4TrackingEnabled = true && window.portfolioAnalytics?.enabled === true;
+    if (ga4TrackingEnabled) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){window.dataLayer.push(arguments);};
+      gtag('js', new Date());
+      gtag('config', ga4MeasurementId, {
+        send_page_view: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        site_path: window.portfolioAnalytics.sitePath,
+        page_type: window.portfolioAnalytics.pageType,
+        ...(window.portfolioAnalytics.project ? {project: window.portfolioAnalytics.project} : {}),
+        layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'
+      });
+      const googleTag = document.createElement('script');
+      googleTag.async = true;
+      googleTag.fetchPriority = 'low';
+      googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4MeasurementId);
+      document.head.appendChild(googleTag);
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://dmitryrybalka.com/work/gdematerial/">
@@ -200,10 +223,10 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
   <script src="/assets/site-controls.js?v=35c422f64e4c" defer></script>
-  <script src="/analytics.js?v=6f78cf93b36b" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=49b2429a45d3" defer></script>
   <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.0+d38301f10c58","tokens":"1.8.0+fa9a3c5a4e82","components":{"related-cases":"1.8.0+d5bde94b07fb","recommendations":"1.8.0+a9c4e110b7c4","brief-dark":"1.8.0+6ae8e692f30d","back":"1.8.0+41190b416118","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","case-study-title":"1.8.0+1fc4e95955c8","company-title":"1.8.0+79e0175033ab","company-page":"1.8.0+929e6d857139","prose-section":"1.8.0+a260fabe32a9","about-header":"1.8.0+845d99b58e14","footer":"1.8.0+4f7f2c7a176b"},"revision":"01819c2f5a1f"}</script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=adec95b945b2"><script src="/assets/recommendations.js?v=1f6c8ada5de6" defer></script>  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.1+13b7f7cfc0ee","tokens":"1.8.0+fa9a3c5a4e82","components":{"related-cases":"1.8.0+d5bde94b07fb","recommendations":"1.8.0+a9c4e110b7c4","brief-dark":"1.8.0+6ae8e692f30d","back":"1.8.0+41190b416118","link":"1.8.0+f77aa115733b","footer-link":"1.8.0+aa3cff655fd9","case-study-title":"1.8.0+1fc4e95955c8","company-title":"1.8.0+79e0175033ab","company-page":"1.8.0+929e6d857139","prose-section":"1.8.0+a260fabe32a9","about-header":"1.8.0+845d99b58e14","footer":"1.8.0+4f7f2c7a176b"},"revision":"82b28acb3ae8"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->

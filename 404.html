@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="f5d930a1c31a" data-build="5e8ec1be2143">
+<html lang="en" data-page-kind="not-found" data-ui-revision="00769ed8402d" data-build="bdd5a338735a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -151,6 +151,29 @@
       })(window, document, "clarity", "script", "yv8rnad266");
     }
   </script>
+<script data-analytics="google-analytics">
+    const ga4MeasurementId = "G-PEZ2YDZQW0";
+    const ga4TrackingEnabled = true && window.portfolioAnalytics?.enabled === true;
+    if (ga4TrackingEnabled) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){window.dataLayer.push(arguments);};
+      gtag('js', new Date());
+      gtag('config', ga4MeasurementId, {
+        send_page_view: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        site_path: window.portfolioAnalytics.sitePath,
+        page_type: window.portfolioAnalytics.pageType,
+        ...(window.portfolioAnalytics.project ? {project: window.portfolioAnalytics.project} : {}),
+        layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'
+      });
+      const googleTag = document.createElement('script');
+      googleTag.async = true;
+      googleTag.fetchPriority = 'low';
+      googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4MeasurementId);
+      document.head.appendChild(googleTag);
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://dmitryrybalka.com/404/">
@@ -166,10 +189,10 @@
   <link rel="stylesheet" href="/about/about.css?v=4c6714dc3770">
   <!-- shared:navigation-boot:start -->
   <!-- shared:navigation-boot:end -->
-  <script src="/analytics.js?v=6f78cf93b36b" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
   <script src="/assets/arrow-controls.js?v=937144b31f0b" defer></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.0+d38301f10c58","tokens":"1.8.0+fa9a3c5a4e82","components":{"back":"1.8.0+41190b416118","article-title":"1.8.0+6567d334508b","not-found-page":"1.8.0+a24d0d531339"},"revision":"f5d930a1c31a"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.8.0","designSystem":"1.56.1+13b7f7cfc0ee","tokens":"1.8.0+fa9a3c5a4e82","components":{"back":"1.8.0+41190b416118","article-title":"1.8.0+6567d334508b","not-found-page":"1.8.0+a24d0d531339"},"revision":"00769ed8402d"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->

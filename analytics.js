@@ -10,7 +10,9 @@
     && typeof window.posthog?.capture === 'function';
   const clarityActive = typeof clarityTrackingEnabled !== 'undefined' && clarityTrackingEnabled
     && typeof window.clarity === 'function';
-  if (!posthogActive && !clarityActive) return;
+  const ga4Active = typeof ga4TrackingEnabled !== 'undefined' && ga4TrackingEnabled
+    && typeof window.gtag === 'function';
+  if (!posthogActive && !clarityActive && !ga4Active) return;
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
@@ -45,6 +47,10 @@
       window.posthog.capture(name, {...common, ...properties},
         immediate ? {transport: 'sendBeacon', send_instantly: true} : undefined);
     } catch { /* An unavailable provider cannot break native actions. */ }
+    if (ga4Active) try {
+      const values = Object.fromEntries(Object.entries({...common, ...properties}).filter(([,value]) => value !== null && value !== undefined));
+      window.gtag('event', name, {...values, send_to: ga4MeasurementId});
+    } catch { /* Google failures cannot affect actions or the other providers. */ }
     if (clarityActive) {
       syncContext(common);
       if (name === 'first_screen_ready') {
