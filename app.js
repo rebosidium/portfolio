@@ -55,10 +55,27 @@
   window.PortfolioProjectMedia = {load};
   // Pause photo transforms outside the visible scene, hidden tab and open menu.
   document.querySelectorAll('[data-photo-mosaic]').forEach(artwork=>{
-    let visible=false;
-    const sync=()=>{artwork.dataset.photosVisible=String(visible&&!document.hidden);};
-    if (window.IntersectionObserver) new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(artwork);
-    else {visible=true;sync();}
+    const scene=artwork.closest('.home-about-screen[data-scroll-entry="flow"]');
+    const flowScene=scene&&document.querySelector('.footer') ? scene : null;
+    let visible=false,sceneVisible=false,visibleTop=0;
+    const sync=()=>{
+      // Safari can still paint passed photos through its translucent toolbar.
+      // Keep only this flow gallery moving until its section leaves or is covered.
+      const passed=sceneVisible&&artwork.getBoundingClientRect().bottom<=visibleTop;
+      artwork.dataset.photosVisible=String((visible||passed)&&!document.hidden);
+    };
+    if (window.IntersectionObserver) {
+      const observer=new IntersectionObserver(entries=>{
+        for(const entry of entries){
+          visibleTop=entry.rootBounds?.top||0;
+          if(entry.target===artwork)visible=entry.isIntersecting;
+          else sceneVisible=entry.isIntersecting;
+        }
+        sync();
+      });
+      observer.observe(artwork);
+      if(flowScene)observer.observe(flowScene);
+    } else {visible=true;sync();}
     document.addEventListener('visibilitychange',sync);
   });
   // HOME chooses request timing itself; reading pages own only their cards.
@@ -618,12 +635,12 @@
       const viewport = window.visualViewport,visibleTop = viewport?.offsetTop || 0,visibleHeight = viewport?.height || height,visibleBottom = visibleTop+visibleHeight;
       const footerCover = footerCoverAt(mobilePaintedY);
       panels.forEach((panel,index) => {
-        const next = panels[index+1],flowExit=next?.element.dataset.scrollEntry==='flow';
+        const next = panels[index+1],flowExit=next?.element.dataset.scrollEntry==='flow',flowFooter=!next&&panel.element.dataset.scrollEntry==='flow';
         const stickyTop=parseFloat(panel.element.style.getPropertyValue('--work-sticky-top'))||0;
         panel.element.dataset.sceneSticky=String(!flowExit&&mobilePaintedY>=panel.start-stickyTop&&mobilePaintedY<(next?.start??footerStart));
         const covering = flowExit ? 0 : next ? Math.max(0,Math.min(1,(mobilePaintedY-next.start+workHeight)/workHeight)) : footerCover;
         // Sticky layout supplies the movement; scroll only controls the outgoing layer.
-        set(panel.element,{autoAlpha:1-covering,scale:1-overlapRecede*covering,y:0});
+        set(panel.element,{autoAlpha:flowFooter ? 1 : 1-covering,scale:flowFooter ? 1 : 1-overlapRecede*covering,y:0});
         panel.element.inert = covering>=.999;
         panel.element.setAttribute('aria-hidden',String(covering>=.999));
         panel.element.style.pointerEvents = covering>=.999 ? 'none' : 'auto';
@@ -656,12 +673,12 @@
       const footerIncoming = Math.max(0,Math.min(1,(desktopPaintedY-footerStart+height)/height));
       const footerCover = footerCoverAt(desktopPaintedY);
       panels.forEach((panel,index)=>{
-        const flowExit=panels[index+1]?.element.dataset.scrollEntry==='flow';
+        const flowExit=panels[index+1]?.element.dataset.scrollEntry==='flow',flowFooter=index===panels.length-1&&panel.element.dataset.scrollEntry==='flow';
         const entering=index===0 ? progress : Math.max(0,Math.min(1,(desktopPaintedY-travel-(index-1)*height)/height));
         const covering=index<panels.length-1 ? Math.max(0,Math.min(1,(desktopPaintedY-travel-index*height)/height)) : footerCover;
         const visible=entering>0 && covering<.999;
         // A flow entry shares its edge with the outgoing work instead of covering it.
-        set(panel.element,{autoAlpha:entering>0 ? flowExit ? Number(covering<1) : 1-covering : 0,y:height*(1-entering)-(flowExit ? height*covering : index===panels.length-1 ? Math.min(footerLead,footerIncoming*height) : 0),scale:flowExit ? 1 : 1-overlapRecede*covering});
+        set(panel.element,{autoAlpha:entering>0 ? flowFooter ? 1 : flowExit ? Number(covering<1) : 1-covering : 0,y:height*(1-entering)-(flowExit ? height*covering : index===panels.length-1 ? Math.min(footerLead,footerIncoming*height) : 0),scale:flowExit||flowFooter ? 1 : 1-overlapRecede*covering});
         panel.element.inert=!visible;panel.element.setAttribute('aria-hidden',String(!visible));panel.element.style.pointerEvents=visible ? 'auto' : 'none';
         panel.element.dataset.coverProgress=covering.toFixed(4);
         if (entering>=.5) visibleIndex=index;
@@ -711,8 +728,8 @@
         const cover=footerCoverAt(window.scrollY);
         paintFooterCorners(cover);
         if(root.classList.contains('footer-native-overlap')) {
-          const last=panels[panels.length-1].element;
-          set(last,{autoAlpha:1-cover,scale:1-overlapRecede*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
+          const last=panels[panels.length-1].element,flowFooter=last.dataset.scrollEntry==='flow';
+          set(last,{autoAlpha:flowFooter ? 1 : 1-cover,scale:flowFooter ? 1 : 1-overlapRecede*cover});last.inert=cover>=.999;last.setAttribute('aria-hidden',String(last.inert));
           root.dataset.footerProgress=cover.toFixed(4);root.dataset.footerStart=footerStart.toFixed(1);
         }
         if (!mobile.matches) panels.forEach(panel=>{
