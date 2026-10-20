@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // Both providers share the exact head decision; unknown routes fail closed.
+  // All providers share the exact head decision; unknown routes fail closed.
   const policy = window.portfolioAnalytics;
   if (!policy?.enabled) return;
   const notFound = policy.pageType === 'not-found';
@@ -17,7 +17,7 @@
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: sitePath,
-    site_build: document.documentElement.dataset.build, analytics_version: 4, analytics_test: qa, page_type: policy.pageType, project});
+    site_build: document.documentElement.dataset.build, analytics_version: 5, analytics_test: qa, page_type: policy.pageType, project});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
   const tag = (key, value) => {
@@ -27,7 +27,7 @@
   const syncContext = properties => {
     if (!clarityActive) return;
     for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test', 'page_type']) tag(key, properties[key]);
-    tag('clarity_events_version', 4);
+    tag('clarity_events_version', 5);
     if (project) tag('project', project);
   };
   const workNames = ['larixon', 'raiffeisen_bank', 'raiffeisen_leasing', 'yandex_market', 'gdematerial', 'medesk'];
@@ -41,7 +41,10 @@
     if (['briefing_clicked', 'briefing_copied', 'briefing_copy_failed'].includes(name)) return name + '_' + properties.placement;
     return name;
   };
+  let observeJourney = () => {};
   const capture = (name, properties = {}, immediate = false) => {
+    if (!policy.enabled) return;
+    observeJourney(name, properties);
     const common = context();
     if (posthogActive) try {
       window.posthog.capture(name, {...common, ...properties},
@@ -58,6 +61,8 @@
         tag('first_screen_band', properties.ready_ms < 3000 ? 'under_3s'
           : properties.ready_ms <= 6000 ? '3_to_6s' : 'over_6s');
       }
+      if (properties.input_method) tag('input_method', properties.input_method);
+      if (['case_engaged','multiple_cases_engaged','qualified_contact'].includes(name)) tag(name, 'true');
       callClarity('event', clarityName(name, properties));
       if (name === 'project_opened' && properties.placement === 'related_cases') callClarity('event', 'project_opened_related_cases');
       // Aggregate API signals let native goals include all current/future
@@ -169,25 +174,131 @@
     else if (destination === 'linkedin') capture('linkedin_opened', properties, true);
   }, true);
 
-  let portraitSent = false, drag = null;
+  let portraitSent = false, drag = null, dragCount = 0, dragTotal = 0;
   const portrait = document.querySelector('.portrait');
   const sendPortrait = input => {if (!portraitSent) {portraitSent = true; capture('portrait_interacted', {input_method: input});}};
   portrait?.addEventListener('pointerdown', event => {
     if (event.isTrusted && event.isPrimary !== false && (event.button === 0 || event.pointerType === 'touch')
-      && portrait.dataset.spinReady === 'true') drag = {id: event.pointerId, x: event.clientX, y: event.clientY, type: event.pointerType};
+      && portrait.dataset.spinReady === 'true') drag = {id: event.pointerId, x: event.clientX, y: event.clientY, type: event.pointerType, started: performance.now(), moved: false, distance: 0};
   }, {passive: true});
   window.addEventListener('pointermove', event => {
     if (!drag || drag.id !== event.pointerId || !event.isTrusted) return;
     const x = Math.abs(event.clientX - drag.x), y = Math.abs(event.clientY - drag.y);
-    if (x >= 8 && x >= y) {sendPortrait(drag.type || 'pointer'); drag = null;}
+    if (x >= 8 && x >= y) {drag.moved = true; drag.distance = Math.max(drag.distance, x);}
   }, {passive: true});
   const clearDrag = () => {drag = null;};
-  window.addEventListener('pointerup', clearDrag, {passive: true});
+  window.addEventListener('pointerup', event => {
+    if (!drag || !event.isTrusted || drag.id !== event.pointerId) return;
+    if (drag.moved && document.visibilityState === 'visible') {
+      const duration = Math.max(0, Math.round(performance.now() - drag.started));
+      dragCount++; dragTotal += duration;
+      sendPortrait(drag.type || 'mouse');
+      capture('portrait_drag_completed', {input_method: drag.type || 'mouse', duration_ms: duration,
+        drag_count: dragCount, total_drag_ms: dragTotal, distance_px: Math.round(drag.distance)});
+    }
+    clearDrag();
+  }, {passive: true});
   window.addEventListener('pointercancel', clearDrag, {passive: true});
   portrait?.addEventListener('keydown', event => {
     if (event.isTrusted && portrait.dataset.spinReady === 'true' && ['ArrowLeft', 'ArrowRight', 'Home'].includes(event.key))
       sendPortrait('keyboard');
   });
+
+  // Session progress is per tab, expires after 30 minutes without activity.
+  // Storage failure keeps page-level measures but never invents cross-page progress.
+  const journeyKey = 'portfolio.analytics.journey.v1';
+  let journey = {at: Date.now(), cases: [], multiple: false, qualified: false};
+  try {const saved = JSON.parse(sessionStorage.getItem(journeyKey));
+    if (saved && Date.now() - saved.at < 1800000 && Array.isArray(saved.cases)) journey = saved;
+  } catch {}
+  const touchJourney = () => {
+    if (Date.now() - journey.at >= 1800000) journey = {at: Date.now(), cases: [], multiple: false, qualified: false};
+    journey.at = Date.now();
+    try {sessionStorage.setItem(journeyKey, JSON.stringify(journey));} catch {}
+  };
+  const contentSections = new Set(), activeThresholds = new Set();
+  let activeMs = 0, lastTick = performance.now(), lastActivity = lastTick, caseEngaged = false;
+  let lastJourneyWrite = 0;
+  const activity = event => {if (event.isTrusted) {lastActivity = performance.now();
+    if (lastActivity - lastJourneyWrite >= 5000) {touchJourney(); lastJourneyWrite = lastActivity;}
+  }};
+  for (const name of ['pointerdown','pointermove','keydown','scroll']) document.addEventListener(name, activity, {passive:true});
+  const engageCase = () => {
+    if (!project || caseEngaged || activeMs < 20000 || contentSections.size < 2) return;
+    caseEngaged = true; touchJourney();
+    if (!journey.cases.includes(project)) journey.cases.push(project);
+    capture('case_engaged', {active_seconds: Math.floor(activeMs / 1000), sections_count: contentSections.size});
+    if (journey.cases.length >= 2 && !journey.multiple) {
+      journey.multiple = true; capture('multiple_cases_engaged', {cases_count: journey.cases.length});
+    }
+    touchJourney();
+  };
+  observeJourney = (name, properties) => {
+    if (name === 'section_viewed' && project && ['project_role','project_context','project_research','project_contribution','project_outcomes','project_behind_scenes'].includes(properties.section)) {
+      contentSections.add(properties.section); engageCase();
+    }
+    if (['contact_clicked','linkedin_opened'].includes(name)) {
+      touchJourney();
+      if (journey.cases.length && !journey.qualified) {
+        journey.qualified = true; touchJourney();
+        capture('qualified_contact', {...properties, channel: properties.channel || 'linkedin', cases_count: journey.cases.length}, true);
+      }
+    }
+  };
+  // Dwell exposures are checked against current geometry, occlusion and visibility.
+  const dwell = new Map(), dwellSeen = new Set();
+  const exposureTargets = [...document.querySelectorAll('.recommendations-slide')];
+  const outcomes = project && document.querySelector('#outcomes')?.parentElement;
+  if (outcomes) exposureTargets.push(outcomes);
+  const engagementTick = () => {
+    const now = performance.now(), delta = Math.min(1000, Math.max(0, now - lastTick)); lastTick = now;
+    if (document.visibilityState !== 'visible' || now - lastActivity > 30000) {dwell.clear(); return;}
+    activeMs += delta;
+    for (const seconds of [15,30,60,120]) if (activeMs >= seconds * 1000 && !activeThresholds.has(seconds)) {
+      activeThresholds.add(seconds); capture('active_time_reached', {active_seconds: seconds});
+    }
+    engageCase();
+    for (const element of exposureTargets) {
+      const isOutcome = element === outcomes, key = isOutcome ? 'outcomes' : element.id;
+      if (dwellSeen.has(key)) continue;
+      const r = element.getBoundingClientRect();
+      const area = Math.max(0,Math.min(r.right,innerWidth)-Math.max(0,r.left)) * Math.max(0,Math.min(r.bottom,innerHeight)-Math.max(0,r.top));
+      if (!r.width || !r.height || area / (Math.min(r.width,innerWidth)*Math.min(r.height,innerHeight)) < .5 || !visible(element)) {dwell.delete(key); continue;}
+      if (!dwell.has(key)) dwell.set(key,now);
+      const required = isOutcome ? 3000 : 5000;
+      if (now-dwell.get(key) >= required) {
+        dwellSeen.add(key);
+        capture(isOutcome ? 'case_outcomes_viewed' : 'recommendation_viewed', {
+          visible_ms: required, ...(isOutcome ? {} : {recommendation_index: [...element.parentElement.children].indexOf(element)+1})});
+      }
+    }
+  };
+  let engagementTimer = setInterval(engagementTick, 250);
+  document.addEventListener('visibilitychange', () => {lastTick = performance.now(); dwell.clear();
+    if (document.visibilityState === 'visible') lastActivity = lastTick;
+  });
+  window.addEventListener('pagehide', () => {clearInterval(engagementTimer); engagementTimer = null; dwell.clear();});
+  window.addEventListener('pageshow', () => {lastTick = performance.now(); lastActivity = lastTick;
+    if (engagementTimer === null) engagementTimer = setInterval(engagementTick,250);
+  });
+  // This reports only local SDK state, never claims server-side recording storage.
+  setTimeout(() => {
+    if (document.visibilityState !== 'visible') return;
+    let replay = 'unknown';
+    try {if (typeof window.posthog?.sessionRecordingStarted === 'function') replay = window.posthog.sessionRecordingStarted() ? 'active' : 'not_started';} catch {}
+    capture('analytics_health', {posthog_replay_state: replay});
+  },15000);
+  document.addEventListener('portfolio:resume-result', event => {
+    const result = event.detail;
+    if (['prepared_download','native_download_requested'].includes(result?.status))
+      capture('resume_delivery_requested', {delivery_method: result.status});
+  });
+  let resumeState;
+  new MutationObserver(() => {
+    const state = document.documentElement.dataset.resumePrefetch;
+    if (state === resumeState || !['ready','error'].includes(state)) return;
+    resumeState = state; capture(state === 'ready' ? 'resume_file_ready' : 'resume_prefetch_failed');
+  }).observe(document.documentElement, {attributes:true,attributeFilter:['data-resume-prefetch']});
 
   let readyAt = null, readySent = false, readyMode;
   const sendReady = () => {

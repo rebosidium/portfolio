@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="8c2aba535679" data-build="3ddd8afb895e">
+<html lang="en" data-ui-revision="9ee4d690c64c" data-build="909bcbb9509a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -132,7 +132,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 4,
+            analytics_version: 5,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -286,7 +286,7 @@
   <script type="module" src="portrait-boot.js?v=cc8c2e4d09bb" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=70bc7ca7d3f7" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=ec861502b2c3"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=e39d4f5c5141"></script>
   <script defer src="mobile-nav.js?v=85b9701ebe21" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=4e459b035a45"></script></template>
   <script>
@@ -361,7 +361,7 @@
       if (window.mobileLayout.matches) load();
     })();
   </script>
-  <template id="resume-prefetch-source"><script src="resume-prefetch.js?v=8698924168bd"></script></template>
+  <template id="resume-prefetch-source"><script src="resume-prefetch.js?v=709d62def6ba"></script></template>
   <script>
     // No speculative download competes with the original portrait startup/rest queue.
     window.addEventListener('load',async () => {
@@ -377,7 +377,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+29425f5c8f51","tokens":"1.9.0+ab8ce19cd2ff","components":{"home-about":"1.9.0+9a5265c99b17","work-logo":"1.9.0+85219dcb169e","brief":"1.9.0+073d0678e3ae","brief-dark":"1.9.0+9d4101e81d49","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","work-actions":"1.9.0+cd7870bd3587","availability":"1.9.0+91e9eb4ad2eb","portrait":"1.9.0+5cf3f0c48082","header":"1.9.0+cb232bb98da6","hero":"1.9.0+7d346b224bd0","work":"1.9.0+a482a4f5ef4b","work-section":"1.9.0+8e6b332d3491","footer":"1.9.0+cae5389952cd"},"revision":"8c2aba535679"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+8de0e67f81c7","tokens":"1.9.0+ab8ce19cd2ff","components":{"home-about":"1.9.0+9a5265c99b17","work-logo":"1.9.0+85219dcb169e","brief":"1.9.0+073d0678e3ae","brief-dark":"1.9.0+9d4101e81d49","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","work-actions":"1.9.0+cd7870bd3587","availability":"1.9.0+91e9eb4ad2eb","portrait":"1.9.0+5cf3f0c48082","header":"1.9.0+33744fa469b1","hero":"1.9.0+7d346b224bd0","work":"1.9.0+a482a4f5ef4b","work-section":"1.9.0+8e6b332d3491","footer":"1.9.0+4275abbf6c55"},"revision":"9ee4d690c64c"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>

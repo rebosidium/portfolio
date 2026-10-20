@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="16002404d89e" data-build="3ddd8afb895e">
+<html lang="en" data-ui-revision="36912b5e654c" data-build="909bcbb9509a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -132,7 +132,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 4,
+            analytics_version: 5,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -253,10 +253,10 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
   <script src="/assets/site-controls.js?v=7eb77655d54e" defer></script>
-  <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=e39d4f5c5141" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=49b2429a45d3" defer></script>
-  <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+29425f5c8f51","tokens":"1.9.0+ab8ce19cd2ff","components":{"recommendations":"1.9.0+edcdb0b5155c","brief-dark":"1.9.0+9d4101e81d49","back":"1.9.0+76a0d0c6d79e","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","about-title":"1.9.0+f258a875ad4b","about-avatar":"1.9.0+333853ac7a8b","prose-section":"1.9.0+d76afea21782","photo-gallery":"1.9.0+2a978937cc3a","photo-gallery-footer":"1.9.0+2dd0db518f37","about-header":"1.9.0+17d234c0e20d","footer":"1.9.0+cae5389952cd","reading-page":"1.9.0+0d1cb07f7536"},"revision":"16002404d89e"}</script>
+  <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+8de0e67f81c7","tokens":"1.9.0+ab8ce19cd2ff","components":{"recommendations":"1.9.0+edcdb0b5155c","brief-dark":"1.9.0+9d4101e81d49","back":"1.9.0+76a0d0c6d79e","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","about-title":"1.9.0+f258a875ad4b","about-avatar":"1.9.0+333853ac7a8b","prose-section":"1.9.0+d76afea21782","photo-gallery":"1.9.0+2a978937cc3a","photo-gallery-footer":"1.9.0+2dd0db518f37","about-header":"1.9.0+672eefbfe8b9","footer":"1.9.0+4275abbf6c55","reading-page":"1.9.0+d457ce34ee51"},"revision":"36912b5e654c"}</script>
   <!-- shared:photo-gallery-assets:start -->
   <link rel="stylesheet" href="/photo/photo-gallery.css?v=a66824514054"><script src="/photo/photo-gallery.js?v=db6df2622cfa" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=3c46df81b590" defer></script>
   <!-- shared:photo-gallery-assets:end -->

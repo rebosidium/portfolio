@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="fb1fe39463a8" data-build="3ddd8afb895e">
+<html lang="en" data-ui-revision="f84d9b5beba6" data-build="909bcbb9509a">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -132,7 +132,7 @@
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
             site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
-            analytics_version: 4,
+            analytics_version: 5,
             analytics_test: false
           });
           if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
@@ -253,9 +253,9 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
   <script src="/assets/site-controls.js?v=7eb77655d54e" defer></script>
-  <script src="/analytics.js?v=ec861502b2c3" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=e39d4f5c5141" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=49b2429a45d3" defer></script>
-  <script src="/resume-prefetch.js?v=8698924168bd" defer></script>
+  <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
 <link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=3c46df81b590" defer></script>  <!-- shared:seo:start -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Dmitry Rybalka">
@@ -274,7 +274,7 @@
   <meta name="twitter:image:alt" content="Yandex.Market analytics dashboard">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://dmitryrybalka.com/#person","name":"Dmitry Rybalka","url":"https://dmitryrybalka.com/about/","sameAs":["https://www.linkedin.com/in/ribadima/"]},{"@type":"WebSite","@id":"https://dmitryrybalka.com/#website","url":"https://dmitryrybalka.com/","name":"Dmitry Rybalka","inLanguage":"en","publisher":{"@id":"https://dmitryrybalka.com/#person"}},{"@type":"WebPage","@id":"https://dmitryrybalka.com/work/yandex-market/#webpage","url":"https://dmitryrybalka.com/work/yandex-market/","name":"Yandex.Market — Dmitry Rybalka","description":"Making vendor onboarding faster and marketplace data easier to use at Yandex.Market: analytics, seller tools and product taxonomy.","inLanguage":"en","isPartOf":{"@id":"https://dmitryrybalka.com/#website"},"author":{"@id":"https://dmitryrybalka.com/#person"},"mainEntity":{"@id":"https://dmitryrybalka.com/work/yandex-market/#case-study"}},{"@type":"CreativeWork","@id":"https://dmitryrybalka.com/work/yandex-market/#case-study","name":"Yandex.Market — Dmitry Rybalka","description":"Making vendor onboarding faster and marketplace data easier to use at Yandex.Market: analytics, seller tools and product taxonomy.","url":"https://dmitryrybalka.com/work/yandex-market/","inLanguage":"en","author":{"@id":"https://dmitryrybalka.com/#person"},"mainEntityOfPage":{"@id":"https://dmitryrybalka.com/work/yandex-market/#webpage"}}]}</script>
   <!-- shared:seo:end -->
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+29425f5c8f51","tokens":"1.9.0+ab8ce19cd2ff","components":{"related-cases":"1.9.0+15ae85a43d89","recommendations":"1.9.0+edcdb0b5155c","brief-dark":"1.9.0+9d4101e81d49","back":"1.9.0+76a0d0c6d79e","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","case-study-title":"1.9.0+53bc6278a38f","company-title":"1.9.0+e9e72cefb7f6","company-page":"1.9.0+1120a09d62da","prose-section":"1.9.0+d76afea21782","about-header":"1.9.0+17d234c0e20d","footer":"1.9.0+cae5389952cd"},"revision":"fb1fe39463a8"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.4+8de0e67f81c7","tokens":"1.9.0+ab8ce19cd2ff","components":{"related-cases":"1.9.0+15ae85a43d89","recommendations":"1.9.0+edcdb0b5155c","brief-dark":"1.9.0+9d4101e81d49","back":"1.9.0+76a0d0c6d79e","link":"1.9.0+20b049a23495","footer-link":"1.9.0+5ef427e1ef53","case-study-title":"1.9.0+53bc6278a38f","company-title":"1.9.0+e9e72cefb7f6","company-page":"1.9.0+ff1049740474","prose-section":"1.9.0+d76afea21782","about-header":"1.9.0+672eefbfe8b9","footer":"1.9.0+4275abbf6c55"},"revision":"f84d9b5beba6"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->
