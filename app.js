@@ -69,6 +69,21 @@
   /* shared:controls:start */
 (() => {
   'use strict';
+  // Use the real history entry so Back restores the preceding case and scroll.
+  // A direct/external visit or new tab retains the template's Home fallback.
+  let previous;
+  try{if(document.referrer&&history.length>1){
+    const url=new URL(document.referrer);
+    if(url.origin===location.origin&&url.href!==location.href)previous=url;
+  }}catch{}
+  if(previous){
+    document.querySelectorAll('a[data-history-back]').forEach(link=>{link.href=previous.href;});
+    document.addEventListener('click',event=>{
+      const link=event.target.closest?.('a[data-history-back]');
+      if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||link.target||link.hasAttribute('download'))return;
+      event.preventDefault();history.back();
+    });
+  }
   // Touch feedback starts on contact; native link navigation never waits for it.
   const arrowReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const arrowAnimations = new Map();
