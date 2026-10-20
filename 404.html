@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="93d1c1a7de97" data-build="909bcbb9509a">
+<html lang="en" data-page-kind="not-found" data-ui-revision="93d1c1a7de97" data-build="2758a7a5bf56">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -25,7 +25,7 @@
     technicalPath = decoded;
   }
   technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
-  const technical = /^\/(?:ds|old)(?:\/|$)/i.test(technicalPath);
+  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath);
   const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
