@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="36912b5e654c" data-build="611c5b2e948c">
+<html lang="en" data-ui-revision="36912b5e654c" data-build="6127af9b8772">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -110,11 +110,52 @@
 })();
   </script>
   <!-- shared:analytics-preferences:end -->
+  <script data-analytics="loader">
+(() => {
+  'use strict';
+  // Clarity starts independently. Other SDKs yield to the initial render,
+  // while their small native command queues and early error listeners run now.
+  if (window.portfolioAnalytics?.enabled !== true) return;
+  const jobs = [], names = new Set(), now = () => performance.now();
+  const createdAt = now();
+  let started = false;
+  const invoke = job => {
+    if (window.portfolioAnalytics?.enabled !== true) return;
+    try {job();} catch { /* One unavailable SDK must not block another or the UI. */ }
+  };
+  window.portfolioAnalyticsLoad = (name, job) => {
+    if (names.has(name) || window.portfolioAnalytics?.enabled !== true) return;
+    names.add(name);
+    if (started) setTimeout(() => invoke(job), 0);
+    else jobs.push(job);
+  };
+  const start = () => {
+    if (started) return;
+    started = true;
+    clearTimeout(deadline);
+    // Small gaps prevent all four SDKs being requested in the same task.
+    jobs.splice(0).forEach((job, index) => setTimeout(() => invoke(job), index * 120));
+  };
+  // A visible busy page, missing idle callback or paused RAF cannot starve SDKs.
+  const deadline = setTimeout(start, 2500);
+  const afterPaint = () => setTimeout(() => {
+    if (started) return;
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 500});
+    else start();
+  }, Math.max(0, 1000 - (now() - createdAt)));
+  const ready = () => {
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => requestAnimationFrame(afterPaint));
+    else afterPaint();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once: true});
+  else ready();
+})();
+  </script>
   <script type="text/javascript" data-analytics="posthog">
     // One early shared gate covers every registered production page.
     const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
     if (posthogTrackingEnabled) {
-      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",r=t.getElementsByTagName("script")[0],window.portfolioAnalyticsLoad("posthog",()=>r.parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
       posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
         api_host: 'https://events.dmitryrybalka.com',
         ui_host: 'https://us.posthog.com',
@@ -181,7 +222,7 @@
       googleTag.async = true;
       googleTag.fetchPriority = 'low';
       googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4MeasurementId);
-      document.head.appendChild(googleTag);
+      window.portfolioAnalyticsLoad('google-analytics', () => document.head.appendChild(googleTag));
     }
   </script>
 <script type="text/javascript" data-analytics="yandex-metrika">
@@ -194,7 +235,8 @@
         m[i].l=1*new Date();
         for (var j=0;j<document.scripts.length;j++) {if(document.scripts[j].src===r)return;}
         k=e.createElement(t);a=e.getElementsByTagName(t)[0];
-        k.async=1;k.fetchPriority='low';k.src=r;a.parentNode.insertBefore(k,a);
+        k.async=1;k.fetchPriority='low';k.src=r;
+        window.portfolioAnalyticsLoad('yandex-metrika', () => a.parentNode.insertBefore(k,a));
       })(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=113701996','ym');
       ym(yandexMetrikaCounterId,'init',{
         ssr:true,webvisor:true,clickmap:true,ecommerce:'dataLayer',
@@ -277,7 +319,7 @@
       for (const error of pending.splice(0)) Sentry.captureException(error);
     } catch {pending.length = 0;}
   };
-  document.head.appendChild(sdk);
+  window.portfolioAnalyticsLoad('sentry', () => document.head.appendChild(sdk));
 })();
 </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
