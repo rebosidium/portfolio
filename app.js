@@ -416,7 +416,7 @@
       panels.forEach(panel=>{if(panel.actions)observer.observe(panel.actions);});
     }
     function reveal(elements,delay = 0) {
-      const pending = elements.filter(element => !revealed.has(element));
+      const pending = elements.filter(element => element && !revealed.has(element));
       if (!pending.length) return;
       pending.forEach(element => revealed.add(element));
       if (!window.gsap || document.hidden) {set(pending,{autoAlpha:1,y:0});return;}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="a5b144dfbceb" data-build="89120b5d22d5">
+<html lang="en" data-ui-revision="61d441f3cb52" data-build="6e1ac848fcb7">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -172,8 +172,8 @@
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
   <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
   <!-- shared:brief-preloads:end -->
-  <link rel="stylesheet" href="assets/site-ui.css?v=33a09bb5a4ac">
-  <link rel="stylesheet" href="styles.css?v=4ced0a5bcb6e">
+  <link rel="stylesheet" href="assets/site-ui.css?v=1e248d970c75">
+  <link rel="stylesheet" href="styles.css?v=46082d61012e">
   <!-- shared:navigation-boot:start -->
   <script>
 // Runs in the head, before any header can paint. Waiting for navigation is
@@ -231,7 +231,7 @@
   </script>
   <script type="module" src="portrait-boot.js?v=cc8c2e4d09bb" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
-  <script defer src="app.js?v=e7dea47d514e" onerror="window.releasePageFallback()"></script>
+  <script defer src="app.js?v=25866fa166e2" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="analytics.js?v=03fb5fa11117"></script>
   <script defer src="mobile-nav.js?v=85b9701ebe21" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=63166db63dfb"></script></template>
@@ -323,7 +323,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.6.0","designSystem":"1.52.0+7d4b3ebac77e","tokens":"1.6.0+2fa0779bebfb","components":{"work-logo":"1.6.0+ed2714d83f47","brief":"1.6.0+ffc2c8732b57","brief-dark":"1.6.0+b28be30f4493","link":"1.6.0+9ea10103e5a0","footer-link":"1.6.0+25cdd8c7eaa4","work-actions":"1.6.0+36b018fb63d0","availability":"1.6.0+24848504dbdb","portrait":"1.6.0+3d78321e3603","header":"1.6.0+6bd930318962","hero":"1.6.0+3ec8355f0b9b","work":"1.6.0+f3da9092ee00","work-section":"1.6.0+399f71a443b0","footer":"1.6.0+ed1b6b791551"},"revision":"a5b144dfbceb"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.7.0","designSystem":"1.53.0+6a91caf764d9","tokens":"1.7.0+edf4800c6a41","components":{"home-about":"1.7.0+6c213561e204","work-logo":"1.7.0+984af9ed59c6","brief":"1.7.0+e5f07f1259dd","brief-dark":"1.7.0+5ef61ef8e1a3","link":"1.7.0+fb966e924a97","footer-link":"1.7.0+974ec203f10d","work-actions":"1.7.0+efdcc0ee892e","availability":"1.7.0+8ff9138b9b9c","portrait":"1.7.0+c6d48343cbbc","header":"1.7.0+73279807e580","hero":"1.7.0+a99280fd8455","work":"1.7.0+1d1f39c9c3fd","work-section":"1.7.0+e6a233d2d65c","footer":"1.7.0+c263c8ccb2a9"},"revision":"61d441f3cb52"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>
@@ -364,7 +364,7 @@
     <nav id="main-navigation" aria-label="Main navigation" data-node-id="159:890">
       <a class="mobile-only" aria-current="page" aria-disabled="true" tabindex="-1">Home</a>
       <a href="/about/">About</a>
-      <a class="desktop-only" href="#selected-works" data-node-id="159:892">Work</a>
+      <a href="#selected-works" data-node-id="159:892">Work</a>
       <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
       <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
       <a href="assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="159:896">Resume</a>
@@ -540,6 +540,25 @@
     </div>
   </section>
   <!-- shared:home-works:end -->
+  <!-- shared:home-about:start -->
+  <section class="works-screen work-screen-followup home-about-screen" data-work-surface="white" id="more-about" aria-labelledby="more-about-title" data-scene="works">
+  <div class="works-body">
+    <article class="work-card home-about-card" aria-labelledby="more-about-title">
+      <div class="work-artwork home-about-artwork">
+        <img class="work-image" src="assets/about-teaser-collage.png?v=dae2b2bc908f" width="442" height="383" alt="A collage of cycling, paddleboarding, travel and everyday moments" loading="lazy" decoding="async" fetchpriority="low">
+        <p class="work-image-error" hidden>Preview unavailable</p>
+      </div>
+      <div class="work-copy home-about-copy">
+        <div class="home-about-summary">
+        <div class="work-heading home-about-heading"><h3 id="more-about-title">Work, life &amp; more</h3></div>
+        <p class="work-description">I like small changes that make products easier to use. There’s often a lot of thought and teamwork behind something that looks simple.<br>I stay hands-on while shaping how design…</p>
+        </div>
+        <div class="work-actions"><a class="work-details ui-project-link" href="/about/"><span>More About</span><img src="assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a></div>
+      </div>
+    </article>
+  </div>
+</section>
+  <!-- shared:home-about:end -->
   <!-- shared:footer:start -->
   <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
     <div class="footer-inner">

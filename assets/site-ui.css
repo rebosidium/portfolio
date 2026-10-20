@@ -30,6 +30,7 @@
   --tracking-heading: .24px;
   --color-canvas: #FFFFFF;
   --color-ink: #232522;
+  --color-about-teaser: #F8F8F8;
   --color-case-surface: #F8F8F8;
   --color-surface: #F5F5F7;
   --color-inverse: #1D1D1F;
@@ -285,6 +286,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
     color-scheme: dark;
     --color-canvas: #171819;
     --color-ink: #EDEEEB;
+    --color-about-teaser: #202123;
     --color-case-surface: #202123;
     --color-surface: #202123;
     --color-inverse: #101112;
@@ -319,6 +321,7 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
     color-scheme: dark;
     --color-canvas: #171819;
     --color-ink: #EDEEEB;
+    --color-about-teaser: #202123;
     --color-case-surface: #202123;
     --color-surface: #202123;
     --color-inverse: #101112;
