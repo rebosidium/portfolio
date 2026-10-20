@@ -67,6 +67,7 @@
 
   if(state==='hover'&&example.group==='template')document.querySelector('.header nav a[href]:not(.mobile-only)')?.setAttribute('data-ui-state','hover');
   function script(src,done){const node=document.createElement('script');node.src=src;node.onload=done;document.body.append(node);}
+  if(example.id==='not-found-page')script(window.DS_CATALOG.scripts.arrows);
   if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.controls,()=>{
     if(example.inPlaceStates){controlsReady=true;applyBriefState(state);notify('portfolio:ds-ready');}
   });

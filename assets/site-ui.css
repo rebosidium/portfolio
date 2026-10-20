@@ -170,6 +170,15 @@ a.work-details{text-decoration:none}
 .ui-project-link{width:auto;gap:var(--space-2);padding:var(--space-2) var(--space-5) var(--space-2) var(--space-6)}
 .ui-project-link span{width:auto}
 .ui-project-link img{display:block;flex:none;width:var(--size-icon);height:var(--size-icon);transform:rotate(180deg)}
+/* Individual translate keeps the right arrow's rotation and button geometry intact. */
+.ui-back{--arrow-offset:-4px}
+.ui-project-link{--arrow-offset:4px}
+@media(min-width:768px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  :is(.ui-back,.ui-project-link)>img{transition:translate .28s cubic-bezier(.22,1,.36,1)}
+  :is(.ui-back,.ui-project-link):not([aria-disabled="true"]):not(:disabled):is(:hover,[data-ui-state="hover"])>img{translate:var(--arrow-offset) 0}
+}
+.ds-preview[data-state="reduced-motion"] :is(.ui-back,.ui-project-link)>img{transition:none;translate:none}
+
 .work-details:disabled,.work-details:disabled:is(:hover,[data-ui-state="hover"]),.work-details:disabled:is(:active,[data-ui-state="pressed"]){color:var(--work-disabled,var(--color-disabled));background:transparent;border-color:var(--work-border,var(--border-subtle));cursor:default}
 .agent-button-label{position:relative;flex:none;width:105px;text-align:left}
 .agent-button-label>span{display:block;transition:opacity .32s cubic-bezier(.4,0,.2,1),visibility 0s linear;transition-delay:var(--agent-label-delay,0s),var(--agent-visibility-delay,0s)}
