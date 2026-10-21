@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru" data-ui-revision="7b7092b0b5ef" data-build="7d7019c7188d">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="canonical" href="https://dmitryrybalka.com/work/ru/gdematerial/">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <title>GdeMaterial — Dmitry Rybalka</title>
+  <meta name="description" content="Проектирование закупки по смете, сравнения поставщиков и оформления заказов для Материал.pro — B2B-платформы строительных материалов GdeMaterial.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check-white.svg?v=f5434dbfe8e0" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-claude.svg?v=4c02aab6dbf5" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-chatgpt-white.svg?v=31685c331afc" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-codex-blue.svg?v=688bbe62639f" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-cursor-white.svg?v=b6213bf33e0a" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/assets/site-ui.css?v=449612f3beb3">
+  <link rel="stylesheet" href="/about/about.css?v=8f836c6bae1a">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+  <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
+  <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
+  <script src="/assets/site-controls.js?v=7eb77655d54e" defer></script>
+  <script src="/about/about.js?v=d07dd4245523" defer></script>
+  <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
+<link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=3c46df81b590" defer></script><link rel="preload" as="font" href="/assets/manrope-cyrillic.woff2?v=c268b459a932" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/reading-ru.css?v=776391608a8d">  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.10.0","designSystem":"1.59.0+7e3183c31840","tokens":"1.10.0+ab8ce19cd2ff","components":{"recommendations":"1.10.0+cee0f1c747a2","brief-dark":"1.10.0+8f47901bf94b","back":"1.10.0+4c4c28104ded","link":"1.10.0+ac4edf96ad97","footer-link":"1.10.0+3f358d63a481","case-study-title":"1.10.0+c4ea67a5912f","company-title":"1.10.0+0cf378125395","company-page":"1.10.0+5c585562ab32","prose-section":"1.10.0+a1f9cda18f9f","about-header":"1.10.0+80dce31abb51","footer":"1.10.0+147cd1a7ddde"},"revision":"7b7092b0b5ef"}</script>
+</head>
+<body class="about-page">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <div class="identity about-identity"><a class="about-mobile-back ui-back" href="/work/ru/" aria-label="К списку кейсов"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a><a class="name" href="/work/ru/">Dmitry Rybalka</a></div>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-navigation" aria-expanded="false">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Main navigation">
+      <a class="mobile-only" href="/work/ru/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/work/ru/">Кейсы</a>
+      <a href="mailto:rebosidium@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf">Resume</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <!-- shared:about-main:start -->
+  <main class="about-main case-study-page" data-navigation-background><div class="about-title-row" style="--reading-reveal-order:0"><a class="ui-back about-desktop-back" href="/work/ru/"><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""><span>Назад</span></a><div class="about-title">
+        <div class="about-avatar company-logo"><img src="/assets/logo-gdematerial.svg?v=2bfcfc37a73b" width="58" height="58" alt="GdeMaterial" decoding="async"></div>
+        <h1>GdeMaterial</h1>
+      </div></div><section class="case-study-title" aria-labelledby="case-study-title" style="--reading-reveal-order:1"><div class="about-prose"><p class="case-study-label">Кейс</p><h2 id="case-study-title">От сметы к выбору поставщиков и оформлению заказа</h2></div></section><div class="about-sections about-prose article-sections"><section aria-labelledby="project-role"><h2 id="project-role" style="--reading-reveal-order:2">Проект и роль</h2><p style="--reading-reveal-order:3">GdeMaterial — маркетплейс строительных материалов с сетью из 500+ поставщиков. С июня 2019 по апрель 2020 года я работал Senior Product Designer.</p><p style="--reading-reveal-order:4">Основным направлением был Материал.pro — B2B-платформа для 2 000 клиентов. Я проектировал поиск материалов, сравнение предложений, оформление заказа и сценарии взаимодействия покупателей, поставщиков и логистики.</p></section><section aria-labelledby="context"><h2 id="context" style="--reading-reveal-order:5">Задача</h2><p style="--reading-reveal-order:6">Закупка материалов требовала согласовать смету, поставщиков и доставку на объект. Прораб отвечал за качество и сроки, заказчик — за бюджет. Ошибки комплектации и задержки могли остановить работу бригады, поэтому самой низкой цены было недостаточно.</p><p style="--reading-reveal-order:7">Покупатель добавлял материалы или загружал смету, а дальнейший подбор поставщиков происходил на стороне менеджера компании. Нужно было сделать предложения понятными для самостоятельного выбора и повысить конверсию в оформленный заказ.</p></section><section aria-labelledby="research"><h2 id="research" style="--reading-reveal-order:8">Исследование и процесс</h2><p style="--reading-reveal-order:9">Совместно с продакт-менеджерами я проводил интервью, разбирал процесс закупки и согласования материалов. Проверял сценарии на интерактивных прототипах с прорабами и заказчиками, собирал обратную связь и дорабатывал интерфейс.</p><p style="--reading-reveal-order:10">По результатам тестов уточнил объяснение различий между предложениями: пользователю было важно понимать, откуда берётся разница в стоимости и предполагает ли вариант замену материалов.</p></section><section aria-labelledby="contribution"><h2 id="contribution" style="--reading-reveal-order:11">Решение</h2><h3 class="prose-subheading" style="--reading-reveal-order:12">Заказ по смете</h3><p style="--reading-reveal-order:13">Покупатель мог загрузить файл или фотографию, написать список материалов вручную либо выбрать товары из каталога.</p><h3 class="prose-subheading" style="--reading-reveal-order:14">Понятное сравнение предложений</h3><p style="--reading-reveal-order:15">Система предлагала распределение позиций сметы между поставщиками с учётом специализации, стоимости и условий доставки. Покупатель вместе с прорабом выбирал баланс бюджета, сроков и надёжности.</p><p style="--reading-reveal-order:16">Я выделил варианты «Самый дешёвый без замен», «Самый дешёвый» и «Рекомендуемый». В сравнении были видны состав предложения, замены материалов, поставщики и их рейтинги, стоимость и сроки доставки.</p><h3 class="prose-subheading" style="--reading-reveal-order:17">Оформление и сопровождение заказа</h3><p style="--reading-reveal-order:18">Связал выбор предложения с согласованием заказа, оплатой и доставкой. В кабинете покупатель мог проверить состав заказа, документы, адрес, время доставки и текущий статус.</p></section><section aria-labelledby="outcomes"><h2 id="outcomes" style="--reading-reveal-order:19">Результаты</h2><p style="--reading-reveal-order:20">Самостоятельное сравнение и выбор предложений запустили в Материал.pro. Покупатель и прораб получили возможность оценивать варианты закупки по всей смете и выбирать подходящие условия.</p><ul class="prose-list" style="--reading-reveal-order:21"><li>После переработки сценариев выбора предложений и оформления заказа конверсия Материал.pro выросла с 0,5% до 1,6%.</li></ul></section></div><section class="recommendations" data-recommendations data-letter-motion="newspaper" data-duration="12000" role="region" aria-roledescription="carousel" aria-labelledby="recommendations-title" style="--reading-reveal-order:22">
+    <h2 id="recommendations-title">Отзывы команды</h2>
+    <div class="recommendations-slides"><figure class="recommendations-slide" id="recommendations-slide-1" role="group" aria-roledescription="slide" aria-label="1 of 1">
+      <blockquote cite="https://www.linkedin.com/in/ribadima/details/recommendations/"><p class="recommendations-quote-mobile">Within our job, he showed many times that before do something we need to clearly understand the customer journey, that design is not about just beauty, it’s about usability<span aria-label="Excerpt continues">…</span></p><p class="recommendations-quote-desktop">Dima is a not just a great designer, he is a great thinker. Within our job, he showed many times that before do something we need to clearly understand the customer journey, that design is not about just beauty, it’s about usability<span aria-label="Excerpt continues">…</span></p></blockquote>
+      <figcaption><img class="recommendations-avatar" src="/assets/recommendation-alim-uderbekov.webp?v=05a5ac2aeecf" alt="" width="54" height="54" decoding="async" fetchpriority="low"><div class="recommendations-author"><a class="recommendations-author-name" href="https://www.linkedin.com/in/auderbekov/" target="_blank" rel="noopener noreferrer">Alim Uderbekov</a><span class="recommendations-author-role"><span class="recommendations-at">Then </span>CEO &amp; Founder<span class="recommendations-at"> at </span><a class="recommendations-company" href="https://www.linkedin.com/company/10557956/" target="_blank" rel="noopener noreferrer">GdeMaterial</a></span></div></figcaption>
+    </figure></div>
+    <div class="recommendations-controls" hidden><div class="recommendations-dots" role="group" aria-label="Choose a recommendation"><button type="button" class="recommendations-dot" aria-label="Show recommendation 1: Alim Uderbekov" aria-controls="recommendations-slide-1" aria-current="true"><span class="recommendations-dot-track"><span class="recommendations-dot-fill"></span></span></button></div></div>
+    <span class="recommendations-status" aria-live="polite" aria-atomic="true"></span>
+  </section><div class="about-sections about-prose article-sections"><section aria-labelledby="behind-scenes"><h2 id="behind-scenes" style="--reading-reveal-order:23">За кадром</h2><h3 class="prose-subheading" style="--reading-reveal-order:24">Материал Чат</h3><p style="--reading-reveal-order:25">Параллельно с Материал.pro я работал над Материал Чатом — экспериментальной площадкой, объединявшей поставщика, прораба и заказчика вокруг заказа. Участники отправляли списки материалов, обсуждали стоимость, оплату и доставку, а площадка выступала арбитром при разногласиях.</p><p style="--reading-reveal-order:26">Позже функциональность чата встроили в основной B2B-продукт Материал.pro.</p></section></div></main>
+  <!-- shared:about-main:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1">Let’s Talk</h2>
+    <div class="footer-content">
+      <p class="footer-description">Have a project or opportunity<br> in mind? Drop me a message — or just say hello!</p>
+      <nav class="footer-links" aria-label="Footer links">
+        <a href="/about/"><span class="footer-link-label">About</span></a>
+        <a href="/work/ru/"><span class="footer-link-label">Work</span></a>
+        <a href="mailto:rebosidium@gmail.com"><span class="footer-link-label">Email</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=be1fc393a5f9" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf"><span class="footer-link-label">Resume</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="footer-agent-copy-status">
+          <span class="agent-button-label" aria-hidden="true"><span class="agent-button-idle">Brief your AI</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Copied</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+            <span class="footer-logo-copilot"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Read the AI profile</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+</body>
+</html>

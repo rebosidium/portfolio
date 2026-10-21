@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="8f7a7f380cae" data-build="95331681166a">
+<html lang="en" data-ui-revision="431b157591cf" data-build="7d7019c7188d">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -25,7 +25,8 @@
     technicalPath = decoded;
   }
   technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
-  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath);
+  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
+    || /^\/work\/ru(?:\/|$)/i.test(technicalPath);
   const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
@@ -374,7 +375,7 @@
   <script src="/analytics.js?v=e39d4f5c5141" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=d07dd4245523" defer></script>
   <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.6+8f439c78e309","tokens":"1.9.0+ab8ce19cd2ff","components":{"recommendations":"1.9.0+d2546c0cfa74","brief-dark":"1.9.0+491af26294ed","back":"1.9.0+a78abff021a4","link":"1.9.0+f64b8b222948","footer-link":"1.9.0+5c9446690c29","about-title":"1.9.0+556991751299","about-avatar":"1.9.0+22779ddb800b","prose-section":"1.9.0+fcb6bc9da5d3","photo-gallery":"1.9.0+b7099f9d36cf","photo-gallery-footer":"1.9.0+3470826cc83a","about-header":"1.9.0+7af251b2dc3e","footer":"1.9.0+461dd8bdca0c","reading-page":"1.9.0+c140e32c2286"},"revision":"8f7a7f380cae"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.10.0","designSystem":"1.59.0+7e3183c31840","tokens":"1.10.0+ab8ce19cd2ff","components":{"recommendations":"1.10.0+cee0f1c747a2","brief-dark":"1.10.0+8f47901bf94b","back":"1.10.0+4c4c28104ded","link":"1.10.0+ac4edf96ad97","footer-link":"1.10.0+3f358d63a481","about-title":"1.10.0+d25f877a8f48","about-avatar":"1.10.0+78e0b781234e","prose-section":"1.10.0+a1f9cda18f9f","photo-gallery":"1.10.0+83622ba50e98","photo-gallery-footer":"1.10.0+8650e2428062","about-header":"1.10.0+80dce31abb51","footer":"1.10.0+147cd1a7ddde","reading-page":"1.10.0+1039bec7de4f"},"revision":"431b157591cf"}</script>
   <!-- shared:photo-gallery-assets:start -->
   <link rel="stylesheet" href="/photo/photo-gallery.css?v=a66824514054"><script src="/photo/photo-gallery.js?v=db6df2622cfa" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=3c46df81b590" defer></script>
   <!-- shared:photo-gallery-assets:end -->

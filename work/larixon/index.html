@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="b5591e944b0d" data-build="95331681166a">
+<html lang="en" data-ui-revision="64120362afcf" data-build="7d7019c7188d">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -25,7 +25,8 @@
     technicalPath = decoded;
   }
   technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
-  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath);
+  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
+    || /^\/work\/ru(?:\/|$)/i.test(technicalPath);
   const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
@@ -392,7 +393,7 @@
   <meta name="twitter:image:alt" content="Project preview placeholder: Bazaraki marketplace interface">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://dmitryrybalka.com/#person","name":"Dmitry Rybalka","url":"https://dmitryrybalka.com/about/","sameAs":["https://www.linkedin.com/in/ribadima/"]},{"@type":"WebSite","@id":"https://dmitryrybalka.com/#website","url":"https://dmitryrybalka.com/","name":"Dmitry Rybalka","inLanguage":"en","publisher":{"@id":"https://dmitryrybalka.com/#person"}},{"@type":"WebPage","@id":"https://dmitryrybalka.com/work/larixon/#webpage","url":"https://dmitryrybalka.com/work/larixon/","name":"Larixon Classifieds — Dmitry Rybalka","description":"Building Larixon’s design function across markets: a Web/App design system, UX Research, DesignOps and team development.","inLanguage":"en","isPartOf":{"@id":"https://dmitryrybalka.com/#website"},"author":{"@id":"https://dmitryrybalka.com/#person"},"mainEntity":{"@id":"https://dmitryrybalka.com/work/larixon/#case-study"}},{"@type":"CreativeWork","@id":"https://dmitryrybalka.com/work/larixon/#case-study","name":"Larixon Classifieds — Dmitry Rybalka","description":"Building Larixon’s design function across markets: a Web/App design system, UX Research, DesignOps and team development.","url":"https://dmitryrybalka.com/work/larixon/","inLanguage":"en","author":{"@id":"https://dmitryrybalka.com/#person"},"mainEntityOfPage":{"@id":"https://dmitryrybalka.com/work/larixon/#webpage"}}]}</script>
   <!-- shared:seo:end -->
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.6+8f439c78e309","tokens":"1.9.0+ab8ce19cd2ff","components":{"related-cases":"1.9.0+1788ef5ee7c5","recommendations":"1.9.0+d2546c0cfa74","brief-dark":"1.9.0+491af26294ed","back":"1.9.0+a78abff021a4","link":"1.9.0+f64b8b222948","footer-link":"1.9.0+5c9446690c29","case-study-title":"1.9.0+bc0924c8cc9f","company-title":"1.9.0+7e556de3d259","company-page":"1.9.0+db57e5c8c4b0","prose-section":"1.9.0+fcb6bc9da5d3","about-header":"1.9.0+7af251b2dc3e","footer":"1.9.0+461dd8bdca0c"},"revision":"b5591e944b0d"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.10.0","designSystem":"1.59.0+7e3183c31840","tokens":"1.10.0+ab8ce19cd2ff","components":{"related-cases":"1.10.0+265d5b692ae3","recommendations":"1.10.0+cee0f1c747a2","brief-dark":"1.10.0+8f47901bf94b","back":"1.10.0+4c4c28104ded","link":"1.10.0+ac4edf96ad97","footer-link":"1.10.0+3f358d63a481","case-study-title":"1.10.0+c4ea67a5912f","company-title":"1.10.0+0cf378125395","company-page":"1.10.0+5c585562ab32","prose-section":"1.10.0+a1f9cda18f9f","about-header":"1.10.0+80dce31abb51","footer":"1.10.0+147cd1a7ddde"},"revision":"64120362afcf"}</script>
 </head>
 <body class="about-page">
   <!-- shared:header:start -->
