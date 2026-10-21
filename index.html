@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="26a7b95a6368" data-build="95331681166a">
+<html lang="en" data-ui-revision="1e13045ad9df" data-build="7d7019c7188d">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -25,7 +25,8 @@
     technicalPath = decoded;
   }
   technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
-  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath);
+  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
+    || /^\/work\/ru(?:\/|$)/i.test(technicalPath);
   const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
   const qaKey = 'portfolio.analytics.qa.v1';
@@ -495,7 +496,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.9.0","designSystem":"1.58.6+8f439c78e309","tokens":"1.9.0+ab8ce19cd2ff","components":{"home-about":"1.9.0+1f7225101976","work-logo":"1.9.0+59905722e09f","brief":"1.9.0+6fe9ee927ab2","brief-dark":"1.9.0+491af26294ed","link":"1.9.0+f64b8b222948","footer-link":"1.9.0+5c9446690c29","work-actions":"1.9.0+28f53f8d94eb","availability":"1.9.0+1b8cfc4ede47","portrait":"1.9.0+4f04b98a7fcf","header":"1.9.0+43733e6a4ae9","hero":"1.9.0+7cd94cbe82b9","work":"1.9.0+81c4a21f6d34","work-section":"1.9.0+b96bd4a47076","footer":"1.9.0+461dd8bdca0c"},"revision":"26a7b95a6368"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.10.0","designSystem":"1.59.0+7e3183c31840","tokens":"1.10.0+ab8ce19cd2ff","components":{"home-about":"1.10.0+86874aa7d007","work-logo":"1.10.0+0a0fd9bab2c2","brief":"1.10.0+294478362a6a","brief-dark":"1.10.0+8f47901bf94b","link":"1.10.0+ac4edf96ad97","footer-link":"1.10.0+3f358d63a481","work-actions":"1.10.0+75159f1b386c","availability":"1.10.0+b1b05054b976","portrait":"1.10.0+4ac87acdb927","header":"1.10.0+3a42faa9f935","hero":"1.10.0+24c049a083b7","work":"1.10.0+022cdcdf20d9","work-section":"1.10.0+0b54bb75b783","footer":"1.10.0+147cd1a7ddde"},"revision":"1e13045ad9df"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=d18ca07165cd"></script></template>
   <script>
