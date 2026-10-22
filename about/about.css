@@ -24,6 +24,14 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .about-sections{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections>section{display:flex;flex-direction:column;gap:var(--space-4)}
 .about-sections>section>h2{display:flex;align-items:center;min-height:60px;margin:0}
+/* Supplied case artwork keeps its complete composition. Screens can extend to
+   the page width; illustrations stay with the prose. Both retain page gutters. */
+.article-figure{flex:none;align-self:center;margin:var(--space-6) 0 var(--space-8);min-width:0}
+.article-figure-wide{width:min(var(--width-page),calc(100vw - var(--gutter-page) * 2))}
+.article-figure-prose{width:100%}
+.article-figure-link{display:block;line-height:0;border-radius:var(--radius-placeholder);cursor:zoom-in;--ui-focus-radius:var(--radius-placeholder)}
+.article-figure-link:focus-visible{outline:2px solid var(--color-ink);outline-offset:var(--space-2)}
+.article-figure img{display:block;width:100%;height:auto;object-fit:contain}
 /* First-paint entrance works without JavaScript. The reading runtime only
    postpones blocks that have not yet reached the viewport. Layout stays fixed. */
 /* Individual translate preserves the gallery's independent horizontal centering. */
@@ -56,6 +64,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
   .about-main>.recommendations,.about-main>.case-study-title{width:100vw;margin-inline:calc((100% - 100vw) / 2)}
   .about-photo-placeholder{height:222px;margin-bottom:var(--space-7)}
   .about-sections,.about-sections>section{gap:var(--space-5)}
+  .article-figure-wide{width:100%}
   .about-sections>section>h2{min-height:0}
   html:is(:not(.navigation-js),.mobile-navigation-fallback) .about-main{padding-top:200px}
 }
