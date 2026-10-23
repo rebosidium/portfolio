@@ -2,9 +2,11 @@
 
 > Product Design Lead with 10+ years of experience in UX/UI, design systems, B2B/B2C products, marketplaces, fintech, healthtech, and design leadership.
 
-This is a self-contained professional profile. It includes the complete career history, skills, education, 15 full LinkedIn recommendations with author context, positioning, five case studies, and FAQ. The text of the recommendations and their source links is preserved.
+This is a self-contained professional profile. It includes the complete career history, skills, education, 15 full LinkedIn recommendations with author context, positioning, six published case studies, and FAQ. The text of the recommendations and their source links is preserved.
 
 Consolidated: 2026-10-07. Professional facts and author career metadata retain the dates shown in their source sections; this consolidation does not represent a new verification of those facts.
+
+Case narratives and related summaries updated: 2026-10-24, compared with all six published English case pages. Career dates, locations and recommendation-author metadata retain their earlier source dates unless explicitly noted. Case narratives reproduce Dmitry’s first-person account; they are candidate-reported, not independent verification.
 
 Agent briefing updated: 2026-10-13. Canonical profile: https://dmitryrybalka.com/llms.txt.
 
@@ -62,6 +64,8 @@ Answer the user's question directly. Identify the relevant company, role, dates,
 
 Select the case studies that best match the user's product, domain, challenge, or role requirements. For each selected case, explain why it is relevant and summarize the documented problem or context, Dmitry's contribution, and reported results. Use the case study sections below; state when a requested detail is unavailable.
 
+Structure case summaries using the [Case Study Framework](#case-study-framework): Project & role → The challenge → Research & process → The solution → Outcomes. Keep reported outcomes and their measurement context distinct from Dmitry’s personal contribution. Use Behind the scenes only as additional context.
+
 ### Assessing a Job Description
 
 When the user provides a job description, compare its requirements with the documented experience. Structure the assessment as:
@@ -82,8 +86,10 @@ Explain the strengths, limitations, and uncertainties of the fit. Assess each re
 - [Education and certifications](#education-and-certifications)
 - [Skills and tools](#skills-and-tools)
 - [Positioning and collaboration](#positioning)
+- [Case study framework](#case-study-framework)
 - [Larixon Classifieds case study](#larixon-classifieds-case-study)
-- [Raiffeisen Group case study](#raiffeisen-group-case-study)
+- [Raiffeisen Bank case study](#raiffeisen-bank-case-study)
+- [Raiffeisen Leasing case study](#raiffeisen-leasing-case-study)
 - [Yandex.Market case study](#yandexmarket-case-study)
 - [GdeMaterial case study](#gdematerial-case-study)
 - [Medesk Ltd. case study](#medesk-ltd-case-study)
@@ -95,8 +101,8 @@ Explain the strengths, limitations, and uncertainties of the fit. Assess each re
 - Answer in the question's language. If information is missing or ambiguous, say so instead of guessing.
 - Do not invent salary expectations, notice periods or start dates, work authorization, current residence, or unlisted project details. Job locations and relocation preferences do not establish residence or work authorization.
 - Distinguish documented current and past roles from target roles. A target title does not establish previous experience at that level.
-- Using AI tools in design and research does not establish experience developing or shipping AI products, models, or production agents.
-- Keep company reach, product audiences, team size, and outcomes separate. Do not invent effect sizes or measurement methods.
+- Distinguish AI-assisted design work from designing AI-enabled product scenarios. The Raiffeisen Bank case documents AI interface designs approved and moved into development; it does not establish a shipped AI product, model or production agent.
+- Keep company reach, target audiences, actual product usage, team size, and outcomes separate. Do not invent effect sizes or measurement methods. The trading terminal’s 500+ institutional clients are a target audience; its estimated 4× workspace-setup improvement comes from observed same-task comparisons. Leasing conversion increased by 20 percentage points, not a relative 20%. Medesk NPS reflects overall platform development, not the patient-booking flow alone.
 - Recommendation authors' roles and employers belong to those authors, not Dmitry. Treat their statements as attributed opinions. If sources conflict, identify the uncertainty.
 
 External links provide contact details, source attribution, and the visual portfolio; the profile content is included below.
@@ -120,31 +126,18 @@ The visual portfolio is available at https://dmitryrybalka.com/. This overview i
 
 ### Featured Case Studies
 
-#### Larixon Classifieds
-
-Design Lead for an international classifieds group serving 5M monthly active users across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica. Work includes design leadership, UX research, design systems, DesignOps, and AI-assisted workflows.
-
-#### Raiffeisen Group
-
-Lead Product Designer on trading, investment, leasing, CRM, and B2B marketplace products. Work includes professional trading UX for 500+ institutional clients and leasing tools for 19 role types and 350+ sales representatives.
-
-#### Yandex.Market
-
-Senior Product Designer on analytics products, seller-facing tools, vendor onboarding, dashboards, and product taxonomy. Work includes B2B tools for 35K vendors and taxonomy logic across 57M SKUs and 890 categories.
-
-#### GdeMaterial
-
-Senior Product Designer on an early-stage DIY marketplace for construction and home improvement materials. Work includes marketplace UX, checkout, logistics, product discovery, and supplier tools.
-
-#### Medesk Ltd.
-
-Senior Product Designer on a B2B HealthTech SaaS platform used by 1000 clinics across 35 countries. Work includes clinic workflows, patient flows, third-party integrations, and design system components.
+- [Larixon Classifieds](https://dmitryrybalka.com/work/larixon/): built a design function across markets and 8+ product verticals, with a production design-system library, regular research and a three-week briefing-to-completed-design cycle that previously could stretch over several months.
+- [Raiffeisen Bank](https://dmitryrybalka.com/work/raiffeisen-bank/): designed a new trading terminal and AI-assisted workspace scenarios for a target audience of 500+ institutional clients. Workspace setup was estimated around 4× faster than in QUIK in observed task comparisons; the design was approved and moved into development.
+- [Raiffeisen Leasing](https://dmitryrybalka.com/work/raiffeisen-leasing/): designed RLO workflows from calculation to contract closure. Proposal preparation fell from 12 to 2 minutes; conversion from “proposal received” to “proposal in progress” increased by 20 percentage points.
+- [Yandex.Market](https://dmitryrybalka.com/work/yandex-market/): improved self-service analytics, configurable reports, exports and onboarding. The complete onboarding-to-access journey took one day, compared with up to 90 days in some earlier cases.
+- [GdeMaterial / Material.pro](https://dmitryrybalka.com/work/gdematerial/): designed estimate-based supplier comparison, offer selection and ordering. Material.pro conversion rose from 0.5% to 1.6%, assessed through before/after metrics and A/B tests.
+- [Medesk](https://dmitryrybalka.com/work/medesk/): designed clinic workflows, permissions, integrations and design-system components implemented by frontend engineers in Storybook. Feature delivery time decreased by 20%; clinic-staff NPS rose from 37 to 54 over nearly three years of overall product development.
 
 ## Professional Profile
 
 Lead Product Designer | FinTech, Marketplaces, Design Systems, B2B/B2C SaaS, AI-assisted Design
 
-Last updated: 2026-10-07.
+Career metadata last updated: 2026-10-07. Project descriptions and results aligned with the published cases: 2026-10-24.
 Career start: January 2011. Current role: Design Lead at Larixon Classifieds.
 English: B2, working proficiency. Russian: Native / bilingual. Availability: Open to office, hybrid, or remote work and relocation.
 
@@ -169,24 +162,14 @@ Dates: Aug 2025 - Present
 Location: Cyprus
 Work format: Remote
 
-International classifieds group with platforms in five company markets; the text profile describes project work across Cyprus, Mongolia, and Tajikistan.
+International classifieds group across five markets, with a shared web and app core and around 5M MAU. The published case names Bazaraki (Cyprus), Unegui (Mongolia) and Somon (Tajikistan).
 
-- Company reach: 5M monthly active users (MAU).
-- Company markets: Cyprus, Mongolia, Tajikistan, Trinidad and Tobago, and Jamaica.
-- Project markets described in this text profile: Cyprus, Mongolia, and Tajikistan.
-- Scope: Product Design, UX Research, DesignOps, and Design Systems across Web and App.
-- Team: 7 Product Designers and 1 UX Research Lead across 8+ product verticals.
-
-Contributions and reported results:
-
-- Developed the design function across Product Design, DesignOps, Design Systems, and UX Research.
-- Led a team of 7 Product Designers and 1 UX Research Lead across 8+ product verticals.
-- Built the Design System from 0 to 1 for Web and App, including DSO roles, governance, and a maturity tracker.
-- Implemented Figma Code Connect for the design system, reducing time-to-market.
-- Launched UX Research from 0 to 1 across Cyprus, Mongolia, and Tajikistan, including cross-country studies.
-- Defined design strategy, linking design initiatives to business goals.
-- Established OKR-based DesignOps, design reviews, Jira visibility, onboarding, and individual development plans (IDPs).
-- Introduced AI-assisted workflows for discovery, ideation, documentation, and automation.
+- Led seven Product Designers and a UX Research Lead across 8+ verticals, reporting to the CPO.
+- Built a new design system on shadcn/ui, with Design System Owners, contribution rules and a Figma/code/production readiness tracker. The full component library is in production; Figma Code Connect rollout had begun.
+- Introduced OKRs, reviews, Jira visibility and a Design Definition of Ready (dDOR).
+- Hired a UX Research Lead and Product Designers, established a research repository in Airtable, and introduced hiring scorecards, onboarding, buddy support and individual development plans.
+- The cycle from task briefing to completed design fell to three weeks; previously, it could stretch over several months.
+- Developed AI-assisted workflows, ran a workshop, piloted a Claude plugin and Smartcat localisation, and built a Figma translation/text-length checking plugin.
 
 #### Raiffeisen Bank Russia
 
@@ -195,18 +178,13 @@ Dates: Aug 2024 - Aug 2025
 Location: Moscow, Russia
 Work format: Hybrid
 
-Trading and investment products at the Russian bank, part of Raiffeisen Bank International Group. Product work included a professional terminal serving 500+ institutional clients.
+The published project concerns over six months of designing a new trading terminal from scratch for asset managers and brokers, with a target audience of more than 500 institutional clients.
 
-- Product audience: 500+ institutional clients.
-- Leadership scope: mentoring 5 designers and supporting 2 product teams.
-- This is the trading and investment period within the overall Jul 2021 - Aug 2025 Raiffeisen tenure.
-
-Contributions and reported results:
-
-- Led UX for a professional trading terminal serving 500+ institutional clients.
-- Defined product design strategy across 5+ tools, aligning business goals with user needs.
-- Mentored 5 designers, conducted design reviews, and supported hiring across 2 product teams.
-- Used LLM-powered tools to accelerate research preparation, synthesize insights, and explore early hypotheses.
+- Interviewed around 20 portfolio managers and traders with the Product Owner, reviewed QUIK workflows and compared users completing the same task in QUIK and the new interface.
+- Designed portfolio, account and order workflows, AI Highlights without buy/sell prompts, and an assistant for market, portfolio and workspace tasks.
+- Workspace setup was estimated around 4× faster than in QUIK based on observed same-task comparisons.
+- The design, including AI-assisted scenarios, was approved and moved into development; screen designs, widget behaviour, interface states and layout rules were prepared for engineers.
+- Wider responsibilities included design direction across 5+ investment tools, mentoring five designers across two product teams, reviews, one-on-ones and hiring support.
 
 #### Raiffeisen Leasing
 
@@ -215,17 +193,16 @@ Dates: Jul 2021 - Aug 2024
 Location: Moscow, Russia
 Work format: Hybrid
 
-B2B leasing marketplace and internal CRM workflows for sales teams, business clients, and dealers.
+The career dates above retain the earlier profile’s employment-period split. The published RLO case describes project work from 2021 to 2025; that project period overlaps the bank role and is not treated here as a revised employment end date.
 
-- Product users: 350+ sales representatives, with workflows for 19 role types.
-- This is the leasing marketplace and internal CRM period within the overall Jul 2021 - Aug 2025 Raiffeisen tenure.
+RLO is an in-house platform connecting internal teams, business clients, brokers, dealers, suppliers and insurers across the full leasing lifecycle. The case places the company’s corporate leasing portfolio at €600M at the time of the project.
 
-Contributions and reported results:
-
-- Designed a B2B leasing marketplace and modular CRM for 19 role types and 350+ sales representatives.
-- Cut offer generation time from 12 to 2 minutes by redesigning quoting workflows and UI logic.
-- Increased process automation from 10% to 90% by streamlining business rules and operational flows.
-- Contributed to implementing the Triple Diamond design process for an organization of 40+ designers.
+- Researched and designed workflows from initial calculation through checks, financing approval, contracts, servicing, closure and asset buyout, including exceptions and flexible payment schedules.
+- Managers’ preparation time for a proposal with an indicative calculation fell from 12 to 2 minutes.
+- Conversion from “proposal received” to “proposal in progress” increased by 20 percentage points.
+- Dealers received indicative calculations within minutes rather than waiting up to a day; managers recorded deals in RLO more often and relied less on separate spreadsheets.
+- The wider product effort expanded automation through servicing and closure. NPS improved, with manager and client scores analysed separately; the team later shifted to CSAT. Specific scores are confidential.
+- Led designers across CIB product teams, helped apply an adapted Triple Diamond process, designed LaaS from scratch, and designed AI assistant workflows for offer comparison.
 
 #### Yandex.Market
 
@@ -234,16 +211,12 @@ Dates: Apr 2020 - Jul 2021
 Location: Moscow, Russia
 Work format: Hybrid
 
-Large-scale e-commerce marketplace work across analytics products, seller-facing tools, vendor onboarding workflows, and product taxonomy.
+Yandex.Market Analytics was a joint Yandex–Sberbank project serving clients including Microsoft, other international vendors and major retail chains. By summer 2020 it covered 780 categories and more than 1,000 stores.
 
-- Product scope: analytics for product and category teams, seller tools for 35,000 vendors, and taxonomy for 57M SKUs across 890 categories.
-
-Contributions and reported results:
-
-- Led UX for a large-scale analytics platform used by product and category teams.
-- Reduced vendor onboarding time from 90 days to 1 day by redesigning agreement workflows.
-- Designed seller tools for 35,000 marketplace vendors.
-- Improved product taxonomy and categorization for 57M SKUs covering 890 marketplace categories.
+- Designed configurable dashboards, visible filters, reports and Excel/CSV/PDF/image exports, informed by surveys and client requests.
+- Designed self-service onboarding covering plan selection, electronic contract signing and automatic access. The complete journey to access took one day; some earlier cases had taken up to 90 days.
+- Clients created reports independently more often, and support received fewer requests for manually prepared reports; the case does not provide numerical effect sizes for these changes.
+- Separate seller-dashboard work covered products, logistics and orders for 35,000 sellers; taxonomy work covered 57M SKUs across 890 categories. These figures describe different scopes from the Analytics service’s coverage.
 
 #### GdeMaterial
 
@@ -252,15 +225,13 @@ Dates: Jun 2019 - Apr 2020
 Location: Moscow, Russia
 Work format: Remote
 
-Early-stage DIY marketplace for construction and home improvement materials.
+GdeMaterial had a network of 500+ suppliers. The published case focuses on Material.pro, a B2B platform serving 2,000 clients, including major property developers such as PIK.
 
-- Marketplace scale: 500+ suppliers and 2K B2B clients.
-
-Contributions and reported results:
-
-- Led UX for a DIY marketplace startup with 500+ suppliers and 2K B2B clients.
-- Increased conversion from 0.5% to 1.6% through product page and checkout redesign.
-- Launched purchase and logistics workflows, including real-time communication between suppliers and buyers.
+- Interviewed users with product managers and tested interactive prototypes with foremen and clients.
+- Designed estimate upload/manual entry/catalogue selection, supplier-offer comparison, approval, payment and delivery tracking.
+- Made substitutions, supplier ratings, delivery costs and timing visible across purchase options, including Fast delivery.
+- Material.pro conversion increased from 0.5% to 1.6% following the offer-selection and ordering redesign, assessed through before/after metrics and A/B tests.
+- Also worked on Material Chat; its chat functionality was later integrated into Material.pro.
 
 #### Medesk Ltd.
 
@@ -269,18 +240,14 @@ Dates: Sep 2016 - Jun 2019
 Location: Moscow, Russia
 Work format: Hybrid
 
-B2B HealthTech SaaS platform used by healthcare providers across 35 countries.
+SaaS platform for private clinics, serving more than 1,000 clinics across 35+ countries during the project period.
 
-- Platform reach: 1000 clinics across 35 countries.
-- Patient flow: 10K B2C patients.
-- Integrations: 10 third-party modules, the top 5 medical laboratories, and Storybook-based UI components.
-
-Contributions and reported results:
-
-- Designed UX for a healthcare platform used by 1000 clinics across 35 countries.
-- Launched an online treatment flow for 10K B2C patients and improved NPS from 37 to 54.
-- Integrated 10 third-party modules, the top 5 medical laboratories, and Storybook-based UI components.
-- Designed and automated a design system using Storybook.
+- Researched clinic staff workflows through Support, interviews and interactive prototypes; designed appointment rescheduling, a role/permissions matrix and integrations.
+- Designed design-system components and visual patterns; frontend engineers implemented them in Storybook. Feature delivery time decreased by 20%, based on Scrum-sprint timeline comparisons before and after introduction.
+- Designed workflows for 10 third-party modules and five major medical laboratories.
+- Designed online appointment booking for an addressable audience of around 10,000 patients; this is not a claim of 10,000 active users or an online-treatment launch.
+- Clinic-staff NPS rose from 37 to 54 over nearly three years with the product team, reflecting overall platform development.
+- Redesigned the marketing website and coordinated freelancers and illustrators on website and conference/print materials.
 
 ### Earlier Experience | 2011-2016
 
@@ -342,12 +309,14 @@ Contributions and reported results:
 
 ### Scale and Results
 
-The scale figures describe the relevant company, platform, or product:
+The figures below describe different scopes and measurement contexts:
 
-- Company reach: Larixon Classifieds - 5M MAU.
-- Product audiences: Raiffeisen trading terminal - 500+ institutional clients; leasing CRM - 350+ sales representatives.
-- Marketplace and platform reach: Yandex seller tools - 35,000 vendors; GdeMaterial - 2K B2B clients and 500+ suppliers; Medesk - 1000 clinics in 35 countries and an online treatment flow for 10K B2C patients.
-- Reported outcomes include vendor onboarding time reduced from 90 days to 1 day at Yandex.Market; offer generation time reduced from 12 to 2 minutes and process automation increased from 10% to 90% at Raiffeisen Leasing; conversion increased from 0.5% to 1.6% at GdeMaterial; and NPS improved from 37 to 54 at Medesk Ltd.
+- Larixon: around 5M company MAU; seven Product Designers and a UX Research Lead across 8+ verticals; briefing-to-completed-design cycle fell to three weeks; previously, it could stretch over several months.
+- Raiffeisen Bank: target audience of 500+ institutional clients; around 20 research participants; estimated around 4× faster workspace setup than QUIK in observed same-task comparisons. The design moved into development.
+- Raiffeisen Leasing: proposal preparation from 12 to 2 minutes; proposal-to-in-progress conversion up 20 percentage points; dealers received indicative calculations within minutes instead of waiting up to a day. NPS/CSAT scores are confidential.
+- Yandex.Market Analytics: 780 categories and 1,000+ stores by summer 2020; onboarding-to-access in one day versus up to 90 days in some earlier cases. Separate seller tools served an audience of 35,000 sellers, and taxonomy covered 57M SKUs/890 categories.
+- Material.pro: conversion from 0.5% to 1.6% after the offer-selection and ordering redesign; before/after metrics and A/B tests were used.
+- Medesk: 1,000+ clinics in 35+ countries; online booking addressed around 10,000 patients. Feature delivery time decreased by 20% in Scrum-sprint timeline comparisons. Clinic-staff NPS rose from 37 to 54 across nearly three years of overall product development.
 
 ### Education and Certifications
 
@@ -440,198 +409,412 @@ Head of Design roles may also be relevant when they combine hands-on product des
 - UX research
 - DesignOps
 
+## Case Study Framework
+
+All six published case narratives follow this sequence:
+
+**Project & role → The challenge → Research & process → The solution → Outcomes**
+
+- **Project & role:** the product, audience, context and Dmitry’s role and responsibilities.
+- **The challenge:** the user or business problem, constraints and intended change.
+- **Research & process:** the research, evidence, validation and working process that informed decisions.
+- **The solution:** the design decisions, workflows and Dmitry’s contribution.
+- **Outcomes:** reported results, their scope, measurement context and limitations.
+
+Behind the scenes provides additional project or leadership context after the five core sections. Team feedback is attributed supporting material; full LinkedIn recommendations are preserved in the Recommendations section.
+
 ## Larixon Classifieds Case Study
 
-### Overview
+Case title: Building a design function across markets and product teams
 
-Larixon Classifieds is an international classifieds group with market-leading platforms across Cyprus, Mongolia, Tajikistan, Trinidad & Tobago, and Jamaica, serving 5M monthly active users.
+Published case: https://dmitryrybalka.com/work/larixon/
 
-### Role And Context
+### Project & role
 
-- Role: Design Lead
-- Dates: Aug. 2025 - Present
-- Location: Cyprus
-- Work format: Remote
-- Scale: 5M MAU
-- Platform: Web and app
-- Product: Multi-country classifieds platforms
-- Scope: Product Design, UX Research, DesignOps, Design Systems
-- Team: 7 Product Designers, UX Research Lead, Product, Engineering, Marketing
+Larixon operates a group of classifieds platforms across five markets, with a shared web and app core and around 5M monthly active users. Its products include market-leading classifieds platforms: Bazaraki (Cyprus), Unegui (Mongolia) and Somon (Tajikistan).
 
-### Contribution
+As Design Lead, I led seven Product Designers and a UX Research Lead across 8+ product verticals. I was responsible for Product Design, UX Research, DesignOps and Design Systems, reporting directly to the CPO.
 
-- Led product design teams: Led 7 Product Designers and 1 UX Research Lead across 8+ product verticals.
-- Launched UX Research from zero to one: Started cross-country research across Cyprus, Mongolia, and Tajikistan.
-- Built Design System from zero to one: Created Web and App foundations with governance, DSO roles, and 90% component coverage for key flows.
-- Implemented Figma Code Connect for the design system, reducing time-to-market.
-- Introduced AI-assisted workflows: Supported discovery, research synthesis, and documentation.
-- Established DesignOps: Introduced OKR-based reviews, Jira visibility, onboarding, IDPs, and quality standards.
-- Improved team maturity: Introduced 1:1s, mentoring, onboarding, and IDPs to improve solution quality.
+### The challenge
 
-### Relevant Capabilities
+Previously, design work at the company was largely reactive: teams received requests and produced screens. There was no design system, and shared processes, quality standards and a research function had not been established.
 
-- Design leadership
-- UX research setup
-- Design systems
-- DesignOps
-- AI-assisted product design workflows
-- Multi-country product work
-- Classifieds marketplace UX
+Tasks could arrive without business goals, analytics or success criteria. Designers spent time clarifying requirements, while stakeholders lacked visibility.
+
+The brief was to build a design function across product teams, align its priorities with the business and create a design system for web and app.
+
+### Research & process
+
+Through a maturity matrix, interviews and workflow analysis, I identified the causes of delays: no Definition of Ready, unclear responsibilities and a lack of pairing between designers and Product Owners. Designers lacked focus, and tasks accumulated in queues and took longer to complete. These findings informed the process changes.
+
+From these findings, I developed a strategy and quarterly plan. I discussed them with the CPO and CEO, iterated on their feedback and connected the proposed changes to the needs of product teams. I worked through cross-team process changes with PMs, Product Owners, the QA Lead and Frontend Lead.
+
+### The solution
+
+#### A design system for web and app
+
+I built a new design system using shadcn/ui as its foundation, which helped us put tokens and reusable components in place faster. I appointed Design System Owners, established contribution rules and introduced a tracker for component readiness in Figma, code and production. I began rolling out Figma Code Connect.
+
+#### DesignOps
+
+I introduced OKRs, regular reviews and visibility of design work in Jira. Through a Design Definition of Ready (dDOR), I set requirements for incoming tasks: context, goals, data, constraints and acceptance criteria.
+
+#### Working with the team
+
+I introduced regular one-on-ones, design reviews and design-team retrospectives.
+
+#### UX Research
+
+I hired a UX Research Lead to own the function and established touchpoints in the product process, Russian and English templates, and a research repository in Airtable.
+
+#### Hiring and team development
+
+I hired Product Designers for Jobs, Local Markets and Real Estate and assigned design coverage across product verticals. I introduced whiteboard interviews and hiring scorecards, alongside onboarding, buddy support, one-on-ones, competency assessments and individual development plans.
+
+### Outcomes
+
+- The full design-system component library is now in production.
+- The cycle from task briefing to completed design fell to three weeks; previously, it could stretch over several months.
+- UX Research became a regular part of product development, helping teams make decisions across verticals and markets.
+- The design function gained defined owners, shared working practices and transparent planning.
+
+### Behind the scenes
+
+I developed AI-assisted workflows, ran a workshop and piloted a Claude plugin for the design process. I also built a Figma plugin for checking translations and text length, and launched a Smartcat localisation pilot.
 
 ## Raiffeisen Group Case Study
 
-### Overview
+The previously combined case is now presented as two published projects: [Raiffeisen Bank](#raiffeisen-bank-case-study) and [Raiffeisen Leasing](#raiffeisen-leasing-case-study). This heading retains the earlier profile anchor.
 
-Raiffeisen Bank is one of the top-10 banks in Russia and part of Raiffeisen Bank International Group. The work covered trading and investment products, including a professional terminal for institutional clients.
+## Raiffeisen Bank Case Study
 
-Raiffeisen Leasing is the group's corporate leasing business. The work covered B2B leasing products, including a marketplace, modular CRM, and internal tools for sales teams, dealers, and partners.
+Case title: Designing a new trading terminal for portfolio managers and traders
 
-### Role And Context
+Published case: https://dmitryrybalka.com/work/raiffeisen-bank/
 
-- Role: Lead Product Designer
-- Dates: Jul. 2021 - Aug. 2025
-- Location: Moscow, Russia
-- Work format: Hybrid
-- Trading and investment period: Aug. 2024 - Aug. 2025
-- Leasing marketplace and CRM period: Jul. 2021 - Aug. 2024
-- Company reach: 2M+ retail clients at Raiffeisen Bank.
-- Product audience: 500+ institutional clients using the trading terminal.
-- Platforms: Web, desktop, internal tools
-- Products: Trading Terminal, Leasing CRM
-- Scope: Trading UX, Leasing UX, B2B Marketplace, CRM, FinTech UX
-- Team: 5 Designers, Product, Engineering, Business, Sales, Operations
+### Project & role
 
-### Trading And Investment Products
+Raiffeisen Bank was developing its own trading terminal for asset managers and brokers, with a target audience of more than 500 institutional clients.
 
-- Led UX for a professional trading terminal: Designed a trading experience for 500+ institutional clients, including asset managers and brokers.
-- Improved design quality across teams: Mentored 5 designers, ran design reviews and 1:1s, and supported hiring across 2 product teams.
-- Defined product design strategy across 5+ tools: Aligned business goals, user needs, and product hypotheses across the investment product ecosystem.
-- Introduced LLM-powered research workflows: Used LLM-powered tools to accelerate research preparation, synthesize insights, and explore early hypotheses.
+As Lead Product Designer, I spent over six months designing the terminal from scratch. I interviewed portfolio managers and traders, designed the main screens and workflows, and prepared the widget behaviour, interface states and layout rules for development.
 
-### Leasing Marketplace And CRM
+### The challenge
 
-- Designed a B2B leasing marketplace and modular CRM: Created workflows for 19 role types, 350+ sales representatives, B2B clients, and car dealers.
-- Increased process automation from 10% to 90%: Streamlined business rules, operational flows, and internal decision-making.
-- Reduced offer generation time from 12 minutes to 2 minutes: Redesigned quoting workflows, UI logic, and offer preparation scenarios.
-- Contributed to implementing the Triple Diamond design process for an organization of 40+ designers.
+The bank was building its own terminal as part of its strategy to reduce dependence on external vendors. In the version of QUIK used by the bank, switching between portfolios took a long time and access to bank accounts was limited. These limitations could directly affect whether client portfolios were managed correctly. Necessary changes depended on the external provider and could take a long time.
 
-### Relevant Capabilities
+The terminal needed to combine portfolio holdings and performance, banking accounts and tools for portfolio managers and traders making decisions or executing instructions.
 
-- Fintech UX
-- Trading terminal UX
-- Information-dense interfaces
-- Enterprise workflows
-- B2B marketplace UX
-- CRM UX
-- Internal tools
-- Design leadership and mentoring
+The bank also wanted AI in its products. In the terminal, AI needed to support daily work within legal constraints while keeping trading decisions with the user.
+
+### Research & process
+
+Together with the Product Owner, I interviewed around 20 portfolio managers and traders. I reviewed their QUIK workflows and observed their work with portfolios and orders. The priorities were portfolio switching and banking-account access. Users spent time manually building boards: finding securities, recalling tickers, and adding and configuring widgets. This led us to design AI-assisted creation of task-specific boards.
+
+I used the findings to design workflows and discussed solutions with users in interviews. Participants completed the same task in QUIK and the new interface to compare the experience.
+
+### The solution
+
+#### Portfolios, accounts and trading
+
+I designed the workspace for the following tasks:
+
+- Switch portfolios and review value, holdings and financial performance across periods and chart points.
+- Review cash, stocks, funds, bonds and futures using search and categories.
+- See account balances and update times, fund accounts or withdraw, and choose an account and portfolio when buying securities.
+- Place buy and sell orders: choose an account, portfolio, instrument, quantity, price and order type.
+- Monitor execution: view active, partially filled and completed orders, and amend or cancel the unfilled portion.
+- Rebalance a portfolio by reviewing asset weights and adjusting holdings through purchases and sales.
+- Review trades, dividends, coupons, taxes and transfers, including amounts, fees and statuses.
+- Find instruments by name or ticker, distinguish trading venues, and open company information or charts.
+
+#### Portfolio-aware AI Highlights
+
+I designed AI Highlights, a panel of facts, news and events for the selected portfolio without buy or sell prompts. Useful/not-useful ratings were intended to gradually tailor the mix of company news and portfolio-composition information.
+
+#### One assistant, three types of tasks
+
+A single assistant field supported three groups of tasks:
+
+- Market: find securities, explore an instrument or compare options.
+- Portfolio: ask questions in ordinary language, such as dividend income or holdings below 1% of portfolio value. Answers could include a breakdown and an Excel file.
+- Workspace: add a widget or create an entire board, then customise it for the task.
+
+A contextual suggestion strip adapted to the query. For example, entering “Apple” brought up questions about price movements and valuation, similar securities, and adding a card to a thematic board.
+
+#### Setting up the workspace
+
+Users could preview a widget, choose its card layout, confirm the addition and position it on a board. We developed templates for new boards together with portfolio managers. Users could rename, duplicate or delete boards, hide widgets and open their data settings.
+
+Text requests worked alongside standard buttons and menus.
+
+### Outcomes
+
+- Estimated around 4× faster workspace setup than in QUIK, based on observing users complete the same task.
+- The terminal design, including the AI-assisted scenarios, was approved and moved into development.
+- I prepared the screen designs, widget behaviour, main interface states and layout rules for the development team.
+
+### Behind the scenes
+
+#### Completing the interface
+
+The design also covered login and QR-based access, appearance options, contextual menus and supporting states.
+
+#### Design leadership
+
+Alongside hands-on terminal work, my wider role included design direction across more than five investment tools. I mentored five designers across two product teams, ran design reviews and one-on-ones, and supported hiring.
+
+#### Working with AI tools
+
+I also used LLM tools to help prepare research, organise findings and explore early ideas.
+
+## Raiffeisen Leasing Case Study
+
+Case title: Simplifying the journey from an initial calculation to contract closure
+
+Published case: https://dmitryrybalka.com/work/raiffeisen-leasing/
+
+### Project & role
+
+Raiffeisen Leasing Online (RLO) is the company’s in-house platform for the full leasing lifecycle. It connects internal teams, business clients and a network of brokers, dealers, suppliers and insurers. At the time of the project, Raiffeisen Leasing managed a €600M corporate leasing portfolio.
+
+From 2021 to 2025, I worked on RLO as Lead Product Designer, conducting research and designing workflows from the first calculation to contract closure. I also led a group of designers across CIB (Corporate Internet Banking) product teams.
+
+### The challenge
+
+Managers manually gathered deal data, compared supplier and insurer offers, calculated leasing terms and uploaded the completed commercial proposal to RLO as a document. Some calculations stayed in their own Excel spreadsheets, leaving potential deals unrecorded in the system.
+
+Vendor limitations led the company to develop its own ecosystem. The goal was to scale leasing through partners and reduce manual processing. We started with proposal preparation so managers could discuss terms and move agreed options forward faster.
+
+According to the company’s 2023 presentation, brokers accounted for 70% of new business in its retail leasing segment in Q1 2022.
+
+### Research & process
+
+I interviewed managers, insurance and compliance specialists and reviewed the existing BPMN diagram. I then validated hypotheses and refined the workflows through several usability tests with managers.
+
+Interviews and usability tests helped us identify which data was needed for the first calculation and which could be requested later. The initial step required the client’s tax ID, asset cost, term, advance payment and other calculation inputs. Documents and insurance details were collected at later stages, when checks and financing approval also took place. This allowed managers to discuss terms with clients sooner.
+
+### The solution
+
+#### Creating and exploring proposals in RLO
+
+Managers created commercial proposals with indicative calculations in RLO, discussed them with clients and quickly prepared alternatives when needed. Once an option was agreed, they initiated the next deal stage and the system routed the proposal through the configured workflow. Indicative calculations helped clients assess terms without being a binding offer or final financing approval. Tax-ID scoring informed the available terms.
+
+#### Connecting the full lifecycle
+
+I designed workflows across the full leasing lifecycle:
+
+- Document collection, compliance and security checks, insurance, financing approvals and contract preparation.
+- After signing, payment servicing through the final instalment, contract closure and asset buyout.
+- Overdue payments, asset repossession and asset loss.
+- Changes of insurer or lessee, and changes to the legal entity.
+
+#### Supporting flexible payment schedules
+
+Managers previously had to complete most of the flow, then edit the payment schedule in PDF or Excel, leaving the proposal out of sync with RLO. I moved these edits to proposal preparation and linked two views: deal parameters and an automatically calculated schedule that could be tailored to the client. Changes to the schedule updated deal parameters, and vice versa. It supported a range of schedules, including balloon, increasing, decreasing and seasonal payments.
+
+#### Extending self-service to clients and partners
+
+B2B clients could track statuses, upload documents, view contracts and payment schedules, obtain documents for active contracts and receive electronic status notifications.
+
+I improved existing dealer and supplier applications, calculations and tracking. Dealers automatically received indicative calculations without waiting for a manager. Applications followed a separate business process before reaching a manager for processing.
+
+### Outcomes
+
+- Managers’ preparation time for a commercial proposal with an indicative calculation fell from 12 to 2 minutes.
+- Conversion from “proposal received” to “proposal in progress” increased by 20 percentage points.
+- Dealers received indicative calculations within minutes instead of waiting up to a day for manual processing.
+- Managers recorded deals in RLO more often and relied less on their own Excel spreadsheets.
+- The wider product effort expanded automation from proposal preparation through contract servicing and closure.
+- During product development, NPS improved, with manager and client scores analysed separately. The team later shifted from measuring loyalty through NPS to measuring product satisfaction through CSAT. Specific scores are confidential.
+
+### Behind the scenes
+
+#### Design leadership
+
+Alongside leasing work, I led a group of designers across CIB product teams, supported hiring and ran design reviews and one-on-ones. I helped with complex scenarios, design-system consistency, professional development and public speaking.
+
+#### Ways of working
+
+I helped apply an adapted Triple Diamond process, shape the design roadmap and work with business stakeholders. Problem exploration, hypothesis testing and early discussions with the business helped reduce rework.
+
+#### Designing LaaS from scratch
+
+I designed LaaS (Leasing as a Service), a B2B marketplace for collaboration between brokers and leasing companies, from scratch.
+
+#### AI-assisted offer analysis
+
+I designed AI assistant workflows for comparing supplier, insurer and competing leasing-company offers. The assistant highlighted differences in terms and helped managers prepare a more favourable offer for the client.
 
 ## Yandex.Market Case Study
 
-### Overview
+Case title: Making marketplace data useful and vendor onboarding faster
 
-Yandex.Market is one of Russia's largest e-commerce marketplaces, serving millions of customers and thousands of sellers. The work covered analytics products, seller-facing tools, vendor onboarding workflows, and product taxonomy for marketplace teams and partners.
+Published case: https://dmitryrybalka.com/work/yandex-market/
 
-### Role And Context
+### Project & role
 
-- Role: Senior Product Designer
-- Dates: Apr. 2020 - Jul. 2021
-- Location: Moscow, Russia
-- Work format: Hybrid
-- Product audience: 35K vendors
-- Platforms: Web, internal tools
-- Products: Analytics Platform, Seller Tools
-- Scope: Marketplace UX, Analytics, Vendor Onboarding, Seller Tools, Product Taxonomy
-- Team: Product, Engineering, Analytics, Category Management, Business
+Yandex.Market Analytics was a joint Yandex–Sberbank project combining partner data with market insights. Clients included Microsoft, other international vendors and major retail chains.
 
-### Marketplace And Seller Tools
+By summer 2020, it covered 780 categories and more than 1,000 stores. Users included business analysts, store owners, marketers, commercial directors and assortment specialists.
 
-- Led UX for a large-scale analytics platform: Designed reports, charts, and dashboards used by product and category teams to analyze marketplace performance.
-- Reduced vendor onboarding time from 90 days to 1 day: Redesigned agreement workflows and simplified the vendor activation process.
-- Made business metrics clearer for decision-making: Improved how suppliers and internal teams worked with product, logistics, sales, and order metrics.
-- Designed B2B tools for 35K marketplace vendors: Created interfaces supporting supplier operations, product management, and marketplace workflows.
-- Optimized the supplier dashboard: Improved workflows for product management, logistics, orders, and marketplace operations.
-- Improved product taxonomy and categorization: Worked on structure and classification logic for 57M SKUs across 890 marketplace categories.
+As Senior Product Designer (April 2020–July 2021), I developed dashboards, reports and client onboarding for the service alongside analysts, engineers and product managers.
 
-### Relevant Capabilities
+### The challenge
 
-- Marketplace UX
-- Seller tools
-- Analytics dashboards
-- Vendor onboarding
-- Product taxonomy
-- Internal tools
-- Complex data and metrics UX
+Clients needed to understand which categories and brands were growing, who was buying them and where to expand their assortment. The available analytics settings did not always meet their needs, so they had to ask support to prepare some reports manually.
+
+The goal was to increase self-service analytics use, help clients identify growth opportunities and reduce support requests.
+
+Getting access was a separate challenge: manual plan selection, document exchanges and approvals could stretch onboarding to as long as 90 days in some cases.
+
+### Research & process
+
+Surveys showed that some clients overlooked the filters and that the available options did not always cover their data selection needs. Users also needed configurable reports and exports. We prioritised requests by frequency, client scale and market segment size, then tracked usage and manual-report support requests.
+
+For onboarding, I separately interviewed representatives of vendors and stores who were responsible for obtaining access. These conversations helped identify delays in plan selection, contract signing and approvals.
+
+### The solution
+
+#### Flexible dashboards and reports
+
+Templates provided a starting point. Based on client feedback, I made filters more noticeable and added missing options. Users could add or remove filter chips to adjust the selection. Data could be filtered by date range, category, brand, product attributes, geography, and shoppers’ gender and age.
+
+Users could choose metrics, create charts, switch visualisation types, and add or reorder reports on their dashboards to explore demand trends, sales forecasts and opportunities to expand their assortment.
+
+#### Exports for further analysis
+
+I improved Excel/CSV exports for analysis and PDF/image exports for presentations. File generation took 10–20 minutes for narrower selections; full exports could take up to an hour.
+
+#### Self-service onboarding
+
+I designed self-service onboarding: plan selection, contract signing via electronic document exchange and automatic access. Partners could also add service packages and product categories without an account manager.
+
+### Outcomes
+
+- Clients created the reports they needed independently more often.
+- Support received fewer requests for manually prepared reports.
+- The complete journey from starting the onboarding process to receiving access took one day. Previously, some cases had taken up to 90 days.
+
+### Behind the scenes
+
+Alongside this work, I developed Yandex.Market’s seller dashboard: tools for managing products, logistics and orders for an audience of 35,000 sellers.
+
+I also contributed to product taxonomy and categorisation for a catalogue of 57 million SKUs across 890 categories. In the interfaces, I used Yandex’s component library and shared design patterns.
+
+#### Analytics in practice
+
+One client identified growing demand for robot vacuums, refocused its entire business on the category and later saw revenue grow eightfold.
 
 ## GdeMaterial Case Study
 
-### Overview
+Case title: From a materials estimate to supplier selection and ordering
 
-GdeMaterial was an early-stage DIY marketplace for construction and home improvement materials. The work covered marketplace UX, supplier-facing tools, product discovery, checkout, and logistics workflows for B2B clients and suppliers.
+Published case: https://dmitryrybalka.com/work/gdematerial/
 
-### Role And Context
+### Project & role
 
-- Role: Senior Product Designer
-- Dates: Jun. 2019 - Apr. 2020
-- Location: Moscow, Russia
-- Work format: Remote
-- Scale: 500+ suppliers, 2K B2B clients
-- Platforms: Web, mobile web, marketplace
-- Products: DIY Marketplace, Checkout, Logistics
-- Scope: Marketplace UX, Product Catalog, Checkout, Logistics, Supplier Tools
-- Team: Founders, Product, Engineering, Sales, Operations
+GdeMaterial was a construction materials marketplace with a network of 500+ suppliers. I worked as Senior Product Designer from June 2019 to April 2020.
 
-### Marketplace And Checkout
+My main focus was Material.pro, a B2B platform serving 2,000 clients, including major property developers such as PIK. I designed material search, offer comparison, ordering and workflows connecting buyers, suppliers and logistics.
 
-- Led UX for an early-stage DIY marketplace: Designed core marketplace flows for construction materials, suppliers, and B2B buyers.
-- Launched checkout and logistics workflows: Designed purchase, delivery, and order management flows for B2B clients and suppliers.
-- Improved product discovery and catalog experience: Worked on product listings, filtering, search, and category navigation for complex material selection.
-- Increased conversion from 0.5% to 1.6%: Improved key marketplace flows across product discovery, checkout, and ordering experience.
+### The challenge
 
-### Relevant Capabilities
+Buying construction materials meant coordinating the estimate, suppliers and delivery to the site. Foremen were responsible for quality and timing, while clients managed the budget. Incorrect materials or late deliveries could bring work to a halt, so the lowest price alone was not enough.
 
-- Early-stage marketplace UX
-- Product discovery
-- Search and filtering
-- Checkout
-- Logistics workflows
-- Supplier tools
-- Mobile web UX
+Buyers added materials or uploaded an estimate, but a company manager handled the subsequent supplier selection. The goal was to make offers clear enough for buyers to choose independently and increase conversion to placed orders.
+
+### Research & process
+
+Together with product managers, I conducted interviews to understand how people purchased and approved materials. I tested interactive prototypes with foremen and clients, collected feedback and refined the flows.
+
+Testing led me to clarify the differences between offers: users needed to understand why prices differed and whether an option involved substituting materials.
+
+### The solution
+
+#### Ordering from an estimate
+
+Buyers could upload a file or photo, enter a materials list manually or select products from the catalogue.
+
+#### Making offers easy to compare
+
+The system proposed how to split the materials in an estimate across suppliers, taking their specialisation, pricing and delivery terms into account. Buyers and foremen chose the right balance of budget, timing and reliability.
+
+I highlighted several purchase options: Cheapest without substitutions, Cheapest, Fast delivery, Recommended and others. The comparison showed the materials included, substitutions, suppliers and their ratings, delivery costs and timing.
+
+#### Placing and tracking an order
+
+I connected offer selection with order approval, payment and delivery. In their account, buyers could check the materials ordered, documents, delivery address and time, and current order status.
+
+### Outcomes
+
+- Self-service offer comparison and selection launched in Material.pro. Buyers and foremen could evaluate purchasing options for the full estimate and choose suitable terms.
+- Following the redesign of offer selection and ordering, Material.pro conversion increased from 0.5% to 1.6%. We compared metrics before and after the update and also conducted A/B tests.
+
+### Behind the scenes
+
+#### Material Chat
+
+Alongside Material.pro, I worked on Material Chat, an experimental platform connecting suppliers, foremen and clients around an order. Participants shared materials lists and discussed pricing, payment and delivery, with the platform acting as an arbiter in disputes.
+
+The chat functionality was later integrated into the main B2B product, Material.pro.
 
 ## Medesk Ltd. Case Study
 
-### Overview
+Case title: Simplifying everyday work for clinic teams
 
-Medesk is a B2B HealthTech SaaS platform for clinics and medical teams, used by healthcare providers across 35 countries. The work covered product UX, patient-facing flows, third-party integrations, and design system components for clinic operations and digital care.
+Published case: https://dmitryrybalka.com/work/medesk/
 
-### Role And Context
+### Project & role
 
-- Role: Senior Product Designer
-- Dates: Sep. 2016 - Jun. 2019
-- Location: Moscow, Russia
-- Work format: Hybrid
-- Scale: 1000 clinics, 35 countries
-- Platforms: Web, SaaS, Patient Portal
-- Products: Clinic Platform, Patient Flow, Design System
-- Scope: HealthTech UX, B2B SaaS, Patient Flows, Design System, UI Components
-- Team: Product, Engineering, Customer Success, Support
+Medesk is a SaaS platform for managing private clinics. During my time there, it served more than 1,000 clinics across 35+ countries.
 
-### HealthTech SaaS And Design System
+From September 2016 to June 2019, I worked on product design across scheduling, appointments, medical records, reporting and integrations. The patient service developed as a connected part of the product. I worked directly with the founders, medical experts and engineers.
 
-- Designed UX for a healthcare platform used by 1000 clinics: Improved core workflows for clinic teams, operations, and patient management across international markets.
-- Designed and automated a design system using Storybook: Created Storybook-based UI components and scalable interface patterns for core product flows and third-party integrations.
-- Launched an online treatment flow for 10K B2C patients and improved NPS from 37 to 54. Designed patient-facing experiences supporting digital treatment, communication, and care delivery; refined key product flows and patient interactions to improve service quality and user satisfaction.
-- Integrated 10 third-party modules, the top 5 medical laboratories, and Storybook-based UI components. Designed integration flows supporting external services, lab data, and connected healthcare workflows.
+### The challenge
 
-### Relevant Capabilities
+The outdated interface had been built by engineers without designers. We needed to establish a consistent visual style and design system, speed up the release of new modules for clinics and update existing ones.
 
-- HealthTech UX
-- B2B SaaS
-- Clinic operations
-- Patient-facing flows
-- Third-party integrations
-- Design systems
-- Storybook-based UI components
+In parallel, the marketing website needed a redesign to attract clinics through advertising campaigns.
+
+### Research & process
+
+I gathered user problems through Support and weighed them against business needs. We prioritised recurring requests from clinics whose spending was typical of our customer base, keeping solutions useful to a broad range of clients.
+
+Requests included clearer access controls, transparent management of SMS and email campaign packages, and connections to new services.
+
+I conducted in-depth interviews with clinic staff and tested workflows using interactive prototypes. Participants included administrators, doctors, managers and marketers, chosen according to the task and role.
+
+### The solution
+
+#### Shared components and working agreements
+
+I designed the components and visual patterns for the design system, while frontend engineers implemented them in Storybook. We agreed to use implemented components in designs: when a new one was needed, we first agreed on and requested its implementation before handing over the product task.
+
+The design system became the foundation for new modules and the gradual migration of existing ones.
+
+#### Clinic staff workflows
+
+For rescheduling appointments, I designed a split panel: patient and booking details on the left, an interactive calendar on the right. Administrators could find another time during a conversation with a patient and move the existing booking without cancelling it or switching between windows.
+
+I designed a role and permissions matrix for managing access. It allowed clinics to separate access for marketers, administrators and doctors, taking medical confidentiality and management’s requirements for protecting the patient database into account.
+
+#### External services and online booking
+
+I designed integration workflows for laboratories, telephony, SMS campaigns, payments, online cash registers and fiscal receipts, including tax settings that accounted for the clinic’s country of operation. My work covered 10 third-party modules, including Mango telephony, and five major medical laboratories, including Invitro and Helix.
+
+For the patient service, I designed online appointment booking: patients could choose a specific doctor, a convenient time, or a specialty followed by a clinician. The service had an addressable audience of around 10,000 patients.
+
+### Outcomes
+
+- Over nearly three years with the product team, NPS among clinic staff rose from 37 to 54, reflecting the platform’s overall development over that period.
+- The design system helped frontend engineers build standard screens and clinic-specific workflows faster. Feature delivery time decreased by 20%, based on a comparison of timelines in Scrum sprints before and after its introduction.
+- Differences between designs and implementation became minimal, making the development outcome predictable.
+
+### Behind the scenes
+
+I also redesigned the marketing website. Landing pages focused on clinics’ needs, specific features and workflows, leading visitors to request a platform demo. We assessed performance through the conversion funnel, demo request volume and conversion to a request.
+
+I coordinated freelancers and illustrators on the website and visual materials, including conference materials, print collateral and handouts.
 
 ## FAQ
 
@@ -653,17 +836,15 @@ He has led 7 Product Designers and a UX Research Lead at Larixon Classifieds, me
 
 ### Does he have design system experience?
 
-Yes. He has built design-system foundations at Larixon Classifieds with governance and DSO roles and implemented Figma Code Connect for the design system, reducing time-to-market. At Medesk Ltd., he designed and automated a design system using Storybook, with reusable UI components and scalable patterns.
+Yes. At Larixon he built a shadcn/ui-based design system with Design System Owners, contribution rules and a readiness tracker; the full component library is in production, and he began rolling out Figma Code Connect. At Medesk he designed the components and visual patterns, while frontend engineers implemented them in Storybook. The case reports a 20% reduction in feature delivery time based on Scrum-sprint timeline comparisons.
 
 ### Does he have UX research experience?
 
-Yes. He launched UX Research from zero to one at Larixon Classifieds and introduced cross-country research across Cyprus, Mongolia, and Tajikistan. He has also used LLM-powered tools for research preparation, insight synthesis, and early hypothesis exploration.
+Yes. At Larixon he hired a UX Research Lead and established research touchpoints, Russian/English templates and an Airtable repository. At Raiffeisen Bank he interviewed around 20 portfolio managers and traders with the Product Owner and compared task completion in QUIK and the new interface. Other cases document interviews, surveys, usability testing and interactive prototypes. He also used LLM tools for research preparation and synthesis.
 
 ### What company reach, product audience, and measurable outcomes are shown in the portfolio?
 
-Company reach: Larixon Classifieds serves 5M monthly active users (MAU). Product audience: seller tools for 35K vendors at Yandex.Market and a trading terminal for 500+ institutional clients at Raiffeisen Bank.
-
-Reported outcomes include vendor onboarding time reduced from 90 days to 1 day at Yandex.Market; offer generation time reduced from 12 to 2 minutes and process automation increased from 10% to 90% at Raiffeisen Leasing; conversion increased from 0.5% to 1.6% at GdeMaterial; and NPS improved from 37 to 54 at Medesk Ltd.
+See [Scale and Results](#scale-and-results) for the figures and their measurement context. The six published case narratives below the professional profile provide the complete project accounts. Company reach, target audience and product outcomes should not be conflated.
 
 ### What roles would be a strong fit?
 
