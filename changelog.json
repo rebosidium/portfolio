@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.6.5",
+    "date": "2026-10-23",
+    "title": "Reading entrance queue and case artwork weight",
+    "changes": [
+      "Finish reading blocks passed above the viewport and remove their stale entrance queue delays, while preserving animation for upcoming content and active fades.",
+      "Optimize case screenshots and illustrations with WebP Q94 when materially smaller; preserve transparency, dimensions and smaller existing lossless variants. Remove click-to-enlarge links from case artwork."
+    ]
+  },
+  {
     "version": "1.6.4",
     "date": "2026-10-23",
     "title": "Leasing proposal conversion outcome",

@@ -14,16 +14,48 @@
   const revealTargets=[...main.querySelectorAll('.about-title-row,.case-study-title,.related-cases,.not-found-actions,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
   if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
   if(!still()&&typeof IntersectionObserver==='function'){
-    let observer;
+    let observer,queueFrame=0;
+    const outstanding=new Set(revealTargets);
     const stepValue=getComputedStyle(main).getPropertyValue('--delay-reading-step').trim();
     const stepMs=parseFloat(stepValue)*(stepValue.endsWith('ms')?1:1000)||240;
     let nextRevealAt=0;
     const show=target=>{
+      outstanding.delete(target);
       target.dataset.readingReveal='shown';
       target.style.removeProperty('--reading-reveal-delay');
       observer?.unobserve(target);
     };
-    const showAll=()=>{observer?.disconnect();revealTargets.forEach(show);};
+    const showAll=()=>{observer?.disconnect();cancelAnimationFrame(queueFrame);queueFrame=0;revealTargets.forEach(show);};
+    const viewport=()=>({top:window.visualViewport?.offsetTop||0,bottom:(window.visualViewport?.offsetTop||0)+(window.visualViewport?.height||window.innerHeight)});
+    function refreshQueue(compact=false){
+      const now=performance.now(),view=viewport();
+      let next=now;
+      for(const target of outstanding){
+        const rect=target.getBoundingClientRect();
+        if(rect.bottom<=view.top||rect.top>=view.bottom)continue;
+        const animation=target.getAnimations().find(item=>item.animationName==='reading-content-enter');
+        if(!animation?.effect)continue;
+        const delay=Number(animation.effect.getTiming().delay)||0,elapsed=Number(animation.currentTime)||0;
+        let remaining=delay-elapsed;
+        // Remove empty slots left by passed blocks. Shorten only waiting time;
+        // a fade already in progress retains its playhead, duration and easing.
+        if(compact&&remaining>0){
+          remaining=Math.min(remaining,Math.max(0,next-now));
+          animation.effect.updateTiming({delay:elapsed+remaining});
+        }
+        next=Math.max(next,now+remaining+stepMs);
+      }
+      nextRevealAt=next;
+    }
+    function finishPassed(){
+      const {top}=viewport();
+      const passed=[...outstanding].filter(target=>target.getBoundingClientRect().bottom<=top);
+      passed.forEach(show);
+      if(passed.length)refreshQueue(true);
+    }
+    const onScroll=()=>{
+      if(!queueFrame&&outstanding.size)queueFrame=requestAnimationFrame(()=>{queueFrame=0;finishPassed();});
+    };
     const showHash=()=>{
       let id;try{id=decodeURIComponent(location.hash.slice(1));}catch(_){return;}
       const anchor=document.getElementById(id);
@@ -31,7 +63,14 @@
     };
     try{
       observer=new IntersectionObserver(entries=>{
-        const entering=entries.filter(entry=>entry.isIntersecting&&entry.target.dataset.readingReveal==='pending')
+        finishPassed();
+        refreshQueue();
+        const view=viewport();
+        const entering=entries.filter(entry=>{
+          if(!entry.isIntersecting||entry.target.dataset.readingReveal!=='pending')return false;
+          const rect=entry.target.getBoundingClientRect();
+          return rect.bottom>view.top&&rect.top<view.bottom;
+        })
           .sort((a,b)=>revealTargets.indexOf(a.target)-revealTargets.indexOf(b.target));
         const now=performance.now();
         nextRevealAt=Math.max(now,nextRevealAt);
@@ -48,15 +87,8 @@
         }else if(window.scrollY>0)show(target);
       });
       // Keep new scroll batches behind first-paint blocks still waiting to start.
-      const now=performance.now();
-      for(const target of revealTargets){
-        for(const animation of target.getAnimations()){
-          if(animation.animationName!=='reading-content-enter')continue;
-          const delay=Number(animation.effect.getTiming().delay)||0;
-          const elapsed=Number(animation.currentTime)||0;
-          nextRevealAt=Math.max(nextRevealAt,now+delay-elapsed+stepMs);
-        }
-      }
+      refreshQueue();
+      window.addEventListener('scroll',onScroll,{passive:true});
       main.addEventListener('animationend',event=>{
         if(event.animationName==='reading-content-enter'&&revealTargets.includes(event.target))show(event.target);
       });
