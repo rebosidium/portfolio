@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.6.1",
+    "date": "2026-10-23",
+    "title": "Recover temporary gallery image failures",
+    "changes": [
+      "Retry only failed About photos with bounded, low-priority recovery. Preserve prefetch and valid images during source upgrades; hide native broken-image placeholders."
+    ]
+  },
+  {
     "version": "1.6.0",
     "date": "2026-10-22",
     "title": "Images across all six case studies",

@@ -4,6 +4,7 @@
 .photo-gallery-card{position:relative;overflow:hidden;border-radius:12px;aspect-ratio:var(--photo-ratio);background:var(--color-surface);isolation:isolate}
 .photo-gallery-crop{position:absolute;inset:0;overflow:hidden;border-radius:12px}
 .photo-gallery-card img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.photo-gallery-enhanced img[data-photo-unavailable]{visibility:hidden}
 .photo-crop-balloons img{position:absolute;left:-77.51%;width:226.58%;max-width:none}
 .photo-crop-coast img{position:absolute;top:-10.23%;left:-.09%;height:120.93%;width:100.17%;max-width:none}
 .photo-crop-coffee .photo-gallery-crop{inset:-3.57% -28.43% -15% -10%}

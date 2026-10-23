@@ -56,7 +56,77 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
     let width=0,height=0,unit=1,tileW=1,tileH=1,x=0,y=0,vx=0,vy=0,frame=0,previous=0,visible=false,drag=null,desktopLens=false;
     let focused=false,departed=false,manualUntil=0,resumeTimer=0,near=false;
     let pixelRatio=window.devicePixelRatio||1;
-    let sourceSignature='',sourceEpoch=0,settledEpoch=-1,preparation=null,failedPhotos=0;
+    let sourceSignature='',sourceEpoch=0,settledEpoch=-1,preparation=null;
+    const decodedSources=new WeakMap(),failures=new Map(),sourceJobs=new Map();
+    let generationController=new AbortController(),recoveryTimer=0,recoveryJob=null;
+    const retryDelays=[1000,3000],candidateQueue=[];
+    let activeCandidates=0;
+    const absolute=url=>new URL(url,location.href).href;
+    const current=(epoch,signal)=>epoch===sourceEpoch&&!signal.aborted&&!departed;
+    const recoveryAllowed=()=>!departed&&!document.hidden&&navigator.onLine!==false;
+    function loadCandidate(url,signal){
+      return new Promise((resolve,reject)=>{
+        candidateQueue.push({url,signal,resolve,reject});pumpCandidates();
+      });
+    }
+    function pumpCandidates(){
+      while(activeCandidates<2&&candidateQueue.length){
+        const job=candidateQueue.shift();
+        if(job.signal.aborted){job.reject(new DOMException('Obsolete photo source','AbortError'));continue;}
+        activeCandidates++;
+        loadAndDecode(new Image(),{url:job.url,signal:job.signal}).then(job.resolve,job.reject).finally(()=>{activeCandidates--;pumpCandidates();});
+      }
+    }
+    function readiness(){
+      if(settledEpoch===sourceEpoch)gallery.dataset.mediaReady=failures.size?'ready-with-errors':'true';
+    }
+    function noteFailure(key,url){
+      if(!failures.has(key))failures.set(key,{key,url,epoch:sourceEpoch,attempts:0,due:performance.now()+retryDelays[0]});
+      for(const image of photoImages.get(key))if(image.complete&&!image.naturalWidth)image.dataset.photoUnavailable='true';
+      readiness();scheduleRecovery();
+    }
+    function photoReady(key,url){
+      const recovered=failures.delete(key);
+      if(recovered)gallery.dispatchEvent(new CustomEvent('portfolio:photo-ready',{bubbles:true,detail:{url}}));
+    }
+    function scheduleRecovery(){
+      clearTimeout(recoveryTimer);recoveryTimer=0;
+      if(!recoveryAllowed()||recoveryJob||preparation||settledEpoch!==sourceEpoch)return;
+      const next=[...failures.values()].filter(item=>item.epoch===sourceEpoch&&item.attempts<retryDelays.length).sort((a,b)=>a.due-b.due)[0];
+      if(next)recoveryTimer=setTimeout(()=>{recoveryTimer=0;recover(next);},Math.max(0,next.due-performance.now()));
+    }
+    async function recover(item){
+      if(!recoveryAllowed()||recoveryJob||preparation||failures.get(item.key)!==item)return;
+      const controller=new AbortController(),epoch=sourceEpoch;
+      const abort=()=>controller.abort();generationController.signal.addEventListener('abort',abort,{once:true});
+      const job={controller};recoveryJob=job;item.attempts++;
+      try{
+        // The warmer owns encoded-cache preparation; only this queue retries
+        // failed DOM photos, one key at a time, after the initial pass finishes.
+        await loadCandidate(item.url,controller.signal);
+        if(!current(epoch,controller.signal))return;
+        const results=await Promise.allSettled(photoImages.get(item.key).map(image=>
+          loadAndDecode(image,{url:item.url,signal:controller.signal,restart:image.complete&&!image.naturalWidth})));
+        if(!current(epoch,controller.signal))return;
+        if(results.some(result=>result.status==='rejected'))throw Error('Photo recovery incomplete');
+        photoReady(item.key,item.url);
+      }catch(error){
+        if(!controller.signal.aborted)item.due=performance.now()+(retryDelays[item.attempts]||0);
+      }finally{
+        if(controller.signal.aborted)item.attempts--;
+        generationController.signal.removeEventListener('abort',abort);
+        if(recoveryJob===job)recoveryJob=null;
+        readiness();scheduleRecovery();
+      }
+    }
+    function pauseRecovery(){clearTimeout(recoveryTimer);recoveryTimer=0;recoveryJob?.controller.abort();}
+    // A late error must remain recoverable even after the preparation pass.
+    field.addEventListener('error',event=>{
+      const image=event.target;if(!(image instanceof HTMLImageElement))return;
+      decodedSources.delete(image);image.dataset.photoUnavailable='true';
+      const card=cards.find(card=>card.image===image),source=card&&sourceFor(card);
+      if(source&&absolute(image.getAttribute('src'))===absolute(source.selected.url))noteFailure(card.key,source.selected.url);
+    },true);
     const allowed=()=>visible&&!departed&&!document.hidden&&!document.documentElement.classList.contains('mobile-menu-open');
     const drifting=now=>!still()&&!(focused&&field.matches(':focus-visible'))&&!drag&&now>=manualUntil;
     function sourceFor(card){
@@ -72,66 +142,103 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
       return {cssWidth,requiredWidth,selected};
     }
     function sizePhoto(card){
-      if(photoSizes.has(card.key))return;
+      if(photoSizes.has(card.key))return sourceJobs.get(card.key);
       const source=sourceFor(card);if(!source)return;
-      const {cssWidth,requiredWidth,selected}=source;
+      const {cssWidth,requiredWidth,selected}=source,peers=photoImages.get(card.key);
       photoSizes.set(card.key,cssWidth);
-      for(const peer of photoImages.get(card.key)){
+      for(const peer of peers){
         peer.dataset.photoCssWidth=cssWidth;
         peer.dataset.photoPixelWidth=requiredWidth;
         peer.dataset.photoSourceWidth=selected.width;
-        // Pick one URL explicitly: cached oversized srcset candidates should
-        // not keep a large decoded bitmap alive in the moving photo field.
-        if(peer.getAttribute('src')!==selected.url)peer.src=selected.url;
       }
+      const replace=()=>{
+        for(const peer of peers)if(peer.getAttribute('src')!==selected.url)peer.src=selected.url;
+      };
+      // A responsive upgrade must not discard a valid displayed bitmap before
+      // its replacement is decoded. Initial same-source loading stays native.
+      if(peers.some(peer=>peer.complete&&peer.naturalWidth&&peer.getAttribute('src')!==selected.url)){
+        const epoch=sourceEpoch,signal=generationController.signal;
+        const job=loadCandidate(selected.url,signal).then(()=>{
+          if(!current(epoch,signal))return false;
+          replace();return true;
+        }).catch(()=>{if(current(epoch,signal))noteFailure(card.key,selected.url);return false;})
+          .finally(()=>{if(sourceJobs.get(card.key)===job)sourceJobs.delete(card.key);});
+        sourceJobs.set(card.key,job);return job;
+      }
+      replace();
     }
-    function loadAndDecode(image){
+    function loadAndDecode(image,{url=image.getAttribute('src'),signal=generationController.signal,restart=false}={}){
       return new Promise((resolve,reject)=>{
-        const timer=setTimeout(()=>finish(Error('Photo preparation timed out')),10000);
-        const finish=error=>{clearTimeout(timer);image.removeEventListener('load',loaded);image.removeEventListener('error',failed);error?reject(error):resolve();};
+        let finished=false,decoding=false,restartTimer=0;
+        const finish=error=>{
+          if(finished)return;finished=true;clearTimeout(timer);clearTimeout(restartTimer);
+          image.removeEventListener('load',loaded);image.removeEventListener('error',failed);signal.removeEventListener('abort',aborted);
+          if(error){if(error.name==='AbortError'&&!image.isConnected)image.removeAttribute('src');if(image.complete&&!image.naturalWidth)image.dataset.photoUnavailable='true';reject(error);}
+          else {decodedSources.set(image,absolute(url));delete image.dataset.photoUnavailable;resolve();}
+        };
+        const aborted=()=>finish(new DOMException('Photo preparation paused','AbortError'));
         const failed=()=>finish(Error('Photo unavailable'));
         const loaded=()=>{
-          image.removeEventListener('load',loaded);image.removeEventListener('error',failed);
-          Promise.resolve().then(()=>image.decode?.()).then(()=>finish(),finish);
+          if(finished||decoding||absolute(image.getAttribute('src'))!==absolute(url))return;
+          decoding=true;
+          Promise.resolve().then(()=>image.decode?.()).then(()=>{
+            if(signal.aborted)return aborted();
+            if(absolute(image.getAttribute('src'))!==absolute(url)||!image.naturalWidth)return failed();
+            finish();
+          },finish);
         };
-        image.addEventListener('load',loaded);image.addEventListener('error',failed);
+        const timer=setTimeout(()=>finish(Error('Photo preparation timed out')),10000);
+        if(signal.aborted){aborted();return;}
+        image.addEventListener('load',loaded);image.addEventListener('error',failed);signal.addEventListener('abort',aborted,{once:true});
         image.fetchPriority='low';image.loading='eager';
-        if(image.complete){if(image.naturalWidth)loaded();else failed();}
+        if(restart){
+          decodedSources.delete(image);image.dataset.photoUnavailable='true';image.removeAttribute('src');
+          // Give WebKit a task boundary to discard the failed image request.
+          restartTimer=setTimeout(()=>{if(!finished)image.src=url;},0);
+        }else{
+          if(image.getAttribute('src')!==url)image.src=url;
+          if(image.complete){if(image.naturalWidth)loaded();else failed();}
+        }
       });
     }
-    function snapshot(){return {generation:sourceEpoch,signature:sourceSignature,settled:settledEpoch===sourceEpoch,failed:failedPhotos,
-      photos:photoImages.size,images:cards.length,complete:cards.filter(card=>card.image.complete&&card.image.naturalWidth>0).length};}
+    function snapshot(){return {generation:sourceEpoch,signature:sourceSignature,settled:settledEpoch===sourceEpoch,failed:failures.size,
+      recovering:!!recoveryJob,retryable:[...failures.values()].filter(item=>item.attempts<retryDelays.length).length,
+      ready:settledEpoch===sourceEpoch&&!failures.size,
+      photos:photoImages.size,images:cards.length,complete:cards.filter(card=>card.image.complete&&card.image.naturalWidth>0&&
+        decodedSources.get(card.image)===absolute(sourceFor(card).selected.url)).length};}
     function prepare({unavailable=[]}={}){
       const signature=sourceSignature;
       const epoch=sourceEpoch;
-      if(settledEpoch===epoch)return Promise.resolve(snapshot());
+      if(settledEpoch===epoch){scheduleRecovery();return Promise.resolve(snapshot());}
       if(preparation?.epoch===epoch)return preparation.promise;
       const preceding=preparation?.promise;
       const job={signature,epoch,promise:null};
       job.promise=Promise.resolve(preceding).catch(()=>{}).then(async()=>{
         if(epoch!==sourceEpoch||departed||document.hidden)return snapshot();
         const skip=new Set(unavailable.map(url=>new URL(url,location.href).href));
-        let next=0,failed=0;
+        let next=0;
         gallery.dataset.mediaReady='preparing';
         async function worker(){
           while(next<records.length&&epoch===sourceEpoch&&!departed&&!document.hidden){
             const record=records[next++],card=cards.find(card=>card.node===record.node),source=sourceFor(card);
-            if(!source||skip.has(new URL(source.selected.url,location.href).href)){failed++;continue;}
-            sizePhoto(card);
+            if(!source)continue;
+            if(skip.has(absolute(source.selected.url))){noteFailure(card.key,source.selected.url);continue;}
+            if(await sizePhoto(card)===false)continue;
             // Prepare the real repeated image elements, not just a detached
             // bitmap. Lazy hidden clones otherwise begin loading on first pan
             // even when their encoded source is already in the HTTP cache.
             const results=await Promise.allSettled(photoImages.get(card.key).map(loadAndDecode));
-            if(results.some(result=>result.status==='rejected'))failed++;
+            if(epoch!==sourceEpoch)return;
+            if(results.some(result=>result.status==='rejected'))noteFailure(card.key,source.selected.url);
+            else photoReady(card.key,source.selected.url);
           }
         }
         await Promise.all([worker(),worker()]);
         if(epoch===sourceEpoch&&!departed&&!document.hidden&&next>=records.length){
-          failedPhotos=failed;settledEpoch=epoch;
-          gallery.dataset.mediaReady=failed?'ready-with-errors':'true';
+          settledEpoch=epoch;readiness();
         }else if(epoch===sourceEpoch)gallery.dataset.mediaReady='paused';
         return snapshot();
-      }).finally(()=>{if(preparation===job)preparation=null;});
+      }).finally(()=>{if(preparation===job)preparation=null;scheduleRecovery();});
       preparation=job;return job.promise;
     }
     controllers.push({prepare,snapshot});
@@ -198,7 +305,8 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
       }
       photoSizes.clear();
       const signature=records.map(record=>sourceFor(cards.find(card=>card.node===record.node))?.selected.url||'').join('|');
-      if(signature!==sourceSignature){sourceSignature=signature;sourceEpoch++;settledEpoch=-1;failedPhotos=0;gallery.dataset.mediaReady='false';}
+      if(signature!==sourceSignature){sourceSignature=signature;sourceEpoch++;settledEpoch=-1;pauseRecovery();generationController.abort();
+        generationController=new AbortController();failures.clear();sourceJobs.clear();gallery.dataset.mediaReady='false';}
       x=wrap(x,tileW);y=wrap(y,tileH);paint();resume();
       if(selfPrepares&&near&&!navigator.connection?.saveData)prepare();
     }
@@ -250,11 +358,12 @@ function portraitQuality(cssWidth,dpr,saveData=false,androidTouch=false){
       near=entries.some(entry=>entry.isIntersecting);
       if(near&&!navigator.connection?.saveData)prepare();
     },{rootMargin:'500px'}).observe(field);
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)suspend();else {resume();if(selfPrepares&&near&&!navigator.connection?.saveData)prepare();}});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden){suspend();pauseRecovery();}else {resume();scheduleRecovery();if(selfPrepares&&near&&!navigator.connection?.saveData)prepare();}});
     new MutationObserver(()=>{if(document.documentElement.classList.contains('mobile-menu-open'))suspend();else resume();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     reduced.addEventListener('change',()=>{suspend();resume();});
-    window.addEventListener('pagehide',()=>{departed=true;suspend();});
-    window.addEventListener('pageshow',()=>{departed=false;measure();});
+    window.addEventListener('pagehide',()=>{departed=true;suspend();pauseRecovery();});
+    window.addEventListener('pageshow',()=>{departed=false;measure();scheduleRecovery();});
+    window.addEventListener('offline',pauseRecovery);window.addEventListener('online',scheduleRecovery);
     measure();
   }
   window.PortfolioPhotoGallery={prepare:options=>Promise.all(controllers.map(controller=>controller.prepare(options))),
