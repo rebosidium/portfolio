@@ -5,7 +5,7 @@
 .hero{position:relative;top:var(--intro-shift);width:var(--content-width);margin:0 auto;display:flex;align-items:center;gap:50px}
 .scene-enhanced .scene-flow{height:calc(var(--scene-height) + var(--scroll-travel) + var(--work-stack-travel,0px) + var(--footer-travel,0px))}
 @media(pointer:coarse){
-.scene-enhanced .scene-flow{height:calc(100lvh + var(--scroll-travel) + var(--work-stack-travel,0px) + var(--footer-travel,0px))}
+.scene-enhanced .scene-flow{height:calc(var(--work-screen-height,100lvh) + var(--scroll-travel) + var(--work-stack-travel,0px) + var(--footer-travel,0px))}
 }
 .scene-enhanced .scene-stage{position:sticky;top:var(--scene-offset);height:var(--scene-height);overflow:clip;isolation:isolate}
 .scene-enhanced .intro-screen,.scene-enhanced .works-screen{position:absolute;inset:0;height:100%;min-height:0}
