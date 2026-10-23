@@ -5,6 +5,8 @@
   if (!policy?.enabled) return;
   const notFound = policy.pageType === 'not-found';
   const sitePath = policy.sitePath;
+  const basePath = path => path.replace(/^\/ru(?=\/)/,'');
+  const localePrefix = policy.language === 'ru' ? '/ru' : '';
   const project = policy.project;
   const posthogActive = typeof posthogTrackingEnabled !== 'undefined' && posthogTrackingEnabled
     && typeof window.posthog?.capture === 'function';
@@ -17,7 +19,7 @@
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
     viewport_width: Math.round(innerWidth), site_path: sitePath,
-    site_build: document.documentElement.dataset.build, analytics_version: 5, analytics_test: qa, page_type: policy.pageType, project});
+    site_build: document.documentElement.dataset.build, analytics_version: 5, analytics_test: qa, language: policy.language || document.documentElement.lang, page_type: policy.pageType, project});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
   const tag = (key, value) => {
@@ -103,7 +105,7 @@
     const common = {input_method: inputMethod(event)};
     const aboutTeaser = target.closest('.home-about-card .work-actions a[href]');
     if (aboutTeaser) {
-      capture('about_opened', {...common, placement: 'home_teaser', destination: '/about/'}, true);
+      capture('about_opened', {...common, placement: 'home_teaser', destination: localePrefix + '/about/'}, true);
       return;
     }
     const relatedCase = target.closest('.related-case-card[href]');
@@ -146,7 +148,7 @@
       capture('briefing_clicked', properties);
       return;
     }
-    const back = (sitePath === '/about/' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
+    const back = (basePath(sitePath) === '/about/' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
     if (back) {
       capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
       return;
@@ -156,9 +158,9 @@
     const href = link.getAttribute('href') || '';
     let isWork = false;
     try {const url = new URL(href, location.href); isWork = url.origin === location.origin
-      && ['/', '/index.html'].includes(url.pathname) && url.hash === '#selected-works';} catch {}
+      && ['/', '/index.html'].includes(basePath(url.pathname)) && url.hash === '#selected-works';} catch {}
     const destination = link.hasAttribute('data-background-prefetch') && link.hasAttribute('download') ? 'resume'
-      : href === '/about/' || href.startsWith('/about/?') ? 'about'
+      : basePath(href) === '/about/' || basePath(href).startsWith('/about/?') ? 'about'
       : isWork ? 'work'
       : href.startsWith('mailto:') ? 'email'
       : href.startsWith('https://www.linkedin.com/in/ribadima/') ? 'linkedin'
@@ -170,7 +172,7 @@
     if (['email', 'telegram'].includes(destination)) capture('contact_clicked', {...properties, channel: destination}, true);
     else if (destination === 'resume') capture('resume_opened', properties, true);
     else if (destination === 'about') capture('about_opened', properties, true);
-    else if (destination === 'work') capture('portfolio_opened', {...properties, destination: '/#selected-works'}, true);
+    else if (destination === 'work') capture('portfolio_opened', {...properties, destination: localePrefix + '/#selected-works'}, true);
     else if (destination === 'linkedin') capture('linkedin_opened', properties, true);
   }, true);
 

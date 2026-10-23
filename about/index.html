@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="323a4502d831" data-build="b002a58457e4">
+<html lang="en" data-ui-revision="e98db7c673c7" data-build="77eedb323c7b">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null},{"route":"/about/","type":"about","project":null},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing"},{"route":"/work/larixon/","type":"article","project":"larixon"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial"},{"route":"/work/medesk/","type":"article","project":"medesk"}];
+  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -25,7 +25,7 @@
     technicalPath = decoded;
   }
   technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
-  const technical = /^\/(?:ds|old|new|test|mobile|ru|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
+  const technical = /^\/(?:ds|old|new|test|mobile|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
     || /^\/work\/ru(?:\/|$)/i.test(technicalPath);
   const allowed = production && !technical && (!!page || notFound);
   const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
@@ -63,6 +63,7 @@
   window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
     projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
     sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    language: page?.lang || document.documentElement.lang || 'en',
     pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
     enabled: allowed && !ownerExcluded && !qa && !automation});
   document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
@@ -370,20 +371,20 @@
   </script>
   <!-- shared:navigation-boot:end -->
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
-  <script src="/mobile-nav.js?v=85b9701ebe21" defer></script>
-  <script src="/assets/site-controls.js?v=7eb77655d54e" defer></script>
-  <script src="/analytics.js?v=582663bc6ce6" defer fetchpriority="low"></script>
+  <script src="/mobile-nav.js?v=f82f8a7582c9" defer></script>
+  <script src="/assets/site-controls.js?v=1d925688acaa" defer></script>
+  <script src="/analytics.js?v=b8d7da09ec3f" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=3849ba5a827b" defer></script>
   <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.61.0+fd6ad8d3816c","tokens":"1.11.0+ab8ce19cd2ff","components":{"recommendations":"1.11.0+623c51ec0873","brief-dark":"1.11.0+cebbb64ee567","back":"1.11.0+0ff574772f67","link":"1.11.0+ca1015883766","footer-link":"1.11.0+502e29d79011","about-title":"1.11.0+6dee7194ec7a","about-avatar":"1.11.0+2dbbca4edc72","prose-section":"1.11.0+98477307faca","photo-gallery":"1.11.0+7f8e9fdf831a","photo-gallery-footer":"1.11.0+0d8ac8e74859","about-header":"1.11.0+943a02e478f0","footer":"1.11.0+c2f3c968e9ca","reading-page":"1.11.0+25f48f6be7e9"},"revision":"323a4502d831"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.0+3c90bb62aeef","tokens":"1.11.0+ab8ce19cd2ff","components":{"recommendations":"1.11.0+62ec21354a32","brief-dark":"1.11.0+f6c44f66990b","back":"1.11.0+2f73de28a198","link":"1.11.0+ac44b2089502","footer-link":"1.11.0+63b7e8466e56","about-title":"1.11.0+a1c9b349359b","about-avatar":"1.11.0+1342a8f1a291","prose-section":"1.11.0+3e66f7f930a4","photo-gallery":"1.11.0+0572a913d7a5","photo-gallery-footer":"1.11.0+6a257239007f","about-header":"1.11.0+2a5e529130e6","footer":"1.11.0+128748cf6033","reading-page":"1.11.0+f4588c558114"},"revision":"e98db7c673c7"}</script>
   <!-- shared:photo-gallery-assets:start -->
-  <link rel="stylesheet" href="/photo/photo-gallery.css?v=b52bb786ba80"><script src="/photo/photo-gallery.js?v=bc0e8453a21b" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=3c46df81b590" defer></script>
+  <link rel="stylesheet" href="/photo/photo-gallery.css?v=b52bb786ba80"><script src="/photo/photo-gallery.js?v=bc0e8453a21b" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=83c293b7c555"><script src="/assets/recommendations.js?v=9b09f82f7411" defer></script>
   <!-- shared:photo-gallery-assets:end -->
   <!-- shared:neighbor-prefetch:start -->
-  <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=60c316820e40"></script></template>
+  <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=81b1c3962ee3"></script></template>
   <script>
     (() => {
-      if (window.top !== window || !['/','/index.html','/about','/about/','/about/index.html'].includes(location.pathname)) return;
+      if (window.top !== window || !['/','/index.html','/about','/about/','/about/index.html','/ru/','/ru/index.html','/ru/about','/ru/about/','/ru/about/index.html'].includes(location.pathname)) return;
       const start = async () => {
         try {
           await window.portraitReveal;
@@ -402,6 +403,11 @@
   </script>
   <!-- shared:neighbor-prefetch:end -->
   <!-- shared:seo:start -->
+  <link rel="alternate" hreflang="en" href="https://dmitryrybalka.com/about/">
+  <link rel="alternate" hreflang="ru" href="https://dmitryrybalka.com/ru/about/">
+  <link rel="alternate" hreflang="x-default" href="https://dmitryrybalka.com/about/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Dmitry Rybalka">
   <meta property="og:title" content="About Me — Dmitry Rybalka">
@@ -417,7 +423,7 @@
   <meta name="twitter:description" content="A little about Dima: product design, people he has worked with, and a few things away from the screen.">
   <meta name="twitter:image" content="https://dmitryrybalka.com/assets/portrait-front.webp">
   <meta name="twitter:image:alt" content="Dmitry Rybalka">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://dmitryrybalka.com/#person","name":"Dmitry Rybalka","url":"https://dmitryrybalka.com/about/","sameAs":["https://www.linkedin.com/in/ribadima/"]},{"@type":"WebSite","@id":"https://dmitryrybalka.com/#website","url":"https://dmitryrybalka.com/","name":"Dmitry Rybalka","inLanguage":"en","publisher":{"@id":"https://dmitryrybalka.com/#person"}},{"@type":"WebPage","@id":"https://dmitryrybalka.com/about/#webpage","url":"https://dmitryrybalka.com/about/","name":"About Me — Dmitry Rybalka","description":"A little about Dima: product design, people he has worked with, and a few things away from the screen.","inLanguage":"en","isPartOf":{"@id":"https://dmitryrybalka.com/#website"},"author":{"@id":"https://dmitryrybalka.com/#person"},"about":{"@id":"https://dmitryrybalka.com/#person"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://dmitryrybalka.com/#person","name":"Dmitry Rybalka","url":"https://dmitryrybalka.com/about/","sameAs":["https://www.linkedin.com/in/ribadima/"]},{"@type":"WebSite","@id":"https://dmitryrybalka.com/#website","url":"https://dmitryrybalka.com/","name":"Dmitry Rybalka","inLanguage":["en","ru"],"publisher":{"@id":"https://dmitryrybalka.com/#person"}},{"@type":"WebPage","@id":"https://dmitryrybalka.com/about/#webpage","url":"https://dmitryrybalka.com/about/","name":"About Me — Dmitry Rybalka","description":"A little about Dima: product design, people he has worked with, and a few things away from the screen.","inLanguage":"en","isPartOf":{"@id":"https://dmitryrybalka.com/#website"},"author":{"@id":"https://dmitryrybalka.com/#person"},"about":{"@id":"https://dmitryrybalka.com/#person"}}]}</script>
   <!-- shared:seo:end -->
 </head>
 <body class="about-page" data-node-id="204:340">

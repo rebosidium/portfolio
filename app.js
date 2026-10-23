@@ -131,6 +131,8 @@
 
 })();
 
+  const uiRU=document.documentElement.lang==='ru';
+  const uiText=(en,ru)=>uiRU?ru:en;
   const agentPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
   const agentButtons = [...document.querySelectorAll('.agent-button')];
   const agentIconReadiness = new WeakMap();
@@ -180,7 +182,7 @@
       // Keep the prepared logo nodes mounted, but make this compact header
       // genuinely non-interactive while the user selects the prompt below.
       if (agentButton.disabled !== manualVisible) agentButton.disabled = manualVisible;
-      agentButton.setAttribute('aria-label',manualVisible ? 'Brief your AI' : copyLabel);
+      agentButton.setAttribute('aria-label',manualVisible ? uiText('Brief your AI','Бриф для ИИ') : copyLabel);
       if (manualCopy.hidden) promptField.style.removeProperty('height');
       else fitManualPrompt();
       // Select once when Manual copy opens, including the DS state picker.
@@ -208,7 +210,7 @@
       agentButton.classList.remove('is-copied');
       manualCopy.hidden = true;
       syncManualCopy();
-      agentStatus.textContent = 'Copies a prompt to paste into your AI chat.';
+      agentStatus.textContent = uiText('Copies a prompt to paste into your AI chat.','Копирует запрос, который можно вставить в чат с ИИ.');
     });
     function copyWithSelection() {
       const previousFocus = document.activeElement;
@@ -258,13 +260,13 @@
         manualCopy.hidden = true;
         syncManualCopy();
         agentButton.classList.add('is-copied');
-        agentStatus.textContent = 'Prompt copied. Paste it into your AI chat.';
+        agentStatus.textContent = uiText('Prompt copied. Paste it into your AI chat.','Запрос скопирован. Вставьте его в чат с ИИ.');
         copyFeedback = setTimeout(() => {agentButton.classList.remove('is-copied');},2200);
       } else {
         agentButton.classList.remove('is-copied');
         manualCopy.hidden = false;
         syncManualCopy();
-        agentStatus.textContent = 'Copy the selected prompt below, then paste it into your AI chat.';
+        agentStatus.textContent = uiText('Copy the selected prompt below, then paste it into your AI chat.','Скопируйте выделенный запрос и вставьте его в чат с ИИ.');
         if(control.closest('.footer'))promptField.scrollIntoView({block:'nearest',inline:'nearest'});
       }
       agentButton.setAttribute('aria-busy','false');

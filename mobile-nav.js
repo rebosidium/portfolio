@@ -114,13 +114,13 @@
       background.forEach(element => {element.inert = true;});
       header.setAttribute('role','dialog');
       header.setAttribute('aria-modal','true');
-      header.setAttribute('aria-label','Navigation menu');
+      header.setAttribute('aria-label',document.documentElement.lang==='ru'?'Меню навигации':'Navigation menu');
     }
     header.classList.toggle('menu-open',expanded);
     root.classList.toggle('mobile-menu-open',expanded);
     document.body.classList.toggle('mobile-menu-open',expanded);
     toggle.setAttribute('aria-expanded',String(expanded));
-    toggle.setAttribute('aria-label',expanded ? 'Close menu' : 'Open menu');
+    toggle.setAttribute('aria-label',document.documentElement.lang==='ru' ? (expanded ? 'Закрыть меню' : 'Открыть меню') : (expanded ? 'Close menu' : 'Open menu'));
     if (!expanded) {
       restoreMenuHeader();
       background.forEach((element,index) => {element.inert = inertBefore[index];});

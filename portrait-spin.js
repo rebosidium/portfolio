@@ -97,7 +97,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function updateAngle(angle){
     const shown=wrap(angle,360);
     const instruction=cursorFollow?'Move the pointer to turn Dmitry toward it. Drag to rotate freely; release to return to the front.':'Drag to rotate; release to return to the front.';
-    stage.setAttribute('aria-label','Dmitry Rybalka. '+instruction+' Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
+    stage.setAttribute('aria-label',document.documentElement.lang==='ru'?'Дмитрий Рыбалка. '+(cursorFollow?'Двигайте указатель, чтобы повернуть портрет к нему. ':'')+'Перетаскивайте для вращения; отпустите, чтобы вернуться к анфасу. Или используйте стрелки влево и вправо. Текущий угол '+Math.round(shown)+' градусов.':'Dmitry Rybalka. '+instruction+' Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
     canvas.dataset.angle=String(shown);
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
@@ -852,7 +852,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     canvas.dataset.activeDownloads='0';notifyLoading();
   }
   function fallback(error){
-    suspend(error?.message||'');stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label','Dmitry Rybalka');
+    suspend(error?.message||'');stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label',document.documentElement.lang==='ru'?'Дмитрий Рыбалка':'Dmitry Rybalka');
     canvas.dataset.mode=media.matches?'reduced':'static';canvas.dataset.error=error?.message||'';
     selectionAngle=0;ctx.clearRect(0,0,canvas.width,canvas.height);
     // The static poster remains visible if a network/decode request fails.
