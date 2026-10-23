@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="ru" data-ui-revision="89674ccbdbda" data-build="77eedb323c7b">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+  <!-- shared:analytics-preferences:start -->
+  <script data-analytics="preferences">
+(() => {
+  'use strict';
+  const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
+  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
+  const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
+  const routes = definitions.flatMap(page => aliases(page.route));
+  const page = definitions.find(page => aliases(page.route).includes(location.pathname));
+  const notFound = document.documentElement.dataset.pageKind === 'not-found';
+  const production = hosts.includes(location.hostname);
+  // Exclude technical namespaces before the shared 404 exception. Decode even
+  // partially malformed escapes, so an invalid suffix cannot bypass the prefix.
+  let technicalPath = location.pathname;
+  while (/%[0-9a-f]{2}/i.test(technicalPath)) {
+    const decoded = technicalPath.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    if (decoded === technicalPath) break;
+    technicalPath = decoded;
+  }
+  technicalPath = technicalPath.replace(/\\/g, '/').replace(/\/+/g, '/');
+  const technical = /^\/(?:ds|old|new|test|mobile|cross|dark|light|photo)(?:\/|$)/i.test(technicalPath)
+    || /^\/work\/ru(?:\/|$)/i.test(technicalPath);
+  const allowed = production && !technical && (!!page || notFound);
+  const ownerKey = 'portfolio.analytics.ownerExcluded.v1';
+  const qaKey = 'portfolio.analytics.qa.v1';
+  const params = new URLSearchParams(location.search);
+  const read = (storage, key) => {try {return window[storage].getItem(key);} catch {return null;}};
+  const write = (storage, key, value) => {try {window[storage].setItem(key, value); return true;} catch {return false;}};
+  const cookieName = 'portfolio_analytics_excluded';
+  const cookieExcluded = () => {try {return document.cookie.split(';').some(value => value.trim() === cookieName + '=1');} catch {return false;}};
+  const saveCookie = excluded => {try {
+    document.cookie = cookieName + '=' + (excluded ? '1' : '0') + '; Max-Age=31536000; Path=/; Domain=dmitryrybalka.com; SameSite=Lax; Secure';
+    return cookieExcluded() === excluded;
+  } catch {return false;}};
+  let ownerExcluded = read('localStorage', ownerKey) === '1' || cookieExcluded();
+  let qa = read('sessionStorage', qaKey) === '1';
+  const ownerControl = production && ['0', '1'].includes(params.get('analytics_owner'));
+  let ownerSaved = true;
+  if (ownerControl) {
+    ownerExcluded = params.get('analytics_owner') === '1';
+    const localSaved = write('localStorage', ownerKey, ownerExcluded ? '1' : '0');
+    ownerSaved = saveCookie(ownerExcluded) || localSaved;
+  }
+  if (allowed && ['0', '1'].includes(params.get('analytics_test'))) {
+    qa = params.get('analytics_test') === '1';
+    write('sessionStorage', qaKey, qa ? '1' : '0');
+  }
+  if (allowed && (params.has('analytics_run') || params.has('analytics_migration'))) {
+    qa = true;
+    write('sessionStorage', qaKey, '1');
+  }
+  const automation = navigator.webdriver === true || /HeadlessChrome|Playwright|PhantomJS|Selenium/i.test(navigator.userAgent || '');
+  // QA is excluded at source, including owners: never load events, heatmaps or replay.
+  // Test storage survives same-tab navigation; owner preference survives browser restarts.
+  const reason = !allowed ? 'untracked' : ownerExcluded ? 'owner' : qa ? 'test' : automation ? 'automation' : 'visitor';
+  window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
+    projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
+    sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    language: page?.lang || document.documentElement.lang || 'en',
+    pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
+    enabled: allowed && !ownerExcluded && !qa && !automation});
+  document.documentElement.dataset.analyticsOwner = ownerExcluded ? 'excluded' : 'included';
+  document.documentElement.dataset.analyticsMode = window.portfolioAnalytics.enabled ? 'normal' : reason;
+  document.documentElement.dataset.analyticsExclusion = reason;
+  if (ownerControl || (allowed && qa)) {
+    const clean = new URL(location.href);
+    if (qa) clean.searchParams.set('analytics_test', '1');
+    clean.searchParams.delete('analytics_owner');
+    if (clean.searchParams.get('analytics_test') === '0') clean.searchParams.delete('analytics_test');
+    try {history.replaceState(history.state, '', clean.pathname + clean.search + clean.hash);} catch {}
+  }
+  const ready = () => {
+    // Carry marked QA across page changes and new tabs, including Clarity's
+    // URL-based exclusions. Same-document hash links and PDF/external links
+    // retain their native hrefs and handlers.
+    if (allowed && qa) for (const link of document.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) continue;
+      try {
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || !routes.includes(url.pathname)
+          || url.searchParams.get('analytics_test') === '0') continue;
+        url.searchParams.set('analytics_test', '1');
+        link.setAttribute('href', url.pathname + url.search + url.hash);
+      } catch {}
+    }
+    // Only an explicit owner-setting link shows this temporary confirmation.
+    if (ownerControl) {
+      const status = document.createElement('p');
+      status.setAttribute('role', 'status');
+      status.dataset.analyticsOwnerStatus = ownerExcluded ? 'excluded' : 'included';
+      status.textContent = !ownerSaved ? 'This browser could not save the analytics preference.'
+        : ownerExcluded ? 'Saved: analytics is excluded for this browser.'
+        : 'Saved: this browser is included in analytics.';
+      status.style.cssText = 'position:fixed;z-index:10000;left:16px;right:16px;bottom:16px;max-width:440px;margin:0;padding:12px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#232522;font:14px/1.5 sans-serif;box-shadow:0 2px 12px #0001';
+      document.body.append(status);
+      setTimeout(() => status.remove(), 15000);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true});
+  else ready();
+  window.addEventListener('storage', event => {
+    if (allowed && event.key === ownerKey) location.reload();
+  });
+})();
+  </script>
+  <!-- shared:analytics-preferences:end -->
+  <script data-analytics="loader">
+(() => {
+  'use strict';
+  // Clarity starts independently. Other SDKs yield to the initial render,
+  // while their small native command queues and early error listeners run now.
+  if (window.portfolioAnalytics?.enabled !== true) return;
+  const jobs = [], names = new Set(), now = () => performance.now();
+  const createdAt = now();
+  let started = false;
+  const invoke = job => {
+    if (window.portfolioAnalytics?.enabled !== true) return;
+    try {job();} catch { /* One unavailable SDK must not block another or the UI. */ }
+  };
+  window.portfolioAnalyticsLoad = (name, job) => {
+    if (names.has(name) || window.portfolioAnalytics?.enabled !== true) return;
+    names.add(name);
+    if (started) setTimeout(() => invoke(job), 0);
+    else jobs.push(job);
+  };
+  const start = () => {
+    if (started) return;
+    started = true;
+    clearTimeout(deadline);
+    // Small gaps prevent all four SDKs being requested in the same task.
+    jobs.splice(0).forEach((job, index) => setTimeout(() => invoke(job), index * 120));
+  };
+  // A visible busy page, missing idle callback or paused RAF cannot starve SDKs.
+  const deadline = setTimeout(start, 2500);
+  const afterPaint = () => setTimeout(() => {
+    if (started) return;
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 500});
+    else start();
+  }, Math.max(0, 1000 - (now() - createdAt)));
+  const ready = () => {
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => requestAnimationFrame(afterPaint));
+    else afterPaint();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once: true});
+  else ready();
+})();
+  </script>
+  <script type="text/javascript" data-analytics="posthog">
+    // One early shared gate covers every registered production page.
+    const posthogTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (posthogTrackingEnabled) {
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.fetchPriority="low",p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",r=t.getElementsByTagName("script")[0],window.portfolioAnalyticsLoad("posthog",()=>r.parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_zCXMC2j4RRKK9Ptg2uPa7U37aAVBW5RstsmcpnfeoBaP', {
+        api_host: 'https://events.dmitryrybalka.com',
+        ui_host: 'https://us.posthog.com',
+        defaults: '2026-08-30',
+        capture_pageview: true,
+        capture_pageleave: true,
+        autocapture: true,
+        capture_heatmaps: true,
+        person_profiles: 'identified_only',
+        capture_exceptions: false,
+        enable_recording_console_log: false,
+        disable_surveys: true,
+        before_send: event => {
+          if (!window.portfolioAnalytics?.enabled) return null;
+          if (event?.properties) Object.assign(event.properties, {
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
+            site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
+            analytics_version: 5,
+            analytics_test: false
+          });
+          if (event?.properties && window.portfolioAnalytics.pageType === 'not-found') Object.assign(event.properties, {
+            requested_path: location.pathname, error_preview: ['/404', '/404/', '/404/index.html', '/404.html'].includes(location.pathname)
+          });
+          return event;
+        },
+        session_recording: {
+          maskAllInputs: true,
+          recordCrossOriginIframes: false,
+          captureCanvas: {recordCanvas: false},
+          streamNetworkBody: false,
+          captureJsonLd: false
+        }
+      });
+    }
+  </script>
+<script type="text/javascript" data-analytics="microsoft-clarity">
+    // Owner, QA and detected automation never load either provider.
+    const clarityTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (clarityTrackingEnabled) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yv8rnad266");
+    }
+  </script>
+<script data-analytics="google-analytics">
+    const ga4MeasurementId = "G-PEZ2YDZQW0";
+    const ga4TrackingEnabled = true && window.portfolioAnalytics?.enabled === true;
+    if (ga4TrackingEnabled) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){window.dataLayer.push(arguments);};
+      gtag('js', new Date());
+      gtag('config', ga4MeasurementId, {
+        send_page_view: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        site_path: window.portfolioAnalytics.sitePath,
+        page_type: window.portfolioAnalytics.pageType,
+        ...(window.portfolioAnalytics.project ? {project: window.portfolioAnalytics.project} : {}),
+        layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'
+      });
+      const googleTag = document.createElement('script');
+      googleTag.async = true;
+      googleTag.fetchPriority = 'low';
+      googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4MeasurementId);
+      window.portfolioAnalyticsLoad('google-analytics', () => document.head.appendChild(googleTag));
+    }
+  </script>
+<script type="text/javascript" data-analytics="yandex-metrika">
+    // Use the same source exclusion as the other analytics providers.
+    const yandexMetrikaCounterId = 113701996;
+    const yandexMetrikaTrackingEnabled = window.portfolioAnalytics?.enabled === true;
+    if (yandexMetrikaTrackingEnabled) {
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j=0;j<document.scripts.length;j++) {if(document.scripts[j].src===r)return;}
+        k=e.createElement(t);a=e.getElementsByTagName(t)[0];
+        k.async=1;k.fetchPriority='low';k.src=r;
+        window.portfolioAnalyticsLoad('yandex-metrika', () => a.parentNode.insertBefore(k,a));
+      })(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=113701996','ym');
+      ym(yandexMetrikaCounterId,'init',{
+        ssr:true,webvisor:true,clickmap:true,ecommerce:'dataLayer',
+        referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true,
+        params:{site_path:window.portfolioAnalytics.sitePath,page_type:window.portfolioAnalytics.pageType,
+          ...(window.portfolioAnalytics.project?{project:window.portfolioAnalytics.project}:{})}
+      });
+    }
+  </script>
+<script data-analytics="sentry">
+(() => {
+  'use strict';
+  if (!true || window.portfolioAnalytics?.enabled !== true) return;
+  const config = {"enabled":true,"dsn":"https://edef21d4201fe725e9b40b57d2eb95a0@o4512290628698112.ingest.de.sentry.io/4512290661859408","sdkUrl":"https://browser.sentry-cdn.com/11.8.0/bundle.min.js","integrity":"sha384-H8JEvxJFgnBT9bZucmagyEBKdF3nGnS+LaekpC73o3oRMWpjjMSDksIoLuDRsj/b"};
+  const pending = [];
+  const rememberError = event => {if (pending.length < 10 && event.error) pending.push(event.error);};
+  const rememberRejection = event => {if (pending.length < 10 && event.reason instanceof Error) pending.push(event.reason);};
+  window.addEventListener('error', rememberError);
+  window.addEventListener('unhandledrejection', rememberRejection);
+  const detach = () => {
+    window.removeEventListener('error', rememberError);
+    window.removeEventListener('unhandledrejection', rememberRejection);
+  };
+  const cleanText = value => String(value || '').replace(/https?:\/\/[^\s)"'<>]+/g, raw => {
+    try {const url = new URL(raw);return url.origin + url.pathname;} catch {return '[URL]';}
+  }).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[email]').slice(0, 1000);
+  let sent = 0;
+  const counts = new Map();
+  const sdk = document.createElement('script');
+  sdk.src = config.sdkUrl;
+  sdk.integrity = config.integrity;
+  sdk.crossOrigin = 'anonymous';
+  sdk.async = true;
+  sdk.fetchPriority = 'low';
+  sdk.onerror = () => {detach();pending.length = 0;};
+  sdk.onload = () => {
+    detach();
+    if (window.portfolioAnalytics?.enabled !== true || !window.Sentry?.init) {pending.length = 0;return;}
+    try {
+      const Sentry = window.Sentry;
+      Sentry.init({
+        dsn: config.dsn,
+        environment: 'production',
+        release: 'portfolio@' + (document.documentElement.dataset.build || 'unknown'),
+        defaultIntegrations: false,
+        integrations: [Sentry.globalHandlersIntegration(), Sentry.browserApiErrorsIntegration(), Sentry.dedupeIntegration()],
+        autoSessionTracking: false,
+        sendClientReports: false,
+        enableLogs: false,
+        maxBreadcrumbs: 0,
+        tracesSampleRate: 0,
+        replaysSessionSampleRate: 0,
+        replaysOnErrorSampleRate: 0,
+        dataCollection: {userInfo: false, cookies: false, httpHeaders: false, httpBodies: [], urlQueryParams: false,
+          graphQL: {document: false, variables: false}, genAI: {inputs: false, outputs: false},
+          databaseQueryData: false, queues: false, stackFrameVariables: false, frameContextLines: 0},
+        beforeSend(event) {
+          if (window.portfolioAnalytics?.enabled !== true || sent >= 10) return null;
+          const frames = (event.exception?.values || []).flatMap(value => value.stacktrace?.frames || []);
+          // Only application stack frames; extensions and third-party widgets are noise.
+          if (frames.length && !frames.some(frame => {
+            try {return new URL(frame.filename).origin === location.origin;} catch {return false;}
+          })) return null;
+          for (const frame of frames) if (frame.filename) frame.filename = cleanText(frame.filename);
+          for (const value of event.exception?.values || []) if (value.value) value.value = cleanText(value.value);
+          if (event.message) event.message = cleanText(event.message);
+          const signature = JSON.stringify(event.exception?.values?.map(value => [value.type, value.value]) || event.message);
+          const count = counts.get(signature) || 0;
+          if (count >= 3) return null;
+          counts.set(signature, count + 1);sent += 1;
+          delete event.user;delete event.breadcrumbs;delete event.extra;
+          event.request = {url: location.origin + location.pathname};
+          const policy = window.portfolioAnalytics;
+          event.tags = {...event.tags, site_path: policy.sitePath, page_type: policy.pageType,
+            project: policy.project || 'none', site_build: document.documentElement.dataset.build,
+            layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'};
+          return event;
+        }
+      });
+      for (const error of pending.splice(0)) Sentry.captureException(error);
+    } catch {pending.length = 0;}
+  };
+  window.portfolioAnalyticsLoad('sentry', () => document.head.appendChild(sdk));
+})();
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://dmitryrybalka.com/ru/">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml?v=0d8dc07b5d79">
+  <link rel="icon" href="/assets/favicon.ico?v=f48a5dcf6c33" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=418c2f22aafd" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/favicon-16.png?v=a50154754ffd" sizes="16x16">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=94a2efca3e42" sizes="180x180">
+  <link rel="manifest" href="/assets/site.webmanifest?v=068621bc9238">
+  <title>Дмитрий Рыбалка — продуктовый дизайн и управление дизайн-командами</title>
+  <meta name="description" content="Дмитрий Рыбалка — продуктовый дизайнер и дизайн-лид. B2B- и B2C-продукты, UX-исследования, дизайн-системы и развитие команд. Кейсы Larixon, Райффайзен Банка, Яндекс Маркета и других компаний.">
+  <link rel="preload" as="font" href="/assets/manrope.woff2?v=a30ddcd34970" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="/assets/portrait-start-dark.webp?v=77771859cda3" media="(prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/portrait-front-dark.webp?v=9ed62e5f8ab5" media="(prefers-reduced-motion: reduce)" fetchpriority="high">
+  <!-- shared:brief-preloads:start -->
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/lucide-check.svg?v=c9e39ddf31b8" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/agent-claude-mobile.svg?v=6288fbeeec9d" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-openai.svg?v=2168aa4465c9" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/brief-cursor.svg?v=05546f1ae7b7" fetchpriority="low">
+  <link rel="preload" as="image" type="image/svg+xml" href="/assets/footer-copilot.svg?v=e66a8c6a5212" fetchpriority="low">
+  <!-- shared:brief-preloads:end -->
+  <link rel="stylesheet" href="/assets/site-ui.css?v=449612f3beb3">
+  <link rel="stylesheet" href="/styles.css?v=88c9d182261e">
+  <link rel="stylesheet" href="/photo/photo-gallery.css?v=b52bb786ba80">
+  <!-- shared:navigation-boot:start -->
+  <script>
+// Runs in the head, before any header can paint. Waiting for navigation is
+// distinct from the accessible no-JavaScript / failed-script fallback.
+(() => {
+  const root=document.documentElement;
+  root.classList.add('navigation-js');
+  window.mobileLayout=matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
+  let requestedOpen=false;
+  window.mobileNavigationReady=new Promise(resolve=>{window.resolveMobileNavigationReady=resolve;});
+  window.releaseMobileNavigation=()=>{
+    if(root.dataset.mobileNavReady==='true')return;
+    root.classList.add('mobile-navigation-fallback');
+    window.resolveMobileNavigationReady(false);
+  };
+  window.mobileNavigationDeadline=setTimeout(window.releaseMobileNavigation,3000);
+  const earlyToggle=event=>{
+    if(!window.mobileLayout.matches||root.dataset.mobileNavReady==='true'||!event.target.closest?.('.menu-toggle'))return;
+    event.preventDefault();event.stopImmediatePropagation();requestedOpen=!requestedOpen;
+  };
+  document.addEventListener('click',earlyToggle,true);
+  window.mobileNavigationReady.then(ready=>{
+    document.removeEventListener('click',earlyToggle,true);
+    if(ready&&requestedOpen&&window.mobileLayout.matches)document.querySelector('.menu-toggle')?.click();
+  });
+})();
+  </script>
+  <!-- shared:navigation-boot:end -->
+  <script>
+    window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
+      ? '/portrait-spin-android.js?v=e2be97c0e466'
+      : '/portrait-spin.js?v=4cd9f0dd3c09';
+    const portraitPreload = document.createElement('link');
+    portraitPreload.rel = 'modulepreload';
+    portraitPreload.href = window.portraitModuleURL;
+    document.head.append(portraitPreload);
+    window.portraitReady = new Promise(resolve => {window.resolvePortraitReady = resolve;});
+    window.portraitReveal = new Promise(resolve => {window.resolvePortraitReveal = resolve;});
+    window.releaseNavigationFallback = () => {
+      document.documentElement.classList.remove('nav-pending');
+      document.dispatchEvent(new Event('mobile:navigation-fallback'));
+    };
+    window.releasePageFallback = () => {
+      window.releaseNavigationFallback();
+      document.documentElement.classList.remove('motion-pending');
+      window.resolvePortraitReveal(false);
+      document.dispatchEvent(new Event('mobile:page-fallback'));
+      window.deferSiteUpdates?.();
+    };
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('nav-pending','motion-pending');
+      window.navigationDeadline = setTimeout(window.releaseNavigationFallback,6500);
+      window.pageDeadline = setTimeout(window.releasePageFallback,21000);
+    }
+  </script>
+  <script type="module" src="/portrait-boot.js?v=66b7291d52e6" onerror="window.resolvePortraitReady(false)"></script>
+  <script defer src="/vendor/gsap.min.js?v=92bb9a96476f"></script>
+  <script defer src="/app.js?v=bee877f86f33" onerror="window.releasePageFallback()"></script>
+  <script defer fetchpriority="low" src="/analytics.js?v=b8d7da09ec3f"></script>
+  <script defer src="/mobile-nav.js?v=f82f8a7582c9" onerror="window.releaseMobileNavigation()"></script>
+  <template id="updates-source"><script src="/updates.js?v=4e459b035a45"></script></template>
+  <script>
+    (() => {
+      let started = false,armed = false;
+      const root = document.documentElement;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const load = () => {
+        if (started) return;
+        started = true;
+        const script = document.createElement('script');
+        script.src = document.querySelector('#updates-source').content.querySelector('script').src;
+        script.fetchPriority = window.mobileLayout.matches ? 'high' : 'low';
+        root.dataset.updatesRequestedAt = performance.now().toFixed(1);
+        script.addEventListener('load',() => {root.dataset.updatesLoadedAt = performance.now().toFixed(1);});
+        document.head.append(script);
+      };
+      window.deferSiteUpdates = (previewReady = Promise.resolve()) => {
+        if (started || armed) return;
+        if (window.mobileLayout.matches) {load();return;}
+        armed = true;
+        let pageLoaded = document.readyState === 'complete',portraitSettled = false,previewSettled = false,unsubscribe;
+        let decodedPreview = '',previewDecoding = false;
+        const preview = document.querySelector('#selected-works .work-image');
+        const cleanup = () => {
+          unsubscribe?.();
+          window.removeEventListener('load',pageReady);
+          window.removeEventListener('resize',check);
+          preview?.removeEventListener('load',check);
+          preview?.removeEventListener('error',check);
+          document.removeEventListener('visibilitychange',check);
+          reduced.removeEventListener('change',check);
+          window.mobileLayout.removeEventListener('change',check);
+        };
+        const check = () => {
+          if (started || document.hidden) return;
+          if (window.mobileLayout.matches) {cleanup();load();return;}
+          if (!pageLoaded || !portraitSettled || !previewSettled) return;
+          const state = window.portraitPlayer?.loadingState;
+          const complete = state?.ready && state.allReady && state.quality === state.desiredQuality && state.activeDownloads === 0;
+          const terminal = !state || state.error || (!state.loading && !state.ready && state.activeDownloads === 0);
+          if (!complete && !terminal && !reduced.matches) return;
+          if (preview && !preview.complete) return;
+          const source = preview?.currentSrc;
+          if (preview?.naturalWidth && decodedPreview !== source) {
+            if (previewDecoding) return;
+            previewDecoding = true;
+            preview.decode().catch(() => {}).then(() => {
+              previewDecoding = false;
+              if (preview.complete && preview.currentSrc === source) decodedPreview = source;
+              check();
+            });
+            return;
+          }
+          cleanup();load();
+        };
+        const pageReady = () => {pageLoaded = true;check();};
+        window.addEventListener('load',pageReady);
+        window.addEventListener('resize',check);
+        preview?.addEventListener('load',check);
+        preview?.addEventListener('error',check);
+        document.addEventListener('visibilitychange',check);
+        reduced.addEventListener('change',check);
+        window.mobileLayout.addEventListener('change',check);
+        Promise.resolve(previewReady).then(() => {previewSettled = true;check();},() => {previewSettled = true;check();});
+        window.portraitReady.then(() => {
+          portraitSettled = true;
+          unsubscribe = window.portraitPlayer?.subscribeLoading(() => queueMicrotask(check));
+          check();
+        });
+      };
+      if (window.mobileLayout.matches) load();
+    })();
+  </script>
+  <template id="resume-prefetch-source"><script src="/resume-prefetch.js?v=709d62def6ba"></script></template>
+  <script>
+    // No speculative download competes with the original portrait startup/rest queue.
+    window.addEventListener('load',async () => {
+      try {
+        await window.portraitReveal;
+        await window.portraitReady;
+        await window.portraitPlayer?.introFinished;
+        await window.portraitPlayer?.allFramesReady;
+      } catch {}
+      const script = document.createElement('script');
+      script.src = document.querySelector('#resume-prefetch-source').content.querySelector('script').src;
+      script.fetchPriority = 'low';
+      document.head.append(script);
+    },{once:true});
+  </script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.0+3c90bb62aeef","tokens":"1.11.0+ab8ce19cd2ff","components":{"home-about":"1.11.0+6ae9fe1f962d","work-logo":"1.11.0+b9dbd9ba34d7","brief":"1.11.0+085494a1b2d1","brief-dark":"1.11.0+f6c44f66990b","link":"1.11.0+ac44b2089502","footer-link":"1.11.0+63b7e8466e56","work-actions":"1.11.0+698a537f46cf","availability":"1.11.0+26e9213b1226","portrait":"1.11.0+c1b55ad293b9","header":"1.11.0+2daf5820287b","hero":"1.11.0+6c506ec9a445","work":"1.11.0+1faca9faeb88","work-section":"1.11.0+d388e83a433b","footer":"1.11.0+128748cf6033"},"revision":"89674ccbdbda"}</script>
+  <!-- shared:neighbor-prefetch:start -->
+  <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=81b1c3962ee3"></script></template>
+  <script>
+    (() => {
+      if (window.top !== window || !['/','/index.html','/about','/about/','/about/index.html','/ru/','/ru/index.html','/ru/about','/ru/about/','/ru/about/index.html'].includes(location.pathname)) return;
+      const start = async () => {
+        try {
+          await window.portraitReveal;
+          await window.portraitReady;
+          await window.portraitPlayer?.introFinished;
+          await window.portraitPlayer?.allFramesReady;
+        } catch {}
+        const script = document.createElement('script');
+        script.src = document.querySelector('#neighbor-prefetch-source').content.querySelector('script').src;
+        script.fetchPriority = 'low';
+        document.head.append(script);
+      };
+      if (document.readyState === 'complete') start();
+      else window.addEventListener('load',start,{once:true});
+    })();
+  </script>
+  <!-- shared:neighbor-prefetch:end -->
+<link rel="preload" as="font" href="/assets/manrope-cyrillic.woff2?v=c268b459a932" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/reading-ru.css?v=776391608a8d">  <!-- shared:seo:start -->
+  <link rel="alternate" hreflang="en" href="https://dmitryrybalka.com/">
+  <link rel="alternate" hreflang="ru" href="https://dmitryrybalka.com/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://dmitryrybalka.com/">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dmitry Rybalka">
+  <meta property="og:title" content="Дмитрий Рыбалка — продуктовый дизайн и управление дизайн-командами">
+  <meta property="og:description" content="Дмитрий Рыбалка — продуктовый дизайнер и дизайн-лид. B2B- и B2C-продукты, UX-исследования, дизайн-системы и развитие команд. Кейсы Larixon, Райффайзен Банка, Яндекс Маркета и других компаний.">
+  <meta property="og:url" content="https://dmitryrybalka.com/ru/">
+  <meta property="og:image" content="https://dmitryrybalka.com/assets/portrait-front.webp">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="800">
+  <meta property="og:image:alt" content="Dmitry Rybalka">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Дмитрий Рыбалка — продуктовый дизайн и управление дизайн-командами">
+  <meta name="twitter:description" content="Дмитрий Рыбалка — продуктовый дизайнер и дизайн-лид. B2B- и B2C-продукты, UX-исследования, дизайн-системы и развитие команд. Кейсы Larixon, Райффайзен Банка, Яндекс Маркета и других компаний.">
+  <meta name="twitter:image" content="https://dmitryrybalka.com/assets/portrait-front.webp">
+  <meta name="twitter:image:alt" content="Dmitry Rybalka">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://dmitryrybalka.com/#person","name":"Dmitry Rybalka","url":"https://dmitryrybalka.com/about/","sameAs":["https://www.linkedin.com/in/ribadima/"]},{"@type":"WebSite","@id":"https://dmitryrybalka.com/#website","url":"https://dmitryrybalka.com/","name":"Dmitry Rybalka","inLanguage":["en","ru"],"publisher":{"@id":"https://dmitryrybalka.com/#person"}},{"@type":"WebPage","@id":"https://dmitryrybalka.com/ru/#webpage","url":"https://dmitryrybalka.com/ru/","name":"Дмитрий Рыбалка — продуктовый дизайн и управление дизайн-командами","description":"Дмитрий Рыбалка — продуктовый дизайнер и дизайн-лид. B2B- и B2C-продукты, UX-исследования, дизайн-системы и развитие команд. Кейсы Larixon, Райффайзен Банка, Яндекс Маркета и других компаний.","inLanguage":"ru","isPartOf":{"@id":"https://dmitryrybalka.com/#website"},"author":{"@id":"https://dmitryrybalka.com/#person"},"about":{"@id":"https://dmitryrybalka.com/#person"}}]}</script>
+  <!-- shared:seo:end -->
+</head>
+<body data-node-id="159:729">
+  <main class="scene-flow">
+  <div class="scene-stage">
+  <div class="intro-screen" data-scene="intro">
+  <!-- shared:header:start -->
+  <header class="header" role="banner">
+    <a class="name identity" href="/ru/" data-node-id="159:898">Дмитрий Рыбалка</a>
+    <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-controls="main-navigation" aria-expanded="false" data-node-id="159:2205">
+      <svg class="menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <defs><path id="menu-stroke-shape" d="M4 12h16"/></defs>
+        <use class="menu-stroke menu-stroke-top" href="#menu-stroke-shape"/>
+        <use class="menu-stroke menu-stroke-bottom" href="#menu-stroke-shape"/>
+      </svg>
+    </button>
+    <nav id="main-navigation" aria-label="Основная навигация" data-node-id="159:890">
+      <a class="mobile-only" aria-current="page" aria-disabled="true" tabindex="-1">Главная</a>
+      <a href="/ru/about/">Обо мне</a>
+      <a href="#selected-works" data-node-id="159:892">Работы</a>
+      <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Почта</a>
+      <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
+      <a href="/assets/dmitry-rybalka-resume-en.pdf?v=3e979e8fa668" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="159:896">Резюме</a>
+      <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+  </header>
+  <!-- shared:header:end -->
+  <div class="intro-content">
+    <!-- shared:home-intro:start -->
+    <section class="hero" aria-labelledby="greeting" data-node-id="159:1060">
+      <div class="portrait" role="img" aria-label="Дмитрий Рыбалка" data-node-id="159:847">
+        <picture>
+          <source data-portrait-motion="reduce" media="(prefers-reduced-motion: reduce)" srcset="/assets/portrait-front-dark.webp?v=9ed62e5f8ab5">
+          <img src="/assets/portrait-start-dark.webp?v=77771859cda3" width="270" height="270" fetchpriority="high" loading="eager" decoding="async" alt="" aria-hidden="true" draggable="false">
+        </picture>
+        <canvas width="270" height="270" aria-hidden="true"></canvas>
+      </div>
+      <div class="introduction" data-node-id="159:2150">
+        <h1 id="greeting" data-node-id="159:854">Всем привет</h1>
+        <p class="summary" data-node-id="159:2151">Я продуктовый дизайнер и дизайн-лид. Превращаю сложные процессы и бизнес-требования в понятные и удобные B2B- и B2C-продукты — от первых исследований до запуска и дальнейшего развития.</p>
+        <p data-node-id="159:2148">Мне нравится разбираться в задачах, когда они ещё только формируются: распутывать сложное и помогать команде находить направление. Я сам проектирую, провожу исследования и руковожу командой, уделяя внимание деталям, с которыми люди сталкиваются каждый день.</p>
+        <!-- shared:brief-light:start -->
+<div class="agent-control" data-agent-control>
+        <button class="agent-button agent-button--light" data-agent-theme="light" type="button" aria-label="Скопировать запрос о Дмитрии Рыбалке для ИИ" aria-describedby="agent-copy-status" data-node-id="162:2412">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="162:2413"><span class="agent-button-idle">Бриф для ИИ</span><span class="agent-button-copied" data-node-id="187:312"><img src="/assets/lucide-check.svg?v=c9e39ddf31b8" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low"><span data-node-id="187:292">Готово</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="182:2717">
+            <img src="/assets/agent-claude-mobile.svg?v=6288fbeeec9d" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2719">
+            <img src="/assets/brief-openai.svg?v=2168aa4465c9" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2721">
+            <img src="/assets/brief-codex-blue.svg?v=b40b8cfdef1e" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2793">
+            <img src="/assets/brief-cursor.svg?v=05546f1ae7b7" width="24" height="24" alt="" decoding="sync" loading="eager" fetchpriority="low" data-node-id="182:2818">
+            <span class="agent-logo-copilot" data-node-id="182:2713"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" width="22.1109" height="22.0324" alt="" decoding="sync" loading="eager" fetchpriority="low"></span>
+          </span>
+        </button>
+        <span class="sr-only" id="agent-copy-status" role="status" aria-live="polite">Копирует запрос, который можно вставить в чат с ИИ.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="agent-prompt">Скопируйте этот запрос в чат с ИИ</label>
+          <textarea id="agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><style>.agent-button{display:none}</style><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Профиль для ИИ</a></noscript>
+</div>
+  <!-- shared:brief-light:end -->
+      </div>
+    </section>
+  <!-- shared:home-intro:end -->
+  </div>
+  </div>
+  <!-- shared:home-works:start -->
+  <section class="works-screen" data-work-surface="gray" id="selected-works" aria-labelledby="works-title" data-scene="works" data-node-id="162:2545">
+    <h2 id="works-title" tabindex="-1" data-node-id="162:2491">Избранные работы</h2>
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="larixon" aria-labelledby="larixon-title" data-node-id="162:2544">
+        <div class="work-copy" data-node-id="162:2526">
+          <div class="work-heading">
+          <h3 class="work-company-title" id="larixon-title" data-node-id="162:2519"><a class="work-case-link work-title-link" href="/ru/work/larixon/"><img class="work-company-logo" data-logo="larixon" src="/assets/logo-larixon.svg?v=7112709ce593" width="28" height="28" alt="" aria-hidden="true" decoding="async"><span>Larixon Classifieds</span></a></h3>
+          <p class="work-meta" data-node-id="162:2520"><span>Сервисы объявлений</span><span aria-hidden="true">·</span><span>Авг. 2025 — настоящее время</span></p>
+          </div>
+          <p class="work-description" data-node-id="162:2524"><a class="work-case-link work-description-link" href="/ru/work/larixon/">Larixon Classifieds объединяет ведущие сервисы объявлений на Кипре, в Монголии, Таджикистане, Тринидаде и Тобаго и на Ямайке. Около 5 млн активных пользователей в месяц. Дизайн-системы, UX-исследования, развитие команды и процессов, инструменты ИИ и локализации.</a></p>
+          <div class="work-actions" data-node-id="182:2734">
+            <a class="work-details ui-project-link" href="/ru/work/larixon/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-case-link work-artwork-link" data-node-id="162:2516" href="/ru/work/larixon/" aria-label="Смотреть кейс Larixon Classifieds">
+          <img class="work-image" data-src="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f" data-srcset="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, /assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, /assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Интерфейс сервиса объявлений Bazaraki">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f" srcset="/assets/work-larixon-bazaraki-544.png?v=d01faeba304f 544w, /assets/work-larixon-bazaraki-1088.png?v=7f56744894d1 1088w, /assets/work-larixon-bazaraki-1600.png?v=991c81638d70 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Интерфейс сервиса объявлений Bazaraki"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-2" aria-labelledby="raiffeisen-bank-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="raiffeisen_bank" aria-labelledby="raiffeisen-bank-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 class="work-company-title" tabindex="-1" id="raiffeisen-bank-title"><a class="work-case-link work-title-link" href="/ru/work/raiffeisen-bank/"><img class="work-company-logo" data-logo="raiffeisen" src="/assets/logo-raiffeisen.svg?v=74f1746e3599" width="28" height="28" alt="" aria-hidden="true" decoding="async"><span>Raiffeisen Bank</span></a></h3>
+          <p class="work-meta"><span>Финтех</span><span aria-hidden="true">·</span><span>2021 — 2025</span></p>
+          </div>
+          <p class="work-description"><a class="work-case-link work-description-link" href="/ru/work/raiffeisen-bank/">Райффайзен Банк входит в десятку крупнейших банков России и группу RBI. Дизайн профессионального торгового терминала для 500+ институциональных клиентов: работа с портфелем и инструменты с ИИ. Параллельно — менторство пяти дизайнеров.</a></p>
+          <div class="work-actions">
+            <a class="work-details ui-project-link" href="/ru/work/raiffeisen-bank/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-case-link work-artwork-link" href="/ru/work/raiffeisen-bank/" aria-label="Смотреть кейс Raiffeisen Bank">
+          <img class="work-image" data-src="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf" data-srcset="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf 544w, /assets/work-raiffeisen-bank-1088.png?v=5a53c4e91315 1088w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Торговый терминал Райффайзен Банка в тёмной теме">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf" srcset="/assets/work-raiffeisen-bank-544.png?v=009c399f50bf 544w, /assets/work-raiffeisen-bank-1088.png?v=5a53c4e91315 1088w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Торговый терминал Райффайзен Банка в тёмной теме"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="gray" id="selected-work-3" aria-labelledby="raiffeisen-leasing-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="raiffeisen_leasing" aria-labelledby="raiffeisen-leasing-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 class="work-company-title" tabindex="-1" id="raiffeisen-leasing-title"><a class="work-case-link work-title-link" href="/ru/work/raiffeisen-leasing/"><img class="work-company-logo" data-logo="raiffeisen" src="/assets/logo-raiffeisen.svg?v=74f1746e3599" width="28" height="28" alt="" aria-hidden="true" decoding="async"><span>Raiffeisen Leasing</span></a></h3>
+          <p class="work-meta"><span>Корпоративный лизинг</span><span aria-hidden="true">·</span><span>2021 — 2025</span></p>
+          </div>
+          <p class="work-description"><a class="work-case-link work-description-link" href="/ru/work/raiffeisen-leasing/">Райффайзен Лизинг работает с корпоративными клиентами; портфель компании — €600 млн. Дизайн лизинговых процессов от первого расчёта до закрытия договора. Параллельно — найм, дизайн-ревью и менторство в командах корпоративного и инвестиционного банкинга.</a></p>
+          <div class="work-actions">
+            <a class="work-details ui-project-link" href="/ru/work/raiffeisen-leasing/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-case-link work-artwork-link" href="/ru/work/raiffeisen-leasing/" aria-label="Смотреть кейс Raiffeisen Leasing">
+          <img class="work-image" data-src="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c" data-srcset="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c 544w, /assets/work-raiffeisen-leasing-1088.png?v=9604d414a93d 1088w, /assets/work-raiffeisen-leasing-1600.png?v=516ce6c3eb2a 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Панель управления B2B-проектами Райффайзен Лизинга">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c" srcset="/assets/work-raiffeisen-leasing-544.png?v=b0d13a128c5c 544w, /assets/work-raiffeisen-leasing-1088.png?v=9604d414a93d 1088w, /assets/work-raiffeisen-leasing-1600.png?v=516ce6c3eb2a 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Панель управления B2B-проектами Райффайзен Лизинга"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-4" aria-labelledby="yandex-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="yandex_market" aria-labelledby="yandex-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 class="work-company-title" tabindex="-1" id="yandex-title"><a class="work-case-link work-title-link" href="/ru/work/yandex-market/"><img class="work-company-logo work-company-logo-wide" data-logo="yandex" src="/assets/logo-yandex.svg?v=2f51118ffe47" width="34" height="28" alt="" aria-hidden="true" decoding="async"><span>Yandex.Market</span></a></h3>
+          <p class="work-meta"><span>Маркетплейс</span><span aria-hidden="true">·</span><span>Апр. 2020 — июль 2021</span></p>
+          </div>
+          <p class="work-description"><a class="work-case-link work-description-link" href="/ru/work/yandex-market/">В Яндекс Маркете, одном из крупнейших маркетплейсов России, я работал над аналитическими отчётами и инструментами продавцов, упрощал подключение поставщиков и занимался структурой и классификацией каталога.</a></p>
+          <div class="work-actions">
+            <a class="work-details ui-project-link" href="/ru/work/yandex-market/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-case-link work-artwork-link" href="/ru/work/yandex-market/" aria-label="Смотреть кейс Yandex.Market">
+          <img class="work-image" data-src="/assets/work-yandex-market-544.png?v=67d874ada533" data-srcset="/assets/work-yandex-market-544.png?v=67d874ada533 544w, /assets/work-yandex-market-1088.png?v=5dc7148f03fb 1088w, /assets/work-yandex-market-1600.png?v=dd1b2b0b7e90 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Аналитические отчёты Яндекс Маркета">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-yandex-market-544.png?v=67d874ada533" srcset="/assets/work-yandex-market-544.png?v=67d874ada533 544w, /assets/work-yandex-market-1088.png?v=5dc7148f03fb 1088w, /assets/work-yandex-market-1600.png?v=dd1b2b0b7e90 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Аналитические отчёты Яндекс Маркета"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="gray" id="selected-work-5" aria-labelledby="gdematerial-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="gdematerial" aria-labelledby="gdematerial-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 class="work-company-title" tabindex="-1" id="gdematerial-title"><a class="work-case-link work-title-link" href="/ru/work/gdematerial/"><img class="work-company-logo" data-logo="gdematerial" src="/assets/logo-gdematerial.svg?v=2bfcfc37a73b" width="28" height="28" alt="" aria-hidden="true" decoding="async"><span>GdeMaterial</span></a></h3>
+          <p class="work-meta"><span>Строительный маркетплейс</span><span aria-hidden="true">·</span><span>Июнь 2019 — апр. 2020</span></p>
+          </div>
+          <p class="work-description"><a class="work-case-link work-description-link" href="/ru/work/gdematerial/">GdeMaterial — стартап-маркетплейс строительных и отделочных материалов. Пользовательский опыт от поиска и выбора материалов до оформления заказа и доставки, а также инструменты поставщиков и управление заказами.</a></p>
+          <div class="work-actions">
+            <a class="work-details ui-project-link" href="/ru/work/gdematerial/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-artwork-composite work-case-link work-artwork-link" href="/ru/work/gdematerial/" aria-label="Смотреть кейс GdeMaterial">
+          <img class="work-image" data-src="/assets/work-gdematerial-544.png?v=2570ce408485" data-srcset="/assets/work-gdematerial-544.png?v=2570ce408485 544w, /assets/work-gdematerial-1088.png?v=e88d6b601c4e 1088w, /assets/work-gdematerial-1600.png?v=ca9647771011 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Три мобильных экрана маркетплейса GdeMaterial">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-gdematerial-544.png?v=2570ce408485" srcset="/assets/work-gdematerial-544.png?v=2570ce408485 544w, /assets/work-gdematerial-1088.png?v=e88d6b601c4e 1088w, /assets/work-gdematerial-1600.png?v=ca9647771011 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Три мобильных экрана маркетплейса GdeMaterial"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <section class="works-screen work-screen-followup" data-work-surface="white" id="selected-work-6" aria-labelledby="medesk-title" data-scene="works">
+    <div class="works-body">
+      <article class="work-card" data-analytics-work="medesk" aria-labelledby="medesk-title">
+        <div class="work-copy">
+          <div class="work-heading">
+          <h3 class="work-company-title" tabindex="-1" id="medesk-title"><a class="work-case-link work-title-link" href="/ru/work/medesk/"><img class="work-company-logo" data-logo="medesk" src="/assets/logo-medesk.svg?v=f5badc4055d4" width="28" height="28" alt="" aria-hidden="true" decoding="async"><span>Medesk Ltd.</span></a></h3>
+          <p class="work-meta"><span>Медицинские технологии</span><span aria-hidden="true">·</span><span>Сент. 2016 — июнь 2019</span></p>
+          </div>
+          <p class="work-description"><a class="work-case-link work-description-link" href="/ru/work/medesk/">Medesk — облачная B2B-платформа для медицинских организаций в 35 странах. Рабочие процессы клиник и пациентов, интеграции с внешними сервисами и лабораториями, общая дизайн-система.</a></p>
+          <div class="work-actions">
+            <a class="work-details ui-project-link" href="/ru/work/medesk/"><span>Смотреть кейс</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a>
+          </div>
+        </div>
+        <a class="work-artwork work-case-link work-artwork-link" href="/ru/work/medesk/" aria-label="Смотреть кейс Medesk Ltd.">
+          <img class="work-image" data-src="/assets/work-medesk-544.png?v=3df4098fa73a" data-srcset="/assets/work-medesk-544.png?v=3df4098fa73a 544w, /assets/work-medesk-1088.png?v=334932fe8bc4 1088w, /assets/work-medesk-1600.png?v=b6c936d0e326 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" fetchpriority="low" alt="Управление правами доступа в Medesk">
+          <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+          <noscript><style>.work-image{display:none}</style><img src="/assets/work-medesk-544.png?v=3df4098fa73a" srcset="/assets/work-medesk-544.png?v=3df4098fa73a 544w, /assets/work-medesk-1088.png?v=334932fe8bc4 1088w, /assets/work-medesk-1600.png?v=b6c936d0e326 1600w" sizes="(max-width: 767px) min(600px, calc(100vw - 40px)), (max-width: 1023px) and (pointer: coarse) min(600px, calc(100vw - 40px)), 544px" width="544" height="294" loading="lazy" decoding="async" alt="Управление правами доступа в Medesk"></noscript>
+        </a>
+      </article>
+    </div>
+  </section>
+  <!-- shared:home-works:end -->
+  <!-- shared:home-about:start -->
+  <section class="works-screen work-screen-followup home-about-screen" data-work-surface="gray" data-scroll-entry="flow" id="more-about" aria-labelledby="more-about-title" data-scene="works">
+  <div class="works-body">
+    <article class="work-card home-about-card" aria-labelledby="more-about-title">
+      <div class="work-artwork home-about-artwork" data-work-reading-start data-photo-mosaic>
+        <div class="home-about-mosaic" style="--photo-ratio:1800 / 1467.3615488624491;--photo-period-width:900px;--photo-narrow-period-width:1100px;--photo-mobile-ratio:1800 / 792.1052631578947;--photo-mobile-period-width:154.7511%"><div class="home-about-track"><div class="home-about-photo-page" style="translate:0% 0%"><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="team" data-photo-mobile-hidden style="--photo-x:15.4824%;--photo-y:94.4849%;--photo-width:17.7410%;--photo-height:16.3563%;--photo-mobile-y:0.0000%;--photo-mobile-height:30.2998%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-team-480.webp?v=5a24298914fb" data-srcset="/assets/photo-team-240.webp?v=00edf6a78cbf 240w, /assets/photo-team-360.webp?v=fe6dce186bcc 360w, /assets/photo-team-480.webp?v=5a24298914fb 480w, /assets/photo-team-640.webp?v=c419c8e4a34d 640w, /assets/photo-team-800.webp?v=56e9ee7142d9 800w, /assets/photo-team.webp?v=323c3117e86f 954w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" width="480" height="361" decoding="async" alt="Работа с командой за столом с ноутбуками" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-team-480.webp?v=5a24298914fb" srcset="/assets/photo-team-240.webp?v=00edf6a78cbf 240w, /assets/photo-team-360.webp?v=fe6dce186bcc 360w, /assets/photo-team-480.webp?v=5a24298914fb 480w, /assets/photo-team-640.webp?v=c419c8e4a34d 640w, /assets/photo-team-800.webp?v=56e9ee7142d9 800w, /assets/photo-team.webp?v=323c3117e86f 954w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" alt="Работа с командой за столом с ноутбуками" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="helmet" data-photo-mobile-hidden style="--photo-x:84.9879%;--photo-y:92.1873%;--photo-width:14.4055%;--photo-height:23.4244%;--photo-mobile-y:0.0000%;--photo-mobile-height:43.3933%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-helmet-480.webp?v=eddf6b1bc15b" data-srcset="/assets/photo-helmet-240.webp?v=f77f88262ff2 240w, /assets/photo-helmet-360.webp?v=78a1b4b11e88 360w, /assets/photo-helmet-480.webp?v=eddf6b1bc15b 480w, /assets/photo-helmet-640.webp?v=4899c5a95b5c 640w, /assets/photo-helmet.webp?v=239752d85b61 774w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="636" decoding="async" alt="Велосипедный портрет в шлеме" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-helmet-480.webp?v=eddf6b1bc15b" srcset="/assets/photo-helmet-240.webp?v=f77f88262ff2 240w, /assets/photo-helmet-360.webp?v=78a1b4b11e88 360w, /assets/photo-helmet-480.webp?v=eddf6b1bc15b 480w, /assets/photo-helmet-640.webp?v=4899c5a95b5c 640w, /assets/photo-helmet.webp?v=239752d85b61 774w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Велосипедный портрет в шлеме" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="rapids" style="--photo-x:50.0301%;--photo-y:33.1189%;--photo-width:18.3653%;--photo-height:12.6701%;--photo-mobile-y:10.5449%;--photo-mobile-height:23.4711%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-rapids-480.webp?v=cdd039758b14" data-srcset="/assets/photo-rapids-240.webp?v=51b184a45d42 240w, /assets/photo-rapids-360.webp?v=018b148c5361 360w, /assets/photo-rapids-480.webp?v=cdd039758b14 480w, /assets/photo-rapids-640.webp?v=d2599cf1ae98 640w, /assets/photo-rapids-800.webp?v=cdae3e521249 800w, /assets/photo-rapids-1040.webp?v=ee6332407b42 1040w, /assets/photo-rapids-1280.webp?v=5f9ea8be9cda 1280w, /assets/photo-rapids.webp?v=6d077187fc18 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="480" height="270" decoding="async" alt="На сапе через речные пороги" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-rapids-480.webp?v=cdd039758b14" srcset="/assets/photo-rapids-240.webp?v=51b184a45d42 240w, /assets/photo-rapids-360.webp?v=018b148c5361 360w, /assets/photo-rapids-480.webp?v=cdd039758b14 480w, /assets/photo-rapids-640.webp?v=d2599cf1ae98 640w, /assets/photo-rapids-800.webp?v=cdae3e521249 800w, /assets/photo-rapids-1040.webp?v=ee6332407b42 1040w, /assets/photo-rapids-1280.webp?v=5f9ea8be9cda 1280w, /assets/photo-rapids.webp?v=6d077187fc18 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="На сапе через речные пороги" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="coast-selfie" data-photo-mobile-hidden style="--photo-x:50.0301%;--photo-y:82.1524%;--photo-width:18.3653%;--photo-height:12.6701%;--photo-mobile-y:0.0000%;--photo-mobile-height:23.4711%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-coast-selfie-480.webp?v=d85d5ce4009d" data-srcset="/assets/photo-coast-selfie-240.webp?v=3121233e787b 240w, /assets/photo-coast-selfie-360.webp?v=5bde6ec81da6 360w, /assets/photo-coast-selfie-480.webp?v=d85d5ce4009d 480w, /assets/photo-coast-selfie-640.webp?v=c90437db45c7 640w, /assets/photo-coast-selfie-800.webp?v=2bdf9c03f97c 800w, /assets/photo-coast-selfie-1040.webp?v=52e15888d508 1040w, /assets/photo-coast-selfie-1280.webp?v=c6c5055a737e 1280w, /assets/photo-coast-selfie.webp?v=ace6845b73d0 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="480" height="270" decoding="async" alt="Портрет на фоне синего моря" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-coast-selfie-480.webp?v=d85d5ce4009d" srcset="/assets/photo-coast-selfie-240.webp?v=3121233e787b 240w, /assets/photo-coast-selfie-360.webp?v=5bde6ec81da6 360w, /assets/photo-coast-selfie-480.webp?v=d85d5ce4009d 480w, /assets/photo-coast-selfie-640.webp?v=c90437db45c7 640w, /assets/photo-coast-selfie-800.webp?v=2bdf9c03f97c 800w, /assets/photo-coast-selfie-1040.webp?v=52e15888d508 1040w, /assets/photo-coast-selfie-1280.webp?v=c6c5055a737e 1280w, /assets/photo-coast-selfie.webp?v=ace6845b73d0 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="Портрет на фоне синего моря" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="studio" style="--photo-x:34.4368%;--photo-y:3.1294%;--photo-width:14.3800%;--photo-height:23.5298%;--photo-mobile-y:-37.5906%;--photo-mobile-height:43.5885%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-studio-480.webp?v=2bbaa3088878" data-srcset="/assets/photo-studio-240.webp?v=b84335a558e0 240w, /assets/photo-studio-360.webp?v=cc28d7abfa02 360w, /assets/photo-studio-480.webp?v=2bbaa3088878 480w, /assets/photo-studio-640.webp?v=6ca664d66c21 640w, /assets/photo-studio-800.webp?v=5d848746faf5 800w, /assets/photo-studio.webp?v=c34ab2135abc 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Домашнее рабочее место у окна" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-studio-480.webp?v=2bbaa3088878" srcset="/assets/photo-studio-240.webp?v=b84335a558e0 240w, /assets/photo-studio-360.webp?v=cc28d7abfa02 360w, /assets/photo-studio-480.webp?v=2bbaa3088878 480w, /assets/photo-studio-640.webp?v=6ca664d66c21 640w, /assets/photo-studio-800.webp?v=5d848746faf5 800w, /assets/photo-studio.webp?v=c34ab2135abc 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Домашнее рабочее место у окна" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="meeting" style="--photo-x:34.4368%;--photo-y:53.1291%;--photo-width:14.3800%;--photo-height:23.5298%;--photo-mobile-y:55.0329%;--photo-mobile-height:43.5885%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-meeting-480.webp?v=cde0026afa34" data-srcset="/assets/photo-meeting-240.webp?v=79df1e830a84 240w, /assets/photo-meeting-360.webp?v=212c9b74a726 360w, /assets/photo-meeting-480.webp?v=cde0026afa34 480w, /assets/photo-meeting-640.webp?v=7d6d27846f73 640w, /assets/photo-meeting-800.webp?v=60112adea6f6 800w, /assets/photo-meeting.webp?v=640abd03bcfb 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Светлая переговорная" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-meeting-480.webp?v=cde0026afa34" srcset="/assets/photo-meeting-240.webp?v=79df1e830a84 240w, /assets/photo-meeting-360.webp?v=212c9b74a726 360w, /assets/photo-meeting-480.webp?v=cde0026afa34 480w, /assets/photo-meeting-640.webp?v=7d6d27846f73 640w, /assets/photo-meeting-800.webp?v=60112adea6f6 800w, /assets/photo-meeting.webp?v=640abd03bcfb 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Светлая переговорная" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="sail" style="--photo-x:84.9879%;--photo-y:42.1046%;--photo-width:14.4055%;--photo-height:23.5713%;--photo-mobile-y:8.6012%;--photo-mobile-height:43.6655%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-sail-480.webp?v=7a9f38d3e92a" data-srcset="/assets/photo-sail-240.webp?v=79c38b17b7c4 240w, /assets/photo-sail-360.webp?v=4f1d2305b3c6 360w, /assets/photo-sail-480.webp?v=7a9f38d3e92a 480w, /assets/photo-sail-640.webp?v=bb01e487e8bc 640w, /assets/photo-sail-800.webp?v=a43d05126a8e 800w, /assets/photo-sail.webp?v=e8139709b51d 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Парусная лодка на озере" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-sail-480.webp?v=7a9f38d3e92a" srcset="/assets/photo-sail-240.webp?v=79c38b17b7c4 240w, /assets/photo-sail-360.webp?v=4f1d2305b3c6 360w, /assets/photo-sail-480.webp?v=7a9f38d3e92a 480w, /assets/photo-sail-640.webp?v=bb01e487e8bc 640w, /assets/photo-sail-800.webp?v=a43d05126a8e 800w, /assets/photo-sail.webp?v=e8139709b51d 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Парусная лодка на озере" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="dubai" style="--photo-x:69.6088%;--photo-y:32.6112%;--photo-width:14.1658%;--photo-height:23.1694%;--photo-mobile-y:10.1050%;--photo-mobile-height:42.9208%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-dubai-480.webp?v=fc8fea7b39f7" data-srcset="/assets/photo-dubai-240.webp?v=00d345f3d89c 240w, /assets/photo-dubai-360.webp?v=2577af0f558b 360w, /assets/photo-dubai-480.webp?v=fc8fea7b39f7 480w, /assets/photo-dubai-640.webp?v=30e6d369124e 640w, /assets/photo-dubai-800.webp?v=7a9263df784b 800w, /assets/photo-dubai-1040.webp?v=7954fcb32b16 1040w, /assets/photo-dubai.webp?v=4f674412d2b8 1186w" sizes="(max-width: 767px) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 1023px) and (pointer: coarse) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 983px) 156px, 128px" width="480" height="640" decoding="async" alt="Ночной Бурдж-Халифа отражается в воде" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-dubai-480.webp?v=fc8fea7b39f7" srcset="/assets/photo-dubai-240.webp?v=00d345f3d89c 240w, /assets/photo-dubai-360.webp?v=2577af0f558b 360w, /assets/photo-dubai-480.webp?v=fc8fea7b39f7 480w, /assets/photo-dubai-640.webp?v=30e6d369124e 640w, /assets/photo-dubai-800.webp?v=7a9263df784b 800w, /assets/photo-dubai-1040.webp?v=7954fcb32b16 1040w, /assets/photo-dubai.webp?v=4f674412d2b8 1186w" sizes="(max-width: 767px) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 1023px) and (pointer: coarse) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 983px) 156px, 128px" alt="Ночной Бурдж-Халифа отражается в воде" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="airport" style="--photo-x:50.0301%;--photo-y:14.7148%;--photo-width:18.3653%;--photo-height:16.9157%;--photo-mobile-y:-23.5482%;--photo-mobile-height:31.3360%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-airport-480.webp?v=89c6ef6684f2" data-srcset="/assets/photo-airport-240.webp?v=b5131cc4b25e 240w, /assets/photo-airport-360.webp?v=85a1f32d921a 360w, /assets/photo-airport-480.webp?v=89c6ef6684f2 480w, /assets/photo-airport-640.webp?v=b2a321978407 640w, /assets/photo-airport-800.webp?v=fb0cce8fae3a 800w, /assets/photo-airport-1040.webp?v=fd2e9f9e76f9 1040w, /assets/photo-airport-1280.webp?v=b7ccca3b2adf 1280w, /assets/photo-airport.webp?v=31b9e2723c4d 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="480" height="360" decoding="async" alt="Самолёты на перроне на закате" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-airport-480.webp?v=89c6ef6684f2" srcset="/assets/photo-airport-240.webp?v=b5131cc4b25e 240w, /assets/photo-airport-360.webp?v=85a1f32d921a 360w, /assets/photo-airport-480.webp?v=89c6ef6684f2 480w, /assets/photo-airport-640.webp?v=b2a321978407 640w, /assets/photo-airport-800.webp?v=fb0cce8fae3a 800w, /assets/photo-airport-1040.webp?v=fd2e9f9e76f9 1040w, /assets/photo-airport-1280.webp?v=b7ccca3b2adf 1280w, /assets/photo-airport.webp?v=31b9e2723c4d 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="Самолёты на перроне на закате" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="logs" style="--photo-x:50.0301%;--photo-y:47.2773%;--photo-width:18.3653%;--photo-height:16.8792%;--photo-mobile-y:36.7732%;--photo-mobile-height:31.2684%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-logs.webp?v=d39b694a222e" data-srcset="/assets/photo-logs-240.webp?v=9f994385ff31 240w, /assets/photo-logs.webp?v=d39b694a222e 327w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="327" height="245" decoding="async" alt="Синий велосипед рядом с поленницей" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-logs.webp?v=d39b694a222e" srcset="/assets/photo-logs-240.webp?v=9f994385ff31 240w, /assets/photo-logs.webp?v=d39b694a222e 327w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="Синий велосипед рядом с поленницей" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="bike" data-photo-mobile-hidden style="--photo-x:50.0301%;--photo-y:96.3108%;--photo-width:18.3653%;--photo-height:16.9157%;--photo-mobile-y:0.0000%;--photo-mobile-height:31.3360%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-bike-480.webp?v=a533abc039b9" data-srcset="/assets/photo-bike-240.webp?v=1552cbc41e86 240w, /assets/photo-bike-360.webp?v=411c884d5500 360w, /assets/photo-bike-480.webp?v=a533abc039b9 480w, /assets/photo-bike-640.webp?v=2c276f5f3e4f 640w, /assets/photo-bike-800.webp?v=1cfdec05d00a 800w, /assets/photo-bike-1040.webp?v=5f80866df4db 1040w, /assets/photo-bike-1280.webp?v=a931094f3684 1280w, /assets/photo-bike.webp?v=a8137a2d7308 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="480" height="360" decoding="async" alt="Шоссейный велосипед на стене" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-bike-480.webp?v=a533abc039b9" srcset="/assets/photo-bike-240.webp?v=1552cbc41e86 240w, /assets/photo-bike-360.webp?v=411c884d5500 360w, /assets/photo-bike-480.webp?v=a533abc039b9 480w, /assets/photo-bike-640.webp?v=2c276f5f3e4f 640w, /assets/photo-bike-800.webp?v=1cfdec05d00a 800w, /assets/photo-bike-1040.webp?v=5f80866df4db 1040w, /assets/photo-bike-1280.webp?v=a931094f3684 1280w, /assets/photo-bike.webp?v=a8137a2d7308 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="Шоссейный велосипед на стене" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="road" style="--photo-x:15.4824%;--photo-y:35.5808%;--photo-width:17.7410%;--photo-height:21.7628%;--photo-mobile-y:25.2782%;--photo-mobile-height:40.3152%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-road-480.webp?v=82852007ad2d" data-srcset="/assets/photo-road-240.webp?v=dc72384d1a0b 240w, /assets/photo-road-360.webp?v=da29672a774b 360w, /assets/photo-road-480.webp?v=82852007ad2d 480w, /assets/photo-road-640.webp?v=9427daabf47e 640w, /assets/photo-road-800.webp?v=25ff784019fd 800w, /assets/photo-road.webp?v=f03e04da2e63 819w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" width="480" height="480" decoding="async" alt="Велопрогулка по загородной дороге" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-road-480.webp?v=82852007ad2d" srcset="/assets/photo-road-240.webp?v=dc72384d1a0b 240w, /assets/photo-road-360.webp?v=da29672a774b 360w, /assets/photo-road-480.webp?v=82852007ad2d 480w, /assets/photo-road-640.webp?v=9427daabf47e 640w, /assets/photo-road-800.webp?v=25ff784019fd 800w, /assets/photo-road.webp?v=f03e04da2e63 819w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" alt="Велопрогулка по загородной дороге" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="rain" style="--photo-x:50.0301%;--photo-y:65.6449%;--photo-width:18.3653%;--photo-height:15.0190%;--photo-mobile-y:70.7989%;--photo-mobile-height:27.8225%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-rain-480.webp?v=5f973d33c051" data-srcset="/assets/photo-rain-240.webp?v=70f5b3704d40 240w, /assets/photo-rain-360.webp?v=3ad977cd56ca 360w, /assets/photo-rain-480.webp?v=5f973d33c051 480w, /assets/photo-rain-640.webp?v=41e57b2eb1e0 640w, /assets/photo-rain-800.webp?v=bb8b215bdf95 800w, /assets/photo-rain-1040.webp?v=9fb10753131b 1040w, /assets/photo-rain-1280.webp?v=c83a4df0a01b 1280w, /assets/photo-rain.webp?v=d067100410b9 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" width="480" height="320" decoding="async" alt="Велопрогулка с друзьями под дождём" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-rain-480.webp?v=5f973d33c051" srcset="/assets/photo-rain-240.webp?v=70f5b3704d40 240w, /assets/photo-rain-360.webp?v=3ad977cd56ca 360w, /assets/photo-rain-480.webp?v=5f973d33c051 480w, /assets/photo-rain-640.webp?v=41e57b2eb1e0 640w, /assets/photo-rain-800.webp?v=bb8b215bdf95 800w, /assets/photo-rain-1040.webp?v=9fb10753131b 1040w, /assets/photo-rain-1280.webp?v=c83a4df0a01b 1280w, /assets/photo-rain.webp?v=d067100410b9 1600w" sizes="(max-width: 767px) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 1023px) and (pointer: coarse) min(172px, calc((100vw - 40px) * 0.2851)), (max-width: 983px) 203px, 166px" alt="Велопрогулка с друзьями под дождём" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="ski" style="--photo-x:15.4824%;--photo-y:12.3296%;--photo-width:17.7410%;--photo-height:21.7628%;--photo-mobile-y:-17.7942%;--photo-mobile-height:40.3152%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-ski-480.webp?v=094cb62e52b4" data-srcset="/assets/photo-ski-240.webp?v=2b4e78ed6aff 240w, /assets/photo-ski-360.webp?v=d3312a01ad09 360w, /assets/photo-ski-480.webp?v=094cb62e52b4 480w, /assets/photo-ski-640.webp?v=eff8be8f8ca7 640w, /assets/photo-ski-800.webp?v=4cdc013ffbb8 800w, /assets/photo-ski-1040.webp?v=4915a2e24513 1040w, /assets/photo-ski.webp?v=183317722edf 1080w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" width="480" height="480" decoding="async" alt="На лыжах по заснеженному лесу" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-ski-480.webp?v=094cb62e52b4" srcset="/assets/photo-ski-240.webp?v=2b4e78ed6aff 240w, /assets/photo-ski-360.webp?v=d3312a01ad09 360w, /assets/photo-ski-480.webp?v=094cb62e52b4 480w, /assets/photo-ski-640.webp?v=eff8be8f8ca7 640w, /assets/photo-ski-800.webp?v=4cdc013ffbb8 800w, /assets/photo-ski-1040.webp?v=4915a2e24513 1040w, /assets/photo-ski.webp?v=183317722edf 1080w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" alt="На лыжах по заснеженному лесу" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="start" style="--photo-x:15.4824%;--photo-y:58.8320%;--photo-width:17.7410%;--photo-height:16.3407%;--photo-mobile-y:68.3506%;--photo-mobile-height:30.2708%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-start-480.webp?v=9e53df54d1c5" data-srcset="/assets/photo-start-240.webp?v=2bc475f76781 240w, /assets/photo-start-360.webp?v=ec2869ee40a2 360w, /assets/photo-start-480.webp?v=9e53df54d1c5 480w, /assets/photo-start-640.webp?v=7f0d8a597b4f 640w, /assets/photo-start-800.webp?v=c7774c3458f7 800w, /assets/photo-start-1040.webp?v=f6b5dae80acf 1040w, /assets/photo-start-1280.webp?v=4e244936a76e 1280w, /assets/photo-start.webp?v=3e385bad8bd1 1600w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" width="480" height="360" decoding="async" alt="Велосипедисты перед стартом гонки" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-start-480.webp?v=9e53df54d1c5" srcset="/assets/photo-start-240.webp?v=2bc475f76781 240w, /assets/photo-start-360.webp?v=ec2869ee40a2 360w, /assets/photo-start-480.webp?v=9e53df54d1c5 480w, /assets/photo-start-640.webp?v=7f0d8a597b4f 640w, /assets/photo-start-800.webp?v=c7774c3458f7 800w, /assets/photo-start-1040.webp?v=f6b5dae80acf 1040w, /assets/photo-start-1280.webp?v=4e244936a76e 1280w, /assets/photo-start.webp?v=3e385bad8bd1 1600w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" alt="Велосипедисты перед стартом гонки" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="office" style="--photo-x:34.4368%;--photo-y:28.1476%;--photo-width:14.3800%;--photo-height:23.4931%;--photo-mobile-y:8.7551%;--photo-mobile-height:43.5206%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-office-480.webp?v=b13982785209" data-srcset="/assets/photo-office-240.webp?v=0a04187556b9 240w, /assets/photo-office-360.webp?v=225a5da243eb 360w, /assets/photo-office-480.webp?v=b13982785209 480w, /assets/photo-office-640.webp?v=bba3d6f38d8c 640w, /assets/photo-office-800.webp?v=16ebb738a4d4 800w, /assets/photo-office.webp?v=9dc04310a249 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Ноутбук у окна с видом на город" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-office-480.webp?v=b13982785209" srcset="/assets/photo-office-240.webp?v=0a04187556b9 240w, /assets/photo-office-360.webp?v=225a5da243eb 360w, /assets/photo-office-480.webp?v=b13982785209 480w, /assets/photo-office-640.webp?v=bba3d6f38d8c 640w, /assets/photo-office-800.webp?v=16ebb738a4d4 800w, /assets/photo-office.webp?v=9dc04310a249 960w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Ноутбук у окна с видом на город" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="0741" style="--photo-x:0.6067%;--photo-y:26.9308%;--photo-width:13.6624%;--photo-height:22.3220%;--photo-mobile-y:13.1881%;--photo-mobile-height:41.3510%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-7b03b-480.webp?v=573ea960ef4c" data-srcset="/assets/photo-7b03b-240.webp?v=910aad8efc4c 240w, /assets/photo-7b03b-360.webp?v=0302f1e6a2e1 360w, /assets/photo-7b03b-480.webp?v=573ea960ef4c 480w, /assets/photo-7b03b-640.webp?v=6122e7916ab8 640w, /assets/photo-7b03b-800.webp?v=905deef5d6bb 800w, /assets/photo-7b03b-1040.webp?v=a8cea5dbedab 1040w, /assets/photo-7b03b.webp?v=932fcc828ed7 1200w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 123px" width="480" height="640" decoding="async" alt="Заснеженная гора" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-7b03b-480.webp?v=573ea960ef4c" srcset="/assets/photo-7b03b-240.webp?v=910aad8efc4c 240w, /assets/photo-7b03b-360.webp?v=0302f1e6a2e1 360w, /assets/photo-7b03b-480.webp?v=573ea960ef4c 480w, /assets/photo-7b03b-640.webp?v=6122e7916ab8 640w, /assets/photo-7b03b-800.webp?v=905deef5d6bb 800w, /assets/photo-7b03b-1040.webp?v=a8cea5dbedab 1040w, /assets/photo-7b03b.webp?v=932fcc828ed7 1200w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 123px" alt="Заснеженная гора" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-balloons" data-mosaic-photo="4440" data-photo-mobile-hidden style="--photo-x:69.6088%;--photo-y:81.8821%;--photo-width:14.1658%;--photo-height:22.1442%;--photo-mobile-y:0.0000%;--photo-mobile-height:41.0217%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-3f816-480.webp?v=924447f3c5e8" data-srcset="/assets/photo-3f816-240.webp?v=ce5437e78b92 240w, /assets/photo-3f816-360.webp?v=5f7489759aa5 360w, /assets/photo-3f816-480.webp?v=924447f3c5e8 480w, /assets/photo-3f816-640.webp?v=864bc147a805 640w, /assets/photo-3f816-800.webp?v=9c6cddbc2633 800w, /assets/photo-3f816-1040.webp?v=4d35dda15983 1040w, /assets/photo-3f816-1280.webp?v=5e924e2b7bfb 1280w, /assets/photo-3f816.webp?v=f902377d8448 1600w" sizes="(max-width: 767px) min(299px, calc((100vw - 40px) * 0.4977)), (max-width: 1023px) and (pointer: coarse) min(299px, calc((100vw - 40px) * 0.4977)), (max-width: 983px) 354px, 289px" width="480" height="270" decoding="async" alt="Воздушные шары над Каппадокией" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-3f816-480.webp?v=924447f3c5e8" srcset="/assets/photo-3f816-240.webp?v=ce5437e78b92 240w, /assets/photo-3f816-360.webp?v=5f7489759aa5 360w, /assets/photo-3f816-480.webp?v=924447f3c5e8 480w, /assets/photo-3f816-640.webp?v=864bc147a805 640w, /assets/photo-3f816-800.webp?v=9c6cddbc2633 800w, /assets/photo-3f816-1040.webp?v=4d35dda15983 1040w, /assets/photo-3f816-1280.webp?v=5e924e2b7bfb 1280w, /assets/photo-3f816.webp?v=f902377d8448 1600w" sizes="(max-width: 767px) min(299px, calc((100vw - 40px) * 0.4977)), (max-width: 1023px) and (pointer: coarse) min(299px, calc((100vw - 40px) * 0.4977)), (max-width: 983px) 354px, 289px" alt="Воздушные шары над Каппадокией" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="8235" style="--photo-x:84.9879%;--photo-y:67.1643%;--photo-width:14.4055%;--photo-height:23.5346%;--photo-mobile-y:55.0239%;--photo-mobile-height:43.5975%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-e0372-480.webp?v=9a2c01796864" data-srcset="/assets/photo-e0372-240.webp?v=909cbfdce80f 240w, /assets/photo-e0372-360.webp?v=66bd5c0256e9 360w, /assets/photo-e0372-480.webp?v=9a2c01796864 480w, /assets/photo-e0372-640.webp?v=9683e7baf633 640w, /assets/photo-e0372-800.webp?v=f48e834a4666 800w, /assets/photo-e0372-1040.webp?v=b56e49699f23 1040w, /assets/photo-e0372.webp?v=2bda0870165d 1200w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Скалы зимой" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-e0372-480.webp?v=9a2c01796864" srcset="/assets/photo-e0372-240.webp?v=909cbfdce80f 240w, /assets/photo-e0372-360.webp?v=66bd5c0256e9 360w, /assets/photo-e0372-480.webp?v=9a2c01796864 480w, /assets/photo-e0372-640.webp?v=9683e7baf633 640w, /assets/photo-e0372-800.webp?v=f48e834a4666 800w, /assets/photo-e0372-1040.webp?v=b56e49699f23 1040w, /assets/photo-e0372.webp?v=2bda0870165d 1200w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Скалы зимой" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-coffee" data-mosaic-photo="7013" style="--photo-x:0.6067%;--photo-y:0.7442%;--photo-width:13.6624%;--photo-height:24.6982%;--photo-mobile-y:-35.3221%;--photo-mobile-height:45.7530%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-ab055-480.webp?v=f8c4b4783237" data-srcset="/assets/photo-ab055-240.webp?v=f7da523158a7 240w, /assets/photo-ab055-360.webp?v=f9977c78d9d1 360w, /assets/photo-ab055-480.webp?v=f8c4b4783237 480w, /assets/photo-ab055-640.webp?v=c3393a615128 640w, /assets/photo-ab055-800.webp?v=8a97450d72ec 800w, /assets/photo-ab055-1040.webp?v=b74923ce4f50 1040w, /assets/photo-ab055-1280.webp?v=8e04405360b3 1280w, /assets/photo-ab055.webp?v=b185a70fb0eb 1600w" sizes="(max-width: 767px) min(298px, calc((100vw - 40px) * 0.4955)), (max-width: 1023px) and (pointer: coarse) min(298px, calc((100vw - 40px) * 0.4955)), (max-width: 983px) 351px, 288px" width="480" height="360" decoding="async" alt="Приготовление кофе на природе" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-ab055-480.webp?v=f8c4b4783237" srcset="/assets/photo-ab055-240.webp?v=f7da523158a7 240w, /assets/photo-ab055-360.webp?v=f9977c78d9d1 360w, /assets/photo-ab055-480.webp?v=f8c4b4783237 480w, /assets/photo-ab055-640.webp?v=c3393a615128 640w, /assets/photo-ab055-800.webp?v=8a97450d72ec 800w, /assets/photo-ab055-1040.webp?v=b74923ce4f50 1040w, /assets/photo-ab055-1280.webp?v=8e04405360b3 1280w, /assets/photo-ab055.webp?v=b185a70fb0eb 1600w" sizes="(max-width: 767px) min(298px, calc((100vw - 40px) * 0.4955)), (max-width: 1023px) and (pointer: coarse) min(298px, calc((100vw - 40px) * 0.4955)), (max-width: 983px) 351px, 288px" alt="Приготовление кофе на природе" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-coast" data-mosaic-photo="7375" data-photo-mobile-hidden style="--photo-x:0.6067%;--photo-y:74.5374%;--photo-width:13.6624%;--photo-height:24.7184%;--photo-mobile-y:0.0000%;--photo-mobile-height:45.7904%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-e2d31-480.webp?v=911634dd4aa6" data-srcset="/assets/photo-e2d31-240.webp?v=ae9739d9d3a9 240w, /assets/photo-e2d31-360.webp?v=a73b11bfe0a2 360w, /assets/photo-e2d31-480.webp?v=911634dd4aa6 480w, /assets/photo-e2d31-640.webp?v=7ae731c76cac 640w, /assets/photo-e2d31-800.webp?v=b236a19890c8 800w, /assets/photo-e2d31.webp?v=925774b530e2 900w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 124px" width="480" height="853" decoding="async" alt="Скалистый берег и синее море" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-e2d31-480.webp?v=911634dd4aa6" srcset="/assets/photo-e2d31-240.webp?v=ae9739d9d3a9 240w, /assets/photo-e2d31-360.webp?v=a73b11bfe0a2 360w, /assets/photo-e2d31-480.webp?v=911634dd4aa6 480w, /assets/photo-e2d31-640.webp?v=7ae731c76cac 640w, /assets/photo-e2d31-800.webp?v=b236a19890c8 800w, /assets/photo-e2d31.webp?v=925774b530e2 900w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 124px" alt="Скалистый берег и синее море" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="5146" style="--photo-x:0.6067%;--photo-y:50.7411%;--photo-width:13.6624%;--photo-height:22.3079%;--photo-mobile-y:57.2964%;--photo-mobile-height:41.3250%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-fd9a1-480.webp?v=1d496c56bcb7" data-srcset="/assets/photo-fd9a1-240.webp?v=4c1e2357b271 240w, /assets/photo-fd9a1-360.webp?v=20983ccbe976 360w, /assets/photo-fd9a1-480.webp?v=1d496c56bcb7 480w, /assets/photo-fd9a1-640.webp?v=ae18b62d4224 640w, /assets/photo-fd9a1-800.webp?v=2a548a534313 800w, /assets/photo-fd9a1.webp?v=6172862278dc 960w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 123px" width="480" height="640" decoding="async" alt="Сапы у осенней реки" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-fd9a1-480.webp?v=1d496c56bcb7" srcset="/assets/photo-fd9a1-240.webp?v=4c1e2357b271 240w, /assets/photo-fd9a1-360.webp?v=20983ccbe976 360w, /assets/photo-fd9a1-480.webp?v=1d496c56bcb7 480w, /assets/photo-fd9a1-640.webp?v=ae18b62d4224 640w, /assets/photo-fd9a1-800.webp?v=2a548a534313 800w, /assets/photo-fd9a1.webp?v=6172862278dc 960w" sizes="(max-width: 767px) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 1023px) and (pointer: coarse) min(128px, calc((100vw - 40px) * 0.2127)), (max-width: 983px) 151px, 123px" alt="Сапы у осенней реки" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="5291" data-photo-mobile-hidden style="--photo-x:15.4824%;--photo-y:76.6610%;--photo-width:17.7410%;--photo-height:16.3355%;--photo-mobile-y:0.0000%;--photo-mobile-height:30.2613%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-fcfe0-480.webp?v=a925d4b780cc" data-srcset="/assets/photo-fcfe0-240.webp?v=06978dea52a7 240w, /assets/photo-fcfe0-360.webp?v=bc307b689b51 360w, /assets/photo-fcfe0-480.webp?v=a925d4b780cc 480w, /assets/photo-fcfe0-640.webp?v=4a65d29a2f1c 640w, /assets/photo-fcfe0-800.webp?v=a9789bd653e9 800w, /assets/photo-fcfe0-1040.webp?v=52c112c718c2 1040w, /assets/photo-fcfe0-1280.webp?v=1eb0407e7893 1280w, /assets/photo-fcfe0.webp?v=893456ae4ecc 1600w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" width="480" height="360" decoding="async" alt="На сапах по спокойной реке" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-fcfe0-480.webp?v=a925d4b780cc" srcset="/assets/photo-fcfe0-240.webp?v=06978dea52a7 240w, /assets/photo-fcfe0-360.webp?v=bc307b689b51 360w, /assets/photo-fcfe0-480.webp?v=a925d4b780cc 480w, /assets/photo-fcfe0-640.webp?v=4a65d29a2f1c 640w, /assets/photo-fcfe0-800.webp?v=a9789bd653e9 800w, /assets/photo-fcfe0-1040.webp?v=52c112c718c2 1040w, /assets/photo-fcfe0-1280.webp?v=1eb0407e7893 1280w, /assets/photo-fcfe0.webp?v=893456ae4ecc 1600w" sizes="(max-width: 767px) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 1023px) and (pointer: coarse) min(166px, calc((100vw - 40px) * 0.2760)), (max-width: 983px) 196px, 160px" alt="На сапах по спокойной реке" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="1561" style="--photo-x:69.6088%;--photo-y:57.2689%;--photo-width:14.1658%;--photo-height:23.1248%;--photo-mobile-y:55.7831%;--photo-mobile-height:42.8383%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-91b2a-480.webp?v=6e9ae29910f0" data-srcset="/assets/photo-91b2a-240.webp?v=4c934a89f199 240w, /assets/photo-91b2a-360.webp?v=e64deacc3d8d 360w, /assets/photo-91b2a-480.webp?v=6e9ae29910f0 480w, /assets/photo-91b2a-640.webp?v=44b4b9d64905 640w, /assets/photo-91b2a-800.webp?v=0b79bef55770 800w, /assets/photo-91b2a-1040.webp?v=788241e54c43 1040w, /assets/photo-91b2a.webp?v=68953b486266 1186w" sizes="(max-width: 767px) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 1023px) and (pointer: coarse) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 983px) 156px, 128px" width="480" height="640" decoding="async" alt="Велопрогулка по осеннему лесу" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-91b2a-480.webp?v=6e9ae29910f0" srcset="/assets/photo-91b2a-240.webp?v=4c934a89f199 240w, /assets/photo-91b2a-360.webp?v=e64deacc3d8d 360w, /assets/photo-91b2a-480.webp?v=6e9ae29910f0 480w, /assets/photo-91b2a-640.webp?v=44b4b9d64905 640w, /assets/photo-91b2a-800.webp?v=0b79bef55770 800w, /assets/photo-91b2a-1040.webp?v=788241e54c43 1040w, /assets/photo-91b2a.webp?v=68953b486266 1186w" sizes="(max-width: 767px) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 1023px) and (pointer: coarse) min(132px, calc((100vw - 40px) * 0.2195)), (max-width: 983px) 156px, 128px" alt="Велопрогулка по осеннему лесу" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="3989" data-photo-mobile-hidden style="--photo-x:34.4368%;--photo-y:78.1472%;--photo-width:14.3800%;--photo-height:23.4938%;--photo-mobile-y:0.0000%;--photo-mobile-height:43.5219%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-50894-480.webp?v=77c75a3a5c1d" data-srcset="/assets/photo-50894-240.webp?v=8f471db29b78 240w, /assets/photo-50894-360.webp?v=d7961ab317bc 360w, /assets/photo-50894-480.webp?v=77c75a3a5c1d 480w, /assets/photo-50894-640.webp?v=997e99c972a2 640w, /assets/photo-50894-800.webp?v=26355c573d0d 800w, /assets/photo-50894-1040.webp?v=83c7c6eb0339 1040w, /assets/photo-50894.webp?v=49356cc9c29c 1186w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Небольшая коллекция повседневных предметов" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-50894-480.webp?v=77c75a3a5c1d" srcset="/assets/photo-50894-240.webp?v=8f471db29b78 240w, /assets/photo-50894-360.webp?v=d7961ab317bc 360w, /assets/photo-50894-480.webp?v=77c75a3a5c1d 480w, /assets/photo-50894-640.webp?v=997e99c972a2 640w, /assets/photo-50894-800.webp?v=26355c573d0d 800w, /assets/photo-50894-1040.webp?v=83c7c6eb0339 1040w, /assets/photo-50894.webp?v=49356cc9c29c 1186w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Небольшая коллекция повседневных предметов" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-cover" data-mosaic-photo="6332" style="--photo-x:84.9879%;--photo-y:17.1001%;--photo-width:14.4055%;--photo-height:23.5161%;--photo-mobile-y:-37.7192%;--photo-mobile-height:43.5632%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-b355d-480.webp?v=022044bc5342" data-srcset="/assets/photo-b355d-240.webp?v=5ee9ff74e2bc 240w, /assets/photo-b355d-360.webp?v=5f549022d24a 360w, /assets/photo-b355d-480.webp?v=022044bc5342 480w, /assets/photo-b355d-640.webp?v=8457a21419b8 640w, /assets/photo-b355d-800.webp?v=23bb9bdd2224 800w, /assets/photo-b355d-1040.webp?v=49073a2925ea 1040w, /assets/photo-b355d.webp?v=b12259889ce3 1186w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" width="480" height="640" decoding="async" alt="Яркий жёлтый интерьер" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-b355d-480.webp?v=022044bc5342" srcset="/assets/photo-b355d-240.webp?v=5ee9ff74e2bc 240w, /assets/photo-b355d-360.webp?v=5f549022d24a 360w, /assets/photo-b355d-480.webp?v=022044bc5342 480w, /assets/photo-b355d-640.webp?v=8457a21419b8 640w, /assets/photo-b355d-800.webp?v=23bb9bdd2224 800w, /assets/photo-b355d-1040.webp?v=49073a2925ea 1040w, /assets/photo-b355d.webp?v=b12259889ce3 1186w" sizes="(max-width: 767px) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 1023px) and (pointer: coarse) min(135px, calc((100vw - 40px) * 0.2240)), (max-width: 983px) 159px, 130px" alt="Яркий жёлтый интерьер" loading="lazy"></noscript></div></div><div class="home-about-photo photo-gallery-card photo-crop-paddle" data-mosaic-photo="4632" style="--photo-x:69.6088%;--photo-y:5.5147%;--photo-width:14.1658%;--photo-height:25.6081%;--photo-mobile-y:-40.0908%;--photo-mobile-height:47.4386%"><div class="photo-gallery-crop"><img class="work-image" data-src="/assets/photo-fddbd-480.webp?v=3a17a1c11fee" data-srcset="/assets/photo-fddbd-240.webp?v=6b49852322b4 240w, /assets/photo-fddbd-360.webp?v=665fc27440c0 360w, /assets/photo-fddbd-480.webp?v=3a17a1c11fee 480w, /assets/photo-fddbd-640.webp?v=7eea3f586bb0 640w, /assets/photo-fddbd-800.webp?v=00bcd686a804 800w, /assets/photo-fddbd-1040.webp?v=1a65e494b3f7 1040w, /assets/photo-fddbd.webp?v=5734619958af 1200w" sizes="(max-width: 767px) min(216px, calc((100vw - 40px) * 0.3597)), (max-width: 1023px) and (pointer: coarse) min(216px, calc((100vw - 40px) * 0.3597)), (max-width: 983px) 255px, 208px" width="480" height="640" decoding="async" alt="На реке под летними облаками" loading="lazy" fetchpriority="low"><noscript><img src="/assets/photo-fddbd-480.webp?v=3a17a1c11fee" srcset="/assets/photo-fddbd-240.webp?v=6b49852322b4 240w, /assets/photo-fddbd-360.webp?v=665fc27440c0 360w, /assets/photo-fddbd-480.webp?v=3a17a1c11fee 480w, /assets/photo-fddbd-640.webp?v=7eea3f586bb0 640w, /assets/photo-fddbd-800.webp?v=00bcd686a804 800w, /assets/photo-fddbd-1040.webp?v=1a65e494b3f7 1040w, /assets/photo-fddbd.webp?v=5734619958af 1200w" sizes="(max-width: 767px) min(216px, calc((100vw - 40px) * 0.3597)), (max-width: 1023px) and (pointer: coarse) min(216px, calc((100vw - 40px) * 0.3597)), (max-width: 983px) 255px, 208px" alt="На реке под летними облаками" loading="lazy"></noscript></div></div></div></div></div>
+        <p class="work-image-error" hidden>Не удалось загрузить изображение</p>
+      </div>
+      <div class="work-copy home-about-copy">
+        <div class="home-about-summary">
+        <div class="work-heading home-about-heading"><h3 id="more-about-title">Работа, жизнь и баланс</h3></div>
+        <p class="work-description">О том, как я подхожу к дизайну, работаю с командами и отдыхаю вдали от экрана: катаюсь на велосипеде и лыжах или наслаждаюсь тишиной на воде. Здесь же — отзывы людей, с которыми мы работали.</p>
+        </div>
+        <div class="work-actions"><a class="work-details ui-project-link" href="/ru/about/"><span>Больше обо мне</span><img src="/assets/lucide-arrow-left.svg?v=9cf7179f0334" width="24" height="24" alt=""></a></div>
+      </div>
+    </article>
+  </div>
+</section>
+  <!-- shared:home-about:end -->
+  <!-- shared:footer:start -->
+  <footer class="footer" id="contact" role="contentinfo" aria-labelledby="footer-title" data-node-id="187:331">
+    <div class="footer-inner">
+    <h2 id="footer-title" tabindex="-1" data-node-id="182:2736">Давайте общаться</h2>
+    <div class="footer-content" data-node-id="187:419">
+      <p class="footer-description" data-node-id="187:420">Есть проект или предложение?<br> Напишите мне — или просто поздоровайтесь!</p>
+      <nav class="footer-links" aria-label="Ссылки в подвале" data-node-id="187:421">
+        <a href="/ru/about/"><span class="footer-link-label">Обо мне</span></a>
+        <a href="/ru/#selected-works"><span class="footer-link-label">Работы</span></a>
+        <a href="mailto:rebosidium@gmail.com" data-node-id="187:422"><span class="footer-link-label">Почта</span></a>
+        <a href="/assets/dmitry-rybalka-resume-en.pdf?v=3e979e8fa668" data-background-prefetch download="Dmitry-Rybalka-Resume-EN.pdf" data-node-id="187:423"><span class="footer-link-label">Резюме</span></a>
+        <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="187:424"><span class="footer-link-label">LinkedIn</span></a>
+        <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425"><span class="footer-link-label">Telegram</span></a>
+      </nav>
+      <div class="footer-agent" data-agent-control>
+        <button class="agent-button agent-button--dark footer-agent-button" data-agent-theme="dark" type="button" aria-label="Скопировать запрос о Дмитрии Рыбалке для ИИ" aria-describedby="footer-agent-copy-status" data-node-id="187:426">
+          <span class="agent-button-label" aria-hidden="true" data-node-id="187:427"><span class="agent-button-idle">Бриф для ИИ</span><span class="agent-button-copied"><img src="/assets/lucide-check-white.svg?v=f5434dbfe8e0" width="24" height="24" alt="" decoding="sync"><span>Готово</span></span></span>
+          <span class="agent-button-logos" aria-hidden="true" data-node-id="187:428">
+            <img src="/assets/footer-claude.svg?v=4c02aab6dbf5" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:430">
+            <img src="/assets/footer-chatgpt-white.svg?v=31685c331afc" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:432">
+            <img src="/assets/footer-codex-blue.svg?v=688bbe62639f" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:434">
+            <span class="footer-logo-copilot" data-node-id="187:438"><img src="/assets/footer-copilot.svg?v=e66a8c6a5212" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:439"></span>
+            <img src="/assets/footer-cursor-white.svg?v=b6213bf33e0a" width="24" height="24" alt="" decoding="sync" loading="lazy" fetchpriority="low" data-node-id="187:442">
+          </span>
+        </button>
+        <span class="sr-only" id="footer-agent-copy-status" role="status" aria-live="polite">Копирует запрос, который можно вставить в чат с ИИ.</span>
+        <div class="agent-copy-fallback" hidden>
+          <label for="footer-agent-prompt">Скопируйте этот запрос в чат с ИИ</label>
+          <textarea id="footer-agent-prompt" readonly rows="2" spellcheck="false"></textarea>
+        </div>
+        <noscript><a class="agent-profile-link" href="https://dmitryrybalka.com/llms.txt">Профиль для ИИ</a></noscript>
+      </div>
+    </div>
+    </div>
+  </footer>
+  <!-- shared:footer:end -->
+  </div>
+  </main>
+</body>
+</html>

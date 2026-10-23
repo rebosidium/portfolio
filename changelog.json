@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.8.0",
+    "date": "2026-10-23",
+    "title": "Independent Russian portfolio pages",
+    "changes": [
+      "Add Russian home, About, six existing translated cases and bilingual case catalogs with the existing interface and design.",
+      "Compile localized controls, canonical/hreflang/sitemap and registered analytics routes; preserve owner and QA exclusions.",
+      "Preserve old Russian URLs with query/hash-preserving static redirects on GitHub Pages."
+    ]
+  },
+  {
     "version": "1.7.3",
     "date": "2026-10-23",
     "title": "Align two approved portfolio facts",

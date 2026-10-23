@@ -137,7 +137,7 @@
       dots.forEach((dot,i)=>{if(i===index)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current');});
       root.dataset.activeSlide=String(index+1);
       keepIndicatorVisible();
-      if(announce)status.textContent=`Recommendation ${index+1} of ${slides.length}`;
+      if(announce)status.textContent=document.documentElement.lang==='ru'?`Отзыв ${index+1} из ${slides.length}`:`Recommendation ${index+1} of ${slides.length}`;
       if(outgoing)try{playInk(outgoing,measureLetters(slides[index]));}catch(_){stopInk();}
       if(canAnimate){
         try{
