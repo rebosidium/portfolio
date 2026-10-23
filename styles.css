@@ -23,6 +23,16 @@
 .work-card{width:var(--content-width);margin:0 auto;display:flex;align-items:center;gap:var(--space-4)}
 .work-copy{display:flex;flex-direction:column;gap:var(--space-4);flex:none;width:383px}
 .work-heading{display:flex;flex-direction:column;gap:var(--space-4)}
+.work-title-link{display:flex;align-items:center;gap:var(--space-2);min-width:0}
+.work-title-link span{min-width:0}
+.work-description-link,.work-artwork-link{display:block}
+.work-title-link span,.work-description-link{transition:opacity var(--duration-control) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){
+.work-title-link:hover span,.work-description-link:hover{opacity:.9}
+}
+@media(prefers-reduced-motion:reduce){
+.work-title-link span,.work-description-link{transition:none}
+}
 .work-copy h3,.work-copy p{margin:0}
 .work-copy .work-meta{display:flex;align-items:center;gap:6px;font-size:var(--type-small);line-height:var(--line-compact);color:var(--work-muted,var(--color-muted))}
 .work-meta span:first-child{flex:none}

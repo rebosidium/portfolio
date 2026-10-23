@@ -114,7 +114,7 @@
         capture('project_opened', {...common, project: destinationProject, source_project: project, destination: url.pathname, placement: 'related_cases'}, true);
       return;
     }
-    const projectLink = target.closest('[data-analytics-work] .work-actions a[href]');
+    const projectLink = target.closest('[data-analytics-work] .work-actions a[href], [data-analytics-work] .work-case-link[href]');
     if (projectLink) {
       const url = new URL(projectLink.href, location.href);
       const destinationProject = policy.projectRoutes?.[url.pathname];
