@@ -207,6 +207,13 @@ new MutationObserver(records=>{
   if(records.some(item=>item.type==='attributes'||[...item.addedNodes].some(node=>
     node.nodeType===1&&(node.matches('img[src],script[src],link[rel=stylesheet]')||node.querySelector('img[src],script[src]')))))changed();
 }).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src','srcset','data-resume-prefetch']});
+// A decoded DOM recovery also repairs the encoded-queue bookkeeping. The
+// gallery owns its bounded retries; do not start another warmer retry loop.
+document.addEventListener('portfolio:photo-ready',event=>{
+  const url=event.detail?.url&&absolute(event.detail.url);
+  if(home||!url||!event.target.matches?.('.photo-gallery')||!tasks().some(task=>task.kind==='photo'&&absolute(task.url)===url))return;
+  done.add(url);failed.delete(url);retryAt.delete(url);schedule();
+});
 document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement)changed();},true);
 document.addEventListener('error',event=>{if(event.target instanceof HTMLImageElement)changed();},true);
 window.portraitPlayer?.subscribeLoading(()=>{if(!portraitSafe())changed();else schedule();});
