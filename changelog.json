@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.6.3",
+    "date": "2026-10-23",
+    "title": "Stable touch scrolling during browser toolbar changes",
+    "changes": [
+      "Retain homepage touch scene and work-card geometry during height-only browser toolbar changes, preventing programmatic reading-position corrections while scrolling.",
+      "Remeasure on width or layout changes and preserve the fluid contact footer, desktop resizing, reading pages and existing motion."
+    ]
+  },
+  {
     "version": "1.6.2",
     "date": "2026-10-23",
     "title": "Larixon feedback before research",

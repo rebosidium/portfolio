@@ -474,7 +474,11 @@
     workViewportProbe.setAttribute('aria-hidden','true');
     workViewportProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:var(--work-screen-height,100lvh);visibility:hidden;pointer-events:none;contain:strict';
     document.body.append(workViewportProbe);
-    const sceneHeight = () => stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
+    // An in-app WKWebView may resize even svh/lvh while its chrome slides.
+    // Retain touch scene geometry for this width; otherwise every resize can
+    // reflow all cards and scrollTo a different reading position mid-gesture.
+    const retainTouchGeometry = () => touchViewport.matches && height>0 && viewportWidth===window.innerWidth;
+    const sceneHeight = () => retainTouchGeometry() ? height : stableViewport() ? viewportProbe.getBoundingClientRect().height || window.innerHeight : window.visualViewport?.height || window.innerHeight;
     const sceneOffset = () => stableViewport() ? 0 : window.visualViewport?.offsetTop || 0;
     const revealed = new Set(),partTweens = new Set();
     let height = 0,workHeight = 0,travel = 1,footerStart = 0,footerLead = 0,progress = location.hash === '#selected-works' ? 1 : 0;
@@ -797,6 +801,15 @@
       warmDesktopPreviews();
       const nextHeight = sceneHeight();
       const offset = sceneOffset();
+      // Share the retained large viewport with CSS and panel measurement. The
+      // footer itself stays fluid so it still fills the currently visible area.
+      if (!retainTouchGeometry()) {
+        root.style.removeProperty('--work-screen-height');
+        if (touchViewport.matches) {
+          const largeHeight=workViewportProbe.getBoundingClientRect().height || nextHeight;
+          root.style.setProperty('--work-screen-height',`${largeHeight}px`);
+        }
+      }
       // iOS also animates safe-area insets with its toolbars. Cache them with
       // the stable scene size so card heights cannot move during a swipe.
       if (stableViewport() && (Math.abs(nextHeight-height)>.5 || viewportWidth!==window.innerWidth)) {
@@ -921,7 +934,7 @@
     function scheduleMeasure() {if (!resizeFrame) resizeFrame = requestAnimationFrame(measureViewport);}
     function onViewportResize() {
       // Browser toolbars resize the visual viewport while the touch scene stays
-      // at 100svh. Leave its layout alone until the scene dimensions change.
+      // at its retained size. A width/layout change remeasures; chrome does not.
       if (stableViewport() && viewportWidth === window.innerWidth && Math.abs(sceneHeight()-height)<=.5 && Math.abs(sceneOffset()-viewportOffset)<=.5) {
         scheduleScroll();return;
       }
