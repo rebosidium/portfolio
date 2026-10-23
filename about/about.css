@@ -29,8 +29,6 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 .article-figure{flex:none;align-self:center;margin:var(--space-6) 0 var(--space-8);min-width:0}
 .article-figure-wide{width:min(var(--width-page),calc(100vw - var(--gutter-page) * 2))}
 .article-figure-prose{width:100%}
-.article-figure-link{display:block;line-height:0;border-radius:var(--radius-placeholder);cursor:zoom-in;--ui-focus-radius:var(--radius-placeholder)}
-.article-figure-link:focus-visible{outline:2px solid var(--color-ink);outline-offset:var(--space-2)}
 .article-figure img{display:block;width:100%;height:auto;object-fit:contain}
 /* First-paint entrance works without JavaScript. The reading runtime only
    postpones blocks that have not yet reached the viewport. Layout stays fixed. */

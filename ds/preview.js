@@ -77,7 +77,7 @@
     const css=document.createElement('link');css.rel='stylesheet';css.href=window.DS_CATALOG.scripts.recommendationsStyle;document.head.append(css);
     script(window.DS_CATALOG.scripts.recommendations);
   }
-  if(example.id==='reading-page')script(window.DS_CATALOG.scripts.reading);
+  if(example.kind.split(' ').includes('reading'))script(window.DS_CATALOG.scripts.reading);
   if(document.querySelector('.menu-toggle'))script(window.DS_CATALOG.scripts.navigation,()=>{if(state==='open')document.querySelector('.menu-toggle').click();});
   document.documentElement.dataset.contentReadyAt=performance.now().toFixed(1);
   if(example.id!=='not-found-page')script(window.DS_CATALOG.scripts.resume);
