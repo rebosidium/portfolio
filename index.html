@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="de80a912139b" data-build="51672d05e593">
+<html lang="en" data-ui-revision="cd9aaddb0043" data-build="c5e242ccad19">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -378,8 +378,8 @@
   <!-- shared:navigation-boot:end -->
   <script>
     window.portraitModuleURL = /Android/i.test(navigator.userAgent) && matchMedia('(pointer: coarse)').matches
-      ? '/portrait-spin-android.js?v=e2be97c0e466'
-      : '/portrait-spin.js?v=4cd9f0dd3c09';
+      ? '/portrait-spin-android.js?v=17f1ead6c4a8'
+      : '/portrait-spin.js?v=0e29002a6527';
     const portraitPreload = document.createElement('link');
     portraitPreload.rel = 'modulepreload';
     portraitPreload.href = window.portraitModuleURL;
@@ -403,7 +403,7 @@
       window.pageDeadline = setTimeout(window.releasePageFallback,21000);
     }
   </script>
-  <script type="module" src="portrait-boot.js?v=66b7291d52e6" onerror="window.resolvePortraitReady(false)"></script>
+  <script type="module" src="portrait-boot.js?v=8b8d84e1ac56" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=bee877f86f33" onerror="window.releasePageFallback()"></script>
   <script defer fetchpriority="low" src="analytics.js?v=b8d7da09ec3f"></script>
@@ -497,7 +497,7 @@
       document.head.append(script);
     },{once:true});
   </script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.2+fb7856a8a174","tokens":"1.11.0+ab8ce19cd2ff","components":{"home-about":"1.11.0+9806ca411d05","work-logo":"1.11.0+b9dbd9ba34d7","brief":"1.11.0+acc9e871d836","brief-dark":"1.11.0+661c6d72e2f0","link":"1.11.0+763bb71fd83f","footer-link":"1.11.0+358c66b69a9c","work-actions":"1.11.0+698a537f46cf","availability":"1.11.0+26e9213b1226","portrait":"1.11.0+c1b55ad293b9","header":"1.11.0+4e95f589a3c3","hero":"1.11.0+65cef1013f57","work":"1.11.0+9ad9dcb4e559","work-section":"1.11.0+25616e0ae874","footer":"1.11.0+881641b0be4f"},"revision":"de80a912139b"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.3+600c5b3e6db3","tokens":"1.11.0+ab8ce19cd2ff","components":{"home-about":"1.11.0+f2c45235c065","work-logo":"1.11.0+b9dbd9ba34d7","brief":"1.11.0+48930bc95f18","brief-dark":"1.11.0+28bad252bdb4","link":"1.11.0+6dd6e4d462b4","footer-link":"1.11.0+eee562a06283","work-actions":"1.11.0+698a537f46cf","availability":"1.11.0+26e9213b1226","portrait":"1.11.0+01b7397f421e","header":"1.11.0+6d8c9623ef49","hero":"1.11.0+c050cb19239f","work":"1.11.0+7ea6ae16e51a","work-section":"1.11.0+ca5545d40c17","footer":"1.11.0+d65dc810921c"},"revision":"cd9aaddb0043"}</script>
   <!-- shared:neighbor-prefetch:start -->
   <template id="neighbor-prefetch-source"><script src="/assets/neighbor-prefetch.js?v=81b1c3962ee3"></script></template>
   <script>
