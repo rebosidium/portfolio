@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-ui-revision="51a16e7c0c71" data-build="c5e242ccad19">
+<html lang="ru" data-ui-revision="51a16e7c0c71" data-build="9d6604553804">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -63,6 +63,7 @@
   window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
     projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
     sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    pageGroup: notFound ? '/404/' : (page?.route || location.pathname).replace(/^\/ru(?=\/)/, ''),
     language: page?.lang || document.documentElement.lang || 'en',
     pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
     enabled: allowed && !ownerExcluded && !qa && !automation});
@@ -174,7 +175,9 @@
           if (!window.portfolioAnalytics?.enabled) return null;
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
-            site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
+            site_path: window.portfolioAnalytics.sitePath, page_group: window.portfolioAnalytics.pageGroup,
+            content_language: window.portfolioAnalytics.language,
+            page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
             analytics_version: 5,
             analytics_test: false
           });
@@ -216,6 +219,8 @@
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
         site_path: window.portfolioAnalytics.sitePath,
+        page_group: window.portfolioAnalytics.pageGroup,
+        content_language: window.portfolioAnalytics.language,
         page_type: window.portfolioAnalytics.pageType,
         ...(window.portfolioAnalytics.project ? {project: window.portfolioAnalytics.project} : {}),
         layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'
@@ -373,7 +378,7 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=f82f8a7582c9" defer></script>
   <script src="/assets/site-controls.js?v=1d925688acaa" defer></script>
-  <script src="/analytics.js?v=b8d7da09ec3f" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=5a77fb960101" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=3849ba5a827b" defer></script>
   <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
   <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.3+600c5b3e6db3","tokens":"1.11.0+ab8ce19cd2ff","components":{"recommendations":"1.11.0+48588897aca5","brief-dark":"1.11.0+28bad252bdb4","back":"1.11.0+563cb82e2583","link":"1.11.0+6dd6e4d462b4","footer-link":"1.11.0+eee562a06283","about-title":"1.11.0+a1c9b349359b","about-avatar":"1.11.0+1342a8f1a291","prose-section":"1.11.0+3e66f7f930a4","photo-gallery":"1.11.0+0572a913d7a5","photo-gallery-footer":"1.11.0+6a257239007f","about-header":"1.11.0+30535fb0228b","footer":"1.11.0+d65dc810921c","reading-page":"1.11.0+17d38bb99df5"},"revision":"51a16e7c0c71"}</script>

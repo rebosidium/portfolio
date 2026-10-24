@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-ui-revision="cd9aaddb0043" data-build="c5e242ccad19">
+<html lang="ru" data-ui-revision="cd9aaddb0043" data-build="9d6604553804">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -63,6 +63,7 @@
   window.portfolioAnalytics = Object.freeze({ownerExcluded, qa, automation, reason,
     projectRoutes: Object.freeze(Object.fromEntries(definitions.filter(page=>page.type==='article').map(page=>[page.route,page.project]))),
     sitePath: notFound ? '/404/' : page?.route || location.pathname,
+    pageGroup: notFound ? '/404/' : (page?.route || location.pathname).replace(/^\/ru(?=\/)/, ''),
     language: page?.lang || document.documentElement.lang || 'en',
     pageType: notFound ? 'not-found' : page?.type || 'untracked', project: page?.project || null,
     enabled: allowed && !ownerExcluded && !qa && !automation});
@@ -174,7 +175,9 @@
           if (!window.portfolioAnalytics?.enabled) return null;
           if (event?.properties) Object.assign(event.properties, {
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop',
-            site_path: window.portfolioAnalytics.sitePath, page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
+            site_path: window.portfolioAnalytics.sitePath, page_group: window.portfolioAnalytics.pageGroup,
+            content_language: window.portfolioAnalytics.language,
+            page_type: window.portfolioAnalytics.pageType, project: event.properties.project ?? window.portfolioAnalytics.project, site_build: document.documentElement.dataset.build,
             analytics_version: 5,
             analytics_test: false
           });
@@ -216,6 +219,8 @@
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
         site_path: window.portfolioAnalytics.sitePath,
+        page_group: window.portfolioAnalytics.pageGroup,
+        content_language: window.portfolioAnalytics.language,
         page_type: window.portfolioAnalytics.pageType,
         ...(window.portfolioAnalytics.project ? {project: window.portfolioAnalytics.project} : {}),
         layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'
@@ -406,7 +411,7 @@
   <script type="module" src="/portrait-boot.js?v=8b8d84e1ac56" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="/vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="/app.js?v=bee877f86f33" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="/analytics.js?v=b8d7da09ec3f"></script>
+  <script defer fetchpriority="low" src="/analytics.js?v=5a77fb960101"></script>
   <script defer src="/mobile-nav.js?v=f82f8a7582c9" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="/updates.js?v=4e459b035a45"></script></template>
   <script>
