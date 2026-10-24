@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.8.12",
+    "date": "2026-10-24",
+    "title": "Show consistent year-only project date labels in both languages",
+    "changes": [
+      "Use year-only ranges in every English and Russian work-card date label, including «2025 — Present» / «2025 — сейчас».",
+      "Preserve existing year ranges, case prose, quotations, styles and behavior."
+    ]
+  },
+  {
     "version": "1.8.11",
     "date": "2026-10-24",
     "title": "Capitalize Russian date-label months consistently",
