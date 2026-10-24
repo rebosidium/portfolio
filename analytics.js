@@ -18,7 +18,8 @@
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
-    viewport_width: Math.round(innerWidth), site_path: sitePath,
+    viewport_width: Math.round(innerWidth), site_path: sitePath, page_group: policy.pageGroup,
+    content_language: policy.language || document.documentElement.lang,
     site_build: document.documentElement.dataset.build, analytics_version: 5, analytics_test: qa, language: policy.language || document.documentElement.lang, page_type: policy.pageType, project});
   const callClarity = (...args) => {try {window.clarity(...args); return true;} catch {return false;}};
   const tags = new Set();
@@ -28,7 +29,7 @@
   };
   const syncContext = properties => {
     if (!clarityActive) return;
-    for (const key of ['layout', 'site_path', 'site_build', 'analytics_version', 'analytics_test', 'page_type']) tag(key, properties[key]);
+    for (const key of ['layout', 'site_path', 'page_group', 'content_language', 'site_build', 'analytics_version', 'analytics_test', 'page_type']) tag(key, properties[key]);
     tag('clarity_events_version', 5);
     if (project) tag('project', project);
   };
@@ -53,7 +54,8 @@
         immediate ? {transport: 'sendBeacon', send_instantly: true} : undefined);
     } catch { /* An unavailable provider cannot break native actions. */ }
     if (ga4Active) try {
-      const values = Object.fromEntries(Object.entries({...common, ...properties}).filter(([,value]) => value !== null && value !== undefined));
+      // GA's built-in language means browser language; content_language is the page locale.
+      const values = Object.fromEntries(Object.entries({...common, ...properties}).filter(([key,value]) => key !== 'language' && value !== null && value !== undefined));
       window.gtag('event', name, {...values, send_to: ga4MeasurementId});
     } catch { /* Google failures cannot affect actions or the other providers. */ }
     if (clarityActive) {
@@ -103,6 +105,14 @@
     const target = event.composedPath().find(node => node instanceof Element);
     if (!target) return;
     const common = {input_method: inputMethod(event)};
+    const catalogCase = policy.pageType === 'catalog' && target.closest('main .article-source-link[href]');
+    if (catalogCase) {
+      const url = new URL(catalogCase.href, location.href);
+      const destinationProject = policy.projectRoutes?.[url.pathname];
+      if (url.origin === location.origin && destinationProject)
+        capture('project_opened', {...common, project: destinationProject, destination: url.pathname, placement: 'case_catalog'}, true);
+      return;
+    }
     const aboutTeaser = target.closest('.home-about-card .work-actions a[href]');
     if (aboutTeaser) {
       capture('about_opened', {...common, placement: 'home_teaser', destination: localePrefix + '/about/'}, true);
@@ -148,7 +158,7 @@
       capture('briefing_clicked', properties);
       return;
     }
-    const back = (basePath(sitePath) === '/about/' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
+    const back = (basePath(sitePath) === '/about/' || policy.pageType === 'catalog' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
     if (back) {
       capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
       return;
@@ -340,12 +350,14 @@
     return hit === element || element.contains(hit);
   };
   const sections = {'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'more-cases-title': 'related_cases', 'footer-title': 'contact',
+    ...(policy.pageType === 'catalog' ? Object.fromEntries(workNames.map(work => ['catalog-' + work.replaceAll('_', '-'), 'catalog_' + work])) : {}),
     'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
     'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',
     ...(project ? {'project-role': 'project_role', context: 'project_context', research: 'project_research',
       contribution: 'project_contribution', outcomes: 'project_outcomes', 'behind-scenes': 'project_behind_scenes'} : {})};
   const identify = element => {
-    const work = element.closest('[data-analytics-work]')?.dataset.analyticsWork;
+    const work = element.closest('[data-analytics-work]')?.dataset.analyticsWork
+      || (policy.pageType === 'catalog' && element.id.startsWith('catalog-') ? element.id.slice(8).replaceAll('-', '_') : null);
     return workNames.includes(work) ? ['work_viewed', {work}]
       : ['section_viewed', {section: sections[element.id]}];
   };
