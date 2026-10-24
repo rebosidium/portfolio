@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.9.0",
+    "date": "2026-10-24",
+    "title": "Complete bilingual monitoring and Metrika goals",
+    "changes": [
+      "Add ten semantic Yandex Metrika goals using the existing trusted intent and engagement events; share content language, page group and mobile/desktop context.",
+      "Add matching language and page-group tags to Sentry errors while preserving error-only capture, privacy, owner/test exclusions and deferred loading.",
+      "Preserve page copy, visual design, interaction definitions and all existing analytics providers."
+    ]
+  },
+  {
     "version": "1.8.13",
     "date": "2026-10-24",
     "title": "Clarify the Russian About interface-quality sentence",

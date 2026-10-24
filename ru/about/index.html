@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-ui-revision="9e995deff1ad" data-build="89fe754e8f8f">
+<html lang="ru" data-ui-revision="9e995deff1ad" data-build="b2d6ade2a545">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -249,6 +249,8 @@
         ssr:true,webvisor:true,clickmap:true,ecommerce:'dataLayer',
         referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true,
         params:{site_path:window.portfolioAnalytics.sitePath,page_type:window.portfolioAnalytics.pageType,
+          content_language:window.portfolioAnalytics.language,page_group:window.portfolioAnalytics.pageGroup,
+          layout:(window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches?'mobile':'desktop',
           ...(window.portfolioAnalytics.project?{project:window.portfolioAnalytics.project}:{})}
       });
     }
@@ -318,6 +320,7 @@
           event.request = {url: location.origin + location.pathname};
           const policy = window.portfolioAnalytics;
           event.tags = {...event.tags, site_path: policy.sitePath, page_type: policy.pageType,
+            content_language: policy.language, page_group: policy.pageGroup,
             project: policy.project || 'none', site_build: document.documentElement.dataset.build,
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'};
           return event;
@@ -378,7 +381,7 @@
   <script src="/vendor/gsap.min.js?v=92bb9a96476f" defer></script>
   <script src="/mobile-nav.js?v=f82f8a7582c9" defer></script>
   <script src="/assets/site-controls.js?v=1d925688acaa" defer></script>
-  <script src="/analytics.js?v=5a77fb960101" defer fetchpriority="low"></script>
+  <script src="/analytics.js?v=f1698b9198fc" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=3849ba5a827b" defer></script>
   <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
   <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.11.0","designSystem":"1.62.11+54da3d1894dc","tokens":"1.11.0+c38fa2f5bc54","components":{"recommendations":"1.11.0+34f2d4fc982a","brief-dark":"1.11.0+e0f4e9f9d5cd","back":"1.11.0+f21f119f146d","link":"1.11.0+d835bde5375a","footer-link":"1.11.0+52396c90b2a5","about-title":"1.11.0+89d9054455da","about-avatar":"1.11.0+471cd9a7d902","prose-section":"1.11.0+feaecaa9cf0a","photo-gallery":"1.11.0+e923dcbf1528","photo-gallery-footer":"1.11.0+24055a279b08","about-header":"1.11.0+eb5b55ff1116","footer":"1.11.0+07ba23d6dda1","reading-page":"1.11.0+e822cebd1f25"},"revision":"9e995deff1ad"}</script>

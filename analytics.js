@@ -14,7 +14,13 @@
     && typeof window.clarity === 'function';
   const ga4Active = typeof ga4TrackingEnabled !== 'undefined' && ga4TrackingEnabled
     && typeof window.gtag === 'function';
-  if (!posthogActive && !clarityActive && !ga4Active) return;
+  const yandexActive = typeof yandexMetrikaTrackingEnabled !== 'undefined' && yandexMetrikaTrackingEnabled
+    && typeof window.ym === 'function';
+  if (!posthogActive && !clarityActive && !ga4Active && !yandexActive) return;
+  // Keep Metrika goals focused on meaningful intent and engagement, using the
+  // same trusted actions and definitions as the other providers.
+  const yandexGoals = new Set(['contact_clicked', 'resume_opened', 'briefing_copied', 'project_opened',
+    'portfolio_opened', 'about_opened', 'portrait_interacted', 'case_engaged', 'multiple_cases_engaged', 'qualified_contact']);
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
@@ -58,6 +64,10 @@
       const values = Object.fromEntries(Object.entries({...common, ...properties}).filter(([key,value]) => key !== 'language' && value !== null && value !== undefined));
       window.gtag('event', name, {...values, send_to: ga4MeasurementId});
     } catch { /* Google failures cannot affect actions or the other providers. */ }
+    if (yandexActive && yandexGoals.has(name)) try {
+      const values = Object.fromEntries(Object.entries({...common, ...properties}).filter(([key,value]) => key !== 'language' && value !== null && value !== undefined));
+      window.ym(yandexMetrikaCounterId, 'reachGoal', name, values);
+    } catch { /* Metrika failures cannot affect native actions or the other providers. */ }
     if (clarityActive) {
       syncContext(common);
       if (name === 'first_screen_ready') {
