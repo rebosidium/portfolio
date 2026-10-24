@@ -59,6 +59,7 @@
   --width-mobile: 600px;
   --gutter-page: 20px;
   --width-brief: 320px;
+  --width-brief-label-ru: 140px;
   --height-brief-field: 56px;
   --gap-brief-manual: 9px;
   --height-control: 50px;
@@ -186,6 +187,10 @@ a.work-details{text-decoration:none}
 .agent-button-label>.agent-button-copied{position:absolute;inset:0 auto 0 -6px;display:flex;align-items:center;gap:var(--space-2);width:109px;opacity:0;visibility:hidden;--agent-label-delay:0s;--agent-visibility-delay:.32s}
 .agent-button-copied>img{display:block;flex:none;width:var(--size-icon);height:var(--size-icon)}
 .agent-button-copied>span{flex:none;width:77px}
+.agent-button:lang(ru){gap:var(--space-4)}
+.agent-button:lang(ru) .agent-button-label{width:var(--width-brief-label-ru)}
+.agent-button:lang(ru) .agent-button-copied{width:max-content}
+.agent-button:lang(ru) .agent-button-copied>span{width:auto}
 .agent-button.is-copied .agent-button-idle{opacity:0;--agent-label-delay:0s}
 .agent-button.is-copied .agent-button-copied{opacity:1;visibility:visible;--agent-label-delay:.36s;--agent-visibility-delay:0s}
 .agent-button-logos{display:flex;align-items:center;gap:6px;flex:none}
@@ -279,6 +284,14 @@ html:is(:not(.navigation-js),.mobile-navigation-fallback) .header nav a{min-heig
 }
 @media(max-width:350px){
 .footer-agent-button{padding-inline:clamp(8px,calc((100vw - 303px) / 2),24px)}
+}
+@media(max-width:767px), (max-width:1023px) and (pointer:coarse){
+.agent-button:lang(ru){padding-inline:clamp(5px,calc((100vw - 342px) / 2),24px)}
+}
+@media(max-width:359px){
+.agent-button:lang(ru){gap:var(--space-2);padding-inline:5px}
+.agent-button:lang(ru) .agent-button-logos{gap:0}
+.agent-button:lang(ru) .agent-button-copied{left:-4px;gap:0}
 }
 @media(prefers-reduced-motion:reduce){
 .footer-link-label::after{transition:none}
