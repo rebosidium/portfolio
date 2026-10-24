@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ui-revision="a0e9c6fc2db6" data-build="89fe754e8f8f">
+<html lang="en" data-ui-revision="a0e9c6fc2db6" data-build="b2d6ade2a545">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -249,6 +249,8 @@
         ssr:true,webvisor:true,clickmap:true,ecommerce:'dataLayer',
         referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true,
         params:{site_path:window.portfolioAnalytics.sitePath,page_type:window.portfolioAnalytics.pageType,
+          content_language:window.portfolioAnalytics.language,page_group:window.portfolioAnalytics.pageGroup,
+          layout:(window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches?'mobile':'desktop',
           ...(window.portfolioAnalytics.project?{project:window.portfolioAnalytics.project}:{})}
       });
     }
@@ -318,6 +320,7 @@
           event.request = {url: location.origin + location.pathname};
           const policy = window.portfolioAnalytics;
           event.tags = {...event.tags, site_path: policy.sitePath, page_type: policy.pageType,
+            content_language: policy.language, page_group: policy.pageGroup,
             project: policy.project || 'none', site_build: document.documentElement.dataset.build,
             layout: (window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)')).matches ? 'mobile' : 'desktop'};
           return event;
@@ -411,7 +414,7 @@
   <script type="module" src="portrait-boot.js?v=8b8d84e1ac56" onerror="window.resolvePortraitReady(false)"></script>
   <script defer src="vendor/gsap.min.js?v=92bb9a96476f"></script>
   <script defer src="app.js?v=bee877f86f33" onerror="window.releasePageFallback()"></script>
-  <script defer fetchpriority="low" src="analytics.js?v=5a77fb960101"></script>
+  <script defer fetchpriority="low" src="analytics.js?v=f1698b9198fc"></script>
   <script defer src="mobile-nav.js?v=f82f8a7582c9" onerror="window.releaseMobileNavigation()"></script>
   <template id="updates-source"><script src="updates.js?v=4e459b035a45"></script></template>
   <script>
