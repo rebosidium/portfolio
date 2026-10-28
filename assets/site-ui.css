@@ -134,6 +134,7 @@ a{color:inherit;text-decoration:none}
 .prose-list{margin:0;padding-inline-start:var(--space-6)}
 .prose-list li+li{margin-block-start:var(--space-2)}
 .prose-list strong{font-weight:var(--weight-bold)}
+.prose-list li::marker{font-size:.55em}
 .article-source-link{text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere}
 .recommendations figcaption a,.resume-page .article-source-link{text-decoration-line:underline;text-decoration-color:color-mix(in srgb,var(--color-ink) 24%,transparent);text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-skip-ink:auto;}
 :is(.recommendations figcaption a,.resume-page .article-source-link):is(:hover,:focus-visible){text-decoration-color:currentColor;}

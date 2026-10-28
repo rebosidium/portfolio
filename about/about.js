@@ -9,9 +9,16 @@
   const root=document.documentElement;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const still=()=>reduced.matches||page.matches('.ds-preview[data-state="reduced-motion"]');
+  main.querySelector('.resume-back-to-top')?.addEventListener('click',event=>{
+    if(still())return;
+    event.preventDefault();
+    main.focus({preventScroll:true});
+    history.replaceState(history.state,'','#resume-top');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
   // CSS handles the first paint. Only prepare blocks still below the viewport:
   // a late script must never hide text the visitor has already started reading.
-  const revealTargets=[...main.querySelectorAll('.about-title-row,.resume-formats,.reading-about-teaser,.case-study-title,.related-cases,.not-found-actions,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
+  const revealTargets=[...main.querySelectorAll('.about-title-row,.resume-formats,.resume-back-to-top,.reading-about-teaser,.case-study-title,.related-cases,.not-found-actions,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > :not(.resume-section-content),.resume-section-content > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
   if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
   if(!still()&&typeof IntersectionObserver==='function'){
     let observer,queueFrame=0;
@@ -193,7 +200,8 @@
   window.addEventListener('resize',()=>schedule(true),{passive:true});
   window.addEventListener('pageshow',()=>schedule(true));
   main.addEventListener('focusin',event=>{
-    if(still()||root.classList.contains('mobile-menu-open'))return;
+    // Back to top manages the scroll when focusing the main landmark.
+    if(event.target===main||still()||root.classList.contains('mobile-menu-open'))return;
     if(resumeWorks&&resumeTeaser.contains(event.target)&&Number(main.dataset.resumeWorksProgress)>0){
       window.scrollTo({top:Math.max(0,worksStart-viewport),behavior:'instant'});
       schedule();return;

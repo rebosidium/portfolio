@@ -1,5 +1,36 @@
 [
   {
+    "version": "1.12.2",
+    "date": "2026-10-28",
+    "title": "Finish Resume release and preserve parallel updates",
+    "changes": [
+      "Preserve The Experience Files title and 18/26 Earlier Experience typography from the latest published site.",
+      "Keep the latest verified AI-profile role corrections.",
+      "Prevent footer focus recovery from interrupting the smooth Back to top action."
+    ]
+  },
+  {
+    "version": "1.12.1",
+    "date": "2026-10-28",
+    "title": "Align Resume logos and tighten ending spacing",
+    "changes": [
+      "Align Resume employment titles and dates with body copy and place each company logo at the right edge of the row in both languages.",
+      "Reduce spacing above and below Back to top from 200px to 60px."
+    ]
+  },
+  {
+    "version": "1.12.0",
+    "date": "2026-10-28",
+    "title": "Refine Resume downloads and reading layout",
+    "changes": [
+      "Implement the Figma two-column download panel with native PDF/DOCX actions and a correctly spaced shared Copy prompt control.",
+      "Use sticky 4/8-column Resume sections, wide section rules, narrower job rules, full-size case logos, case links with 24px spacing, and smooth Back to top.",
+      "Apply the requested bilingual Resume wording and split Trading/Leasing on the Resume page only; label the verified project periods explicitly.",
+      "Remove the horizontal section menu, synchronize new controls with content reveals, and reduce shared Resume/case bullet markers.",
+      "Remove Selected Works and Work, life & balance from both Resume pages, with exactly 200px above and below Back to top before the shared footer."
+    ]
+  },
+  {
     "version": "1.11.16",
     "date": "2026-10-28",
     "title": "Rename the English Resume heading",
