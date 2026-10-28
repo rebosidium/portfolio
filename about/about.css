@@ -129,12 +129,18 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
  .resume-page .about-title-row{margin-bottom:var(--space-10)}
  .resume-formats{padding:var(--space-7) var(--space-5) var(--space-10);margin-bottom:var(--space-10);width:100vw;margin-inline:calc((100% - 100vw) / 2);border-radius:0}
  .resume-formats h2{font-size:var(--type-case-title-mobile);margin-bottom:var(--space-7)}
- .resume-format-actions{flex-direction:column;align-items:stretch;gap:var(--space-4)}
+ .resume-format-actions{flex-direction:row;align-items:flex-start;gap:var(--space-4) var(--space-2)}
+ .resume-format-actions>.ui-download{flex:none;padding-inline:var(--space-2);gap:var(--space-2)}
  .resume-format-actions>.agent-control{width:100%}
  .resume-format-actions .agent-button{align-self:center}
  .reading-about-teaser{margin-top:112px;padding:calc(var(--space-10) * 2) 0}
  .reading-about-teaser+.related-cases{margin-top:0}
 }
+@media(max-width:389px){
+ .resume-formats .ui-download{font-size:var(--type-small)}
+}
 @media(max-width:359px){
+ .resume-format-actions{column-gap:var(--space-1)}
+ .resume-formats .ui-download{padding-inline:var(--space-1);gap:0}
  .resume-formats .agent-button{gap:var(--space-2);padding-inline:var(--space-2)}
 }
