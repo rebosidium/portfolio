@@ -115,7 +115,7 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 /* Resume composition: existing title, panel, button and reading tokens. */
 .resume-page{position:relative}
 .resume-page>.about-prose{width:min(100%,var(--width-prose-wide))}
-.resume-page section:is([aria-labelledby="experience"],[aria-labelledby="education"]) .prose-list,.resume-page .prose-company-description{font-size:var(--type-body);line-height:var(--line-resume-list)}
+.resume-page section:is([aria-labelledby="experience"],[aria-labelledby="education"]) .prose-list,.resume-page .prose-company-description,.resume-page section[aria-labelledby="experience"]>p:not(.prose-employment){font-size:var(--type-body);line-height:var(--line-resume-list)}
 .resume-page section[aria-labelledby="experience"] .prose-list li+li{margin-block-start:var(--space-2)}
 .resume-page>.reading-about-teaser{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;min-height:100svh}
 .resume-page.resume-works-overlap>.reading-about-teaser{position:sticky;top:var(--resume-teaser-sticky-top);z-index:0;transform-origin:center bottom}
