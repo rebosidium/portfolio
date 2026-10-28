@@ -136,7 +136,7 @@ a{color:inherit;text-decoration:none}
 .article-source-link{text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere}
 .recommendations figcaption a,.resume-page .article-source-link{text-decoration-line:underline;text-decoration-color:color-mix(in srgb,var(--color-ink) 24%,transparent);text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-skip-ink:auto;}
 :is(.recommendations figcaption a,.resume-page .article-source-link):is(:hover,:focus-visible){text-decoration-color:currentColor;}
-.resume-page .article-source-link{font-weight:var(--weight-semibold);text-underline-offset:6px}
+.resume-page .article-source-link{font-weight:var(--weight-body);text-underline-offset:6px}
 .prose-recommendations{align-self:center;width:min(var(--width-page),calc(100vw - var(--gutter-page) * 2))}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
 .prose-recommendations{width:100vw}
