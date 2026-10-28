@@ -11,7 +11,7 @@
   const still=()=>reduced.matches||page.matches('.ds-preview[data-state="reduced-motion"]');
   // CSS handles the first paint. Only prepare blocks still below the viewport:
   // a late script must never hide text the visitor has already started reading.
-  const revealTargets=[...main.querySelectorAll('.about-title-row,.case-study-title,.related-cases,.not-found-actions,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
+  const revealTargets=[...main.querySelectorAll('.about-title-row,.resume-formats,.reading-about-teaser,.case-study-title,.related-cases,.not-found-actions,.about-intro > p,.about-photo-placeholder,.article-work,.about-sections > section > *,.about-main > .recommendations,.about-gallery-main > .photo-gallery-footer')];
   if(still())revealTargets.forEach(target=>{target.dataset.readingReveal='shown';});
   if(!still()&&typeof IntersectionObserver==='function'){
     let observer,queueFrame=0;
@@ -111,6 +111,18 @@
   const footerRadius=poseNumber('--radius-panel',40);
   const overlapRecede=poseNumber('--overlap-recede',.025);
   const flattenStart=poseNumber('--overlap-flatten-start',.75);
+  // Resume alone reuses the covering pose between its About teaser and works.
+  const resumeTeaser=main.matches('.resume-page')?main.querySelector('.reading-about-teaser'):null;
+  const resumeWorks=resumeTeaser?.nextElementSibling?.matches('.related-cases')?resumeTeaser.nextElementSibling:null;
+  let worksStart=0,worksTravel=1;
+  function resetResumeOverlap(){
+    main.classList.remove('resume-works-overlap');
+    main.style.removeProperty('--resume-teaser-sticky-top');
+    if(!resumeWorks)return;
+    resumeTeaser.style.removeProperty('opacity');resumeTeaser.style.removeProperty('transform');
+    resumeTeaser.inert=false;
+    delete resumeTeaser.dataset.resumeCovered;delete main.dataset.resumeWorksProgress;
+  }
   const probe=document.createElement('div');
   probe.className='reading-viewport-probe';probe.setAttribute('aria-hidden','true');
   page.append(probe);
@@ -120,6 +132,7 @@
     frame=0;
     if(root.classList.contains('mobile-menu-open')||document.hidden)return;
     if(still()){
+      resetResumeOverlap();
       page.classList.remove('reading-footer-overlap','reading-footer-ready');
       main.style.removeProperty('opacity');main.style.removeProperty('transform');
       footer.style.removeProperty('--footer-radius');
@@ -139,7 +152,25 @@
       page.style.setProperty('--reading-sticky-top',`${Math.min(0,overlapTravel-main.offsetHeight)}px`);
       page.classList.add('reading-footer-ready');
       footerStart=footer.getBoundingClientRect().top+window.scrollY;
+      if(resumeWorks){
+        worksTravel=Math.max(1,Math.min(resumeTeaser.offsetHeight,viewport-Math.min(resumeWorks.querySelector('h2')?.offsetHeight||0,viewport-1)));
+        // Main is the offset parent; its end remains anchored at the footer even
+        // while the existing footer transition pins and scales the whole page.
+        worksStart=footerStart-main.offsetHeight+resumeWorks.offsetTop;
+        main.style.setProperty('--resume-teaser-sticky-top',`${worksTravel-resumeTeaser.offsetHeight}px`);
+      }
       measurePending=false;
+    }
+    if(resumeWorks){
+      const progress=clamp((window.scrollY-worksStart+worksTravel)/worksTravel);
+      main.classList.toggle('resume-works-overlap',progress>0&&progress<1);
+      resumeTeaser.style.opacity=String(1-progress);
+      resumeTeaser.style.transform=progress>0?`scale(${1-overlapRecede*progress})`:'none';
+      resumeTeaser.inert=progress>=.999;
+      resumeTeaser.dataset.resumeCovered=String(progress>=.999);
+      main.dataset.resumeWorksProgress=progress.toFixed(4);
+      // An incoming opaque surface must not wait behind a reading fade queue.
+      if(progress>0){resumeWorks.dataset.readingReveal='shown';resumeWorks.style.removeProperty('--reading-reveal-delay');}
     }
     // Sticky layout supplies the same native incoming motion as HOME. Only the
     // outgoing reading surface and the last quarter of the corners are painted.
@@ -163,6 +194,10 @@
   window.addEventListener('pageshow',()=>schedule(true));
   main.addEventListener('focusin',event=>{
     if(still()||root.classList.contains('mobile-menu-open'))return;
+    if(resumeWorks&&resumeTeaser.contains(event.target)&&Number(main.dataset.resumeWorksProgress)>0){
+      window.scrollTo({top:Math.max(0,worksStart-viewport),behavior:'instant'});
+      schedule();return;
+    }
     const cover=Number(page.dataset.readingFooterProgress)||0;
     if(!cover)return;
     const target=event.target.getBoundingClientRect();

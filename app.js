@@ -79,7 +79,11 @@
     document.addEventListener('visibilitychange',sync);
   });
   // HOME chooses request timing itself; reading pages own only their cards.
-  document.querySelectorAll('.article-work .work-artwork,[data-project-media-auto] .work-artwork').forEach(artwork => {load(artwork).catch(() => {});});
+  document.querySelectorAll('.article-work .work-artwork,[data-project-media-auto] .work-artwork').forEach(artwork => {
+    if(artwork.closest('.reading-about-teaser')&&window.IntersectionObserver){
+      const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();load(artwork).catch(()=>{});}},{rootMargin:'600px'});observer.observe(artwork);
+    }else load(artwork).catch(() => {});
+  });
 })();
 
   /* shared:project-media:end */

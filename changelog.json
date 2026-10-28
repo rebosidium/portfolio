@@ -1,5 +1,52 @@
 [
   {
+    "version": "1.10.4",
+    "date": "2026-10-28",
+    "title": "Shorten the Resume format labels",
+    "changes": [
+      "Label the format buttons Resume PDF and Resume DOCX alongside the selected Download icon.",
+      "Keep download intent explicit in accessible names and regenerate the actual page and DS specimens."
+    ]
+  },
+  {
+    "version": "1.10.3",
+    "date": "2026-10-28",
+    "title": "Use the selected Lucide Download glyph",
+    "changes": [
+      "Use the selected arrow-into-tray Download icon on both Resume format buttons at the existing shared size.",
+      "Add Download to Icons & logos and retain File Down as an available library glyph with accurate usage."
+    ]
+  },
+  {
+    "version": "1.10.2",
+    "date": "2026-10-28",
+    "title": "Use document-download icons on Resume",
+    "changes": [
+      "Replace the PDF and DOCX button arrows with the official Lucide File Down icon at the existing shared size.",
+      "Register the actual glyph in the design-system icon inventory; retain native downloads and both themes."
+    ]
+  },
+  {
+    "version": "1.10.1",
+    "date": "2026-10-28",
+    "title": "Make the Resume About surface fill the screen",
+    "changes": [
+      "Give the Resume Work, life & balance section a full-viewport minimum height and vertically center its existing card.",
+      "Scope the change to Resume and preserve the Selected Works covering transition, responsive layout and reduced-motion flow."
+    ]
+  },
+  {
+    "version": "1.10.0",
+    "date": "2026-10-28",
+    "title": "Add the English Resume page",
+    "changes": [
+      "Add /resume/ with the shared My Experience heading and PDF, Word and AI briefing panel.",
+      "Copy Summary, all 25 experience bullets, education and skills directly from the existing PDF; retain active certificate links and use Selected Work muted dates.",
+      "Reuse the existing Work, life & balance teaser and related-case grid with all six cases under Selected Works.",
+      "Add actual responsive DS specimens and preserve seven previously published case-copy updates in canonical sources."
+    ]
+  },
+  {
     "version": "1.9.0",
     "date": "2026-10-24",
     "title": "Complete bilingual monitoring and Metrika goals",

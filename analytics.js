@@ -163,12 +163,14 @@
     const briefing = target.closest('.agent-button');
     if (briefing) {
       if (briefing.getAttribute('aria-busy') === 'true') return;
-      const properties = {...common, placement: briefing.closest('.footer') ? 'footer' : 'hero'};
+      const properties = {...common, placement: briefing.closest('.footer') ? 'footer' : briefing.closest('.resume-formats') ? 'resume_formats' : 'hero'};
       pendingCopies.set(briefing, properties);
       capture('briefing_clicked', properties);
       return;
     }
-    const back = (basePath(sitePath) === '/about/' || policy.pageType === 'catalog' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
+    const resumeFormat=target.closest('.resume-formats a[data-resume-format]');
+    if(resumeFormat){capture('resume_opened',{...common,placement:'resume_formats',format:resumeFormat.dataset.resumeFormat},true);return;}
+    const back = (basePath(sitePath) === '/about/' || policy.pageType === 'catalog' || policy.pageType === 'resume' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
     if (back) {
       capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
       return;

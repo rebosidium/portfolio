@@ -16,8 +16,6 @@
 .recommendations-at{opacity:.6;}
 .recommendations-company{white-space:nowrap;}
 .recommendations-role-compact{display:none;text-decoration:none;}
-.recommendations figcaption a{text-decoration-line:underline;text-decoration-color:color-mix(in srgb,var(--color-ink) 24%,transparent);text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-skip-ink:auto;}
-.recommendations figcaption a:is(:hover,:focus-visible){text-decoration-color:currentColor;}
 .recommendations.is-enhanced .recommendations-slides{display:grid;}
 .recommendations.is-enhanced .recommendations-slide{grid-area:1/1;display:flex;flex-direction:column;justify-content:space-between;visibility:hidden;opacity:0;transform:translateX(10px);margin:0;transition:opacity .35s ease,transform .35s ease,visibility .35s;pointer-events:none;}
 .recommendations.is-enhanced .recommendations-slide.is-current{visibility:visible;opacity:1;transform:none;pointer-events:auto;}
