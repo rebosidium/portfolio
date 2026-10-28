@@ -181,7 +181,7 @@
     let isWork = false;
     try {const url = new URL(href, location.href); isWork = url.origin === location.origin
       && ['/', '/index.html'].includes(basePath(url.pathname)) && url.hash === '#selected-works';} catch {}
-    const destination = link.hasAttribute('data-background-prefetch') && link.hasAttribute('download') ? 'resume'
+    const destination = (link.hasAttribute('data-background-prefetch') && link.hasAttribute('download')) || /^\/resume\/(?:[?#]|$)/.test(basePath(href)) ? 'resume'
       : basePath(href) === '/about/' || basePath(href).startsWith('/about/?') ? 'about'
       : isWork ? 'work'
       : href.startsWith('mailto:') ? 'email'
