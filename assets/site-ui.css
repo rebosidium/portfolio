@@ -12,9 +12,9 @@
   --type-helper: 14px;
   --type-prompt: 12px;
   --type-menu-max: 27.6px;
-  /* Core line-height scale: 1.15, 1.4, 1.6, 1.8, 2. Resume certification lists use the approved 16/24 role. */
+  /* Core line-height scale: 1.15, 1.4, 1.6, 1.8, 2. Resume achievement/certification lists use an explicit 26px line-height role. */
   --line-copy: 1.8;
-  --line-resume-list: 1.5;
+  --line-resume-list: 26px;
   --line-prose: 1.8;
   --line-compact: 1.4;
   --line-helper: 1.4;

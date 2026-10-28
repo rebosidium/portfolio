@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.11.11",
+    "date": "2026-10-28",
+    "title": "Give Resume achievements and certifications clearer 18/26 typography",
+    "changes": [
+      "Use a dedicated 26px line-height role with 18px text for achievement and certification lists in both languages.",
+      "Separate list items with 8px spacing; preserve the typography of other paragraphs and the existing panel alignment."
+    ]
+  },
+  {
     "version": "1.11.10",
     "date": "2026-10-28",
     "title": "Shorten the English Resume panel heading",
