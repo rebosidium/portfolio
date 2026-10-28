@@ -112,17 +112,19 @@ html[data-reading-footer-covered="true"]{background:var(--color-inverse);overscr
 
 /* Resume composition: existing title, panel, button and reading tokens. */
 .resume-page{position:relative}
-.resume-page>.reading-about-teaser{display:grid;align-items:center;min-height:100svh}
+.resume-page>.about-prose{width:min(100%,var(--width-prose-wide))}
+.resume-page>.reading-about-teaser{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;min-height:100svh}
 .resume-page.resume-works-overlap>.reading-about-teaser{position:sticky;top:var(--resume-teaser-sticky-top);z-index:0;transform-origin:center bottom}
 .resume-page>.reading-about-teaser[data-resume-covered="true"] .home-about-track{animation-play-state:paused}
 .resume-page .about-title-row{margin-bottom:var(--height-control-spacious)}
-.resume-formats{margin:0 0 var(--height-control-spacious);padding:calc(var(--space-6) * 2) calc(var(--space-8) * 2) calc(var(--space-5) + var(--space-6));border-radius:var(--radius-placeholder);background:var(--color-case-surface)}
+.resume-formats{margin:0 0 var(--height-control-spacious);padding:calc(var(--space-6) * 2) max(0px,calc((100% - var(--width-prose-wide)) / 2)) calc(var(--space-5) + var(--space-6));border-radius:var(--radius-placeholder);background:var(--color-case-surface)}
 .resume-formats h2{margin:0 0 var(--space-10);font-size:var(--type-case-title);font-weight:var(--weight-semibold);line-height:var(--line-compact);letter-spacing:normal;text-wrap:pretty}
-.resume-format-actions{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--space-5)}
+.resume-format-actions{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--space-3)}
 .resume-format-actions .agent-button{margin-top:0}
 .resume-page .article-sections>section>h2{font-size:var(--type-heading);font-weight:var(--weight-extrabold)}
 .reading-about-teaser{display:block;min-height:0;margin-top:86px;padding:calc(var(--space-10) * 2) 0;background:var(--color-case-surface);box-shadow:0 0 0 100vmax var(--color-case-surface);clip-path:inset(0 -100vmax)}
 .reading-about-teaser .works-body{display:block;width:100%;padding:0}
+.reading-about-teaser .home-about-card{max-width:100%}
 .reading-about-teaser+.related-cases{margin-top:0}
 .resume-page>.related-cases{z-index:1;background:var(--color-canvas);box-shadow:0 0 0 100vmax var(--color-canvas)}
 @media(max-width:767px), (max-width:1023px) and (pointer:coarse){
