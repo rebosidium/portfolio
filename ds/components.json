@@ -12805,8 +12805,8 @@
     "resume-page": {
       "componentKey": "reading-page",
       "variant": "resume",
-      "version": "1.15.0+8054b0c65567",
-      "revision": "8054b0c655673aef4718343a6ff48713d695d4952bfc53c9df86f26e38985912",
+      "version": "1.15.0+ecb7c6816793",
+      "revision": "ecb7c6816793d7ee7e484977579f96205bca9c30750d02e8df96b42633561a54",
       "markupRevision": "5b94cc1df19d1885355f81c3ae2e3755eeb90df3bd0fee6fc2d59779c40ca0e1",
       "owners": [
         "shared/resume-page.json",
@@ -14960,8 +14960,8 @@
         {
           "path": "shared/resume-page.json",
           "kind": "markup",
-          "sha256": "fff7075e4d2bfabf332a268719211d7deb99eeb5980abe41d939b046fefe70eb",
-          "revisionSha256": "fff7075e4d2bfabf332a268719211d7deb99eeb5980abe41d939b046fefe70eb"
+          "sha256": "6b326e4307700365db449bd8f567d47aab86bf51dfd82b7df2b1e842c52e7859",
+          "revisionSha256": "6b326e4307700365db449bd8f567d47aab86bf51dfd82b7df2b1e842c52e7859"
         },
         {
           "path": "shared/ru-gdematerial-page.json",
@@ -20210,10 +20210,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.66.2",
-    "revision": "1929799eeb4a",
-    "release": "1.66.2+1929799eeb4a",
-    "updatedAt": "2026-10-28T21:58:20.080Z",
+    "version": "1.66.3",
+    "revision": "e29cf47a96dc",
+    "release": "1.66.3+e29cf47a96dc",
+    "updatedAt": "2026-10-28T22:07:13.062Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -20282,13 +20282,13 @@
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "b36abb762c789b951dade971f973826f23e6d31b62a82350c624b08e110bed7d",
-        "revisionSha256": "b36abb762c789b951dade971f973826f23e6d31b62a82350c624b08e110bed7d"
+        "sha256": "a7db793bff0f5f9f01ae0154cbf725be9d17984204a140bc49d42fe6329ed1f0",
+        "revisionSha256": "a7db793bff0f5f9f01ae0154cbf725be9d17984204a140bc49d42fe6329ed1f0"
       },
       {
         "path": "shared/ds-changelog.json",
-        "sha256": "81362dc5e684fe24f17b5d3cf5230b17df443630cb98d84e5ece8eef801ea8bf",
-        "revisionSha256": "81362dc5e684fe24f17b5d3cf5230b17df443630cb98d84e5ece8eef801ea8bf"
+        "sha256": "c06cfc062c8235fad27b629ad7beff72bd31d610bed350e1e0b369cd4ed75048",
+        "revisionSha256": "c06cfc062c8235fad27b629ad7beff72bd31d610bed350e1e0b369cd4ed75048"
       },
       {
         "path": "shared/ds-changelog.mjs",
