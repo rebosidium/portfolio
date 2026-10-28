@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-page-kind="not-found" data-ui-revision="16f2f06d0b62" data-build="2eda8d6f1f04">
+<html lang="en" data-page-kind="not-found" data-ui-revision="bce937a61c23" data-build="2f0f822f0c66">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/resume/","type":"resume","project":null,"lang":"en"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
+  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/resume/","type":"resume","project":null,"lang":"en"},{"route":"/ru/resume/","type":"resume","project":null,"lang":"ru"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -350,7 +350,7 @@
   <script src="/analytics.js?v=7c8e90d017ed" defer fetchpriority="low"></script>
   <script src="/assets/arrow-controls.js?v=082520116856" defer></script>
   <link rel="stylesheet" href="/404/not-found.css?v=9434dc4a5954">
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.12.0","designSystem":"1.63.7+1aa427d22507","tokens":"1.12.0+70bfac028433","components":{"back":"1.12.0+e552c3d058a3","article-title":"1.12.0+482fdd5ffc67","not-found-page":"1.12.0+c34b991c9ea8"},"revision":"16f2f06d0b62"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.13.0","designSystem":"1.64.0+7d669ffd64ab","tokens":"1.13.0+70bfac028433","components":{"back":"1.13.0+87f3e25796ba","article-title":"1.13.0+fc060ff34090","not-found-page":"1.13.0+55b0b2b95bfa"},"revision":"bce937a61c23"}</script>
 </head>
 <body class="about-page not-found-page">
   <!-- shared:header:start -->

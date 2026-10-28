@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-ui-revision="b88d8f0e9466" data-build="2eda8d6f1f04">
+<html lang="ru" data-ui-revision="365325e98651" data-build="2f0f822f0c66">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light dark">
@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   const hosts = ['dmitryrybalka.com', 'www.dmitryrybalka.com'];
-  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/resume/","type":"resume","project":null,"lang":"en"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
+  const definitions = [{"route":"/","type":"home","project":null,"lang":"en"},{"route":"/about/","type":"about","project":null,"lang":"en"},{"route":"/resume/","type":"resume","project":null,"lang":"en"},{"route":"/ru/resume/","type":"resume","project":null,"lang":"ru"},{"route":"/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"en"},{"route":"/work/larixon/","type":"article","project":"larixon","lang":"en"},{"route":"/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"en"},{"route":"/work/yandex-market/","type":"article","project":"yandex-market","lang":"en"},{"route":"/work/gdematerial/","type":"article","project":"gdematerial","lang":"en"},{"route":"/work/medesk/","type":"article","project":"medesk","lang":"en"},{"route":"/ru/work/larixon/","type":"article","project":"larixon","lang":"ru"},{"route":"/ru/work/raiffeisen-bank/","type":"article","project":"raiffeisen-bank","lang":"ru"},{"route":"/ru/work/raiffeisen-leasing/","type":"article","project":"raiffeisen-leasing","lang":"ru"},{"route":"/ru/work/yandex-market/","type":"article","project":"yandex-market","lang":"ru"},{"route":"/ru/work/gdematerial/","type":"article","project":"gdematerial","lang":"ru"},{"route":"/ru/work/medesk/","type":"article","project":"medesk","lang":"ru"},{"route":"/work/","type":"catalog","project":null,"lang":"en"},{"route":"/ru/work/","type":"catalog","project":null,"lang":"ru"},{"route":"/ru/","type":"home","project":null,"lang":"ru"},{"route":"/ru/about/","type":"about","project":null,"lang":"ru"}];
   const aliases = route => route === '/' ? ['/', '/index.html'] : [route.slice(0, -1), route, route + 'index.html'];
   const routes = definitions.flatMap(page => aliases(page.route));
   const page = definitions.find(page => aliases(page.route).includes(location.pathname));
@@ -384,7 +384,7 @@
   <script src="/analytics.js?v=7c8e90d017ed" defer fetchpriority="low"></script>
   <script src="/about/about.js?v=38bf7e3c1347" defer></script>
   <script src="/resume-prefetch.js?v=709d62def6ba" defer></script>
-  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.12.0","designSystem":"1.63.7+1aa427d22507","tokens":"1.12.0+70bfac028433","components":{"recommendations":"1.12.0+68fadb715825","brief-dark":"1.12.0+33ad32d139da","back":"1.12.0+e552c3d058a3","link":"1.12.0+eede2d5d03ac","footer-link":"1.12.0+7d2d8245300e","about-title":"1.12.0+31d28a741119","about-avatar":"1.12.0+1ec243a60cd5","prose-section":"1.12.0+06771f5cb2e8","photo-gallery":"1.12.0+ed07c64099ec","photo-gallery-footer":"1.12.0+623ad91ba0c1","about-header":"1.12.0+7cb07880df94","footer":"1.12.0+79de906e057e","reading-page":"1.12.0+1cd10186d8e1"},"revision":"b88d8f0e9466"}</script>
+  <script type="application/json" id="portfolio-ui">{"schemaVersion":1,"contractVersion":"1.13.0","designSystem":"1.64.0+7d669ffd64ab","tokens":"1.13.0+70bfac028433","components":{"recommendations":"1.13.0+55959e3a908b","brief-dark":"1.13.0+22915f0e9b84","back":"1.13.0+87f3e25796ba","link":"1.13.0+122321430a88","footer-link":"1.13.0+ae40980007dc","about-title":"1.13.0+db0cb338eee5","about-avatar":"1.13.0+e10537f7e206","prose-section":"1.13.0+ddbf527aac7c","photo-gallery":"1.13.0+687206d0ea23","photo-gallery-footer":"1.13.0+6507c94941b0","about-header":"1.13.0+10580a28e0ad","footer":"1.13.0+8370f537eb28","reading-page":"1.13.0+b8728e7d02df"},"revision":"365325e98651"}</script>
   <!-- shared:photo-gallery-assets:start -->
   <link rel="stylesheet" href="/photo/photo-gallery.css?v=b52bb786ba80"><script src="/photo/photo-gallery.js?v=bc0e8453a21b" defer></script><link rel="stylesheet" href="/assets/recommendations.css?v=4e2b2682e46a"><script src="/assets/recommendations.js?v=9b09f82f7411" defer></script>
   <!-- shared:photo-gallery-assets:end -->
@@ -451,7 +451,7 @@
       <a href="/ru/#selected-works" data-node-id="159:892">Работы</a>
       <a href="mailto:rebosidium@gmail.com" data-node-id="159:893">Email</a>
       <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="159:895">LinkedIn</a>
-      <a href="/resume/" data-node-id="159:896">Резюме</a>
+      <a href="/ru/resume/" data-node-id="159:896">Резюме</a>
       <a class="mobile-only" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer">Telegram</a>
     </nav>
   </header>
@@ -544,7 +544,7 @@
         <a href="/ru/about/"><span class="footer-link-label">Обо мне</span></a>
         <a href="/ru/#selected-works"><span class="footer-link-label">Работы</span></a>
         <a href="mailto:rebosidium@gmail.com" data-node-id="187:422"><span class="footer-link-label">Email</span></a>
-        <a href="/resume/" data-node-id="187:423"><span class="footer-link-label">Резюме</span></a>
+        <a href="/ru/resume/" data-node-id="187:423"><span class="footer-link-label">Резюме</span></a>
         <a href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer" data-node-id="187:424"><span class="footer-link-label">LinkedIn</span></a>
         <a href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer" data-node-id="187:425"><span class="footer-link-label">Telegram</span></a>
       </nav>

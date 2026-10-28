@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "1.12.0",
+  "contractVersion": "1.13.0",
   "pages": [
     {
       "route": "/",
@@ -52,6 +52,29 @@
       "label": "Resume",
       "documents": [
         "resume/index.html"
+      ],
+      "components": [
+        "brief",
+        "brief-dark",
+        "back",
+        "link",
+        "footer-link",
+        "about-title",
+        "about-avatar",
+        "prose-section",
+        "about-header",
+        "footer",
+        "resume-formats",
+        "resume-page",
+        "home-about",
+        "related-cases"
+      ]
+    },
+    {
+      "route": "/ru/resume/",
+      "label": "Резюме",
+      "documents": [
+        "ru/resume/index.html"
       ],
       "components": [
         "brief",
@@ -486,7 +509,7 @@
     }
   ],
   "tokens": {
-    "version": "1.12.0+70bfac028433",
+    "version": "1.13.0+70bfac028433",
     "revision": "70bfac028433364bc480b33cd63ebb291bd9c5046b8cf418e224b136669bd614",
     "sources": [
       "shared/tokens.css",
@@ -496,8 +519,8 @@
   "components": {
     "article-figure": {
       "componentKey": "article-figure",
-      "version": "1.12.0+514b0d49cad8",
-      "revision": "514b0d49cad89482e0e42971540b285ddc05b2ead02470f15589eac0e6e66878",
+      "version": "1.13.0+c7673061a529",
+      "revision": "c7673061a529dd04b98978940788be3c88760e6435afa796e9cccd05102d9d5d",
       "markupRevision": "85a328af98bacfde0fb6231560e17f1b4b4ff225bf6550f173aff6107c35bb26",
       "owners": [
         "shared/raiffeisen-leasing-page.json",
@@ -1069,8 +1092,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/medesk-page.json",
@@ -1129,8 +1152,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -1188,8 +1211,8 @@
     },
     "related-cases": {
       "componentKey": "related-cases",
-      "version": "1.12.0+de38f615dcef",
-      "revision": "de38f615dcef712d03f039293a1d0361a93a7e7790165e6434e7dc7b8b01f395",
+      "version": "1.13.0+cb67df06817c",
+      "revision": "cb67df06817c7a9e9d863f2b3e2c1decf59cea8ddbcf1466f772d7c39da65518",
       "markupRevision": "24b1d6e8e9ea08ff0308a09aa85b63887f884337a45bd2b8bba85ec37d197446",
       "owners": [
         "shared/related-cases.html",
@@ -1867,8 +1890,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/medesk-page.json",
@@ -1939,8 +1962,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -1987,6 +2010,7 @@
       ],
       "usedBy": [
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -2005,8 +2029,8 @@
     },
     "home-about": {
       "componentKey": "home-about",
-      "version": "1.12.0+1bd6fcf6dc56",
-      "revision": "1bd6fcf6dc56da27c897c069d98dfe7d3db0e391f08e787b6da976cd44b9f4c4",
+      "version": "1.13.0+f976593b3f64",
+      "revision": "f976593b3f6427d774d1c930edb6ebce7620b4ab692bd0ffa0629705b2fd1ded",
       "markupRevision": "d580caecec7e1888dc6338fab2ff6d41f67f90aa6beb72b24b5d167e80955b74",
       "owners": [
         "shared/home-about.html",
@@ -3222,14 +3246,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -3270,14 +3294,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -3313,6 +3337,7 @@
       "usedBy": [
         "/",
         "/resume/",
+        "/ru/resume/",
         "/ru/"
       ],
       "name": "Section / About teaser",
@@ -3320,8 +3345,8 @@
     },
     "work-logo": {
       "componentKey": "work-logo",
-      "version": "1.12.0+a439c3a23c57",
-      "revision": "a439c3a23c5795e65b123064328ed8279681ab39c906ed3e5c70cf49ddaf6f0a",
+      "version": "1.13.0+ae69281651bc",
+      "revision": "ae69281651bc791ab4c879d7006c6f94fbe8d11ff2ee93eceb19751ad88f5b8e",
       "markupRevision": "82f448287cebfe5ccace53d0e9e26b78b61d9d3b5d6210269ab8d5e1ae333615",
       "owners": [
         "shared/work-logos.json"
@@ -3408,14 +3433,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -3463,8 +3488,8 @@
     },
     "recommendations": {
       "componentKey": "recommendations",
-      "version": "1.12.0+68fadb715825",
-      "revision": "68fadb715825d4d5c008d7ec39508311bce2b4a8fe22b4f2846cbfe0e0b86bc8",
+      "version": "1.13.0+55959e3a908b",
+      "revision": "55959e3a908bff30caf654912d5dc18e30a203ae3af8a83aa09a3cf7798d6543",
       "markupRevision": "18b116325edd840e634ff55744db391c8639d5975dc85d835cb943b36eec7fa3",
       "owners": [
         "shared/recommendations.mjs",
@@ -3688,14 +3713,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/medesk-page.json",
@@ -3736,14 +3761,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -3798,8 +3823,8 @@
     "brief": {
       "componentKey": "brief",
       "variant": "light",
-      "version": "1.12.0+6129159cb0f0",
-      "revision": "6129159cb0f0ad37ae4c3886b643acb2d3f7b36dbc3186226eb17e3c2df63b7f",
+      "version": "1.13.0+9aa651801919",
+      "revision": "9aa6518019193e3e9430c719c7008d4942d31bf28fcf42beb687e7487f3e2660",
       "markupRevision": "0bb3697c7dab09d51f179caf4a12a5ec24f6c1706b225468616534f8f56cacf3",
       "owners": [
         "shared/brief-light.html",
@@ -3900,20 +3925,20 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -3924,8 +3949,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -3961,6 +3986,7 @@
       "usedBy": [
         "/",
         "/resume/",
+        "/ru/resume/",
         "/ru/"
       ],
       "name": "Button / AI brief",
@@ -3970,8 +3996,8 @@
     "brief-dark": {
       "componentKey": "brief",
       "variant": "dark",
-      "version": "1.12.0+33ad32d139da",
-      "revision": "33ad32d139da5782ed960fc56a8fee8a735b13b72da9621203dfa5bc79b9ebfb",
+      "version": "1.13.0+22915f0e9b84",
+      "revision": "22915f0e9b84456c03b107257babf9c75e3e52338edbaf1346b6a7e238013bcf",
       "markupRevision": "38e30c6b13312d555bc58ed15e6a214ee2e96474575290541182d7ba612f1edb",
       "owners": [
         "shared/brief-dark.html",
@@ -4072,20 +4098,20 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -4096,8 +4122,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4134,6 +4160,7 @@
         "/",
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -4158,8 +4185,8 @@
     "back": {
       "componentKey": "back",
       "variant": "responsive",
-      "version": "1.12.0+e552c3d058a3",
-      "revision": "e552c3d058a362a43f76fcc6f51463fdb233b953c8509725069fcbca0fa3968d",
+      "version": "1.13.0+87f3e25796ba",
+      "revision": "87f3e25796bafe282b2c6d8b8fe294e7ee5fe705e8f429f329b4e73d0c5537e6",
       "markupRevision": "097d5ae31c820163a432f8e7dfd67c85f028d1b83401fc61313b518083142080",
       "owners": [
         "shared/back.html",
@@ -4242,26 +4269,26 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4297,6 +4324,7 @@
       "usedBy": [
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -4319,8 +4347,8 @@
     },
     "link": {
       "componentKey": "navigation-link",
-      "version": "1.12.0+eede2d5d03ac",
-      "revision": "eede2d5d03ac843da7b60873ee6d621cf778ab7d09bc5ab778c7035fe9ce058f",
+      "version": "1.13.0+122321430a88",
+      "revision": "122321430a88b7d9725560a8870bfc87c1d301f2b8a43383b6c537444efa5349",
       "markupRevision": "177ea6b77bf21d31aa84b535eeb7940bdd3f18d05df66db8f9ee2c55dd1c1ff2",
       "owners": [
         "shared/header.html",
@@ -4397,26 +4425,26 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4453,6 +4481,7 @@
         "/",
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -4475,8 +4504,8 @@
     },
     "footer-link": {
       "componentKey": "footer-link",
-      "version": "1.12.0+7d2d8245300e",
-      "revision": "7d2d8245300e661cf02c095203b1dec6c7e61aefb7c890860ee6afb46c2abda2",
+      "version": "1.13.0+ae40980007dc",
+      "revision": "ae40980007dc3120671cc159e418876513729aacc3611c08ad2dd7a608af6c2e",
       "markupRevision": "96974ee3c400093ef69a853505fedfad034a15928cc7430040cad08d1d1196ed",
       "owners": [
         "shared/footer.html",
@@ -4541,26 +4570,26 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4597,6 +4626,7 @@
         "/",
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -4620,8 +4650,8 @@
     },
     "work-actions": {
       "componentKey": "work-actions",
-      "version": "1.12.0+4b9e098e3ff8",
-      "revision": "4b9e098e3ff8788a8c1283b6b5734702c017bbc8a302f5b19e76b9a48ba98b2c",
+      "version": "1.13.0+d33f42969057",
+      "revision": "d33f42969057e998fd1581179f4663ec3647f137aee3674813bcfbc8a75a402b",
       "markupRevision": "80c85878311a7e29324ab30729638a1dec92591e647719e72268b7cd15e6e225",
       "owners": [
         "shared/work-actions.html",
@@ -4715,8 +4745,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/project-link.html",
@@ -4733,8 +4763,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4782,8 +4812,8 @@
     },
     "availability": {
       "componentKey": "availability",
-      "version": "1.12.0+806b17baa03b",
-      "revision": "806b17baa03b6fc6e0bc78b035041f42249c4e6a7d639ebff9574e7d39b45a24",
+      "version": "1.13.0+f3395f1bf951",
+      "revision": "f3395f1bf951cd44a0a5b8b7c09dc9b43bd15cc26ac9097f87c7a1436eb9b5b8",
       "markupRevision": "c848f243c706ee0a2d8a13c5e316803dde97cd3ff576576e02c3e7c6bb8a52c0",
       "owners": [
         "shared/work-actions.html"
@@ -4870,8 +4900,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/project-media.js",
@@ -4882,8 +4912,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -4931,8 +4961,8 @@
     },
     "portrait": {
       "componentKey": "portrait",
-      "version": "1.12.0+62c29574fd95",
-      "revision": "62c29574fd952324aaaa3c39f9f6ce12d122364b56ebbda10c1aeda480137ee0",
+      "version": "1.13.0+ebe77dc24103",
+      "revision": "ebe77dc241036caa5d25296b4af449677bf2daaa832afb32489791f37077d963",
       "markupRevision": "02acaa204eb65b41492993c13c2d7e8d576585c8af0aa64c15ebfb2bdfbbe59b",
       "owners": [
         "shared/home-intro.html",
@@ -5290,8 +5320,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/portrait-media-policy.json",
@@ -5302,8 +5332,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -5346,8 +5376,8 @@
     "about-title": {
       "componentKey": "about-title",
       "variant": "with-avatar",
-      "version": "1.12.0+31d28a741119",
-      "revision": "31d28a7411192c17f07bc3c61fc764dddad6c861aacef573cffa9dbf8644a460",
+      "version": "1.13.0+db0cb338eee5",
+      "revision": "db0cb338eee5c6d5716e99eb8c49b301152c09303d6c38136042f48445f06f61",
       "markupRevision": "79e3f411388b42f87db036cb0d6155dca06c2fbc79a92c8000ab9733865c6eba",
       "owners": [
         "shared/article-heading.html",
@@ -5447,14 +5477,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -5490,6 +5520,7 @@
       "usedBy": [
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/ru/about/"
       ],
       "name": "Heading / Article",
@@ -5498,8 +5529,8 @@
     },
     "case-study-title": {
       "componentKey": "case-study-title",
-      "version": "1.12.0+e304291e3625",
-      "revision": "e304291e36256d357d1b282badf545f3a9015c6d9a2835a9d2633fafa758dc41",
+      "version": "1.13.0+0779cc9f394d",
+      "revision": "0779cc9f394d20dbe4c8950c7e111e33c96d6a6c0e30c7bdc7c50d740d8842ff",
       "markupRevision": "6402abc5551abeb482032c9f375f14bc09ad1e85081c3b1cd24b5208a0f39755",
       "owners": [
         "shared/case-study-title.html",
@@ -6078,8 +6109,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/medesk-page.json",
@@ -6138,8 +6169,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -6198,8 +6229,8 @@
     "company-title": {
       "componentKey": "about-title",
       "variant": "with-company-logo",
-      "version": "1.12.0+0c3ddef1f841",
-      "revision": "0c3ddef1f841838272d687ee4bc43c0ffe8f852081c0c5b6e85bee5bd8ad7ed3",
+      "version": "1.13.0+02afd5e325fb",
+      "revision": "02afd5e325fb9dff0a8f667b29843f0122214647bf25c6a6b1c975bc1963b67d",
       "markupRevision": "276466ee319d798ad3db007115b9a52129c3edd0db47f15c306245318b775c5c",
       "owners": [
         "shared/article-heading.html",
@@ -6779,8 +6810,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/medesk-page.json",
@@ -6839,8 +6870,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -6902,8 +6933,8 @@
     "company-page": {
       "componentKey": "reading-page",
       "variant": "company",
-      "version": "1.12.0+79af9aa7739d",
-      "revision": "79af9aa7739d3d699641f8b43935e963c1ccaa652e51184a8431c41c3698c58a",
+      "version": "1.13.0+e4894cd7e8b0",
+      "revision": "e4894cd7e8b032d358b3d615f23bba22df28aff0bba54b8fa70f009ab7aebd3d",
       "markupRevision": "8132cb69ff2999a6cd582157994211eeb2f6a766ab3dd40966af4864d1fda5e8",
       "owners": [
         "shared/reading-page.html",
@@ -7718,14 +7749,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/medesk-page.json",
@@ -7832,8 +7863,8 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/ru-yandex-market-page.json",
@@ -7850,8 +7881,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -7919,8 +7950,8 @@
     "article-title": {
       "componentKey": "about-title",
       "variant": "without-avatar",
-      "version": "1.12.0+482fdd5ffc67",
-      "revision": "482fdd5ffc6704866316eaa5bc7fd447c7ca66bf922edf33d5cc5a6fb0d5ae09",
+      "version": "1.13.0+fc060ff34090",
+      "revision": "fc060ff34090f58550401baf9b3f1dbf07d8c2be6e7a93ceab38500df0b898f3",
       "markupRevision": "f72b751dfe6d8e96a78aea268f97df03f6d4d3af6dfa50d3ba43b7eb17420d4a",
       "owners": [
         "shared/article-heading.html"
@@ -7989,14 +8020,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -8038,8 +8069,8 @@
     },
     "about-avatar": {
       "componentKey": "about-avatar",
-      "version": "1.12.0+1ec243a60cd5",
-      "revision": "1ec243a60cd51c93c9963c87880f75ed6dd44001ddaa8d60132d8f7b9ebd3279",
+      "version": "1.13.0+e10537f7e206",
+      "revision": "e10537f7e2062da0c682ca547c05ea1a54f0cb497d509ef946ca7cd886e650f0",
       "markupRevision": "51ed243f4b69681c3d7da274e6ca2a5df8b21a6c7eba09b082e539d6845c7be2",
       "owners": [
         "shared/about-avatar.html"
@@ -8132,14 +8163,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -8175,6 +8206,7 @@
       "usedBy": [
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/ru/about/"
       ],
       "name": "Avatar / Static",
@@ -8182,8 +8214,8 @@
     },
     "prose-section": {
       "componentKey": "prose-section",
-      "version": "1.12.0+06771f5cb2e8",
-      "revision": "06771f5cb2e80dbe0efa7a359ad409080741626bc42b6009e0b93cb20a7da6ca",
+      "version": "1.13.0+ddbf527aac7c",
+      "revision": "ddbf527aac7c0ff1dabb48de9af1404af726f71c794369e5110b6a680e54550a",
       "markupRevision": "a1588f614dee87cec01a557c318b6665a3329f2de8c1a027bd22f8cd4d83c5ef",
       "owners": [
         "shared/about-main.html"
@@ -8252,14 +8284,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -8295,6 +8327,7 @@
       "usedBy": [
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -8316,8 +8349,8 @@
     },
     "photo-gallery": {
       "componentKey": "photo-gallery",
-      "version": "1.12.0+ed07c64099ec",
-      "revision": "ed07c64099ec859528749ed93ea287ef7e34493e04eeb534da5f2c734583875c",
+      "version": "1.13.0+687206d0ea23",
+      "revision": "687206d0ea231155cadcad544938b3b02594ac349f8da47b0615a4505ea13c8e",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -9486,8 +9519,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -9528,8 +9561,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -9573,8 +9606,8 @@
     "photo-gallery-footer": {
       "componentKey": "photo-gallery",
       "variant": "footer",
-      "version": "1.12.0+623ad91ba0c1",
-      "revision": "623ad91ba0c10ea0bba976b909d82cc8e94542bbac44c2d81680d89da9c0e59f",
+      "version": "1.13.0+6507c94941b0",
+      "revision": "6507c94941b0c9d7ccc6650a3b78f829f7b7e9b17378f84869e0ebb0017ce6b2",
       "markupRevision": "87a3033453fdd3c5e2efeecee5eff974f603ad7c4df331d845bcc9f8bd1d4dec",
       "owners": [
         "shared/photo-gallery.mjs",
@@ -10743,8 +10776,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -10785,8 +10818,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -10830,8 +10863,8 @@
     "header": {
       "componentKey": "header",
       "variant": "default",
-      "version": "1.12.0+05b39bae904a",
-      "revision": "05b39bae904a52a67843be30be264110990ebf3894edf7d9e1cd7db4387ca12b",
+      "version": "1.13.0+aabcb97043d0",
+      "revision": "aabcb97043d023acae1315f8f51e3f0aa066ad7adaca6b9277d9926048c319f6",
       "markupRevision": "08800be0f28b9d86ba260c52ea3253d35547f0253c1926f7d15d39964fdb7a87",
       "owners": [
         "shared/header.html",
@@ -10914,14 +10947,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/navigation-boot.js",
@@ -10932,14 +10965,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -10982,8 +11015,8 @@
     "about-header": {
       "componentKey": "header",
       "variant": "article",
-      "version": "1.12.0+7cb07880df94",
-      "revision": "7cb07880df94ba6718c3e1f217fcbdd92c74788ec30defbf7d10bfe3aaeb5ba6",
+      "version": "1.13.0+10580a28e0ad",
+      "revision": "10580a28e0add5530f5ea217af865901cc562c4a47457d082a03d322ebed3c68",
       "markupRevision": "e495c5336e1a5c31aeeb96efafdbbdfe3380281319f16f854a7228d7a38237b9",
       "owners": [
         "shared/header.html",
@@ -11085,14 +11118,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/navigation-boot.js",
@@ -11103,14 +11136,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -11146,6 +11179,7 @@
       "usedBy": [
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -11168,8 +11202,8 @@
     },
     "hero": {
       "componentKey": "homepage-intro",
-      "version": "1.12.0+13b87b66bdcb",
-      "revision": "13b87b66bdcbaced4d78fdab23bbdcc2552b44f01434661cfaa867770c9085ea",
+      "version": "1.13.0+d6235174708c",
+      "revision": "d6235174708c2a4f7139bd0fe38fd3223e9a8dc976b66e3719fb0888cdd8bf15",
       "markupRevision": "17671f9b77f8d7742d127aae4a5fa01f78a2f30d7dff8091f99a44ca97088e11",
       "owners": [
         "shared/home-intro.html",
@@ -11572,14 +11606,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/portrait-media-policy.json",
@@ -11590,8 +11624,8 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -11602,8 +11636,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -11645,8 +11679,8 @@
     },
     "work": {
       "componentKey": "work-card",
-      "version": "1.12.0+192a97f0fc93",
-      "revision": "192a97f0fc93f59ac1347545b33b0ba6e8ae57d42fb6bef61cde92205eba7e7c",
+      "version": "1.13.0+421771bbb8ba",
+      "revision": "421771bbb8babb90d67891e648071aa3ab31aede11c9498e9dc62b5660c0f8f9",
       "markupRevision": "2de18d4417227e0e3890eb065ec01b68c9488e19e6d5443e488de26e3fef38f9",
       "owners": [
         "shared/work-card.html",
@@ -11876,14 +11910,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/project-media.js",
@@ -11894,14 +11928,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -11967,8 +12001,8 @@
     },
     "work-section": {
       "componentKey": "work-section",
-      "version": "1.12.0+091c177c5612",
-      "revision": "091c177c5612595393c8bf086becf309413622c7dcbd4aa1636c9e6e2d277bb4",
+      "version": "1.13.0+85c418f62a36",
+      "revision": "85c418f62a364197457e865457d05e60bbd77cf2fc52131c0403806541590ade",
       "markupRevision": "8994362665f8cc33e2ff97ea2ba38cbff63d63a6958adbfba2b48ed813551f00",
       "owners": [
         "shared/work-section.html",
@@ -12199,14 +12233,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/project-media.js",
@@ -12217,14 +12251,14 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -12297,8 +12331,8 @@
     },
     "footer": {
       "componentKey": "footer",
-      "version": "1.12.0+79de906e057e",
-      "revision": "79de906e057e141945935e646afcaa1416a26452f6e9239a4ac6d26c1cd0d5d6",
+      "version": "1.13.0+8370f537eb28",
+      "revision": "8370f537eb28dcb10a36dcf3e31f40eca7529fd175e8f86875075512df7b116e",
       "markupRevision": "218d179bce983561ec0b67175ca9866993b6afbc8b9154bc0c4105c016dd0c0d",
       "owners": [
         "shared/footer.html",
@@ -12442,14 +12476,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -12472,8 +12506,8 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -12484,8 +12518,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -12522,6 +12556,7 @@
         "/",
         "/about/",
         "/resume/",
+        "/ru/resume/",
         "/work/raiffeisen-leasing/",
         "/work/larixon/",
         "/work/raiffeisen-bank/",
@@ -12544,12 +12579,15 @@
     },
     "resume-formats": {
       "componentKey": "resume-formats",
-      "version": "1.12.0+a98cb95b4acd",
-      "revision": "a98cb95b4acd3bb13693aa4f1aae9c3fe1c25b98ae246c3cca8500eabc06eeeb",
+      "version": "1.13.0+63a998d980b4",
+      "revision": "63a998d980b43478b8f24ab75388d9c12b9aa8677f5de7e86d95ff1a4183f8d0",
       "markupRevision": "3589fef2f19f8dacff209b17f46af04f2b02f3ed8b7d36d6b0afbe25cf051b11",
       "owners": [
         "shared/resume-formats.html",
-        "shared/brief-light.html"
+        "shared/brief-light.html",
+        "shared/reading-ru.css",
+        "shared/localization.mjs",
+        "shared/ru-ui.json"
       ],
       "dependencies": [
         {
@@ -12593,6 +12631,18 @@
           "kind": "asset",
           "sha256": "3e979e8fa668f38d0578bb9786bb0086c62136be6a36ed59bc9c5f5e1ece00fe",
           "revisionSha256": "3e979e8fa668f38d0578bb9786bb0086c62136be6a36ed59bc9c5f5e1ece00fe"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-ru.docx",
+          "kind": "asset",
+          "sha256": "be396a1cc1575ef90f96c23874d58d11b09f9764a66b17f87fa4997122a0caaa",
+          "revisionSha256": "be396a1cc1575ef90f96c23874d58d11b09f9764a66b17f87fa4997122a0caaa"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-ru.pdf",
+          "kind": "asset",
+          "sha256": "52e44a4779e5a9146bce2d4ba50ab59815260187b4b036cacf925c5c90c05236",
+          "revisionSha256": "52e44a4779e5a9146bce2d4ba50ab59815260187b4b036cacf925c5c90c05236"
         },
         {
           "path": "home/assets/footer-copilot.svg",
@@ -12675,14 +12725,32 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
+        },
+        {
+          "path": "shared/localization.mjs",
+          "kind": "markup",
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
+        },
+        {
+          "path": "shared/reading-ru.css",
+          "kind": "markup",
+          "sha256": "da3c5fcd7ac0dc09b3ee1f816487d570fa3bf25fa89e4f38830c1cd6627eb452",
+          "revisionSha256": "da3c5fcd7ac0dc09b3ee1f816487d570fa3bf25fa89e4f38830c1cd6627eb452"
         },
         {
           "path": "shared/resume-formats.html",
           "kind": "markup",
           "sha256": "6d6e0f4b2a17d23c3f62b001add7c1f55d12c86e208248b0b1ffc42b2d41111c",
           "revisionSha256": "6d6e0f4b2a17d23c3f62b001add7c1f55d12c86e208248b0b1ffc42b2d41111c"
+        },
+        {
+          "path": "shared/ru-ui.json",
+          "kind": "markup",
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -12693,8 +12761,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -12728,7 +12796,8 @@
         }
       ],
       "usedBy": [
-        "/resume/"
+        "/resume/",
+        "/ru/resume/"
       ],
       "name": "Panel / Resume formats",
       "displayName": "Panel / Resume formats"
@@ -12736,11 +12805,12 @@
     "resume-page": {
       "componentKey": "reading-page",
       "variant": "resume",
-      "version": "1.12.0+7d63b05a4479",
-      "revision": "7d63b05a44793e5c1d0ccf60dade9dbc1dfef869807959a4e8d77fc51cdbd315",
+      "version": "1.13.0+07b3e9e19b71",
+      "revision": "07b3e9e19b718ed2df1321eaf3f1b86e0a482a1ab8055a1bb4081ba3735ea768",
       "markupRevision": "5b94cc1df19d1885355f81c3ae2e3755eeb90df3bd0fee6fc2d59779c40ca0e1",
       "owners": [
         "shared/resume-page.json",
+        "shared/ru-resume-page.json",
         "shared/work-projects.json",
         "shared/raiffeisen-leasing-page.json",
         "shared/larixon-page.json",
@@ -12770,7 +12840,9 @@
         "shared/header.html",
         "shared/back.html",
         "shared/footer.html",
-        "shared/brief-dark.html"
+        "shared/brief-dark.html",
+        "shared/localization.mjs",
+        "shared/ru-ui.json"
       ],
       "dependencies": [
         {
@@ -13228,6 +13300,18 @@
           "kind": "asset",
           "sha256": "3e979e8fa668f38d0578bb9786bb0086c62136be6a36ed59bc9c5f5e1ece00fe",
           "revisionSha256": "3e979e8fa668f38d0578bb9786bb0086c62136be6a36ed59bc9c5f5e1ece00fe"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-ru.docx",
+          "kind": "asset",
+          "sha256": "be396a1cc1575ef90f96c23874d58d11b09f9764a66b17f87fa4997122a0caaa",
+          "revisionSha256": "be396a1cc1575ef90f96c23874d58d11b09f9764a66b17f87fa4997122a0caaa"
+        },
+        {
+          "path": "home/assets/dmitry-rybalka-resume-ru.pdf",
+          "kind": "asset",
+          "sha256": "52e44a4779e5a9146bce2d4ba50ab59815260187b4b036cacf925c5c90c05236",
+          "revisionSha256": "52e44a4779e5a9146bce2d4ba50ab59815260187b4b036cacf925c5c90c05236"
         },
         {
           "path": "home/assets/favicon.ico",
@@ -14768,8 +14852,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
+        },
+        {
+          "path": "shared/localization.mjs",
+          "kind": "markup",
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/medesk-page.json",
@@ -14904,6 +14994,18 @@
           "revisionSha256": "ac8022d82f21f7928e88ff624348020204bca8ff0cb19572ab7d499b0c3de2ea"
         },
         {
+          "path": "shared/ru-resume-page.json",
+          "kind": "markup",
+          "sha256": "8b69286f06c55c96b7325edbe1bd36ee31b980d784ea016061e6cf7024cb50db",
+          "revisionSha256": "8b69286f06c55c96b7325edbe1bd36ee31b980d784ea016061e6cf7024cb50db"
+        },
+        {
+          "path": "shared/ru-ui.json",
+          "kind": "markup",
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
+        },
+        {
           "path": "shared/ru-yandex-market-page.json",
           "kind": "markup",
           "sha256": "6b052308dfcc351428127c42a9b1ebb0ccd495284068cff7f323904430ad49ee",
@@ -14918,8 +15020,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -14965,7 +15067,8 @@
         }
       ],
       "usedBy": [
-        "/resume/"
+        "/resume/",
+        "/ru/resume/"
       ],
       "name": "Page / Reading",
       "displayName": "Page / Reading · Resume",
@@ -14973,8 +15076,8 @@
     },
     "reading-page": {
       "componentKey": "reading-page",
-      "version": "1.12.0+1cd10186d8e1",
-      "revision": "1cd10186d8e1a95501c4e72e24cac33fd9d8ff4f227b522568c6319d25954d47",
+      "version": "1.13.0+b8728e7d02df",
+      "revision": "b8728e7d02df7857a14a4f6cda6b78ddcc3972a009881105eef0b6b82b152275",
       "markupRevision": "5b94cc1df19d1885355f81c3ae2e3755eeb90df3bd0fee6fc2d59779c40ca0e1",
       "owners": [
         "shared/reading-page.html",
@@ -16390,14 +16493,14 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/localization.mjs",
           "kind": "markup",
-          "sha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2",
-          "revisionSha256": "3923b9f4c84c5543c4600016e548d135223dfe76c19fb400deaec83351670ff2"
+          "sha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859",
+          "revisionSha256": "c51e0911664fb34944a98968733ca49fd8e839539854ed2a3271f57fa2b0c859"
         },
         {
           "path": "shared/media-selection.mjs",
@@ -16498,8 +16601,8 @@
         {
           "path": "shared/ru-ui.json",
           "kind": "markup",
-          "sha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d",
-          "revisionSha256": "25afb93bf43931519ce9cbdac7d59df4d72cfcc160bd1dda2874a693e57cf77d"
+          "sha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b",
+          "revisionSha256": "bca720859039d569262535a9a7c1ac85b5f0e5a81d477c46e37c7f62831fc83b"
         },
         {
           "path": "shared/site-controls.js",
@@ -16510,8 +16613,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -16554,8 +16657,8 @@
     },
     "not-found-page": {
       "componentKey": "not-found-page",
-      "version": "1.12.0+c34b991c9ea8",
-      "revision": "c34b991c9ea862051efea59a28d93645df4508adcd2c32e4d82cacddc11e0628",
+      "version": "1.13.0+55b0b2b95bfa",
+      "revision": "55b0b2b95bfa09732ff4697d0f94c8ce8925372a12dd7f947289d0de5bb89731",
       "markupRevision": "385205cb88dcc834e1d4cce8b1aa8efc8f631b6e0a66abebf903de21a6633eb8",
       "owners": [
         "shared/reading-page.html",
@@ -16663,8 +16766,8 @@
         {
           "path": "shared/library.mjs",
           "kind": "producer",
-          "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-          "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+          "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+          "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
         },
         {
           "path": "shared/reading-page.html",
@@ -16675,8 +16778,8 @@
         {
           "path": "shared/site-pages.mjs",
           "kind": "producer",
-          "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-          "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+          "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+          "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
         },
         {
           "path": "shared/site-ui.css",
@@ -16723,8 +16826,8 @@
         "light": {
           "componentKey": "icon/arrow-left",
           "variant": "light",
-          "version": "1.12.0+5f025c15587d",
-          "revision": "5f025c15587d61d25e723dc3fa88ce648ca1755c2ba07fc5ad13530be286b1d7",
+          "version": "1.13.0+fd336a178860",
+          "revision": "fd336a178860cb60bb35905d1594ae02b859aae1ef006ab1a00d72a6cfdcd79d",
           "markupRevision": "ba4042f14f219a1c6d030adca16a91ba1e026d578b2f27d6fcb3749bfaad99e1",
           "owners": [
             "shared/back.html"
@@ -16799,14 +16902,14 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -16842,6 +16945,7 @@
           "usedBy": [
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -16867,8 +16971,8 @@
         "light": {
           "componentKey": "icon/file-down",
           "variant": "light",
-          "version": "1.12.0+3c361c6bd083",
-          "revision": "3c361c6bd083e7a5eebf939bf10bd4dc91cc093da3daba4b79ac818fb8b1f7ca",
+          "version": "1.13.0+7b7e6d51c4b1",
+          "revision": "7b7e6d51c4b1588cf6da3a02eb391dedab6f550970b4d7f6dbc4f6320578fbd3",
           "markupRevision": "59a17f02d92f8a26c1c96fbcaab4c3435236e005ad4080f92ca19c555410640a",
           "owners": [
             "home/assets/lucide-file-down.svg"
@@ -16925,14 +17029,14 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -16976,8 +17080,8 @@
         "light": {
           "componentKey": "icon/download",
           "variant": "light",
-          "version": "1.12.0+e76bf71f7cd9",
-          "revision": "e76bf71f7cd9c39fde2b0122884285f9117e9be2a8bdede7968537f79646d13a",
+          "version": "1.13.0+4cb9e9b208a4",
+          "revision": "4cb9e9b208a4d31584edd03885826711fb30af6588aad70eca5b3d47bef24eaf",
           "markupRevision": "43c84fa4b611d155476fd3daa3122907a38b72641d3c97767f5aa4d045e6b27c",
           "owners": [
             "shared/resume-formats.html"
@@ -17058,8 +17162,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/resume-formats.html",
@@ -17070,8 +17174,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17105,7 +17209,8 @@
             }
           ],
           "usedBy": [
-            "/resume/"
+            "/resume/",
+            "/ru/resume/"
           ]
         }
       }
@@ -17115,8 +17220,8 @@
         "light": {
           "componentKey": "icon/check",
           "variant": "light",
-          "version": "1.12.0+c22a791147ed",
-          "revision": "c22a791147ed62fc0efca2c3d003322ef0e6c98f03a0510f2ac924df45c48fe8",
+          "version": "1.13.0+9ed9acc3779d",
+          "revision": "9ed9acc3779da8caa3b5826d53e297506521b28e48326cd7d078d33b65f88cf1",
           "markupRevision": "cd9f6deb1284bf5e6d706ff8d6909eff903039f285d227c4fb7fc15c6d97cea9",
           "owners": [
             "shared/brief-light.html"
@@ -17215,8 +17320,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -17227,8 +17332,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17264,14 +17369,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/check",
           "variant": "dark",
-          "version": "1.12.0+989397c64d3a",
-          "revision": "989397c64d3ab1228a7595f251853da241faa77a03dd020b3f2df6b7c942b519",
+          "version": "1.13.0+f68f947d1239",
+          "revision": "f68f947d1239d535a8d53d6ef74883777205fbee0cba7fb97b077a7e8c33f13b",
           "markupRevision": "b5d15c4ea83c6d573a9053ac7cf7816ace9aef20529b5504d8091589fddb2cdb",
           "owners": [
             "shared/brief-dark.html"
@@ -17370,8 +17476,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -17382,8 +17488,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17420,6 +17526,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -17445,8 +17552,8 @@
         "closed": {
           "componentKey": "icon/menu",
           "variant": "closed",
-          "version": "1.12.0+33a6a410cc15",
-          "revision": "33a6a410cc1533673f14568916778e2daf87ef6a88f8a08e1efa29d4159a7e4d",
+          "version": "1.13.0+b517b6c7629f",
+          "revision": "b517b6c7629f0f249c1fba391ed5b9bbf2e7ca6b5b5cb3421301dfc106ff6e77",
           "markupRevision": "7fa6ae3a886f6e7f325cc86d7958040d2a366533fd33e07ef5a8a0b6ce7e3779",
           "owners": [
             "shared/header.html"
@@ -17515,14 +17622,14 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17560,6 +17667,7 @@
             "/ru/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -17580,8 +17688,8 @@
         "open": {
           "componentKey": "icon/menu",
           "variant": "open",
-          "version": "1.12.0+23719be6bddf",
-          "revision": "23719be6bddf8172da70140fbae5a7122b56fdce68d180e4586cbead36bfa470",
+          "version": "1.13.0+a1a93f30baf0",
+          "revision": "a1a93f30baf070106aed865fe97c721c3a17fa102e0ba8c2de15ab12f80cbbdc",
           "markupRevision": "ff20fc428140dc8708a95c1373d250a1a43aa2ec8b99680ea4b8d860a7b058c8",
           "owners": [
             "shared/header.html"
@@ -17650,14 +17758,14 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17695,6 +17803,7 @@
             "/ru/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -17719,8 +17828,8 @@
         "light": {
           "componentKey": "icon/claude",
           "variant": "light",
-          "version": "1.12.0+fd1f4f45b65d",
-          "revision": "fd1f4f45b65d5b2b5f77477f3818ad465f897d3d9e396999efddf242286f3e29",
+          "version": "1.13.0+703a761e94d6",
+          "revision": "703a761e94d67623577cc3d86426e2cd46cea7bc7cd59059937bd90af6b30b95",
           "markupRevision": "508041fa637d9617cb3467091c2f152617a811e5821cf96da72460b939e699d5",
           "owners": [
             "shared/brief-light.html"
@@ -17819,8 +17928,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -17831,8 +17940,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -17868,14 +17977,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/claude",
           "variant": "dark",
-          "version": "1.12.0+80b6ed6b5cd3",
-          "revision": "80b6ed6b5cd371e67c5b9ea00e5974926d9a33091d5aa7aacbb69eebcfd73f93",
+          "version": "1.13.0+08f6d1181109",
+          "revision": "08f6d1181109ecd231f385e737900f45151020051a96790e9f2e1473ed3d42a8",
           "markupRevision": "d631f2ebd21f51011d9fcea7c208f454232d14e986ccb2f4fb089d3cfc73dd5c",
           "owners": [
             "shared/brief-dark.html"
@@ -17974,8 +18084,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -17986,8 +18096,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18024,6 +18134,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -18049,8 +18160,8 @@
         "light": {
           "componentKey": "icon/chatgpt",
           "variant": "light",
-          "version": "1.12.0+ca9a6fc9123d",
-          "revision": "ca9a6fc9123dc9c1535b5f9936903aa303c3f0f5e5d2465aa233728bc6905d5f",
+          "version": "1.13.0+f4354e671575",
+          "revision": "f4354e671575bd45a8dc2d5f9a8c90c792d7b5efff2552616edaa36225c5c1a4",
           "markupRevision": "5ecc0bbf2c8e392a7b908b0e959ebb5ad1bf326f04d0a586a3be87680b898b94",
           "owners": [
             "shared/brief-light.html"
@@ -18149,8 +18260,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18161,8 +18272,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18198,14 +18309,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/chatgpt",
           "variant": "dark",
-          "version": "1.12.0+2f5c07ce24cb",
-          "revision": "2f5c07ce24cba45913c103c0a1f97e46513aefbd5ffbd1ab39a2b3d67d01b698",
+          "version": "1.13.0+cb26dcc91488",
+          "revision": "cb26dcc91488e43b1ac1a0c835c9cd016da4e162839827100c927fb4b78c33bc",
           "markupRevision": "e68584ff1bdd08c3e28c623e576b10610215ce5a119482bcd176e00f41fb01b2",
           "owners": [
             "shared/brief-dark.html"
@@ -18304,8 +18416,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18316,8 +18428,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18354,6 +18466,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -18379,8 +18492,8 @@
         "light": {
           "componentKey": "icon/codex",
           "variant": "light",
-          "version": "1.12.0+c0365b7e3849",
-          "revision": "c0365b7e3849bfa77d518f1969173815e8b595e1e3d51122b8c41680d718e35c",
+          "version": "1.13.0+305005de43bf",
+          "revision": "305005de43bfa106daf7518a53ebf0893d9e8a189619a061d0d67f1fc7a29b08",
           "markupRevision": "d994a38d32891e3ace03015ab79fa6f8c19f7aae2be81bab1e23f4b6bcf88ae5",
           "owners": [
             "shared/brief-light.html"
@@ -18479,8 +18592,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18491,8 +18604,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18528,14 +18641,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/codex",
           "variant": "dark",
-          "version": "1.12.0+e780ca17e075",
-          "revision": "e780ca17e075a676761c010195deb39b960b93947c72d041eb1a67c1dd8a973e",
+          "version": "1.13.0+cf933e91de92",
+          "revision": "cf933e91de929072ffc77dbf0bf1bf090e9084cfc561663b164e12bdf62d7c0f",
           "markupRevision": "6ed75ca8d26bb8ab78a0b9f715937cdbeed956275fe86a6bbf1b1fb217d29c15",
           "owners": [
             "shared/brief-dark.html"
@@ -18634,8 +18748,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18646,8 +18760,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18684,6 +18798,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -18709,8 +18824,8 @@
         "light": {
           "componentKey": "icon/cursor",
           "variant": "light",
-          "version": "1.12.0+0b9c6d951668",
-          "revision": "0b9c6d9516682d7c9df134cf3524717095430319ad8397d9f3ce135df9e70fb3",
+          "version": "1.13.0+fade4c79ccf0",
+          "revision": "fade4c79ccf0c1fce3a59d82204a1577544bbb9887de7b6ac711dbc3d2a24715",
           "markupRevision": "7b91bfdb8d9bebdac2d1ac9e2567bbb4cfc3cf0e95027c5fd52cabbb62858965",
           "owners": [
             "shared/brief-light.html"
@@ -18809,8 +18924,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18821,8 +18936,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -18858,14 +18973,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/cursor",
           "variant": "dark",
-          "version": "1.12.0+de39f4d8c66f",
-          "revision": "de39f4d8c66f44b04ff7f76b4a804f2109720561763f6c7e50fed257278bbe6e",
+          "version": "1.13.0+6bfe9f62cb5f",
+          "revision": "6bfe9f62cb5fcd40299451cbb4781411b8cd0ce99cbd76fd72afdb9fc2326114",
           "markupRevision": "46243445444e47d173b16d53bd5bc43d798346c5ea05976c5ddd9f86b0d4647e",
           "owners": [
             "shared/brief-dark.html"
@@ -18964,8 +19080,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -18976,8 +19092,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -19014,6 +19130,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -19039,8 +19156,8 @@
         "light": {
           "componentKey": "icon/copilot",
           "variant": "light",
-          "version": "1.12.0+b2c93984dd96",
-          "revision": "b2c93984dd96420a69fa5f993aa3b98f354a2df2c592b903878e5b77607dd69d",
+          "version": "1.13.0+1f946b78d2fb",
+          "revision": "1f946b78d2fbc604db1587d64134caaf9c7fa84517b69e693214247c877f36f4",
           "markupRevision": "534e8ca22c39cf606066bb86780bc9a2ffe3d10cdc3105bff4f96649ec90cb2d",
           "owners": [
             "shared/brief-light.html"
@@ -19139,8 +19256,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -19151,8 +19268,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -19188,14 +19305,15 @@
           "usedBy": [
             "/",
             "/resume/",
+            "/ru/resume/",
             "/ru/"
           ]
         },
         "dark": {
           "componentKey": "icon/copilot",
           "variant": "dark",
-          "version": "1.12.0+8b960e747bee",
-          "revision": "8b960e747bee4df51bd59973f2237c49f61368c436623c1462f22c3666a90148",
+          "version": "1.13.0+512d3649b5cb",
+          "revision": "512d3649b5cbea1ab75d9222966496448d5e7899e4946f008eb60c2d005b24c6",
           "markupRevision": "d004d307513aa0f7edfad1b6b61cf14770a6b51168896d19506e0672cf3700d4",
           "owners": [
             "shared/brief-dark.html"
@@ -19294,8 +19412,8 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-controls.js",
@@ -19306,8 +19424,8 @@
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -19344,6 +19462,7 @@
             "/",
             "/about/",
             "/resume/",
+            "/ru/resume/",
             "/work/raiffeisen-leasing/",
             "/work/larixon/",
             "/work/raiffeisen-bank/",
@@ -19369,8 +19488,8 @@
         "default": {
           "componentKey": "icon/availability-dot",
           "variant": "default",
-          "version": "1.12.0+37af6c0e75d5",
-          "revision": "37af6c0e75d56573fcdb2c6906ef1ac2cbd10109f3699789c1e7dfe18f7e34fc",
+          "version": "1.13.0+171dc8d0b210",
+          "revision": "171dc8d0b2101e3242be6eabc06b3ad1d7d6809f8380d8efa7d2db186ec01cc8",
           "markupRevision": "b2b9303221effe6266e4c9c1edc189c02da9d4e9d2cd0523053fc3a18a34ae10",
           "owners": [
             "shared/work-actions.html"
@@ -19445,14 +19564,14 @@
             {
               "path": "shared/library.mjs",
               "kind": "producer",
-              "sha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3",
-              "revisionSha256": "cd515eb47504b0c0d1f7d9edf3e0eb03b21390bd425efb03ade2e67a76849bb3"
+              "sha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c",
+              "revisionSha256": "ae5fbde1b935e6ddb801559bfadcdce2f0431fd34d09401916c791825a58636c"
             },
             {
               "path": "shared/site-pages.mjs",
               "kind": "producer",
-              "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-              "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+              "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+              "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
             },
             {
               "path": "shared/site-ui.css",
@@ -20091,10 +20210,10 @@
     }
   ],
   "designSystem": {
-    "version": "1.63.7",
-    "revision": "1aa427d22507",
-    "release": "1.63.7+1aa427d22507",
-    "updatedAt": "2026-10-28T15:22:38.000Z",
+    "version": "1.64.0",
+    "revision": "7d669ffd64ab",
+    "release": "1.64.0+7d669ffd64ab",
+    "updatedAt": "2026-10-28T16:10:08.049Z",
     "sources": [
       {
         "path": "home/ds/asset-loading.css",
@@ -20148,28 +20267,28 @@
       },
       {
         "path": "shared/build-ds.mjs",
-        "sha256": "9292b6f6eedd3b8fb443cbc9b8e31c6fafdfb5a35fcd56e463fa4adcbc0fa6a6",
-        "revisionSha256": "9292b6f6eedd3b8fb443cbc9b8e31c6fafdfb5a35fcd56e463fa4adcbc0fa6a6"
+        "sha256": "7e01744f0aecb26522ec8d362bfb144234813aeabaa08101e2caf2f3684fb0de",
+        "revisionSha256": "7e01744f0aecb26522ec8d362bfb144234813aeabaa08101e2caf2f3684fb0de"
       },
       {
         "path": "shared/code-catalog.mjs",
-        "sha256": "078fd93a9f049829a7461141e25ccbc9211c8f84b163df53b50b75f6083956bb",
-        "revisionSha256": "078fd93a9f049829a7461141e25ccbc9211c8f84b163df53b50b75f6083956bb"
+        "sha256": "3d73c4687d441c66c2391753de42757f6eaa456c3bb9003663ddc98dfdbb1686",
+        "revisionSha256": "3d73c4687d441c66c2391753de42757f6eaa456c3bb9003663ddc98dfdbb1686"
       },
       {
         "path": "shared/component-registry.mjs",
-        "sha256": "4652d278eb2781e1da6f058471057133f10f7a6fe4f33f8bc57021f23094d248",
-        "revisionSha256": "4652d278eb2781e1da6f058471057133f10f7a6fe4f33f8bc57021f23094d248"
+        "sha256": "3d79afa62a51d992b98110a3eca20ff378425fed93abc51098abfdbdaf293e2c",
+        "revisionSha256": "3d79afa62a51d992b98110a3eca20ff378425fed93abc51098abfdbdaf293e2c"
       },
       {
         "path": "shared/design-system.json",
-        "sha256": "a5e0ba5ec457c6031724e3fdb554cf38ebb850694e2a9cd34054ef22916f642e",
-        "revisionSha256": "a5e0ba5ec457c6031724e3fdb554cf38ebb850694e2a9cd34054ef22916f642e"
+        "sha256": "25f48ef96c9adb01f20dc5b482b23e9db972652769e2a911eb04c751bc34e2af",
+        "revisionSha256": "25f48ef96c9adb01f20dc5b482b23e9db972652769e2a911eb04c751bc34e2af"
       },
       {
         "path": "shared/ds-changelog.json",
-        "sha256": "c3d321e5eb99dd64c8afca345b02726729d23633fac209e97a77d566ec7ae7b3",
-        "revisionSha256": "c3d321e5eb99dd64c8afca345b02726729d23633fac209e97a77d566ec7ae7b3"
+        "sha256": "d94e3b6d8ae718a91caa4280a2bb23e6c12ce1cb1045145c6ac1445fdee52184",
+        "revisionSha256": "d94e3b6d8ae718a91caa4280a2bb23e6c12ce1cb1045145c6ac1445fdee52184"
       },
       {
         "path": "shared/ds-changelog.mjs",
@@ -20208,8 +20327,8 @@
       },
       {
         "path": "shared/site-pages.mjs",
-        "sha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2",
-        "revisionSha256": "748bdc6a2995d51b41fa5fb4ac0a23b380a343f53e6f89b9ab7484a1ceb3b6e2"
+        "sha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240",
+        "revisionSha256": "618a9b287e8185c38c327c9f3a515b0074142f7f12b9007d4d8b89f94d17a240"
       },
       {
         "path": "shared/theme-dark.css",
