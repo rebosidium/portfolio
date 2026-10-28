@@ -1,5 +1,41 @@
 [
   {
+    "version": "1.11.9",
+    "date": "2026-10-28",
+    "title": "Restore the previous Resume achievements typography",
+    "changes": [
+      "Restore achievement bullets to the shared18px body size and32.4px line height in both languages.",
+      "Keep certifications at16px/24px and retain zero extra achievement-item spacing."
+    ]
+  },
+  {
+    "version": "1.11.8",
+    "date": "2026-10-28",
+    "title": "Set Resume achievements and certifications to 16/24",
+    "changes": [
+      "Use16px type with24px line height for achievement and certification lists in both Resume languages.",
+      "Keep zero extra achievement-item spacing and existing certification-item spacing; regenerate the actual shared Resume specimens."
+    ]
+  },
+  {
+    "version": "1.11.7",
+    "date": "2026-10-28",
+    "title": "Link earlier Resume experience to LinkedIn",
+    "changes": [
+      "Append Full list on LinkedIn to the earlier-experience paragraph, with a matching Russian link to the existing profile."
+    ]
+  },
+  {
+    "version": "1.11.6",
+    "date": "2026-10-28",
+    "title": "Refine Resume project labels and employment spacing",
+    "changes": [
+      "Render the Raiffeisen Bank and Raiffeisen Leasing project labels as regular body paragraphs in English and Russian Resume pages.",
+      "Remove the 16px gap between each role heading and its location/date line in both languages.",
+      "Use zero extra spacing between achievement bullets in the Experience section of both Resume pages."
+    ]
+  },
+  {
     "version": "1.11.5",
     "date": "2026-10-28",
     "title": "Name the AI agent in the Resume heading",
