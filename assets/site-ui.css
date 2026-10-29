@@ -113,6 +113,10 @@
   --overlap-recede: .025;
   --overlap-flatten-start: .75;
   --ease-out: cubic-bezier(.22,1,.36,1);
+  --width-case-gallery-thumb: 222px;
+  --height-case-gallery-thumb: 148px;
+  --width-case-gallery-thumb-mobile: 148px;
+  --height-case-gallery-thumb-mobile: 99px;
 }
 
 @font-face{font-family:Manrope;src:url('manrope.woff2?v=a30ddcd34970') format('woff2');font-style:normal;font-weight:400 800;font-display:swap}

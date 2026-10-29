@@ -72,6 +72,7 @@
     if(example.inPlaceStates){controlsReady=true;applyBriefState(state);notify('portfolio:ds-ready');}
   });
   if(document.querySelector('.work-artwork')&&state!=='image-error'){previewRoot.dataset.projectMediaAuto='';script(window.DS_CATALOG.scripts.projectMedia);}
+  if(document.querySelector('[data-case-gallery]')){const css=document.createElement('link');css.rel='stylesheet';css.href=window.DS_CATALOG.scripts.caseGalleryStyle;document.head.append(css);script(window.DS_CATALOG.scripts.caseGallery);}
   if(document.querySelector('.photo-gallery'))script(window.DS_CATALOG.scripts.photoGallery);
   if(document.querySelector('[data-recommendations]')){
     const css=document.createElement('link');css.rel='stylesheet';css.href=window.DS_CATALOG.scripts.recommendationsStyle;document.head.append(css);
