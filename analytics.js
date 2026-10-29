@@ -19,8 +19,8 @@
   if (!posthogActive && !clarityActive && !ga4Active && !yandexActive) return;
   // Keep Metrika goals focused on meaningful intent and engagement, using the
   // same trusted actions and definitions as the other providers.
-  const yandexGoals = new Set(['contact_clicked', 'resume_opened', 'briefing_copied', 'project_opened',
-    'portfolio_opened', 'about_opened', 'portrait_interacted', 'case_engaged', 'multiple_cases_engaged', 'qualified_contact']);
+  const yandexGoals = new Set(['contact_clicked', 'resume_opened', 'resume_viewed', 'resume_download_clicked', 'resume_engaged', 'briefing_copied', 'project_opened',
+    'gallery_viewed', 'gallery_slide_changed', 'portfolio_opened', 'about_opened', 'portrait_interacted', 'case_engaged', 'multiple_cases_engaged', 'qualified_contact']);
   const mobile = window.mobileLayout || matchMedia('(max-width: 767px), (max-width: 1023px) and (pointer: coarse)');
   const qa = window.portfolioAnalytics?.qa ?? new URLSearchParams(location.search).get('analytics_test') === '1';
   const context = () => ({layout: mobile.matches ? 'mobile' : 'desktop',
@@ -46,6 +46,9 @@
     if (name === 'project_opened') return name + '_' + properties.project.replaceAll('-', '_');
     if (['about_opened', 'portfolio_opened'].includes(name)) return name + '_' + properties.placement;
     if (name === 'work_viewed') return name + '_' + properties.work;
+    if (name === 'gallery_slide_changed') return name + '_' + properties.gallery + '_' + properties.slide_index;
+    if (name === 'gallery_viewed') return name + '_' + properties.gallery;
+    if (name === 'resume_download_clicked') return name + '_' + properties.format;
     if (name === 'section_viewed') return name + '_' + properties.section;
     if (['briefing_clicked', 'briefing_copied', 'briefing_copy_failed'].includes(name)) return name + '_' + properties.placement;
     return name;
@@ -78,6 +81,10 @@
       if (properties.input_method) tag('input_method', properties.input_method);
       if (['case_engaged','multiple_cases_engaged','qualified_contact'].includes(name)) tag(name, 'true');
       callClarity('event', clarityName(name, properties));
+      if (['gallery_viewed','gallery_slide_changed'].includes(name)) callClarity('event', name);
+      if (name === 'gallery_slide_changed') callClarity('event', name + '_' + properties.gallery);
+      if (name === 'resume_download_clicked') callClarity('event', name);
+      if (name === 'project_opened' && properties.placement === 'resume_experience') callClarity('event', 'project_opened_resume_experience');
       if (name === 'project_opened' && properties.placement === 'related_cases') callClarity('event', 'project_opened_related_cases');
       // Aggregate API signals let native goals include all current/future
       // destinations and placements while retaining the detailed event names.
@@ -85,6 +92,8 @@
     }
   };
   syncContext(context());
+  // Arrival (including direct entry) is distinct from menu intent and file clicks.
+  if (policy.pageType === 'resume') capture('resume_viewed');
   mobile.addEventListener?.('change', () => syncContext(context()));
   const placement = target => target.closest('.footer') ? 'footer' : mobile.matches ? 'mobile_menu' : 'desktop_navigation';
   const inputMethod = event => event.detail === 0 ? 'keyboard' : event.pointerType || 'pointer';
@@ -99,6 +108,16 @@
     }, true);
     return;
   }
+  document.addEventListener('portfolio:gallery-change', event => {
+    const root = event.target.closest?.('[data-case-gallery]'), detail = event.detail;
+    if (!project || !root || !detail || document.visibilityState !== 'visible') return;
+    const count = root.querySelectorAll('[data-gallery-slide]').length;
+    if (detail.gallery !== root.dataset.galleryName || !Number.isInteger(detail.slide_index)
+      || detail.slide_index < 1 || detail.slide_index > count || detail.slide_count !== count) return;
+    capture('gallery_slide_changed', {gallery: detail.gallery, slide_index: detail.slide_index,
+      previous_slide_index: detail.previous_slide_index, slide_count: count,
+      input_method: detail.input_method, control: detail.control});
+  });
   const pendingCopies = new WeakMap();
   document.querySelectorAll('.agent-button').forEach(button => {
     new MutationObserver(() => {
@@ -115,6 +134,14 @@
     const target = event.composedPath().find(node => node instanceof Element);
     if (!target) return;
     const common = {input_method: inputMethod(event)};
+    const resumeCase = policy.pageType === 'resume' && target.closest('.resume-case-link[href]');
+    if (resumeCase) {
+      const url = new URL(resumeCase.href, location.href);
+      const destinationProject = policy.projectRoutes?.[url.pathname];
+      if (url.origin === location.origin && destinationProject)
+        capture('project_opened', {...common, project: destinationProject, destination: url.pathname, placement: 'resume_experience'}, true);
+      return;
+    }
     const catalogCase = policy.pageType === 'catalog' && target.closest('main .article-source-link[href]');
     if (catalogCase) {
       const url = new URL(catalogCase.href, location.href);
@@ -169,7 +196,10 @@
       return;
     }
     const resumeFormat=target.closest('.resume-formats a[data-resume-format]');
-    if(resumeFormat){capture('resume_opened',{...common,placement:'resume_formats',format:resumeFormat.dataset.resumeFormat},true);return;}
+    if (resumeFormat && ['pdf', 'docx'].includes(resumeFormat.dataset.resumeFormat)) {
+      capture('resume_download_clicked', {...common, placement: 'resume_formats', format: resumeFormat.dataset.resumeFormat}, true);
+      return;
+    }
     const back = (basePath(sitePath) === '/about/' || policy.pageType === 'catalog' || policy.pageType === 'resume' || !!project) && target.closest('.about-desktop-back, .about-mobile-back, .about-identity .name');
     if (back) {
       capture('homepage_opened', {...common, placement: back.matches('.name') ? 'identity' : mobile.matches ? 'mobile_back' : 'desktop_back'}, true);
@@ -241,6 +271,13 @@
     try {sessionStorage.setItem(journeyKey, JSON.stringify(journey));} catch {}
   };
   const contentSections = new Set(), activeThresholds = new Set();
+  const resumeSections = new Set();
+  let resumeEngaged = false;
+  const engageResume = () => {
+    if (policy.pageType !== 'resume' || resumeEngaged || activeMs < 20000 || resumeSections.size < 2) return;
+    resumeEngaged = true;
+    capture('resume_engaged', {active_seconds: Math.floor(activeMs / 1000), sections_count: resumeSections.size});
+  };
   let activeMs = 0, lastTick = performance.now(), lastActivity = lastTick, caseEngaged = false;
   let lastJourneyWrite = 0;
   const activity = event => {if (event.isTrusted) {lastActivity = performance.now();
@@ -258,6 +295,9 @@
     touchJourney();
   };
   observeJourney = (name, properties) => {
+    if (name === 'section_viewed' && policy.pageType === 'resume' && ['resume_summary','resume_experience','resume_education','resume_skills'].includes(properties.section)) {
+      resumeSections.add(properties.section); engageResume();
+    }
     if (name === 'section_viewed' && project && ['project_role','project_context','project_research','project_contribution','project_outcomes','project_behind_scenes'].includes(properties.section)) {
       contentSections.add(properties.section); engageCase();
     }
@@ -271,7 +311,8 @@
   };
   // Dwell exposures are checked against current geometry, occlusion and visibility.
   const dwell = new Map(), dwellSeen = new Set();
-  const exposureTargets = [...document.querySelectorAll('.recommendations-slide')];
+  const galleryViewers = project ? [...document.querySelectorAll('[data-case-gallery] [data-gallery-viewer]')] : [];
+  const exposureTargets = [...document.querySelectorAll('.recommendations-slide'), ...galleryViewers];
   const outcomes = project && document.querySelector('#outcomes')?.parentElement;
   if (outcomes) exposureTargets.push(outcomes);
   const engagementTick = () => {
@@ -281,18 +322,20 @@
     for (const seconds of [15,30,60,120]) if (activeMs >= seconds * 1000 && !activeThresholds.has(seconds)) {
       activeThresholds.add(seconds); capture('active_time_reached', {active_seconds: seconds});
     }
-    engageCase();
+    engageCase(); engageResume();
     for (const element of exposureTargets) {
-      const isOutcome = element === outcomes, key = isOutcome ? 'outcomes' : element.id;
+      const isOutcome = element === outcomes, gallery = galleryViewers.includes(element) ? element.closest('[data-case-gallery]') : null;
+      const key = gallery ? 'gallery:' + gallery.id : isOutcome ? 'outcomes' : element.id;
       if (dwellSeen.has(key)) continue;
       const r = element.getBoundingClientRect();
       const area = Math.max(0,Math.min(r.right,innerWidth)-Math.max(0,r.left)) * Math.max(0,Math.min(r.bottom,innerHeight)-Math.max(0,r.top));
       if (!r.width || !r.height || area / (Math.min(r.width,innerWidth)*Math.min(r.height,innerHeight)) < .5 || !visible(element)) {dwell.delete(key); continue;}
       if (!dwell.has(key)) dwell.set(key,now);
-      const required = isOutcome ? 3000 : 5000;
+      const required = isOutcome || gallery ? 3000 : 5000;
       if (now-dwell.get(key) >= required) {
         dwellSeen.add(key);
-        capture(isOutcome ? 'case_outcomes_viewed' : 'recommendation_viewed', {
+        if (gallery) capture('gallery_viewed', {gallery: gallery.dataset.galleryName, visible_ms: required, slide_count: gallery.querySelectorAll('[data-gallery-slide]').length});
+        else capture(isOutcome ? 'case_outcomes_viewed' : 'recommendation_viewed', {
           visible_ms: required, ...(isOutcome ? {} : {recommendation_index: [...element.parentElement.children].indexOf(element)+1})});
       }
     }
@@ -361,7 +404,9 @@
     const hit = document.elementFromPoint(x, y);
     return hit === element || element.contains(hit);
   };
-  const sections = {'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'more-cases-title': 'related_cases', 'footer-title': 'contact',
+  const sections = {
+    ...(policy.pageType === 'resume' ? {summary:'resume_summary', experience:'resume_experience', education:'resume_education', skills:'resume_skills'} : {}),
+    'works-title': 'selected_works', 'more-about-title': 'home_about', 'case-study-title': 'project_title', 'more-cases-title': 'related_cases', 'footer-title': 'contact',
     ...(policy.pageType === 'catalog' ? Object.fromEntries(workNames.map(work => ['catalog-' + work.replaceAll('_', '-'), 'catalog_' + work])) : {}),
     'design-title': 'about_design', 'people-title': 'about_people', 'away-title': 'about_away',
     'recommendations-title': project ? 'project_recommendations' : 'about_recommendations',

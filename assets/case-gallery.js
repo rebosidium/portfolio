@@ -40,7 +40,7 @@
       if(left<visibleLeft)controls.scrollTo({left:Math.max(0,left-4),behavior:reduce.matches?'auto':'smooth'});
       else if(right>visibleRight)controls.scrollTo({left:right-controls.clientWidth+4,behavior:reduce.matches?'auto':'smooth'});
     }
-    async function select(index){
+    async function select(index, interaction){
       index=(index+slides.length)%slides.length;
       if(index===current){
         generation++;animation?.cancel();
@@ -48,7 +48,7 @@
         buttons.forEach(b=>delete b.dataset.galleryLoading);
         viewer.setAttribute('aria-busy','false');error.hidden=true;return;
       }
-      const token=++generation,next=slides[index],button=buttons[index];
+      const token=++generation,next=slides[index],button=buttons[index],previous=current;
       viewer.setAttribute('aria-busy','true');error.hidden=true;button.dataset.galleryLoading='';
       try{
         await prepare(next);
@@ -59,6 +59,10 @@
         buttons.forEach((b,i)=>{b.setAttribute('aria-pressed',String(i===index));b.tabIndex=i===index?0:-1;});
         caption.textContent=next.dataset.galleryCaption;status.textContent=(index+1)+' / '+slides.length+': '+next.dataset.galleryCaption;
         scrollThumb(button);
+        if(interaction?.trusted)root.dispatchEvent(new CustomEvent('portfolio:gallery-change',{bubbles:true,detail:{
+          gallery:root.dataset.galleryName,slide_index:index+1,previous_slide_index:previous+1,
+          slide_count:slides.length,input_method:interaction.input,control:interaction.control
+        }}));
         const settle=()=>{if(token===generation)slides.forEach((slide,i)=>{slide.hidden=i!==current;slide.style.zIndex='';});};
         if(!reduce.matches&&next.animate){animation=next.animate([{opacity:0},{opacity:1}],{duration:150,easing:'ease-out'});animation.finished.then(settle,settle);}else settle();
       }catch{
@@ -70,7 +74,7 @@
     }
     buttons.forEach((button,index)=>{
       button.disabled=false;
-      button.addEventListener('click',()=>select(index));
+      button.addEventListener('click',event=>select(index,{trusted:event.isTrusted,input:event.detail===0?'keyboard':event.pointerType||'mouse',control:'thumbnail'}));
       button.addEventListener('keydown',event=>{
         let next;
         if(event.key==='ArrowRight')next=(index+1)%buttons.length;
@@ -78,7 +82,7 @@
         else if(event.key==='Home')next=0;
         else if(event.key==='End')next=buttons.length-1;
         else return;
-        event.preventDefault();buttons[next].focus({preventScroll:true});select(next);
+        event.preventDefault();buttons[next].focus({preventScroll:true});select(next,{trusted:event.isTrusted,input:'keyboard',control:'keyboard'});
       });
     });
     root.dataset.galleryIndex='0';
