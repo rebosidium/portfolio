@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.14.1",
+    "date": "2026-10-29",
+    "title": "Use exact Figma raster artwork in case galleries",
+    "changes": [
+      "Replace assembled screenshot fragments with11transparent Figma compositions exported at3x and responsive WebP derivatives.",
+      "Bake original panel clipping, corner radii and shadows into each raster; remove runtime artwork masks and corner geometry.",
+      "Preserve caption placement below the main image, thumbnail hover, white preview cards, gray surfaces and background preloading."
+    ]
+  },
+  {
     "version": "1.14.0",
     "date": "2026-10-29",
     "title": "Separate Resume and gallery analytics",
