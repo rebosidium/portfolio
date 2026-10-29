@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.13.1",
+    "date": "2026-10-29",
+    "title": "Preload case gallery screenshots before selection",
+    "changes": [
+      "Warm and decode every responsive gallery screenshot in the background with two concurrent slide preparations; preload thumbnails too.",
+      "Reuse in-flight and decoded images on selection, preserving no-overlap transitions and retry after failure.",
+      "Use the shared gray case surface across the gallery area and white thumbnail cards, matching the approved reference."
+    ]
+  },
+  {
     "version": "1.13.0",
     "date": "2026-10-29",
     "title": "Add Larixon screenshot galleries",

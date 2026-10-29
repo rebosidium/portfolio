@@ -1,5 +1,5 @@
 /* Thumbnail gallery: the live case and DS use this same component. */
-.case-gallery{flex:none;align-self:center;width:min(var(--width-page),calc(100vw - var(--gutter-page)*2));max-width:none;margin:var(--space-8) 0 var(--space-10);min-width:0;color:var(--color-ink)}
+.case-gallery{position:relative;background:var(--color-case-surface);box-shadow:0 0 0 100vmax var(--color-case-surface);clip-path:inset(0 -100vmax);padding-block:var(--space-8);flex:none;align-self:center;width:min(var(--width-page),calc(100vw - var(--gutter-page)*2));max-width:none;margin:var(--space-8) 0 var(--space-10);min-width:0;color:var(--color-ink)}
 .case-gallery-viewer{display:grid;position:relative;aspect-ratio:944/600;isolation:isolate}
 .case-gallery-slide{grid-area:1/1;position:relative;min-width:0}
 .case-gallery-slide[hidden],.case-gallery-error[hidden]{display:none!important}
@@ -8,7 +8,7 @@
 .case-gallery-crop{position:absolute;display:block;overflow:hidden;left:var(--gallery-x);top:var(--gallery-y);width:var(--gallery-w);height:var(--gallery-h);border-radius:var(--gallery-radius)}
 .case-gallery-controls{overflow-x:auto;overscroll-behavior-inline:contain;margin-top:var(--space-6);scrollbar-width:thin;scroll-padding-inline:var(--space-1);padding-bottom:var(--space-1)}
 .case-gallery-thumbnails{display:flex;width:max-content;gap:var(--space-4);margin-inline:auto;padding:var(--space-1)}
-.case-gallery-thumb{display:grid;place-items:center;flex:0 0 auto;width:var(--width-case-gallery-thumb);height:var(--height-case-gallery-thumb);box-sizing:border-box;padding:var(--space-2);border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:transparent;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.case-gallery-thumb{display:grid;place-items:center;flex:0 0 auto;width:var(--width-case-gallery-thumb);height:var(--height-case-gallery-thumb);box-sizing:border-box;padding:var(--space-2);border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:var(--color-case-gallery-preview);color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .case-gallery-thumb>.case-gallery-art{aspect-ratio:944/600;height:auto;max-height:100%}
 .case-gallery-thumb[aria-pressed="true"]{border:2px solid var(--border-control-pressed);padding:calc(var(--space-2) - 1px)}
 .case-gallery-thumb:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:2px}
