@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.13.2",
+    "date": "2026-10-29",
+    "title": "Refine gallery thumbnail hover and caption placement",
+    "changes": [
+      "Use shared control border colors and180msfeedback for gallery thumbnails on hover-capable fine pointers.",
+      "Keep selected borders, white thumbnail surfaces, dimensions and cached image switching unchanged; document the real hover state in DS.",
+      "Place the changing screenshot caption directly below the large viewer, before the thumbnail strip."
+    ]
+  },
+  {
     "version": "1.13.1",
     "date": "2026-10-29",
     "title": "Preload case gallery screenshots before selection",

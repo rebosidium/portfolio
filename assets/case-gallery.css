@@ -8,7 +8,7 @@
 .case-gallery-crop{position:absolute;display:block;overflow:hidden;left:var(--gallery-x);top:var(--gallery-y);width:var(--gallery-w);height:var(--gallery-h);border-radius:var(--gallery-radius)}
 .case-gallery-controls{overflow-x:auto;overscroll-behavior-inline:contain;margin-top:var(--space-6);scrollbar-width:thin;scroll-padding-inline:var(--space-1);padding-bottom:var(--space-1)}
 .case-gallery-thumbnails{display:flex;width:max-content;gap:var(--space-4);margin-inline:auto;padding:var(--space-1)}
-.case-gallery-thumb{display:grid;place-items:center;flex:0 0 auto;width:var(--width-case-gallery-thumb);height:var(--height-case-gallery-thumb);box-sizing:border-box;padding:var(--space-2);border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:var(--color-case-gallery-preview);color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.case-gallery-thumb{display:grid;place-items:center;flex:0 0 auto;width:var(--width-case-gallery-thumb);height:var(--height-case-gallery-thumb);box-sizing:border-box;padding:var(--space-2);border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:var(--color-case-gallery-preview);color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color var(--duration-control) ease}
 .case-gallery-thumb>.case-gallery-art{aspect-ratio:944/600;height:auto;max-height:100%}
 .case-gallery-thumb[aria-pressed="true"]{border:2px solid var(--border-control-pressed);padding:calc(var(--space-2) - 1px)}
 .case-gallery-thumb:focus-visible{outline:var(--focus-width) solid var(--color-ink);outline-offset:2px}
@@ -23,3 +23,9 @@
   .case-gallery-thumb{width:var(--width-case-gallery-thumb-mobile);height:var(--height-case-gallery-thumb-mobile)}
   .case-gallery-thumbnails{gap:var(--space-3)}
 }
+
+@media(hover:hover) and (pointer:fine){
+  .case-gallery-thumb:not(:disabled):is(:hover,[data-ui-state="hover"]){border-color:var(--border-control-hover)}
+  .case-gallery-thumb[aria-pressed="true"]:not(:disabled):is(:hover,[data-ui-state="hover"]){border-color:var(--border-control-hover-pressed)}
+}
+@media(prefers-reduced-motion:reduce){.case-gallery-thumb{transition:none}}
