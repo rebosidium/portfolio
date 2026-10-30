@@ -1,3 +1,4 @@
+import {mountSpinFeedback} from './avatar-spin-feedback.js?v=efff07e00737';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
 const playerModule = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches
@@ -7,6 +8,7 @@ const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
 const shell=dialog.v3AvatarShell;
 const spinButton=dialog.querySelector('.v3-avatar-spin');
+mountSpinFeedback(spinButton);
 const loader=dialog.querySelector('.v3-avatar-loader');
 const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
@@ -88,7 +90,9 @@ dialog.addEventListener('v3-avatar-closing',()=>{++openGeneration;largePlayer?.s
 dialog.addEventListener('v3-avatar-closed',()=>{smallPlayer?.returnFromMenu();syncLoading();});
 spinButton.addEventListener('click',()=>largePlayer?.spin?.(4));
 reduced.addEventListener('change',()=>{syncLoading();if(!reduced.matches){if(dialog.open)afterFirstPaint(()=>{if(dialog.open&&!shell.closing){welcomeGeneration=-1;activateLarge();}});else queuePreload();}});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)queuePreload();});
+function syncBackgroundMotion(){dialog.toggleAttribute('data-background-paused',document.hidden);}
+syncBackgroundMotion();
+document.addEventListener('visibilitychange',()=>{syncBackgroundMotion();if(!document.hidden)queuePreload();});
 function syncNavigationPortrait(){
  if(!navigation.open)return;
  // Reopening cancels the celebration immediately. Settle intro readiness before

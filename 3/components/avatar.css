@@ -25,44 +25,75 @@
 .v3-avatar-large img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .v3-avatar-large canvas { inset: 0; width: 100%; height: 100%; }
 .v3-avatar-hint { margin: 0; font-size: 15px; line-height: 22px; text-align: center; color: #66686d; }
-.v3-avatar-spin,.v3-avatar-hide { border: 0; border-radius: 100px; background: #ffffff9e; padding: 13px 30px; color: #232522; font: 500 18px/26px 'DM Sans',sans-serif; cursor: pointer; box-shadow: 0 3px 16px #00000008,inset 0 1px 0 #ffffffe0; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.v3-avatar-spin,.v3-avatar-hide { border: 0; border-radius: 100px; background: #ffffff9e; padding: 13px 30px 13px 24px; color: #232522; font: 500 18px/26px 'DM Sans',sans-serif; cursor: pointer; box-shadow: 0 3px 16px #00000008,inset 0 1px 0 #ffffffe0; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
 .v3-avatar-spin:focus-visible,.v3-avatar-hide:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
 @keyframes v3-avatar-frost-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion:reduce) { .v3-avatar-dialog::backdrop { animation: none; } }
 
 .v3-avatar-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.v3-avatar-spin,.v3-avatar-hide { display: inline-flex; align-items: center; justify-content: center; gap: 9px; }
+.v3-avatar-spin,.v3-avatar-hide { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
 .v3-avatar-actions img { display: block; flex: 0 0 24px; }
 /* Loading dims the label/icon, preserving the dark glass surface. */
 .v3-avatar-spin:disabled { cursor: default; }
 .v3-avatar-spin:disabled img,.v3-avatar-spin:disabled span { opacity: .52; }
-@media(max-width:359px){.v3-avatar-actions{gap:8px}.v3-avatar-spin,.v3-avatar-hide{font-size:16px;padding:12px 18px;gap:7px}}
+@media(max-width:359px){.v3-avatar-actions{gap:8px}.v3-avatar-spin,.v3-avatar-hide{font-size:16px;padding:12px 22px 12px 16px;gap:9px}}
 
-/* Blur only the coloured light field. The underlying page keeps its lighter
-   8px glass blur, so readable content does not dissolve into a 40px backdrop. */
+/* Static blurred shapes move on separate transform layers. The native glass
+   stays at 8px; no per-frame path, filter or layout changes are needed. */
 .v3-avatar-mesh { position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;isolation:isolate; }
 .v3-avatar-mesh::before {
-  content:'';position:absolute;inset:-25%;
-  background:conic-gradient(from 25deg,#7040ff,#2ac9ff,#61e8ce,#ffb746,#ff5cbd,#7040ff);
-  filter:blur(80px);opacity:.20;
-  animation:v3-avatar-mesh-orbit 22s linear infinite paused;
+ content:'';position:absolute;inset:-25%;
+ background:conic-gradient(from 25deg,#7040ff,#2ac9ff,#61e8ce,#ffb746,#ff5cbd,#7040ff);
+ filter:blur(80px);opacity:.22;animation:v3-avatar-mesh-orbit 16s linear infinite paused;
 }
 .v3-avatar-mesh::after { content:'';position:absolute;inset:0;background:rgb(245 245 247 / .08);pointer-events:none; }
-.v3-avatar-light {
-  position:absolute;width:72vmax;height:72vmax;border-radius:50%;
-  filter:blur(64px);opacity:.32;
-  animation:v3-avatar-light-flow 9s ease-in-out infinite paused;
+.v3-avatar-light { position:absolute;width:72vmax;height:58vmax;border-radius:50%;filter:blur(56px);opacity:.34;animation:v3-avatar-light-flow 6.8s ease-in-out infinite paused; }
+.v3-avatar-light--violet { left:-20%;top:-26%;background:radial-gradient(ellipse,#632cff 8%,#632cff88 38%,#632cff00 70%);animation-delay:-3s; }
+.v3-avatar-light--cyan { width:90vmax;height:38vmax;left:5%;bottom:-28%;background:radial-gradient(ellipse,#00dbde 8%,#00dbde88 38%,#00dbde00 70%);animation-duration:8s;animation-delay:-5s;animation-direction:reverse; }
+.v3-avatar-light--pink { width:54vmax;height:76vmax;right:-22%;top:-18%;background:radial-gradient(ellipse,#ff2ea6 8%,#ff2ea688 38%,#ff2ea600 70%);animation-duration:6s;animation-delay:-2s; }
+.v3-avatar-light--amber { width:76vmax;height:46vmax;right:-16%;bottom:-30%;background:radial-gradient(ellipse,#ffab24 8%,#ffab2488 38%,#ffab2400 70%);animation-duration:9.5s;animation-delay:-6s;animation-direction:reverse; }
+/* A ring, an S-shaped ribbon and an open arc give the field distinct contours.
+   Geometry is static on the pseudo-element, then softened by its outer layer. */
+.v3-avatar-wave { position:absolute;left:-24vmax;top:18%;width:min(130vmax,1800px);height:min(44vmax,660px);filter:blur(28px);opacity:.26;animation:v3-avatar-wave-orbit 8.2s ease-in-out infinite paused; }
+.v3-avatar-wave::before { content:'';position:absolute;inset:0; }
+.v3-avatar-wave--ring::before {
+ background:linear-gradient(105deg,#723cff 12%,#ee42d1 37%,#19dce7 65%,#ffc051 90%);
+ -webkit-mask-image:radial-gradient(ellipse,transparent 44%,#000 51%,#000 62%,transparent 72%);mask-image:radial-gradient(ellipse,transparent 44%,#000 51%,#000 62%,transparent 72%);
 }
-.v3-avatar-light--violet { left:-18%;top:-26%;background:radial-gradient(ellipse,#632cff 8%,#632cff88 38%,#632cff00 70%);animation-delay:-3s; }
-.v3-avatar-light--cyan { left:18%;bottom:-40%;background:radial-gradient(ellipse,#00dbde 8%,#00dbde88 38%,#00dbde00 70%);animation-duration:11s;animation-delay:-7s;animation-direction:reverse; }
-.v3-avatar-light--pink { right:-28%;top:-14%;background:radial-gradient(ellipse,#ff2ea6 8%,#ff2ea688 38%,#ff2ea600 70%);animation-duration:8s;animation-delay:-4s; }
-.v3-avatar-light--amber { right:-12%;bottom:-44%;background:radial-gradient(ellipse,#ffab24 8%,#ffab2488 38%,#ffab2400 70%);animation-duration:13s;animation-delay:-9s;animation-direction:reverse; }
-.v3-avatar-dialog[open] .v3-avatar-mesh::before,.v3-avatar-dialog[open] .v3-avatar-light { animation-play-state:running; }
+.v3-avatar-wave--ribbon { left:-15vmax;top:43%;height:min(36vmax,520px);animation-name:v3-avatar-ribbon-flow;animation-duration:7.1s;animation-delay:-4s; }
+.v3-avatar-wave--ribbon::before {
+ background:linear-gradient(100deg,#23dcd9,#5745ff 34%,#fc4ba9 68%,#ffb950);
+ clip-path:polygon(0 34%,18% 4%,36% 10%,52% 64%,70% 75%,86% 36%,100% 52%,100% 90%,82% 70%,65% 100%,46% 86%,29% 35%,12% 25%,0 62%);
+}
+.v3-avatar-wave--arc { left:-5vmax;top:-15%;width:min(100vmax,1500px);height:min(80vmax,1100px);filter:blur(32px);animation-name:v3-avatar-arc-flow;animation-duration:10.5s;animation-delay:-6s;animation-direction:reverse; }
+.v3-avatar-wave--arc::before {
+ background:conic-gradient(from 15deg,transparent 7%,#21d9ed 20%,#7952ff 38%,#f54cb4 55%,#ffc767 68%,transparent 82%);
+ -webkit-mask-image:radial-gradient(ellipse,transparent 41%,#000 49%,#000 60%,transparent 70%);mask-image:radial-gradient(ellipse,transparent 41%,#000 49%,#000 60%,transparent 70%);
+}
+.v3-avatar-dialog[open] .v3-avatar-mesh::before,.v3-avatar-dialog[open] .v3-avatar-light,.v3-avatar-dialog[open] .v3-avatar-wave { animation-play-state:running; }
+.v3-avatar-dialog[data-background-paused] .v3-avatar-mesh::before,.v3-avatar-dialog[data-background-paused] .v3-avatar-light,.v3-avatar-dialog[data-background-paused] .v3-avatar-wave { animation-play-state:paused; }
 @keyframes v3-avatar-mesh-orbit { from{transform:rotate(0deg) scale(1)}to{transform:rotate(360deg) scale(1)} }
 @keyframes v3-avatar-light-flow {
-  0%,100%{transform:translate(-9%,-8%) scale(.88);opacity:.24}
-  35%{transform:translate(22%,17%) scale(1.14);opacity:.38}
-  70%{transform:translate(-12%,26%) scale(.96);opacity:.30}
+ 0%,100%{transform:translate(-12%,-12%) rotate(-14deg) scale(.86);opacity:.26}
+ 25%{transform:translate(24%,-8%) rotate(20deg) scale(1.16);opacity:.40}
+ 50%{transform:translate(8%,30%) rotate(-22deg) scale(.90);opacity:.32}
+ 75%{transform:translate(-22%,14%) rotate(12deg) scale(1.08);opacity:.42}
+}
+@keyframes v3-avatar-wave-orbit {
+ 0%,100%{transform:translate3d(-8%,-22%,0) rotate(-24deg) scale(1,.66);opacity:.16}
+ 33%{transform:translate3d(12%,8%,0) rotate(16deg) scale(.88,1.08);opacity:.34}
+ 66%{transform:translate3d(-2%,26%,0) rotate(34deg) scale(1.12,.78);opacity:.22}
+}
+@keyframes v3-avatar-ribbon-flow {
+ 0%,100%{transform:translate3d(-14%,-40%,0) rotate(-20deg) scale(.86,.70);opacity:.18}
+ 30%{transform:translate3d(12%,-16%,0) rotate(6deg) scale(1.10,.82);opacity:.32}
+ 60%{transform:translate3d(-2%,20%,0) rotate(18deg) scale(1.04,1.12);opacity:.20}
+ 82%{transform:translate3d(-12%,-5%,0) rotate(-8deg) scale(.90,.90);opacity:.28}
+}
+@keyframes v3-avatar-arc-flow {
+ 0%{transform:translate3d(-10%,4%,0) rotate(0deg) scale(.88);opacity:.16}
+ 50%{transform:translate3d(16%,-8%,0) rotate(180deg) scale(1.10);opacity:.30}
+ 100%{transform:translate3d(-10%,4%,0) rotate(360deg) scale(.88);opacity:.16}
 }
 /* Loading feedback exists only inside the large portrait, never on the page. */
 .v3-avatar-loader { position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none; }
@@ -71,7 +102,7 @@
 .v3-avatar-loading-status { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
 @keyframes v3-avatar-loader-turn { to{transform:rotate(360deg)} }
 @media(prefers-reduced-motion:reduce) {
- .v3-avatar-mesh,.v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-loader__spinner { animation:none!important; }
+ .v3-avatar-mesh,.v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-wave,.v3-avatar-loader__spinner { animation:none!important; }
  .v3-avatar-loader { display:none; }
 }
 

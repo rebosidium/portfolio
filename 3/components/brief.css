@@ -81,10 +81,12 @@
 .v3-brief__manual label { display: block; margin-bottom: 8px; }
 .v3-brief__manual textarea { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #757575; border-radius: 12px; background: #fff; color: #232522; font: inherit; resize: vertical; }
 @media (max-width: 600px) {
-  .v3-brief { --v3-brief-height: 60px; --v3-brief-font-size: 18px; --v3-brief-label-width: 110px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 18px; --v3-brief-gap: 12px; --v3-brief-logo-scale: .75; }
+  .v3-brief { --v3-brief-height: 60px; --v3-brief-font-size: 18px; --v3-brief-label-width: 110px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 28px; --v3-brief-gap: 12px; --v3-brief-logo-scale: .75; }
 }
+/* Preserve the new trailing inset on narrow phones without reducing text. */
+@media (min-width:360px) and (max-width:369px) { .v3-brief { --v3-brief-logo-scale:.69; } }
 @media (max-width: 359px) {
-  .v3-brief { --v3-brief-height: 56px; --v3-brief-font-size: 17px; --v3-brief-label-width: 98px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 12px; --v3-brief-gap: 8px; --v3-brief-logo-scale: .62; }
+  .v3-brief { --v3-brief-height: 56px; --v3-brief-font-size: 17px; --v3-brief-label-width: 98px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 24px; --v3-brief-gap: 8px; --v3-brief-logo-scale: .59; }
 }
 @media (prefers-reduced-motion: reduce) { .v3-brief__button, .v3-brief .v3-brief__label > span { transition: none; } }
 @supports not ((backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px))) { .v3-brief__glass { background: #ffffffd9; } }
