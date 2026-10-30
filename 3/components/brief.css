@@ -69,7 +69,7 @@
 .is-copied .v3-brief__copied { opacity: 1; visibility: visible; transition: opacity 180ms ease 180ms, visibility 0s linear 180ms; }
 .v3-brief__check { display: block; width: 24px; height: 24px; flex: 0 0 24px; }
 .v3-brief__logos-space { display: block; position: relative; flex: 0 0 calc(var(--v3-brief-logos-width) * var(--v3-brief-logo-scale)); width: calc(var(--v3-brief-logos-width) * var(--v3-brief-logo-scale)); height: calc(28px * var(--v3-brief-logo-scale)); }
-.v3-brief__logos { position: absolute; left: 0; top: 0; display: flex; gap: 13px; transform: scale(var(--v3-brief-logo-scale)); transform-origin: top left; }
+.v3-brief__logos { position: absolute; left: 0; top: 0; display: flex; gap: 13px; transform: translateZ(0) scale(var(--v3-brief-logo-scale)); transform-origin: top left; }
 .v3-brief__icon.v3-brief__icon--cursor { display: flex; align-items: center; justify-content: center; }
 .v3-brief__icon { display: block; position: relative; flex: 0 0 28px; width: 28px; height: 28px; }
 /* Preserve the source SVG dimensions; the wrapper carries Figma's masks. */
@@ -90,3 +90,7 @@
 }
 @media (prefers-reduced-motion: reduce) { .v3-brief__button, .v3-brief .v3-brief__label > span { transition: none; } }
 @supports not ((backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px))) { .v3-brief__glass { background: #ffffffd9; } }
+
+/* Keep the same compositor origin before, during and after the logo wave.
+   Fractional mobile scaling must not switch back to a differently snapped raster. */
+.v3-brief__icon { transform:translate3d(0,0,0); backface-visibility:hidden; will-change:transform; }

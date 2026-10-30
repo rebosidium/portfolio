@@ -3,7 +3,7 @@ export function mountBriefIcons(button) {
   const icons = [...button.querySelector('.v3-brief__logos').children];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const ease = 'cubic-bezier(.37,0,.63,1)';
-  const pose = y => ({transform: `translateY(${y}px)`, easing: ease});
+  const pose = y => ({transform: `translate3d(0,${y}px,0)`, easing: ease});
   let animations = [];
   function stop() {
     animations.forEach(animation => animation.cancel());

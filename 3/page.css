@@ -64,3 +64,6 @@ body { margin: 0; }
   .v3-nav { gap: 20px; font-size: 17px; }
   .v3-headline { font-size: clamp(28px, calc(100svh - 540px), 30px); }
 }
+
+/* Slightly open word spacing, independent of letter tracking. */
+.v3-headline,.v3-case-copy h3,.v3-name,.v3-nav,.v3-menu-links { word-spacing:1px; }

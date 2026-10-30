@@ -421,6 +421,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
   }
   function skipIntro(){
+    delete stage.dataset.welcomePending;
     finishIntro(false);
     introConsumed=true;introRequested=false;
     if(mode==='intro'){releaseDrag();stop();canvas.dataset.introCancelled='true'}
@@ -436,6 +437,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(prepared)checkResize();
   }
   function startIntro({replay=false}={}){
+    clearTimeout(resizeTimer);
     if(media.matches||document.hidden||destroyed)return false;
     if(introConsumed){
       if(!replay)return false;
@@ -460,6 +462,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     introRequested=false;introConsumed=true;introTime=0;introFrom=indexToAngle(first.index)-360;
     currentAngle=targetAngle=introFrom;lastMotionPhase=currentAngle;lastMotionDirection=1;
     wantedIndex=first.index;beginStats();draw(first,indexToAngle(first.index));
+    delete stage.dataset.welcomePending;
     mode='intro';previousTick=0;canvas.dataset.mode=mode;canvas.dataset.introCount=String(Number(canvas.dataset.introCount||0)+1);
     scheduleRender();
   }
@@ -773,9 +776,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     notifyLoading();
     if(!ready||!startupSettled||preparing)return;clearTimeout(resizeTimer);
     // Finish the short welcome turn with its prepared bitmaps; resize once idle.
-    if(mode==='intro')return;
+    if(mode==='intro'||introRequested)return;
     resizeTimer=setTimeout(()=>{
-      if(!ready||!startupSettled||preparing||mode==='intro')return;
+      if(!ready||!startupSettled||preparing||mode==='intro'||introRequested)return;
       if(manifest&&chooseVariant()!==canvas.dataset.quality){init();return}
       const next=physicalSize();
       if(Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;

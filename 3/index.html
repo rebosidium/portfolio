@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="affe879562f1">
+<html lang="en" data-build="77692514aa8a">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,15 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..500;1,9..40,400..500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/3/page.css?v=42c1a7402ce9">
-  <link rel="stylesheet" href="/3/components/brief.css?v=4110c6541941">
-  <script type="module" src="/3/components/brief.js?v=6b1201bfb1f9"></script>
+  <link rel="stylesheet" href="/3/page.css?v=cdac027c7bd8">
+  <link rel="stylesheet" href="/3/components/brief.css?v=9dfe114a6059">
+  <script type="module" src="/3/components/brief.js?v=c73390d1a696"></script>
   <link rel="stylesheet" href="/3/components/mobile-menu.css?v=5bb21642eb19">
   <script type="module" src="/3/components/mobile-menu.js?v=6c2cc0e28616"></script>
-  <link rel="stylesheet" href="/3/components/avatar.css?v=f8d066b4f505">
-  <script type="module" src="/3/components/avatar.js?v=810ed798a3df"></script>
+  <link rel="stylesheet" href="/3/components/avatar-effects.css?v=dd55cd4dcf8f">
+  <link rel="stylesheet" href="/3/components/avatar.css?v=bc099fded5bf">
+  <script type="module" src="/3/components/avatar.js?v=d15922a454de"></script>
   <link rel="stylesheet" href="/3/components/case-cards.css?v=8cf684a0ce6b">
-  <script type="module" src="/3/components/case-cards.js?v=1bf1e97d14a1"></script>
+  <script type="module" src="/3/components/case-cards.js?v=df9c1a325b9c"></script>
   <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
 </head>
 <body>
@@ -56,7 +57,7 @@
         <span class="v3-brief__status" id="v3-brief-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
         <div class="v3-brief__manual" hidden>
           <label for="v3-brief-prompt">Copy this prompt into your AI chat</label>
-          <textarea id="v3-brief-prompt" readonly rows="4" spellcheck="false">Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt</textarea>
+          <textarea id="v3-brief-prompt" readonly rows="4" spellcheck="false">Read https://dmitryrybalka.com/llms.txt — it's Dmitry Rybalka's resume and portfolio. Give me a short overview of his experience and key projects, and help me assess his fit for the role I'm hiring for. If you can't open the link, tell me instead of guessing.</textarea>
         </div>
         <noscript><style>.v3-brief__button{display:none}.v3-brief__manual[hidden]{display:block}</style></noscript>
       </div>
@@ -78,9 +79,9 @@
     <div class="v3-avatar-mesh" aria-hidden="true"><span class="v3-avatar-light v3-avatar-light--violet"></span><span class="v3-avatar-light v3-avatar-light--cyan"></span><span class="v3-avatar-light v3-avatar-light--pink"></span><span class="v3-avatar-light v3-avatar-light--amber"></span><span class="v3-avatar-wave v3-avatar-wave--ring"></span><span class="v3-avatar-wave v3-avatar-wave--ribbon"></span><span class="v3-avatar-wave v3-avatar-wave--arc"></span></div>
     <div class="v3-avatar-viewer">
       <div class="v3-avatar-large v3-avatar-stage" data-v3-avatar-large role="img" aria-label="Dmitry Rybalka. Drag to rotate" tabindex="0">
-        <img src="/3/assets/portrait-front-dark.webp?v=9ed62e5f8ab5" alt="" width="800" height="800" draggable="false">
+        <picture><source media="(prefers-reduced-motion: reduce)" srcset="/3/assets/portrait-front-dark.webp?v=9ed62e5f8ab5"><img src="/3/assets/portrait-start-dark.webp?v=77771859cda3" alt="" width="800" height="800" draggable="false"></picture>
         <canvas width="800" height="800" aria-hidden="true"></canvas>
-        <span class="v3-avatar-loader" aria-hidden="true"><span class="v3-avatar-loader__spinner"></span></span>
+        <span class="v3-avatar-loader" aria-hidden="true"></span>
       </div>
       <div class="v3-avatar-actions">
         <button class="v3-avatar-spin" type="button" disabled><img src="/3/assets/lucide-rotate-cw.svg?v=ddcfe6d87240" alt="" width="24" height="24"><span>Spin</span></button>
@@ -100,7 +101,7 @@
     const hide=dialog.querySelector('.v3-avatar-hide');
     const spin=dialog.querySelector('.v3-avatar-spin');
     const reduced=matchMedia('(prefers-reduced-motion:reduce)');
-    let locked=null,closing=false,animation=null,gesture=null,generation=0;
+    let locked=null,closing=false,animation=null,gesture=null,generation=0,hideTimer=0;
     const afterPaint=callback=>requestAnimationFrame(()=>requestAnimationFrame(callback));
     const emit=name=>dialog.dispatchEvent(new Event(name));
     function lock(){
@@ -131,6 +132,7 @@
     }
     async function close(){
       if(!dialog.open||closing)return;
+      clearTimeout(hideTimer);hideTimer=0;delete hide.dataset.feedbackPending;
       closing=true;++generation;animation?.cancel();emit('v3-avatar-closing');
       if(!reduced.matches){
         animation=viewer.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.96)'}],{duration:220,easing:'ease-in'});
@@ -142,7 +144,15 @@
     small.addEventListener('pointerdown',event=>{gesture={x:event.clientX,y:event.clientY,moved:false};},{capture:true});
     small.addEventListener('pointermove',event=>{if(gesture&&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>6)gesture.moved=true;},{capture:true});
     small.addEventListener('click',event=>{if(event.detail!==0&&gesture?.moved){event.preventDefault();return;}open();});
-    hide.addEventListener('click',close);
+    hide.addEventListener('click',()=>{
+      if(closing||hideTimer)return;
+      // Let the shared icon/button spring settle before the viewer fades away.
+      // Escape still closes immediately, including during this feedback window.
+      if(hide.dataset.feedbackReady==='true'&&!reduced.matches&&!document.hidden){
+        hide.dataset.feedbackPending='';
+        hideTimer=setTimeout(close,840);
+      }else close();
+    });
     dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
     // A second tap and backdrop clicks are inert. Only Hide/Escape dismiss.
     dialog.addEventListener('keydown',event=>{

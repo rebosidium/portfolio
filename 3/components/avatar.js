@@ -1,15 +1,20 @@
-import {mountSpinFeedback} from './avatar-spin-feedback.js?v=efff07e00737';
+import {mountAvatarAmbience} from './avatar-ambience.js?v=c236389323c7';
+import {mountPortraitLoader} from './avatar-loading.js?v=7f155db9dbbf';
+import {mountSpinFeedback} from './avatar-spin-feedback.js?v=d4db6ae56b10';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
 const playerModule = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches
-  ? '../portrait-player-android.js?v=605206950d5f' : '../portrait-player.js?v=c823f9def505';
+  ? '../portrait-player-android.js?v=2f0c74021487' : '../portrait-player.js?v=79616efef3ee';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
 const shell=dialog.v3AvatarShell;
 const spinButton=dialog.querySelector('.v3-avatar-spin');
 mountSpinFeedback(spinButton);
+const hideButton=dialog.querySelector('.v3-avatar-hide');
+mountSpinFeedback(hideButton);hideButton.dataset.feedbackReady='true';
 const loader=dialog.querySelector('.v3-avatar-loader');
+mountPortraitLoader(large,loader);
 const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const navigation=document.querySelector('.v3-mobile-menu');
@@ -23,7 +28,7 @@ let primaryPageReady=false,primaryIntroSettled=false,primaryState=null;
 function syncLoading(){
  const ready=!!largeState?.ready,complete=ready&&!!largeState?.allReady;
  const loading=!reduced.matches&&!moduleFailed&&!largeState?.error&&!ready;
- loader.hidden=!loading;
+ loader.hidden=!loading;if(moduleFailed||largeState?.error||reduced.matches)delete large.dataset.welcomePending;
  dialog.dataset.preloaded=String(complete);
  large.setAttribute('aria-busy',String(loading));
  spinButton.disabled=!complete||reduced.matches;
@@ -39,6 +44,7 @@ function ensureLarge(){
   interaction:'drag',manifestURL,paused:!dialog.open||shell.closing,retainQuality:true,
   displayWidth:()=>Math.max(1,Math.min(innerWidth*.86,innerHeight-140,860))
  });
+ mountAvatarAmbience(dialog,large,spinButton);
  // Startup retains the original 90-frame buffer/70-frame welcome. Once a
  // hidden preload is usable, release decoded welcome frames and fetch the rest.
  largePlayer.subscribeLoading(state=>{
@@ -84,10 +90,10 @@ function queuePreload(){
 }
 
 // The shell also works when this entire adapter is delayed by the network.
-dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;syncLoading();});
+dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;if(!reduced.matches)large.dataset.welcomePending='';syncLoading();});
 dialog.addEventListener('v3-avatar-opened',activateLarge);
 dialog.addEventListener('v3-avatar-closing',()=>{++openGeneration;largePlayer?.skipIntro();largePlayer?.pause();});
-dialog.addEventListener('v3-avatar-closed',()=>{smallPlayer?.returnFromMenu();syncLoading();});
+dialog.addEventListener('v3-avatar-closed',()=>{delete large.dataset.welcomePending;smallPlayer?.returnFromMenu();syncLoading();});
 spinButton.addEventListener('click',()=>largePlayer?.spin?.(4));
 reduced.addEventListener('change',()=>{syncLoading();if(!reduced.matches){if(dialog.open)afterFirstPaint(()=>{if(dialog.open&&!shell.closing){welcomeGeneration=-1;activateLarge();}});else queuePreload();}});
 function syncBackgroundMotion(){dialog.toggleAttribute('data-background-paused',document.hidden);}

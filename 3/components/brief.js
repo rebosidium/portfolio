@@ -1,7 +1,7 @@
 // Independent copy of the existing site's Brief behavior and briefing prompt.
 // This module has no dependency on the site's app, analytics or shared styles.
-import {mountBriefIcons} from './brief-icons.js?v=44c083f7a806';
-export const briefingPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
+import {mountBriefIcons} from './brief-icons.js?v=77335a25004d';
+export const briefingPrompt = "Read https://dmitryrybalka.com/llms.txt — it's Dmitry Rybalka's resume and portfolio. Give me a short overview of his experience and key projects, and help me assess his fit for the role I'm hiring for. If you can't open the link, tell me instead of guessing.";
 
 export function mountBrief(control) {
   const button = control.querySelector('.v3-brief__button');

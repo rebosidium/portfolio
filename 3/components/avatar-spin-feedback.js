@@ -74,10 +74,10 @@ export function mountSpinFeedback(button) {
   }
 
   listen(button, 'click', event => {
-    if (!event.isTrusted || button.disabled || button.getAttribute('aria-disabled') === 'true') return;
+    if (!event.isTrusted || button.disabled || button.getAttribute('aria-disabled') === 'true' || button.hasAttribute('data-feedback-pending')) return;
     if (reduced.matches || document.hidden) { cancel(); return; }
     play();
-  });
+  }, {capture:true});
   listen(reduced, 'change', cancel);
   listen(dialog, 'v3-avatar-closing', cancel);
   listen(dialog, 'close', cancel);

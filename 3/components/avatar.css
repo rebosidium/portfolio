@@ -98,11 +98,9 @@
 /* Loading feedback exists only inside the large portrait, never on the page. */
 .v3-avatar-loader { position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none; }
 .v3-avatar-loader[hidden] { display:none; }
-.v3-avatar-loader__spinner { box-sizing:border-box;width:44px;height:44px;border:3px solid #ffffffb3;border-top-color:#232522;border-radius:50%;box-shadow:0 0 0 12px #ffffffa3,0 2px 24px 12px #0000000c;animation:v3-avatar-loader-turn 850ms linear infinite; }
 .v3-avatar-loading-status { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
-@keyframes v3-avatar-loader-turn { to{transform:rotate(360deg)} }
 @media(prefers-reduced-motion:reduce) {
- .v3-avatar-mesh,.v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-wave,.v3-avatar-loader__spinner { animation:none!important; }
+ .v3-avatar-mesh,.v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-wave { animation:none!important; }
  .v3-avatar-loader { display:none; }
 }
 
@@ -116,7 +114,12 @@
 }
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
 
-@media(hover:hover) and (pointer:fine){.v3-portrait.v3-avatar-stage{transition:transform 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover{transform:scale(1.03)}}
+@media(hover:hover) and (pointer:fine){.v3-portrait.v3-avatar-stage{transition:transform 460ms cubic-bezier(.37,0,.63,1),box-shadow 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover{transform:scale(1.03);box-shadow:0 3px 16px #00000008,0 8px 28px #00000004}}
 @media(prefers-reduced-motion:reduce){.v3-portrait.v3-avatar-stage{transition:none}}
 
 .v3-portrait.v3-avatar-stage[data-return-focus]:focus-visible { outline: none; }
+
+/* Keep the first pose visible until the replay bitmaps are complete. */
+.v3-avatar-large picture { display:contents; }
+.v3-avatar-large[data-welcome-pending] canvas { visibility:hidden; }
+.v3-avatar-large[data-welcome-pending] img { visibility:visible; }
