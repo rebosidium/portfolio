@@ -33,7 +33,9 @@
 .v3-avatar-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 .v3-avatar-spin,.v3-avatar-hide { display: inline-flex; align-items: center; justify-content: center; gap: 9px; }
 .v3-avatar-actions img { display: block; flex: 0 0 24px; }
-.v3-avatar-spin:disabled { opacity: .45; cursor: default; }
+/* Loading dims the label/icon, preserving the dark glass surface. */
+.v3-avatar-spin:disabled { cursor: default; }
+.v3-avatar-spin:disabled img,.v3-avatar-spin:disabled span { opacity: .52; }
 @media(max-width:359px){.v3-avatar-actions{gap:8px}.v3-avatar-spin,.v3-avatar-hide{font-size:16px;padding:12px 18px;gap:7px}}
 
 /* Blur only the coloured light field. The underlying page keeps its lighter
@@ -76,7 +78,7 @@
 .v3-avatar-dialog:focus { outline: none; }
 /* Dark glass keeps a white label while reflecting the same light rim as Brief. */
 .v3-avatar-spin {
- background:linear-gradient(135deg,#ffffff26,#ffffff06 54%,#ffffff12),rgb(8 8 12 / .68);
+ background:linear-gradient(135deg,#ffffff0e,#ffffff02 54%,#ffffff06),rgb(3 3 5 / .92);
  color:#fff;
  box-shadow:0 3px 16px #00000018,inset 0 1px 0 #ffffff73,inset 0 -1px 0 #00000040,inset 1px 0 0 #ffffff2b,inset -1px 0 0 #ffffff24;
  -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
