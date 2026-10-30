@@ -1,5 +1,5 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
-import {mountMesh} from './card-shader-runtime.js?v=0749b66b4f40';
+import {mountMesh} from './card-shader-runtime.js?v=1901744a2682';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',size:[28,28]},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599',size:[460,460]},
@@ -71,7 +71,16 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   const active=desktop.matches&&!reduced.matches;
   const progress=Math.max(0,Math.min(2200,scrollY));
   columns.forEach(column=>{column.style.transform=active?`translateY(${progress*Number(column.dataset.speed)}px)`:'none'});
-  for(const cover of covers){const rect=cover.getBoundingClientRect();const factor=Math.min(1,Math.max(0,scrollY/180));const shift=active?Math.max(-36,Math.min(36,(innerHeight/2-(rect.top+rect.height/2))*.06))*factor:0;cover.style.setProperty('--v3-cover-shift',`${shift}px`);cover.style.setProperty('--v3-cover-scale',String(active?1+.22*factor:1));}
+  for(const cover of covers){
+   const rect=cover.getBoundingClientRect(),factor=Math.min(1,Math.max(0,scrollY/180));
+   const scale=active?1+.22*factor:1;
+   const desired=active?Math.max(-36,Math.min(36,(innerHeight/2-(rect.top+rect.height/2))*.06))*factor:0;
+   // A fixed pixel shift can exceed the overscan on narrow, tall desktops.
+   // Clamp to the actual scaled image margin, retaining a subpixel safety inset.
+   const margin=Math.max(0,rect.height*(scale-1)/2-.5);
+   cover.style.setProperty('--v3-cover-shift',`${Math.max(-margin,Math.min(margin,desired))}px`);
+   cover.style.setProperty('--v3-cover-scale',String(scale));
+  }
  }
  function schedule(){if(!raf)raf=requestAnimationFrame(draw);}
  const size=new ResizeObserver(measure);size.observe(section);section.querySelectorAll('.v3-case-copy').forEach(el=>size.observe(el));

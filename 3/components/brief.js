@@ -61,6 +61,9 @@ export function mountBrief(control) {
       button.disabled = true;
       field.focus({preventScroll: true});
       field.select();
+      // preventScroll avoids a focus jump; reveal the fallback if it is below
+      // the fold on short mobile viewports before asking the user to copy it.
+      field.scrollIntoView({block:'nearest',inline:'nearest'});
       status.textContent = 'Copy the selected prompt below, then paste it into your AI chat.';
     }
     button.setAttribute('aria-busy', 'false');

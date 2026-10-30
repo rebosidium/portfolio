@@ -18,8 +18,10 @@ function lockScroll() {
   const body = document.body;
   const properties = ['position','top','left','right','width'];
   locked = {x:scrollX,y:scrollY,overflow:document.documentElement.style.overflow,styles:properties.map(p=>[p,body.style.getPropertyValue(p)])};
+  // Capture before overflow:hidden so classic scrollbars cannot shift the page.
+  const layoutWidth=body.getBoundingClientRect().width;
   document.documentElement.style.overflow = 'hidden';
-  Object.assign(body.style,{position:'fixed',top:`${-locked.y}px`,left:'0',right:'0',width:'100%'});
+  Object.assign(body.style,{position:'fixed',top:`${-locked.y}px`,left:'0',right:'0',width:`${layoutWidth}px`});
 }
 function unlockScroll() {
   if (!locked) return;

@@ -1,12 +1,21 @@
 // Vanilla adapter for the exact Figma shader setup/render contract.
 // The hosted React runtime resource is unavailable through this MCP client.
 import {setup,render} from './card-mesh-shader.js?v=2143ad00fc5f';
-let devicePromise;
+let devicePromise,activeDevice;
 function getDevice(){
   return devicePromise ||= (async()=>{
     if(!navigator.gpu)return null;
     const adapter=await navigator.gpu.requestAdapter();
-    return adapter?await adapter.requestDevice():null;
+    if(!adapter)return null;
+    const device=await adapter.requestDevice();activeDevice=device;
+    // Device loss is asynchronous; render() need not throw. Stop every canvas
+    // sharing the device and allow a future mount to request a fresh one.
+    device.lost.then(info=>{
+      if(activeDevice===device){activeDevice=null;devicePromise=null;}
+      for(const entry of entries.values())if(entry.device===device)failEntry(entry,info.message||'Graphics device lost');
+      sync();
+    });
+    return device;
   })();
 }
 export function meshParams(index=0){
@@ -51,6 +60,12 @@ function drift(entry,time){
     point.color.b=base.color.b+.018*(Math.sin(phase*.53+seed+2)-Math.sin(seed+2));
   }
 }
+function failEntry(entry,error){
+  entry.dead=true;entry.canvas.dataset.shader='error';
+  entry.canvas.dataset.shaderError=error?.message||String(error);
+  entry.canvas.parentElement.setAttribute('data-shader-unavailable','');
+  try{entry.context.unconfigure();}catch{}
+}
 function drawEntry(entry){
   if(!entry.initialized){setup(entry.device,entry.frame);entry.initialized=true;}
   const dpr=Math.min(devicePixelRatio||1,1.25);
@@ -73,7 +88,7 @@ function tick(now){
       if(!reduced.matches&&entry.lastTime)entry.time+=Math.min(100,now-entry.lastTime);
       entry.lastTime=now;
       try{drawEntry(entry);device=entry.device;}
-      catch(error){entry.dead=true;entry.canvas.dataset.shader='error';entry.canvas.dataset.shaderError=error.message;entry.canvas.parentElement.setAttribute('data-shader-unavailable','');}
+      catch(error){failEntry(entry,error);}
     }
     lastFrame=now;
     if(device){gpuBusy=true;device.queue.onSubmittedWorkDone().catch(()=>{}).finally(()=>{gpuBusy=false;wake();});}

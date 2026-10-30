@@ -1,6 +1,6 @@
 // Own v3 adapter around the approved source player and unchanged frame archives.
 const playerModule = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches
-  ? '../portrait-player-android.js?v=5eb314ea9a45' : '../portrait-player.js?v=1564567c8cc5';
+  ? '../portrait-player-android.js?v=a7166b22430d' : '../portrait-player.js?v=cdc1ffc2a0c6';
 const {mountSeedancePortrait} = await import(playerModule);
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
@@ -19,7 +19,9 @@ let largePlayer=null,locked=null,closing=false,animation=null,gesture=null;
 function lock(){
  const properties=['position','top','left','right','width'];
  locked={x:scrollX,y:scrollY,overflow:document.documentElement.style.overflow,styles:properties.map(p=>[p,document.body.style.getPropertyValue(p)])};
- document.documentElement.style.overflow='hidden';Object.assign(document.body.style,{position:'fixed',top:`${-locked.y}px`,left:'0',right:'0',width:'100%'});
+ // Preserve content width before removing classic (non-overlay) scrollbars.
+ const layoutWidth=document.body.getBoundingClientRect().width;
+ document.documentElement.style.overflow='hidden';Object.assign(document.body.style,{position:'fixed',top:`${-locked.y}px`,left:'0',right:'0',width:`${layoutWidth}px`});
 }
 function unlock(){
  if(!locked)return;const saved=locked;locked=null;document.documentElement.style.overflow=saved.overflow;

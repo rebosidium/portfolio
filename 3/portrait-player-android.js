@@ -7,7 +7,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   if(!ctx||!posterElement||!manifestURL){
     const state=Object.freeze({generation:0,quality:null,desiredQuality:null,ready:false,allReady:false,loading:false,error:'Portrait unavailable',activeDownloads:0});
     const allFramesReady=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
-    return {ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
+    // Preserve the controller contract when Canvas is unavailable: the modal
+    // adapter must still open/close the static poster without throwing.
+    return {spin(){return false},prepareMenuPose(){return false},returnFromMenu(){return false},ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
   }
   let selectionAngle=initialAngle,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
   let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
