@@ -16,7 +16,10 @@
 .v3-case-cover-pin[data-stack-covered] canvas { display:none; }
 .v3-case-cover { position:relative;isolation:isolate;aspect-ratio:588/400;overflow:hidden;border-radius:32px;background:#f0f0f2; }
 .v3-case-cover canvas { position:absolute;inset:0;width:100%;height:100%;display:block;transform:translateY(var(--v3-cover-shift,0px)) scale(var(--v3-cover-scale,1)); }
-.v3-case-copy { position:relative;z-index:1;box-sizing:border-box;padding:50px 42px;border-radius:32px;background:#fff;transform:translateY(var(--v3-stack-lift,0px)); }
+/* A constant blur samples the pinned cover through the white tint. Keep text
+   fully opaque and avoid animating filter strength inside the scroll loop. */
+.v3-case-copy { position:relative;z-index:1;box-sizing:border-box;padding:50px 42px;border-radius:32px;background:rgb(255 255 255 / .78);-webkit-backdrop-filter:blur(24px) saturate(110%);backdrop-filter:blur(24px) saturate(110%);box-shadow:inset 0 1px 0 #ffffffb3;transform:translateY(var(--v3-stack-lift,0px)); }
+@supports not ((backdrop-filter:blur(24px)) or (-webkit-backdrop-filter:blur(24px))) { .v3-case-copy {background:#fff;} }
 .v3-case-copy h3 { margin:0;font-size:34px;line-height:1.4;font-weight:400;letter-spacing:0; }
 .v3-case-brand-lead { white-space:nowrap; }
 .v3-case-company { font-style:italic; }
