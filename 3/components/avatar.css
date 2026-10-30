@@ -1,6 +1,10 @@
-.v3-portrait.v3-avatar-stage { display: block; padding: 0; border: 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; }
+.v3-portrait.v3-avatar-stage { --v3-avatar-hover-scale:1; --v3-avatar-size:68px; display: block; padding: 0; border: 0; overflow:visible; background:transparent; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; }
+/* Expand only the circular aperture. Artwork stays anchored to its centre at
+   a fixed CSS size, so hover reveals more of the portrait without zooming it. */
+.v3-avatar-aperture { position:absolute;inset:0;overflow:hidden;border-radius:50%;background:#fff;pointer-events:none; }
 .v3-avatar-stage canvas { position: absolute; display: block; visibility: hidden; pointer-events: none; }
-.v3-portrait.v3-avatar-stage canvas { width: 120.84%; height: 120.84%; max-width: none; left: -11.11%; top: 3.58%; }
+.v3-portrait.v3-avatar-stage :is(canvas,img) { width:calc(var(--v3-avatar-size)*1.2084);height:calc(var(--v3-avatar-size)*1.2084);max-width:none;left:calc(50% - var(--v3-avatar-size)*.6111);top:calc(50% - var(--v3-avatar-size)*.4642); }
+@media(max-width:480px){.v3-portrait.v3-avatar-stage{--v3-avatar-size:52px}}
 .v3-avatar-stage.portrait-rendered canvas { visibility: visible; }
 .v3-avatar-stage.portrait-rendered img { visibility: hidden; }
 .v3-avatar-stage:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
@@ -47,6 +51,9 @@
  filter:blur(80px);opacity:.22;animation:v3-avatar-mesh-orbit 16s linear infinite paused;
 }
 .v3-avatar-mesh::after { content:'';position:absolute;inset:0;background:rgb(245 245 247 / .08);pointer-events:none; }
+/* Android touch fallback: drop the animated colour field (and any ambience
+   nested in it). The light native backdrop glass and all content remain. */
+html[data-v3-android] .v3-avatar-mesh { display:none!important; }
 .v3-avatar-light { position:absolute;width:72vmax;height:58vmax;border-radius:50%;filter:blur(56px);opacity:.34;animation:v3-avatar-light-flow 6.8s ease-in-out infinite paused; }
 .v3-avatar-light--violet { left:-20%;top:-26%;background:radial-gradient(ellipse,#632cff 8%,#632cff88 38%,#632cff00 70%);animation-delay:-3s; }
 .v3-avatar-light--cyan { width:90vmax;height:38vmax;left:5%;bottom:-28%;background:radial-gradient(ellipse,#00dbde 8%,#00dbde88 38%,#00dbde00 70%);animation-duration:8s;animation-delay:-5s;animation-direction:reverse; }
@@ -114,8 +121,8 @@
 }
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
 
-@media(hover:hover) and (pointer:fine){.v3-portrait.v3-avatar-stage{transition:transform 460ms cubic-bezier(.37,0,.63,1),box-shadow 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover{transform:scale(1.03);box-shadow:0 3px 16px #00000008,0 8px 28px #00000004}}
-@media(prefers-reduced-motion:reduce){.v3-portrait.v3-avatar-stage{transition:none}}
+@media(hover:hover) and (pointer:fine){.v3-avatar-aperture{transition:inset 460ms cubic-bezier(.37,0,.63,1),box-shadow 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover .v3-avatar-aperture{inset:-3px;box-shadow:0 3px 16px #00000008,0 8px 28px #00000004}}
+@media(prefers-reduced-motion:reduce){.v3-avatar-aperture{transition:none}}
 
 .v3-portrait.v3-avatar-stage[data-return-focus]:focus-visible { outline: none; }
 

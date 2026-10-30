@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="77692514aa8a">
+<html lang="en" data-build="b29df0fa43c3">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,26 +8,48 @@
   <meta name="description" content="Dmitry Rybalka — Product Designer & Design Lead building large-scale products for millions of users across multiple markets.">
   <title>Dmitry Rybalka — Product Designer & Design Lead · v3</title>
   <link rel="icon" href="data:,">
+  <script>
+  // Android touch devices get a static portrait backdrop. Set before first paint
+  // so a cold tap never shows the animated mesh. Same test as the player choice.
+  if(/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches)document.documentElement.dataset.v3Android='';
+  </script>
+  <style>html[data-v3-entrance="pending"] :is(.v3-header,.v3-headline,.v3-hero > .v3-brief){opacity:0}@media(prefers-reduced-motion:reduce){html[data-v3-entrance="pending"] :is(.v3-header,.v3-headline,.v3-hero > .v3-brief){opacity:1}}</style>
+  <script>
+  (()=>{
+    const root=document.documentElement;let timer,headerResolve,contentResolve;
+    const headerReady=new Promise(resolve=>{headerResolve=resolve;});
+    const contentReady=new Promise(resolve=>{contentResolve=resolve;});
+    const headerDone=()=>{headerResolve();};
+    const finish=()=>{clearTimeout(timer);delete root.dataset.v3Entrance;headerDone();contentResolve();};
+    window.v3Entrance=Object.freeze({headerReady,headerDone,contentReady,finish});
+    if(!matchMedia('(prefers-reduced-motion:reduce)').matches&&!document.hidden){
+      root.dataset.v3Entrance='pending';
+      // Fail open even if the optional entrance script cannot be fetched.
+      timer=setTimeout(()=>{finish();dispatchEvent(new Event('v3-entrance-timeout'));},4500);
+    }else finish();
+  })();
+  </script>
+  <script defer src="/3/components/page-entrance.js?v=3a238635f3c1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..500;1,9..40,400..500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/3/page.css?v=cdac027c7bd8">
+  <link rel="stylesheet" href="/3/page.css?v=b86bab0e26c5">
   <link rel="stylesheet" href="/3/components/brief.css?v=9dfe114a6059">
   <script type="module" src="/3/components/brief.js?v=c73390d1a696"></script>
   <link rel="stylesheet" href="/3/components/mobile-menu.css?v=5bb21642eb19">
   <script type="module" src="/3/components/mobile-menu.js?v=6c2cc0e28616"></script>
   <link rel="stylesheet" href="/3/components/avatar-effects.css?v=dd55cd4dcf8f">
-  <link rel="stylesheet" href="/3/components/avatar.css?v=bc099fded5bf">
-  <script type="module" src="/3/components/avatar.js?v=d15922a454de"></script>
-  <link rel="stylesheet" href="/3/components/case-cards.css?v=8cf684a0ce6b">
-  <script type="module" src="/3/components/case-cards.js?v=df9c1a325b9c"></script>
+  <link rel="stylesheet" href="/3/components/avatar.css?v=9a58191b5260">
+  <script type="module" src="/3/components/avatar.js?v=4c3227fe0d6e"></script>
+  <link rel="stylesheet" href="/3/components/case-cards.css?v=1f36cca64d98">
+  <script type="module" src="/3/components/case-cards.js?v=c7bedd01024b"></script>
   <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
 </head>
 <body>
   <div class="v3-page" data-node-id="797:5191">
     <header class="v3-header v3-grid">
       <div class="v3-identity" data-node-id="797:5203">
-        <button class="v3-portrait v3-avatar-stage" data-v3-avatar-small type="button" aria-label="Open full-screen portrait" aria-haspopup="dialog" aria-controls="v3-avatar-dialog"><img src="/3/assets/portrait-start-dark.webp?v=77771859cda3" alt="" width="68" height="68" fetchpriority="high" draggable="false"><canvas width="68" height="68" aria-hidden="true"></canvas></button>
+        <button class="v3-portrait v3-avatar-stage" data-v3-avatar-small type="button" aria-label="Open full-screen portrait" aria-haspopup="dialog" aria-controls="v3-avatar-dialog"><span class="v3-avatar-aperture" aria-hidden="true"><img src="/3/assets/portrait-start-240-dark.webp?v=9701f6c922ae" alt="" width="68" height="68" fetchpriority="high" draggable="false"><canvas width="68" height="68" aria-hidden="true"></canvas></span></button>
         <span class="v3-name" data-node-id="797:5205">Dmitry Rybalka</span>
       </div>
       <button class="v3-menu-toggle" type="button" aria-label="Open menu" aria-controls="v3-mobile-menu" aria-expanded="false" data-menu-icon="menu"><svg class="v3-menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><defs><path id="v3-menu-stroke-header" d="M4 12h16"/></defs><use class="v3-menu-stroke v3-menu-stroke--top" href="#v3-menu-stroke-header"/><use class="v3-menu-stroke v3-menu-stroke--bottom" href="#v3-menu-stroke-header"/></svg></button>

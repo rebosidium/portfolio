@@ -3,8 +3,10 @@ import {mountPortraitLoader} from './avatar-loading.js?v=7f155db9dbbf';
 import {mountSpinFeedback} from './avatar-spin-feedback.js?v=d4db6ae56b10';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
-const playerModule = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches
-  ? '../portrait-player-android.js?v=2f0c74021487' : '../portrait-player.js?v=79616efef3ee';
+// The head flag uses the same Android + coarse pointer test as the player choice.
+const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
+const playerModule = androidTouch
+  ? '../portrait-player-android.js?v=ba394c8423ee' : '../portrait-player.js?v=c9cdb5233e30';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -19,10 +21,10 @@ const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const navigation=document.querySelector('.v3-mobile-menu');
 const mobileNavigation=matchMedia('(max-width:767px), (max-width:1023px) and (pointer:coarse)');
-const manifestURL=new URL('../assets/seedance-manifest.json?v=8196c33636fb',import.meta.url).href;
+const manifestURL=new URL('../assets/seedance-manifest.json?v=c45a38e5741a',import.meta.url).href;
 let mountPortrait,smallPlayer,largePlayer,largeState=null,moduleFailed=false;
 let openGeneration=0,welcomeGeneration=-1,backgroundWelcomeGeneration=-1;
-let preloadAllowed=false,preloadQueued=false;
+let preloadAllowed=false,preloadQueued=false,preloadIntent=false;
 let primaryPageReady=false,primaryIntroSettled=false,primaryState=null;
 
 function syncLoading(){
@@ -32,6 +34,7 @@ function syncLoading(){
  dialog.dataset.preloaded=String(complete);
  large.setAttribute('aria-busy',String(loading));
  spinButton.disabled=!complete||reduced.matches;
+ spinButton.title=ready&&!complete?'Downloading the remaining rotation views…':'';
  const message=dialog.open?(loading?'Loading portrait…':complete?'Portrait ready.':''):'';
  if(loadingStatus.textContent!==message)loadingStatus.textContent=message;
 }
@@ -41,10 +44,11 @@ function ensureLarge(){
  // Retain one controller and frame set across closes. The width hint matches
  // CSS min() while the native dialog is display:none during preloading.
  largePlayer=mountPortrait(large,{
-  interaction:'drag',manifestURL,paused:!dialog.open||shell.closing,retainQuality:true,
+  interaction:'drag',manifestURL,paused:!dialog.open||shell.closing,retainQuality:true,sequentialDownloads:true,
   displayWidth:()=>Math.max(1,Math.min(innerWidth*.86,innerHeight-140,860))
  });
- mountAvatarAmbience(dialog,large,spinButton);
+ // Android fallback: no dynamic ambience layer, RAF loop or motion trails.
+ if(!androidTouch)mountAvatarAmbience(dialog,large,spinButton);
  // Startup retains the original 90-frame buffer/70-frame welcome. Once a
  // hidden preload is usable, release decoded welcome frames and fetch the rest.
  largePlayer.subscribeLoading(state=>{
@@ -72,29 +76,44 @@ function welcomeIfReady(){
  welcomeGeneration=openGeneration;largePlayer.startIntro({replay:true});
 }
 
+function connectionAllowsPreload(){
+ const connection=navigator.connection;
+ return !connection?.saveData&&!['slow-2g','2g','3g'].includes(connection?.effectiveType);
+}
 function canPreload(){
- // Readiness promises may settle false after cancellation or reduced motion.
- // Only the current successful thumbnail generation grants background work.
- return primaryPageReady&&primaryIntroSettled&&primaryState?.ready&&primaryState?.allReady&&!reduced.matches;
+ // Automatic work waits for load, the main content, and the tiny current frame
+ // generation. Explicit portrait intent can warm it sooner on fast connections.
+ return !reduced.matches&&connectionAllowsPreload()&&(preloadIntent||primaryPageReady&&primaryIntroSettled&&primaryState?.ready&&primaryState?.allReady);
+}
+function beginPreload(){
+ if(!canPreload()||document.hidden||navigation.open)return;
+ preloadAllowed=true;ensureLarge();
 }
 function queuePreload(){
- if(preloadQueued||!canPreload()||document.hidden||document.querySelector('.v3-mobile-menu[open]'))return;
+ if(preloadQueued||preloadAllowed||!canPreload()||document.hidden||navigation.open)return;
+ if(preloadIntent){beginPreload();return;}
  preloadQueued=true;
- const run=()=>{
-  preloadQueued=false;
-  if(document.hidden||!canPreload()||document.querySelector('.v3-mobile-menu[open]'))return;
-  preloadAllowed=true;ensureLarge();
- };
+ const run=()=>{preloadQueued=false;beginPreload();};
  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:2000});
  else setTimeout(run,600);
 }
+function warmFromIntent(){preloadIntent=true;beginPreload();}
+small.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch')warmFromIntent()},{passive:true});
+small.addEventListener('focus',warmFromIntent,{passive:true});
+small.addEventListener('pointerdown',warmFromIntent,{passive:true});
+navigator.connection?.addEventListener?.('change',queuePreload);
 
 // The shell also works when this entire adapter is delayed by the network.
 dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;if(!reduced.matches)large.dataset.welcomePending='';syncLoading();});
 dialog.addEventListener('v3-avatar-opened',activateLarge);
 dialog.addEventListener('v3-avatar-closing',()=>{++openGeneration;largePlayer?.skipIntro();largePlayer?.pause();});
 dialog.addEventListener('v3-avatar-closed',()=>{delete large.dataset.welcomePending;smallPlayer?.returnFromMenu();syncLoading();});
-spinButton.addEventListener('click',()=>largePlayer?.spin?.(4));
+// A deliberate action wins over the deferred welcome, including the two
+// painted-frame opening gap. Never let autoplay replace a just-started spin.
+function claimLargeInteraction(){if(dialog.open&&largeState?.ready)welcomeGeneration=openGeneration;}
+large.addEventListener('pointerdown',claimLargeInteraction,{capture:true,passive:true});
+large.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home'].includes(event.key))claimLargeInteraction();},{capture:true});
+spinButton.addEventListener('click',()=>{claimLargeInteraction();largePlayer?.spin?.(4);});
 reduced.addEventListener('change',()=>{syncLoading();if(!reduced.matches){if(dialog.open)afterFirstPaint(()=>{if(dialog.open&&!shell.closing){welcomeGeneration=-1;activateLarge();}});else queuePreload();}});
 function syncBackgroundMotion(){dialog.toggleAttribute('data-background-paused',document.hidden);}
 syncBackgroundMotion();
@@ -125,8 +144,9 @@ navigation.addEventListener('close',()=>{
 const loaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
 import(playerModule).then(({mountSeedancePortrait})=>{
  mountPortrait=mountSeedancePortrait;
- smallPlayer=mountPortrait(small,{interaction:'cursor',manifestURL});
- smallPlayer.ready.then(ready=>{if(ready)smallPlayer.startIntro();else smallPlayer.skipIntro();});
+ if(preloadIntent)beginPreload();
+ smallPlayer=mountPortrait(small,{interaction:'cursor',manifestURL,fixedVariant:'240-dark'});
+ smallPlayer.ready.then(async ready=>{await window.v3Entrance?.headerReady;if(ready)smallPlayer.startIntro();else smallPlayer.skipIntro();});
  syncNavigationPortrait();
  // The reused player supplies angle instructions; this button opens the modal.
  const updateLabel=()=>{if(small.getAttribute('aria-label')!=='Open full-screen portrait')small.setAttribute('aria-label','Open full-screen portrait');};

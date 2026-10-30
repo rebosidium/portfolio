@@ -1,5 +1,5 @@
 /* v3 case templates: Figma 588×400 cover + content-sized copy, radius32/smoothing1. */
-.v3-cases { width:min(1200px,calc(100% - 96px));margin:164px auto 0;padding:0 0 100px; }
+.v3-cases { width:min(1200px,calc(100% - 96px));margin:var(--v3-case-teaser-gap,164px) auto 0;padding:0 0 100px; }
 .v3-cases__title { width:calc((100% - 24px)/2);margin:0 0 0 -2px;font-size:74px;line-height:96px;font-weight:400;letter-spacing:-.74px; }
 .v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
 .v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
@@ -39,7 +39,7 @@
  .v3-case-logo--larixon{mask-size:44px 44px}
 }
 @media(max-width:800px){
- .v3-cases{margin-top:108px;padding-bottom:40px}
+ .v3-cases{margin-top:var(--v3-case-teaser-gap,108px);padding-bottom:40px}
  .v3-cases__title{width:auto;font-size:48px;line-height:62px;letter-spacing:-.48px}
  .v3-case-columns{display:flex;flex-direction:column;margin-top:40px;gap:56px}
  .v3-case-column{display:contents;will-change:auto}
@@ -50,7 +50,7 @@
  .v3-case-copy h3{font-size:30px}
 }
 @media(max-width:480px){
- .v3-cases{width:calc(100% - 48px);margin-top:clamp(24px,calc(100svh - 620px),56px)}
+ .v3-cases{width:calc(100% - 48px);margin-top:var(--v3-case-teaser-gap,clamp(48px,calc(100svh - 560px),120px))}
  .v3-cases__title{font-size:40px;line-height:52px;letter-spacing:-.4px}
  .v3-case-columns{margin-top:24px;gap:40px}
  .v3-case-card{gap:12px}

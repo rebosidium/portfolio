@@ -1,7 +1,7 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
-export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706,displayWidth=null,paused=false,retainQuality=false} = {}) {
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706,displayWidth=null,paused=false,retainQuality=false,fixedVariant=null,sequentialDownloads=false} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -145,6 +145,13 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     while(count>limit&&removable.length){const entry=removable.shift();if(cache.get(entry.index)!==entry)continue;cache.delete(entry.index);closeResource(entry.resource);count--}
   }
   function physicalSize(){
+    if(fixedVariant==='240-dark'){
+      // CSS dimensions exclude hover transforms. Reserve the largest hover
+      // scale once, so entering/leaving hover never resizes the drawing buffer.
+      const hoverScale=parseFloat(getComputedStyle(stage).getPropertyValue('--v3-avatar-hover-scale'))||1;
+      const pixels=Math.min(240,Math.max(1,Math.round(canvas.offsetWidth*(devicePixelRatio||1)*hoverScale)));
+      return [pixels,pixels];
+    }
     const width=stage.clientWidth||displayWidth?.()||sourceSize[0];
     // Keep touch interaction at the same 2× CSS raster budget as the smooth
     // predecoded welcome turn. The selected encoded quality remains unchanged.
@@ -673,7 +680,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const armDeadline=()=>{clearTimeout(deadline);deadline=setTimeout(()=>{chunk.timedOut=true;localController.abort(new Error('Frame download timeout'))},15000)};
     armDeadline();
     try{
-      const response=await trackedFetch(chunk.file,{signal:localController.signal,cache:'force-cache',priority:chunk.startup?'high':'low'});
+      const response=await trackedFetch(chunk.file,{signal:localController.signal,cache:'force-cache',priority:sequentialDownloads?'low':chunk.startup?'high':'low'});
       if(!response.ok)throw new Error('Не удалось загрузить часть поворота.');
       const bytes=new Uint8Array(chunk.bytes);let received=0,cursor=0;
       const expose=()=>{
@@ -706,14 +713,18 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function pumpChunks(){
     if(!variant||document.hidden||media.matches||fetchController?.signal.aborted)return;
     const token=generation;
-    const pending=chunkStates.filter(c=>c.state==='pending'&&(c.startup||c.priority<5||(bufferReady&&allowBackground))).sort((a,b)=>a.priority-b.priority||a.order-b.order);
+    const workers=sequentialDownloads?1:CHUNK_WORKERS;
+    // A cold start warms startup first. Later quality upgrades already have a
+    // usable pose and must prioritise its required chunk over unrelated intro.
+    const startupPending=sequentialDownloads&&!startupSettled&&chunkStates.some(c=>c.startup&&c.state!=='done');
+    const pending=chunkStates.filter(c=>c.state==='pending'&&(!startupPending||c.startup)&&(c.startup||c.priority<5||(bufferReady&&allowBackground))).sort((a,b)=>a.priority-b.priority||a.order-b.order);
     // An obsolete background request must not block a newly requested pose.
     // Limit pre-emption so fast gestures cannot endlessly restart the same file.
-    if(activeChunks.size>=CHUNK_WORKERS&&pending[0]?.priority<5&&performance.now()-lastPreemptAt>400){
+    if(!sequentialDownloads&&activeChunks.size>=workers&&pending[0]?.priority<5&&performance.now()-lastPreemptAt>400){
       const obsolete=[...activeChunks].filter(c=>c.priority>=50&&c.received<c.bytes*.5).sort((a,b)=>b.bytes-a.bytes)[0];
       if(obsolete){lastPreemptAt=performance.now();obsolete.preempted=true;obsolete.controller?.abort()}
     }
-    while(activeChunks.size<CHUNK_WORKERS&&pending.length){
+    while(activeChunks.size<workers&&pending.length){
       const chunk=pending.shift();chunk.state='loading';chunk.preempted=false;activeChunks.add(chunk);
       loadProgress();
       readChunk(chunk,token).catch(error=>{
@@ -730,6 +741,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
   }
   function chooseVariant(){
+    if(fixedVariant)return fixedVariant;
     // Select the encoded tier for the actual touch raster budget, avoiding
     // decoding an 800/1200 source only to reduce it to 2× CSS afterwards.
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
@@ -842,7 +854,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       if(!ready||!startupSettled||preparing||mode==='intro'||introRequested)return;
       if(manifest&&chooseVariant()!==canvas.dataset.quality){init();return}
       const next=physicalSize();
-      if(Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;
+      if(fixedVariant==='240-dark'?next[0]===renderSize[0]&&next[1]===renderSize[1]:Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;
       renderSize=next;clearDecoded();wantedIndex=Math.max(0,displayedIndex);
       if(introFrames.size){requestDecode(wantedIndex,0);for(const index of introFrames)requestDecode(index,1)}
       else warmWindow(wantedIndex,1);
@@ -856,7 +868,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
   function watchDensity(){
     densityQuery?.removeEventListener('change',densityChanged);
-    densityQuery=window.matchMedia(`(resolution: ${Math.max(1,window.devicePixelRatio||1)}dppx)`);
+    const density=fixedVariant==='240-dark'?(window.devicePixelRatio||1):Math.max(1,window.devicePixelRatio||1);
+    densityQuery=window.matchMedia(`(resolution: ${density}dppx)`);
     densityQuery.addEventListener('change',densityChanged);
   }
   watchDensity();cleanup.push(()=>densityQuery?.removeEventListener('change',densityChanged));
