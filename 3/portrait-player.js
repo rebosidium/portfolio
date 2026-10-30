@@ -435,8 +435,17 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(ready&&startupSettled&&!preparing)warmWindow(Math.max(0,displayedIndex),1);
     if(prepared)checkResize();
   }
-  function startIntro(){
-    if(introConsumed||media.matches||document.hidden)return false;
+  function startIntro({replay=false}={}){
+    if(media.matches||document.hidden||destroyed)return false;
+    if(introConsumed){
+      if(!replay)return false;
+      releaseDrag();stop();introConsumed=false;
+      introPreparedIndex=introPath[0]??-1;introFrames.clear();
+      for(const index of introPath)introFrames.add(index);
+      delete canvas.dataset.introDone;delete canvas.dataset.introCancelled;
+      // Encoded frames survive closing. Only the short welcome bitmap window
+      // is prepared again, then released back to the normal 12-frame LRU.
+    }
     // Keep the one welcome request if a resize temporarily evicts its bitmap.
     introRequested=true;scheduleRender();return true;
   }
@@ -451,7 +460,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     introRequested=false;introConsumed=true;introTime=0;introFrom=indexToAngle(first.index)-360;
     currentAngle=targetAngle=introFrom;lastMotionPhase=currentAngle;lastMotionDirection=1;
     wantedIndex=first.index;beginStats();draw(first,indexToAngle(first.index));
-    mode='intro';previousTick=0;canvas.dataset.mode=mode;canvas.dataset.introCount='1';
+    mode='intro';previousTick=0;canvas.dataset.mode=mode;canvas.dataset.introCount=String(Number(canvas.dataset.introCount||0)+1);
     scheduleRender();
   }
   function renderIntro(elapsed){

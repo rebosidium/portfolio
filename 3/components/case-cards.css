@@ -7,8 +7,12 @@
 .v3-case-card { position:relative;isolation:isolate;display:flex;flex-direction:column;gap:16px;min-width:0; }
 /* The sticky layout box and its visual cover have separate transforms:
    stacking never interferes with hover tilt or the canvas image parallax. */
-.v3-case-cover-pin { position:sticky;top:calc(24px - var(--v3-column-offset,0px));z-index:0;flex:none;width:100%;aspect-ratio:588/400;transform:scale(var(--v3-stack-scale,1));transform-origin:center top;opacity:var(--v3-stack-opacity,1); }
-.v3-case-cover-pin > .v3-case-cover { width:100%;height:100%; }
+.v3-case-cover-pin { position:sticky;top:calc(24px - var(--v3-column-offset,0px));z-index:0;flex:none;width:100%;aspect-ratio:588/400; }
+/* Keep sticky geometry untransformed. Only this persistent compositor layer
+   shrinks/fades, avoiding sticky/clipping raster changes during iOS scrolling. */
+.v3-case-cover-reveal { width:100%;height:100%; }
+.v3-case-cover-visual { width:100%;height:100%;transform:translate3d(0,0,0) scale(var(--v3-stack-scale,1));transform-origin:center top;opacity:var(--v3-stack-opacity,1);will-change:transform,opacity; }
+.v3-case-cover-visual > .v3-case-cover { width:100%;height:100%; }
 .v3-case-cover-pin[data-stack-covered] canvas { display:none; }
 .v3-case-cover { position:relative;isolation:isolate;aspect-ratio:588/400;overflow:hidden;border-radius:32px;background:#f0f0f2; }
 .v3-case-cover canvas { position:absolute;inset:0;width:100%;height:100%;display:block;transform:translateY(var(--v3-cover-shift,0px)) scale(var(--v3-cover-scale,1)); }
@@ -43,9 +47,9 @@
  .v3-case-copy h3{font-size:30px}
 }
 @media(max-width:480px){
- .v3-cases{width:calc(100% - 48px);margin-top:88px}
+ .v3-cases{width:calc(100% - 48px);margin-top:clamp(24px,calc(100svh - 620px),56px)}
  .v3-cases__title{font-size:40px;line-height:52px;letter-spacing:-.4px}
- .v3-case-columns{margin-top:32px;gap:40px}
+ .v3-case-columns{margin-top:24px;gap:40px}
  .v3-case-card{gap:12px}
  .v3-case-copy{padding:27px 25px}
  .v3-case-copy h3{font-size:25px;line-height:1.4}
@@ -62,15 +66,18 @@
 }
 @media(prefers-reduced-motion:reduce){.v3-case-cover{transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
 
-/* One entrance per card; independent of the column/cover parallax transforms. */
-.v3-case-card[data-reveal],.v3-cases__title[data-reveal] {
+/* Never transform the article containing the sticky box: Safari can change
+   its sticky reference when an entrance transform finishes. Reveal artwork
+   and text inside their stable layout boxes instead. */
+.v3-case-card[data-reveal],.v3-cases__title[data-reveal] { transition:opacity 720ms ease; }
+.v3-cases__title[data-reveal],.v3-case-card[data-reveal] .v3-case-cover-reveal,.v3-case-card[data-reveal] .v3-case-copy h3 {
   transition:opacity 720ms ease,transform 900ms cubic-bezier(.22,1,.36,1);
 }
-.v3-case-card[data-reveal="pending"],.v3-cases__title[data-reveal="pending"] {
-  opacity:0;transform:translateY(32px);pointer-events:none;
-}
+.v3-case-card[data-reveal="pending"],.v3-cases__title[data-reveal="pending"] { opacity:0;pointer-events:none; }
+.v3-cases__title[data-reveal="pending"],.v3-case-card[data-reveal="pending"] .v3-case-cover-reveal,.v3-case-card[data-reveal="pending"] .v3-case-copy h3 { transform:translateY(32px); }
 @media(prefers-reduced-motion:reduce) {
-  .v3-case-card[data-reveal],.v3-cases__title[data-reveal] {opacity:1;transform:none;transition:none}
-  .v3-case-cover-pin {position:relative;top:auto;transform:none;opacity:1}
+  .v3-case-card[data-reveal],.v3-cases__title[data-reveal],.v3-case-cover-reveal,.v3-case-copy h3 {opacity:1;transform:none!important;transition:none!important}
+  .v3-case-cover-pin {position:relative;top:auto}
+  .v3-case-cover-visual {transform:none;opacity:1;will-change:auto}
   .v3-case-copy {transform:none}
 }

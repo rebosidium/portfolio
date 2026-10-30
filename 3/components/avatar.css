@@ -13,6 +13,12 @@
 }
 .v3-avatar-dialog[open] { display: grid; place-items: center; }
 .v3-avatar-dialog::backdrop { background: rgb(245 245 247 / .18); -webkit-backdrop-filter: blur(8px) saturate(120%); backdrop-filter: blur(8px) saturate(120%); animation: v3-avatar-frost-in 320ms ease both; }
+/* First-frame rendering is intentionally cheap; glass and colour follow after
+   the shell has yielded one painted frame, independently of player readiness. */
+.v3-avatar-dialog[data-opening]::backdrop { -webkit-backdrop-filter:none;backdrop-filter:none;animation:none; }
+.v3-avatar-dialog[data-opening] .v3-avatar-mesh { display:none; }
+.v3-avatar-dialog[open]:not([data-opening]) .v3-avatar-mesh { animation:v3-avatar-colour-in 600ms ease both; }
+@keyframes v3-avatar-colour-in { from{opacity:0}to{opacity:1} }
 .v3-avatar-viewer { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .v3-avatar-large { position: relative; width: min(86vw, calc(100dvh - 140px), 860px); aspect-ratio: 1; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; cursor: grab; border-radius: 24px; }
 .v3-avatar-large.dragging { cursor: grabbing; }
@@ -63,11 +69,18 @@
 .v3-avatar-loading-status { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
 @keyframes v3-avatar-loader-turn { to{transform:rotate(360deg)} }
 @media(prefers-reduced-motion:reduce) {
- .v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-loader__spinner { animation:none; }
+ .v3-avatar-mesh,.v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-loader__spinner { animation:none!important; }
+ .v3-avatar-loader { display:none; }
 }
 
 .v3-avatar-dialog:focus { outline: none; }
-.v3-avatar-spin { background: #000; color: #fff; box-shadow: 0 3px 16px #00000018,inset 0 1px 0 #ffffff26; }
+/* Dark glass keeps a white label while reflecting the same light rim as Brief. */
+.v3-avatar-spin {
+ background:linear-gradient(135deg,#ffffff26,#ffffff06 54%,#ffffff12),rgb(8 8 12 / .68);
+ color:#fff;
+ box-shadow:0 3px 16px #00000018,inset 0 1px 0 #ffffff73,inset 0 -1px 0 #00000040,inset 1px 0 0 #ffffff2b,inset -1px 0 0 #ffffff24;
+ -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+}
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
 
 @media(hover:hover) and (pointer:fine){.v3-portrait.v3-avatar-stage{transition:transform 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover{transform:scale(1.03)}}

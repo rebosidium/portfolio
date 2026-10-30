@@ -57,8 +57,11 @@
 }
 .v3-brief__button:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
 .v3-brief__button:disabled { cursor: default; }
-.v3-brief__label { position: relative; flex: 0 0 var(--v3-brief-label-width); height: 33px; white-space: nowrap; }
-.v3-brief__idle, .v3-brief__copied { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; }
+.v3-brief__label { position: relative; flex: 0 0 var(--v3-brief-label-width); height: 36px; white-space: nowrap; }
+.v3-brief__idle, .v3-brief__copied { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; transform: translateZ(0); backface-visibility: hidden; will-change: opacity; }
+/* Identical line boxes and persistent compositing keep glyphs on one baseline
+   when Safari promotes/demotes the fading label layers. */
+.v3-brief__text { display: block; height: 36px; line-height: 36px; }
 /* Sequential fades with a 40ms gap; neither direction superimposes labels. */
 .v3-brief__idle { opacity: 1; visibility: visible; transition: opacity 180ms ease 180ms, visibility 0s linear; }
 .v3-brief__copied { opacity: 0; visibility: hidden; transition: opacity 140ms ease, visibility 0s linear 140ms; }

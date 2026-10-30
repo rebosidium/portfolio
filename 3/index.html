@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="989a4dd9b477">
+<html lang="en" data-build="22fcf954b322">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,15 +11,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..500;1,9..40,400..500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/3/page.css?v=395ca3a7bf38">
-  <link rel="stylesheet" href="/3/components/brief.css?v=424876b5e581">
+  <link rel="stylesheet" href="/3/page.css?v=42c1a7402ce9">
+  <link rel="stylesheet" href="/3/components/brief.css?v=9683850ab482">
   <script type="module" src="/3/components/brief.js?v=6b1201bfb1f9"></script>
   <link rel="stylesheet" href="/3/components/mobile-menu.css?v=5bb21642eb19">
   <script type="module" src="/3/components/mobile-menu.js?v=6c2cc0e28616"></script>
-  <link rel="stylesheet" href="/3/components/avatar.css?v=03a8bb21f0a1">
-  <script type="module" src="/3/components/avatar.js?v=d6badf418e1c"></script>
-  <link rel="stylesheet" href="/3/components/case-cards.css?v=bb02f0bd6a58">
-  <script type="module" src="/3/components/case-cards.js?v=08f1a710a0c1"></script>
+  <link rel="stylesheet" href="/3/components/avatar.css?v=68eaaafe6570">
+  <script type="module" src="/3/components/avatar.js?v=781c88ccbaec"></script>
+  <link rel="stylesheet" href="/3/components/case-cards.css?v=9d26822d832c">
+  <script type="module" src="/3/components/case-cards.js?v=1bf1e97d14a1"></script>
   <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
 </head>
 <body>
@@ -43,7 +43,7 @@
         <button class="v3-brief__button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="v3-brief-status" data-node-id="797:5284">
           <span class="v3-brief__glass" aria-hidden="true"></span>
           <span class="v3-brief__content">
-          <span class="v3-brief__label" aria-hidden="true" data-node-id="797:5285"><span class="v3-brief__idle" data-node-id="797:5286">Brief your AI</span><span class="v3-brief__copied" data-v3-brief-label><img class="v3-brief__check" src="/3/assets/lucide-check.svg?v=7f33acc9a77a" alt="" width="24" height="24"><span>Copied</span></span></span>
+          <span class="v3-brief__label" aria-hidden="true" data-node-id="797:5285"><span class="v3-brief__idle" data-node-id="797:5286"><span class="v3-brief__text">Brief your AI</span></span><span class="v3-brief__copied" data-v3-brief-label><img class="v3-brief__check" src="/3/assets/lucide-check.svg?v=7f33acc9a77a" alt="" width="24" height="24"><span class="v3-brief__text">Copied</span></span></span>
           <span class="v3-brief__logos-space" aria-hidden="true"><span class="v3-brief__logos">
             <span class="v3-brief__icon v3-brief__icon--claude" data-node-id="797:5287"><img src="/3/assets/claude.svg?v=e2ddeedefe4c" alt=""></span>
             <span class="v3-brief__icon v3-brief__icon--openai" data-node-id="797:5293"><img src="/3/assets/openai.svg?v=6ed5478bb9d6" alt=""></span>
@@ -80,7 +80,7 @@
       <div class="v3-avatar-large v3-avatar-stage" data-v3-avatar-large role="img" aria-label="Dmitry Rybalka. Drag to rotate" tabindex="0">
         <img src="/3/assets/portrait-front-dark.webp?v=9ed62e5f8ab5" alt="" width="800" height="800" draggable="false">
         <canvas width="800" height="800" aria-hidden="true"></canvas>
-        <span class="v3-avatar-loader" aria-hidden="true" hidden><span class="v3-avatar-loader__spinner"></span></span>
+        <span class="v3-avatar-loader" aria-hidden="true"><span class="v3-avatar-loader__spinner"></span></span>
       </div>
       <div class="v3-avatar-actions">
         <button class="v3-avatar-spin" type="button" disabled><img src="/3/assets/lucide-rotate-cw.svg?v=ddcfe6d87240" alt="" width="24" height="24"><span>Spin</span></button>
@@ -89,5 +89,72 @@
       <span class="v3-avatar-loading-status" role="status" aria-live="polite"></span>
     </div>
   </dialog>
+  <!-- Keep this small modal shell in the document: the first tap must not wait
+       for an ES module, frame archive, decoder or decorative GPU layer. -->
+  <script>
+  (()=>{
+    const small=document.querySelector('[data-v3-avatar-small]');
+    const dialog=document.querySelector('.v3-avatar-dialog');
+    const viewer=dialog.querySelector('.v3-avatar-viewer');
+    const large=dialog.querySelector('[data-v3-avatar-large]');
+    const hide=dialog.querySelector('.v3-avatar-hide');
+    const spin=dialog.querySelector('.v3-avatar-spin');
+    const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+    let locked=null,closing=false,animation=null,gesture=null,generation=0;
+    const afterPaint=callback=>requestAnimationFrame(()=>requestAnimationFrame(callback));
+    const emit=name=>dialog.dispatchEvent(new Event(name));
+    function lock(){
+      const properties=['position','top','left','right','width'];
+      locked={x:scrollX,y:scrollY,overflow:document.documentElement.style.overflow,styles:properties.map(p=>[p,document.body.style.getPropertyValue(p)])};
+      const width=document.body.getBoundingClientRect().width;
+      document.documentElement.style.overflow='hidden';
+      Object.assign(document.body.style,{position:'fixed',top:-locked.y+'px',left:'0',right:'0',width:width+'px'});
+    }
+    function unlock(){
+      if(!locked)return;const saved=locked;locked=null;
+      document.documentElement.style.overflow=saved.overflow;
+      for(const [p,v]of saved.styles){if(v)document.body.style.setProperty(p,v);else document.body.style.removeProperty(p);}
+      scrollTo(saved.x,saved.y);
+    }
+    function open(){
+      if(dialog.open||closing)return;
+      const token=++generation,start=performance.now();
+      // Paint the native top layer, poster and loader before allocating blur surfaces.
+      dialog.dataset.opening='';lock();dialog.showModal();emit('v3-avatar-opening');
+      if(!reduced.matches)animation=viewer.animate([{opacity:.6,transform:'scale(.985)'},{opacity:1,transform:'scale(1)'}],{duration:240,easing:'cubic-bezier(.22,1,.36,1)'});
+      dialog.focus({preventScroll:true});
+      afterPaint(()=>{
+        if(!dialog.open||closing||token!==generation)return;
+        dialog.dataset.firstPaintMs=(performance.now()-start).toFixed(1);
+        delete dialog.dataset.opening;emit('v3-avatar-opened');
+      });
+    }
+    async function close(){
+      if(!dialog.open||closing)return;
+      closing=true;++generation;animation?.cancel();emit('v3-avatar-closing');
+      if(!reduced.matches){
+        animation=viewer.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.96)'}],{duration:220,easing:'ease-in'});
+        try{await animation.finished;}catch{}
+      }
+      dialog.close();animation?.cancel();animation=null;delete dialog.dataset.opening;
+      unlock();small.dataset.returnFocus='true';small.focus({preventScroll:true});closing=false;emit('v3-avatar-closed');
+    }
+    small.addEventListener('pointerdown',event=>{gesture={x:event.clientX,y:event.clientY,moved:false};},{capture:true});
+    small.addEventListener('pointermove',event=>{if(gesture&&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>6)gesture.moved=true;},{capture:true});
+    small.addEventListener('click',event=>{if(event.detail!==0&&gesture?.moved){event.preventDefault();return;}open();});
+    hide.addEventListener('click',close);
+    dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
+    // A second tap and backdrop clicks are inert. Only Hide/Escape dismiss.
+    dialog.addEventListener('keydown',event=>{
+      if(event.key!=='Tab')return;
+      const controls=[...(large.hasAttribute('tabindex')?[large]:[]),...(!spin.disabled?[spin]:[]),hide];
+      const index=controls.indexOf(document.activeElement);event.preventDefault();
+      controls[index<0?(event.shiftKey?controls.length-1:0):(index+(event.shiftKey?-1:1)+controls.length)%controls.length].focus({preventScroll:true});
+    });
+    small.addEventListener('blur',()=>{delete small.dataset.returnFocus;});
+    document.addEventListener('keydown',event=>{if(['Tab','ArrowLeft','ArrowRight'].includes(event.key))delete small.dataset.returnFocus;});
+    dialog.v3AvatarShell=Object.freeze({afterPaint,get closing(){return closing;}});
+  })();
+  </script>
 </body>
 </html>
