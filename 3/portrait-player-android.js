@@ -1,7 +1,7 @@
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
-export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706} = {}) {
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706,displayWidth=null,paused=false,retainQuality=false} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -9,8 +9,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const allFramesReady=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
     // Preserve the controller contract when Canvas is unavailable: the modal
     // adapter must still open/close the static poster without throwing.
-    return {spin(){return false},prepareMenuPose(){return false},returnFromMenu(){return false},ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
+    return {pause(){},resume(){},spin(){return false},prepareMenuPose(){return false},returnFromMenu(){return false},ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
   }
+  let renderPaused=paused;
   let selectionAngle=initialAngle,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
   let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
   let resolveIntroFinished,introFinishedSettled=false;
@@ -112,7 +113,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
   function sample(values,value){values.push(value);if(values.length>4096)values.splice(0,256)}
-  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(new URL(url,import.meta.url),options)}
+  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(new URL(url,import.meta.url),renderPaused?{...options,priority:'low'}:options)}
   function diagnostics(){
     const resources=[...cache.values()].filter(e=>e.state==='ready');
     const pixels=resources.reduce((sum,e)=>sum+e.resource.width*e.resource.height,0);
@@ -144,7 +145,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     while(count>limit&&removable.length){const entry=removable.shift();if(cache.get(entry.index)!==entry)continue;cache.delete(entry.index);closeResource(entry.resource);count--}
   }
   function physicalSize(){
-    const width=stage.clientWidth||sourceSize[0];
+    const width=stage.clientWidth||displayWidth?.()||sourceSize[0];
     // Keep touch interaction at the same 2× CSS raster budget as the smooth
     // predecoded welcome turn. The selected encoded quality remains unchanged.
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()||!introConsumed||introFrames.size?2:Infinity));
@@ -180,7 +181,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       return sizedResource(img,img.naturalWidth,img.naturalHeight,size,()=>{img.onload=img.onerror=null;img.removeAttribute('src');URL.revokeObjectURL(objectURL)});
     }catch(error){img.removeAttribute('src');URL.revokeObjectURL(objectURL);throw error}
   }
-  function scheduleRender(){if(!raf)raf=requestAnimationFrame(render)}
+  function scheduleRender(){if(!renderPaused&&!destroyed&&!raf)raf=requestAnimationFrame(render)}
   function pumpDecoder(){
     queue.sort((a,b)=>a.priority-b.priority||b.used-a.used);
     while(inFlight.size<DECODE_WORKERS&&queue.length){
@@ -717,10 +718,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // Select the encoded tier for the actual touch raster budget, avoiding
     // decoding an 800/1200 source only to reduce it to 2× CSS afterwards.
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
-    const physical=(stage.clientWidth||311)*ratio;
+    // Hidden modal preloading uses the same future layout width as reopening.
+    const physical=(stage.clientWidth||displayWidth?.()||311)*ratio;
     const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
     // Shared cleaned set; historical filenames stay exact for cache/rollback.
-    return quality+'-dark';
+    return retainQuality&&Number.parseInt(loadQuality,10)>Number(quality)?loadQuality:quality+'-dark';
   }
   function prepareVariant(data,key){
     const value=data.variants?.[key],count=data.frames;
@@ -939,6 +941,15 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }else if(event.key==='Home'){event.preventDefault();setTarget(0,{session:true})}
 
   });
+  // Pausing keeps encoded frames and the bounded decoded LRU alive. Closing a
+  // modal must not abort downloads, restart its generation, or spin offscreen.
+  function pause(){renderPaused=true;releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}
+  function resume(){
+    if(destroyed)return;
+    renderPaused=false;
+    if(!ready&&!loadAttemptActive&&!media.matches&&!document.hidden){init();return;}
+    checkResize();queuePump();if(ready)scheduleRender();
+  }
   function suspend(error=''){
     settleAllFrames(false);generation++;
     currentStartupReady=encodedAllReady=loadAttemptActive=false;loadError=error;
@@ -957,7 +968,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     posterElement.classList.add('image-ready');
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
-  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
+  // Preserve partial frame downloads when a tab becomes visible again.
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready&&!loadAttemptActive)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
@@ -966,7 +978,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   },mobileLayout,media,mobileScrollStart,mobileCoverTop));
   if(media.matches){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
-  return {ready:startupReady,introFinished,spin,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
+  return {pause,resume,ready:startupReady,introFinished,spin,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }
 
 // Mobile scroll owns only its requested pose; manual rotation and menu spring win.

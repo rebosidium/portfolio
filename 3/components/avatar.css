@@ -8,6 +8,7 @@
   box-sizing: border-box; position: fixed; inset: 0; margin: 0; padding: 24px;
   width: 100%; max-width: none; height: 100dvh; max-height: none;
   border: 0; overflow: auto; background: transparent; color: #232522;
+  touch-action: manipulation;
   font-family: 'DM Sans', sans-serif; font-variation-settings: 'opsz' 14;
 }
 .v3-avatar-dialog[open] { display: grid; place-items: center; }
@@ -29,34 +30,40 @@
 .v3-avatar-spin:disabled { opacity: .45; cursor: default; }
 @media(max-width:359px){.v3-avatar-actions{gap:8px}.v3-avatar-spin,.v3-avatar-hide{font-size:16px;padding:12px 18px;gap:7px}}
 
-/* Broad coloured light pools, like the quiet glow of a HomePod display. */
-.v3-avatar-mesh { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.v3-avatar-mesh::before,.v3-avatar-mesh::after {
-  content: ''; position: absolute; inset: -12%; pointer-events: none;
-  filter: blur(52px); transform-origin: 50% 50%;
-  animation-play-state: paused;
-}
+/* Blur only the coloured light field. The underlying page keeps its lighter
+   8px glass blur, so readable content does not dissolve into a 40px backdrop. */
+.v3-avatar-mesh { position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;isolation:isolate; }
 .v3-avatar-mesh::before {
-  background: radial-gradient(ellipse at 14% 25%, #ff259d 0, transparent 43%),radial-gradient(ellipse at 84% 22%, #4940ff 0, transparent 44%),radial-gradient(ellipse at 65% 88%, #00cfc0 0, transparent 48%);
-  opacity: .23;
-  animation: v3-avatar-mesh-flow 12s ease-in-out infinite alternate paused;
+  content:'';position:absolute;inset:-25%;
+  background:conic-gradient(from 25deg,#7040ff,#2ac9ff,#61e8ce,#ffb746,#ff5cbd,#7040ff);
+  filter:blur(80px);opacity:.20;
+  animation:v3-avatar-mesh-orbit 22s linear infinite paused;
 }
-.v3-avatar-mesh::after {
-  background: radial-gradient(ellipse at 25% 80%, #00aaff 0, transparent 40%),radial-gradient(ellipse at 80% 65%, #ff7939 0, transparent 42%),radial-gradient(ellipse at 52% 8%, #df43ff 0, transparent 39%);
-  opacity: .14;
-  animation: v3-avatar-mesh-counterflow 15s ease-in-out infinite alternate paused;
+.v3-avatar-mesh::after { content:'';position:absolute;inset:0;background:rgb(245 245 247 / .08);pointer-events:none; }
+.v3-avatar-light {
+  position:absolute;width:72vmax;height:72vmax;border-radius:50%;
+  filter:blur(64px);opacity:.32;
+  animation:v3-avatar-light-flow 9s ease-in-out infinite paused;
 }
-.v3-avatar-dialog[open] .v3-avatar-mesh::before,.v3-avatar-dialog[open] .v3-avatar-mesh::after { animation-play-state: running; }
-@keyframes v3-avatar-mesh-flow {
-  from { transform: translate(-5%, -3%) scale(1) rotate(-5deg); opacity: .19; }
-  to { transform: translate(7%, 5%) scale(1.12) rotate(8deg); opacity: .28; }
+.v3-avatar-light--violet { left:-18%;top:-26%;background:radial-gradient(ellipse,#632cff 8%,#632cff88 38%,#632cff00 70%);animation-delay:-3s; }
+.v3-avatar-light--cyan { left:18%;bottom:-40%;background:radial-gradient(ellipse,#00dbde 8%,#00dbde88 38%,#00dbde00 70%);animation-duration:11s;animation-delay:-7s;animation-direction:reverse; }
+.v3-avatar-light--pink { right:-28%;top:-14%;background:radial-gradient(ellipse,#ff2ea6 8%,#ff2ea688 38%,#ff2ea600 70%);animation-duration:8s;animation-delay:-4s; }
+.v3-avatar-light--amber { right:-12%;bottom:-44%;background:radial-gradient(ellipse,#ffab24 8%,#ffab2488 38%,#ffab2400 70%);animation-duration:13s;animation-delay:-9s;animation-direction:reverse; }
+.v3-avatar-dialog[open] .v3-avatar-mesh::before,.v3-avatar-dialog[open] .v3-avatar-light { animation-play-state:running; }
+@keyframes v3-avatar-mesh-orbit { from{transform:rotate(0deg) scale(1)}to{transform:rotate(360deg) scale(1)} }
+@keyframes v3-avatar-light-flow {
+  0%,100%{transform:translate(-9%,-8%) scale(.88);opacity:.24}
+  35%{transform:translate(22%,17%) scale(1.14);opacity:.38}
+  70%{transform:translate(-12%,26%) scale(.96);opacity:.30}
 }
-@keyframes v3-avatar-mesh-counterflow {
-  from { transform: translate(6%, -3%) scale(1.08) rotate(6deg); opacity: .17; }
-  to { transform: translate(-6%, 6%) scale(.98) rotate(-9deg); opacity: .1; }
-}
-@media (prefers-reduced-motion:reduce) {
-  .v3-avatar-mesh::before,.v3-avatar-mesh::after { animation: none; }
+/* Loading feedback exists only inside the large portrait, never on the page. */
+.v3-avatar-loader { position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none; }
+.v3-avatar-loader[hidden] { display:none; }
+.v3-avatar-loader__spinner { box-sizing:border-box;width:44px;height:44px;border:3px solid #ffffffb3;border-top-color:#232522;border-radius:50%;box-shadow:0 0 0 12px #ffffffa3,0 2px 24px 12px #0000000c;animation:v3-avatar-loader-turn 850ms linear infinite; }
+.v3-avatar-loading-status { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
+@keyframes v3-avatar-loader-turn { to{transform:rotate(360deg)} }
+@media(prefers-reduced-motion:reduce) {
+ .v3-avatar-mesh::before,.v3-avatar-light,.v3-avatar-loader__spinner { animation:none; }
 }
 
 .v3-avatar-dialog:focus { outline: none; }

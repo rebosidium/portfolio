@@ -1,5 +1,24 @@
 // Reviewed adaptation of the old mobile-nav.js. All v3 DOM and styles are local.
 // Native modal dialog supplies inert background, focus containment and top layer.
+// These pure curves match GSAP power2/power3 exactly without a runtime dependency.
+const menuEases = {
+  power2Out: t => 1 - Math.pow(1 - t, 3),
+  power3Out: t => 1 - Math.pow(1 - t, 4),
+  power3In: t => Math.pow(t, 4),
+  power2InOut: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+};
+function motionFrames(from, to, ease) {
+  // Linear interpolation across 240 segments is within 0.00003 of these curves.
+  return Array.from({length: 241}, (_, index) => {
+    const offset = index / 240;
+    const progress = ease(offset);
+    const frame = {offset};
+    if ('opacity' in to) frame.opacity = Number(from.opacity) + (to.opacity - Number(from.opacity)) * progress;
+    if ('y' in to) frame.transform = `translateY(${from.y + (to.y - from.y) * progress}px)`;
+    return frame;
+  });
+}
+// End of pure menu motion helpers.
 const toggle = document.querySelector('.v3-menu-toggle');
 const dialog = document.querySelector('.v3-mobile-menu');
 const closeButton = dialog.querySelector('.v3-menu-close');
@@ -12,6 +31,16 @@ let desiredOpen = false;
 let generation = 0;
 let animations = [];
 let locked = null;
+const focusControls = [toggle, closeButton];
+function setFocusMode(mode) {
+  focusControls.forEach(control => {control.dataset.menuFocus = mode;});
+}
+// Suppress pointer outlines on both ends of native dialog focus restoration.
+setFocusMode('pointer');
+document.addEventListener('pointerdown', () => setFocusMode('pointer'), {capture:true, passive:true});
+document.addEventListener('keydown', event => {
+  if (['Tab','Enter',' ','Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) setFocusMode('keyboard');
+}, {capture:true});
 function cancel() { animations.forEach(a => a.cancel()); animations = []; }
 function lockScroll() {
   if (locked) return;
@@ -48,7 +77,10 @@ async function setOpen(open,{instant=false,returnFocus=true}={}) {
   const firstOpen = !dialog.open;
   const fromPanelOpacity = getComputedStyle(panel).opacity;
   const fromScrim = getComputedStyle(scrim).opacity;
-  const fromLinks = links.map(link=>({opacity:getComputedStyle(link).opacity,transform:getComputedStyle(link).transform}));
+  const fromLinks = links.map(link => {
+    const style = getComputedStyle(link);
+    return {opacity: Number(style.opacity), y: style.transform === 'none' ? 0 : new DOMMatrixReadOnly(style.transform).m42};
+  });
   const run = ++generation;
   desiredOpen = open;
   cancel();
@@ -80,16 +112,16 @@ async function setOpen(open,{instant=false,returnFocus=true}={}) {
   }
   if (open) {
     animations = [
-      panel.animate([{opacity:firstOpen?0:fromPanelOpacity},{opacity:1}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'}),
-      scrim.animate([{opacity:firstOpen?0:fromScrim},{opacity:1}],{duration:280,easing:'ease-out',fill:'both'}),
-      ...links.map((link,index)=>link.animate([{opacity:firstOpen?0:fromLinks[index].opacity,transform:firstOpen?'translateY(12px)':fromLinks[index].transform},{opacity:1,transform:'translateY(0)'}],{duration:320,delay:70+index*55,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'}))
+      panel.animate(motionFrames({opacity:firstOpen?0:fromPanelOpacity},{opacity:1},menuEases.power2Out),{duration:280,easing:'linear',fill:'both'}),
+      scrim.animate(motionFrames({opacity:firstOpen?0:fromScrim},{opacity:1},menuEases.power2Out),{duration:280,easing:'linear',fill:'both'}),
+      ...links.map((link,index)=>link.animate(motionFrames(firstOpen?{opacity:0,y:12}:fromLinks[index],{opacity:1,y:0},menuEases.power3Out),{duration:320,delay:70+index*55,easing:'linear',fill:'both'}))
     ];
   } else {
     const lastLink=240+(links.length-1)*55;
     animations = [
-      ...links.map((link,index)=>link.animate([fromLinks[index],{opacity:0,transform:'translateY(12px)'}],{duration:240,delay:(links.length-1-index)*55,easing:'cubic-bezier(.64,0,.78,0)',fill:'both'})),
-      panel.animate([{opacity:fromPanelOpacity},{opacity:0}],{duration:280,delay:lastLink,easing:'ease-in-out',fill:'both'}),
-      scrim.animate([{opacity:fromScrim},{opacity:0}],{duration:280,delay:lastLink,easing:'ease-in-out',fill:'both'})
+      ...links.map((link,index)=>link.animate(motionFrames(fromLinks[index],{opacity:0,y:12},menuEases.power3In),{duration:240,delay:(links.length-1-index)*55,easing:'linear',fill:'both'})),
+      panel.animate(motionFrames({opacity:fromPanelOpacity},{opacity:0},menuEases.power2InOut),{duration:280,delay:lastLink,easing:'linear',fill:'both'}),
+      scrim.animate(motionFrames({opacity:fromScrim},{opacity:0},menuEases.power2InOut),{duration:280,delay:lastLink,easing:'linear',fill:'both'})
     ];
   }
   try {

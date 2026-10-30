@@ -16,13 +16,14 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  for(const [index,project]of projects.entries()){
   const article=document.createElement('article');article.className='v3-case-card';article.dataset.project=project.id;article.style.setProperty('--v3-card-order',String(index));
   const [firstWord,...remainingWords]=project.company.split(' ');
-  article.innerHTML=`<div class="v3-case-cover" aria-hidden="true"><canvas data-card-index="${index}"></canvas></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
+  article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover" aria-hidden="true"><canvas data-card-index="${index}"></canvas></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
   columns[index%2].append(article);
  }
  host.append(section);
  const reduced=matchMedia('(prefers-reduced-motion:reduce)'),desktop=matchMedia('(min-width:801px)');
  let raf=0,visible=true;
  const covers=[...section.querySelectorAll('.v3-case-cover')];
+ const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0}));
  // Reveal once, with a small upward drift. No hidden content without JS.
  const revealItems=[section.querySelector('.v3-cases__title'),...section.querySelectorAll('.v3-case-card')];
  const revealObserver=new IntersectionObserver(changes=>{
@@ -59,13 +60,31 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    const style=getComputedStyle(element),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height)continue;
    element.style.clipPath=`path('${getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true})}')`;
   }
+  for(const card of cards){card.height=card.pin.offsetHeight;card.copyOffset=card.copy.offsetTop;}
   schedule();
  }
  function draw(){
   raf=0;if(!visible||document.hidden)return;
   const active=desktop.matches&&!reduced.matches;
   const progress=Math.max(0,Math.min(2200,scrollY));
-  columns.forEach(column=>{column.style.transform=active?`translateY(${progress*Number(column.dataset.speed)}px)`:'none'});
+  columns.forEach(column=>{
+   const offset=active?progress*Number(column.dataset.speed):0;
+   column.style.transform=active?`translateY(${offset}px)`:'none';
+   // Counter the transformed column so its sticky cover stays at the viewport edge.
+   column.style.setProperty('--v3-column-offset',`${offset}px`);
+  });
+  const stackTop=desktop.matches?24:16;
+  for(const {article,pin,height,copyOffset} of cards){
+   // Read normal-flow positions, never the already lifted text or scaled cover.
+   const overlap=reduced.matches?0:Math.max(0,Math.min(1,(stackTop+height-(article.getBoundingClientRect().top+copyOffset))/Math.max(1,height)));
+   const eased=overlap*overlap*(3-2*overlap);
+   article.style.setProperty('--v3-stack-scale',String(1-eased*(desktop.matches ? .03 : .07)));
+   article.style.setProperty('--v3-stack-opacity',String(1-Math.pow(eased,desktop.matches?2:1.25)));
+   article.style.setProperty('--v3-stack-lift',`${-eased*(desktop.matches?10:20)}px`);
+   article.dataset.stackProgress=overlap.toFixed(3);
+   // A fully covered canvas has no visible work; its observer pauses the shader.
+   pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
+  }
   for(const cover of covers){
    const rect=cover.getBoundingClientRect(),factor=Math.min(1,Math.max(0,scrollY/180));
    const scale=active?1+.22*factor:1;

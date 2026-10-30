@@ -4,7 +4,9 @@
   padding: 0; margin: 0; border: 0; border-radius: 12px; background: transparent;
   color: #000; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.v3-menu-toggle:focus-visible,.v3-menu-close:focus-visible { outline: 2px solid #232522; outline-offset: 4px; }
+.v3-menu-toggle:focus-visible,.v3-menu-close:focus-visible,
+.v3-menu-toggle[data-menu-focus='keyboard']:focus,.v3-menu-close[data-menu-focus='keyboard']:focus { outline: 2px solid #232522; outline-offset: 4px; }
+.v3-menu-toggle[data-menu-focus='pointer']:focus,.v3-menu-close[data-menu-focus='pointer']:focus { outline: none; }
 .v3-menu-glyph { display: block; pointer-events: none; }
 .v3-menu-stroke { transform-box: view-box; transform-origin: 50% 50%; transition: transform .2s ease-in-out; }
 .v3-menu-stroke--top { transform: translateY(-4px) rotate(0); }
