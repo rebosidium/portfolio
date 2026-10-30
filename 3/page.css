@@ -8,8 +8,11 @@
   color: #000;
   background: #f5f5f7;
 }
+/* Clip decorative overflow without creating an extra scroll container or
+   restricting horizontal portrait dragging and pinch-to-zoom gestures. */
+html,body { overflow-x: clip; }
 body { margin: 0; }
-.v3-page { position: relative; z-index: 1; min-height: 100svh; padding-block: 76px 80px; box-sizing: border-box; }
+.v3-page { overflow-x: clip; position: relative; z-index: 1; min-height: 100svh; padding-block: 76px 80px; box-sizing: border-box; }
 .v3-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));

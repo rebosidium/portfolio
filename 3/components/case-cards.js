@@ -1,12 +1,12 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
 import {mountMesh} from './card-shader-runtime.js?v=1901744a2682';
 const projects=[
- {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',size:[28,28]},
- {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599',size:[460,460]},
- {id:'leasing',prefix:'Connecting',company:'Raiffeisen Leasing',tail:'workflows, from the first calculation to a signed contract.',logo:'logo-raiffeisen.svg?v=74f1746e3599',size:[460,460]},
- {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47',size:[553,460]},
- {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b',size:[460,460]},
- {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4',size:[457,461]}
+ {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57'},
+ {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
+ {id:'leasing',prefix:'Connecting',company:'Raiffeisen Leasing',tail:'workflows, from the first calculation to a signed contract.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
+ {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
+ {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b'},
+ {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
 ];
 export function mountCaseCards(host=document.querySelector('.v3-page')){
  if(!host||host.querySelector('.v3-cases'))return;
@@ -17,7 +17,6 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   const article=document.createElement('article');article.className='v3-case-card';article.dataset.project=project.id;article.style.setProperty('--v3-card-order',String(index));
   const [firstWord,...remainingWords]=project.company.split(' ');
   article.innerHTML=`<div class="v3-case-cover" aria-hidden="true"><canvas data-card-index="${index}"></canvas></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
-  article.querySelector('img').dataset.sourceWidth=String(project.size[0]);article.querySelector('img').dataset.sourceHeight=String(project.size[1]);
   columns[index%2].append(article);
  }
  host.append(section);
@@ -59,10 +58,6 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   for(const element of section.querySelectorAll('.v3-case-cover,.v3-case-copy')){
    const style=getComputedStyle(element),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height)continue;
    element.style.clipPath=`path('${getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true})}')`;
-  }
-  for(const img of section.querySelectorAll('.v3-case-logo img')){
-   const side=img.parentElement.clientWidth,w=Number(img.dataset.sourceWidth),h=Number(img.dataset.sourceHeight),scale=side/Math.max(w,h);
-   img.style.transform=`translate(${(side-w*scale)/2}px,${(side-h*scale)/2}px) scale(${scale})`;
   }
   schedule();
  }
