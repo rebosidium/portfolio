@@ -52,14 +52,17 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0,flowTop:0,articleHeight:0,column:article.parentElement}));
  // Reveal once, with a small upward drift. No hidden content without JS.
  const revealItems=[section.querySelector('.v3-cases__title'),...section.querySelectorAll('.v3-case-card')];
- const initialGroup=new Set([revealItems[0],cards[0].article,cards[1].article]);
+ // DOM order groups whole columns; its second article is not the first
+ // article in the right column. Release the actual first visual row.
+ const secondTeaser=columns[1].firstElementChild;
+ const initialGroup=new Set([revealItems[0],cards[0].article,secondTeaser]);
  const waitForHero=!!window.v3Entrance?.contentReady&&!reduced.matches&&!document.hidden;
  let initialReleased=!waitForHero,initialTimer=0;
  const revealObserver=new IntersectionObserver(changes=>{
   for(const {target,isIntersecting} of changes)if(isIntersecting){target.dataset.reveal='visible';revealObserver.unobserve(target);}
  },{rootMargin:'0px 0px -32px 0px',threshold:.04});
  for(const element of revealItems){
-  const gated=waitForHero&&initialGroup.has(element),teaser=element===cards[0].article;
+  const gated=waitForHero&&initialGroup.has(element),teaser=element===cards[0].article||desktop.matches&&element===secondTeaser;
   element.dataset.reveal=reduced.matches||teaser&&!gated?'visible':'pending';
   if(!reduced.matches&&!gated&&!teaser)revealObserver.observe(element);
  }
@@ -75,8 +78,8 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   revealItems[0].dataset.reveal='visible';
   initialTimer=setTimeout(()=>{
    initialReleased=true;cards[0].article.dataset.reveal='visible';
-   if(desktop.matches)cards[1].article.dataset.reveal='visible';
-   else revealObserver.observe(cards[1].article);
+   if(desktop.matches)secondTeaser.dataset.reveal='visible';
+   else revealObserver.observe(secondTeaser);
   },200);
  })));
  reduced.addEventListener('change',()=>{if(reduced.matches){settleInitial();revealObserver.disconnect();for(const element of revealItems)element.dataset.reveal='visible';}});
@@ -91,10 +94,11 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   if(initialReleased)return;
   clearTimeout(initialTimer);initialReleased=true;
   revealItems[0].dataset.reveal=cards[0].article.dataset.reveal='visible';
-  if(desktop.matches)cards[1].article.dataset.reveal='visible';
-  else revealObserver.observe(cards[1].article);
+  if(desktop.matches)secondTeaser.dataset.reveal='visible';
+  else revealObserver.observe(secondTeaser);
  }
  if(waitForHero)addEventListener('scroll',releaseOnScroll,{passive:true});
+ desktop.addEventListener('change',()=>{if(desktop.matches&&initialReleased){secondTeaser.dataset.reveal='visible';revealObserver.unobserve(secondTeaser);}});
  const fine=matchMedia('(hover:hover) and (pointer:fine)');
  let hoverFrame=0,hoverPoint=null;
  function resetHover(cover){cover.style.setProperty('--v3-card-rx','0deg');cover.style.setProperty('--v3-card-ry','0deg');delete cover.dataset.hovering;}
