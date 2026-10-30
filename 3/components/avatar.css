@@ -1,7 +1,12 @@
 .v3-portrait.v3-avatar-stage { --v3-avatar-hover-scale:1; --v3-avatar-size:68px; display: block; padding: 0; border: 0; overflow:visible; background:transparent; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; }
 /* Expand only the circular aperture. Artwork stays anchored to its centre at
    a fixed CSS size, so hover reveals more of the portrait without zooming it. */
-.v3-avatar-aperture { position:absolute;inset:0;overflow:hidden;border-radius:50%;background:#fff;pointer-events:none; }
+.v3-avatar-aperture { position:absolute;inset:-4px;overflow:hidden;border-radius:50%;background:#fff;pointer-events:none;clip-path:circle(calc(50% - 4px) at 50% 50%); }
+/* The aperture box is fixed 4px larger than the stage, so the artwork never
+   re-lays out and the hover overshoot (radius <+3.5px) is never cut off by
+   its own border-radius: only the clip radius moves. The hover shadow is a separate layer that only
+   fades (opacity), instead of repainting an animated box-shadow. */
+.v3-portrait.v3-avatar-stage::before { content:'';position:absolute;inset:-3px;border-radius:50%;box-shadow:0 3px 16px #00000008,0 8px 28px #00000004;opacity:0;pointer-events:none; }
 .v3-avatar-stage canvas { position: absolute; display: block; visibility: hidden; pointer-events: none; }
 .v3-portrait.v3-avatar-stage :is(canvas,img) { width:calc(var(--v3-avatar-size)*1.2084);height:calc(var(--v3-avatar-size)*1.2084);max-width:none;left:calc(50% - var(--v3-avatar-size)*.6111);top:calc(50% - var(--v3-avatar-size)*.4642); }
 @media(max-width:480px){.v3-portrait.v3-avatar-stage{--v3-avatar-size:52px}}
@@ -121,8 +126,18 @@ html[data-v3-android] .v3-avatar-mesh { display:none!important; }
 }
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
 
-@media(hover:hover) and (pointer:fine){.v3-avatar-aperture{transition:inset 460ms cubic-bezier(.37,0,.63,1),box-shadow 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover .v3-avatar-aperture{inset:-3px;box-shadow:0 3px 16px #00000008,0 8px 28px #00000004}}
-@media(prefers-reduced-motion:reduce){.v3-avatar-aperture{transition:none}}
+/* Hover: the white circle grows +3px on a damped spring (zeta .5, ~16% visible
+   overshoot = ~0.5px, soft landing); leaving eases back without a bounce.
+   linear() samples the spring; older engines keep the cubic-bezier fallback. */
+@media(hover:hover) and (pointer:fine){
+ .v3-avatar-aperture{transition:clip-path 420ms cubic-bezier(.37,0,.63,1)}
+ .v3-portrait.v3-avatar-stage::before{transition:opacity 420ms cubic-bezier(.37,0,.63,1)}
+ .v3-portrait.v3-avatar-stage:hover .v3-avatar-aperture{clip-path:circle(calc(50% - 1px) at 50% 50%);
+  transition:clip-path 620ms cubic-bezier(.34,1.45,.64,1);
+  transition:clip-path 620ms linear(0,.0713,.2428,.4582,.6741,.8614,1.0048,1.0997,1.1497,1.163,1.1501,1.1215,1.0862,1.0511,1.021,.9981,.983,.9753,.9735,.9758,.9805,.9863,.992,.9968,1.0005,1.0029,1.0041,1.0043,1.0039,1.0031,1.0022,1.0013,1)}
+ .v3-portrait.v3-avatar-stage:hover::before{opacity:1;transition:opacity 360ms cubic-bezier(.22,1,.36,1)}
+}
+@media(prefers-reduced-motion:reduce){.v3-avatar-aperture,.v3-portrait.v3-avatar-stage::before{transition:none}}
 
 .v3-portrait.v3-avatar-stage[data-return-focus]:focus-visible { outline: none; }
 

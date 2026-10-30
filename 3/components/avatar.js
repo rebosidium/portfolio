@@ -24,8 +24,9 @@ const mobileNavigation=matchMedia('(max-width:767px), (max-width:1023px) and (po
 const manifestURL=new URL('../assets/seedance-manifest.json?v=c45a38e5741a',import.meta.url).href;
 let mountPortrait,smallPlayer,largePlayer,largeState=null,moduleFailed=false;
 let openGeneration=0,welcomeGeneration=-1,backgroundWelcomeGeneration=-1;
-let preloadAllowed=false,preloadQueued=false,preloadIntent=false;
-let primaryPageReady=false,primaryIntroSettled=false,primaryState=null;
+let preloadAllowed=false,preloadQueued=false,pageReady=false;
+// The thumbnail state is only needed for the mobile menu-close spin.
+let primaryState=null;
 
 function syncLoading(){
  const ready=!!largeState?.ready,complete=ready&&!!largeState?.allReady;
@@ -81,26 +82,23 @@ function connectionAllowsPreload(){
  return !connection?.saveData&&!['slow-2g','2g','3g'].includes(connection?.effectiveType);
 }
 function canPreload(){
- // Automatic work waits for load, the main content, and the tiny current frame
- // generation. Explicit portrait intent can warm it sooner on fast connections.
- return !reduced.matches&&connectionAllowsPreload()&&(preloadIntent||primaryPageReady&&primaryIntroSettled&&primaryState?.ready&&primaryState?.allReady);
+ // Last in line: after window load, fonts and the main entrance content. It
+ // never waits for (or depends on) the thumbnail. Opening the dialog mounts
+ // the player on its own; hover, focus and pointerdown never warm it.
+ return !reduced.matches&&connectionAllowsPreload()&&pageReady;
 }
 function beginPreload(){
- if(!canPreload()||document.hidden||navigation.open)return;
+ // The player module may still be loading; its import requeues this.
+ if(!mountPortrait||!canPreload()||document.hidden||navigation.open)return;
  preloadAllowed=true;ensureLarge();
 }
 function queuePreload(){
- if(preloadQueued||preloadAllowed||!canPreload()||document.hidden||navigation.open)return;
- if(preloadIntent){beginPreload();return;}
+ if(preloadQueued||preloadAllowed||!mountPortrait||!canPreload()||document.hidden||navigation.open)return;
  preloadQueued=true;
  const run=()=>{preloadQueued=false;beginPreload();};
  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:2000});
  else setTimeout(run,600);
 }
-function warmFromIntent(){preloadIntent=true;beginPreload();}
-small.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch')warmFromIntent()},{passive:true});
-small.addEventListener('focus',warmFromIntent,{passive:true});
-small.addEventListener('pointerdown',warmFromIntent,{passive:true});
 navigator.connection?.addEventListener?.('change',queuePreload);
 
 // The shell also works when this entire adapter is delayed by the network.
@@ -142,9 +140,10 @@ navigation.addEventListener('close',()=>{
 });
 
 const loaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
+// Independent of the player import order: whichever finishes last queues it.
+Promise.all([loaded,document.fonts?.ready,window.v3Entrance?.contentReady]).then(()=>{pageReady=true;queuePreload();});
 import(playerModule).then(({mountSeedancePortrait})=>{
  mountPortrait=mountSeedancePortrait;
- if(preloadIntent)beginPreload();
  smallPlayer=mountPortrait(small,{interaction:'cursor',manifestURL,fixedVariant:'240-dark'});
  smallPlayer.ready.then(async ready=>{await window.v3Entrance?.headerReady;if(ready)smallPlayer.startIntro();else smallPlayer.skipIntro();});
  syncNavigationPortrait();
@@ -152,9 +151,8 @@ import(playerModule).then(({mountSeedancePortrait})=>{
  const updateLabel=()=>{if(small.getAttribute('aria-label')!=='Open full-screen portrait')small.setAttribute('aria-label','Open full-screen portrait');};
  new MutationObserver(updateLabel).observe(small,{attributes:true,attributeFilter:['aria-label']});updateLabel();
  if(dialog.open)afterFirstPaint(activateLarge);
- // Re-arm eligibility on each loading generation, including a preference or
- // density change. Settled false promises must never bypass the primary load.
- smallPlayer.subscribeLoading(state=>{primaryState=state;queuePreload();});
- smallPlayer.introFinished.then(()=>{primaryIntroSettled=true;queuePreload();});
- Promise.all([loaded,document.fonts?.ready]).then(()=>{primaryPageReady=true;queuePreload();});
+ // The thumbnail state only gates the menu-close spin. The large preload is
+ // queued here too in case the page became ready before this import.
+ smallPlayer.subscribeLoading(state=>{primaryState=state;});
+ queuePreload();
 }).catch(()=>{moduleFailed=true;syncLoading();});

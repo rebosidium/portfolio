@@ -1,5 +1,6 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
-import {mountMesh} from './card-shader-runtime.js?v=1901744a2682';
+import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
+import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=15a915c8562f';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57'},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
@@ -17,7 +18,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  for(const [index,project]of projects.entries()){
   const article=document.createElement('article');article.className='v3-case-card';article.dataset.project=project.id;article.dataset.reveal='pending';article.style.setProperty('--v3-card-order',String(index));
   const [firstWord,...remainingWords]=project.company.split(' ');
-  article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual"><div class="v3-case-cover" aria-hidden="true"><canvas data-card-index="${index}"></canvas></div></div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
+  article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual"><div class="v3-case-cover" aria-hidden="true"></div></div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
   columns[index%2].append(article);
  }
  host.append(section);
@@ -44,12 +45,33 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  const queueTeaser=()=>{if(!teaserFrame)teaserFrame=requestAnimationFrame(fitTeaser);};
  const teaserResize=typeof ResizeObserver==='function'?new ResizeObserver(queueTeaser):null;
  for(const el of [document.querySelector('.v3-header'),document.querySelector('.v3-hero'),section.querySelector('.v3-cases__title'),teaserViewport])if(el)teaserResize?.observe(el);
- addEventListener('resize',queueTeaser,{passive:true});
  document.fonts?.ready.then(queueTeaser);
 
  let raf=0,visible=true;
  const covers=[...section.querySelectorAll('.v3-case-cover')];
  const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0,flowTop:0,articleHeight:0,column:article.parentElement}));
+ mountCardStack(section);
+ mountCardGradients(section);
+ const clipSizes=new WeakMap();
+ const setStyle=(element,name,value)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
+ // Cover clipping must follow CSS box resizing without a JS resize loop.
+ // Normalize the authored path once against the unchanging sticky slot.
+ const svgNS='http://www.w3.org/2000/svg',clipSVG=document.createElementNS(svgNS,'svg'),clipDefs=document.createElementNS(svgNS,'defs');
+ clipSVG.setAttribute('width','0');clipSVG.setAttribute('height','0');clipSVG.setAttribute('aria-hidden','true');clipSVG.setAttribute('focusable','false');
+ clipSVG.style.cssText='position:absolute;pointer-events:none';clipSVG.append(clipDefs);section.append(clipSVG);
+ const responsiveClips=new WeakMap();
+ function resizeCoverClip(element,width,height){
+  let record=responsiveClips.get(element);
+  if(!record){
+   const clip=document.createElementNS(svgNS,'clipPath'),path=document.createElementNS(svgNS,'path'),id=`v3-case-clip-${element.closest('.v3-case-card').dataset.project}`;
+   clip.setAttribute('id',id);clip.setAttribute('clipPathUnits','objectBoundingBox');clip.append(path);clipDefs.append(clip);
+   record={id,path};responsiveClips.set(element,record);
+  }
+  record.path.setAttribute('d',getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true}));
+  record.path.setAttribute('transform',`scale(${1/width} ${1/height})`);
+  setStyle(element,'clip-path',`url("#${record.id}")`);
+ }
+ let measuredWidth=0,measuredSmallHeight=0;
  // Reveal once, with a small upward drift. No hidden content without JS.
  const revealItems=[section.querySelector('.v3-cases__title'),...section.querySelectorAll('.v3-case-card')];
  // DOM order groups whole columns; its second article is not the first
@@ -68,6 +90,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  }
  function settleInitial(){
   clearTimeout(initialTimer);initialReleased=true;
+  removeEventListener('scroll',releaseOnScroll);
   for(const element of initialGroup)element.dataset.reveal='visible';
  }
  if(waitForHero)window.v3Entrance.contentReady.then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -77,7 +100,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   // Existing reveal layers keep the sticky article geometry untransformed.
   revealItems[0].dataset.reveal='visible';
   initialTimer=setTimeout(()=>{
-   initialReleased=true;cards[0].article.dataset.reveal='visible';
+   initialReleased=true;removeEventListener('scroll',releaseOnScroll);cards[0].article.dataset.reveal='visible';
    if(desktop.matches)secondTeaser.dataset.reveal='visible';
    else revealObserver.observe(secondTeaser);
   },200);
@@ -99,7 +122,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  }
  if(waitForHero)addEventListener('scroll',releaseOnScroll,{passive:true});
  desktop.addEventListener('change',()=>{if(desktop.matches&&initialReleased){secondTeaser.dataset.reveal='visible';revealObserver.unobserve(secondTeaser);}});
- const fine=matchMedia('(hover:hover) and (pointer:fine)');
+ const fine=matchMedia('(min-width:801px) and (hover:hover) and (pointer:fine)');
  let hoverFrame=0,hoverPoint=null;
  function resetHover(cover){cover.style.setProperty('--v3-card-rx','0deg');cover.style.setProperty('--v3-card-ry','0deg');delete cover.dataset.hovering;}
  function applyHover(){
@@ -124,9 +147,20 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  const clearHover=()=>{cancelAnimationFrame(hoverFrame);hoverFrame=0;hoverPoint=null;covers.forEach(resetHover);};
  fine.addEventListener('change',clearHover);reduced.addEventListener('change',clearHover);document.addEventListener('visibilitychange',()=>{if(document.hidden)clearHover();});
  function measure(){
+  measuredWidth=section.clientWidth;measuredSmallHeight=teaserViewport.offsetHeight;
   for(const element of section.querySelectorAll('.v3-case-cover,.v3-case-copy')){
-   const style=getComputedStyle(element),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height)continue;
-   element.style.clipPath=`path('${getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true})}')`;
+   const relative=!desktop.matches&&element.classList.contains('v3-case-cover');
+   const box=relative?element.closest('.v3-case-cover-pin'):element;
+   const style=getComputedStyle(box),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height)continue;
+   const previous=clipSizes.get(element);if(previous?.width===width&&previous.height===height&&previous.relative===relative)continue;
+   if(relative)resizeCoverClip(element,width,height);
+   else element.style.clipPath=`path('${getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true})}')`;
+   clipSizes.set(element,{width,height,relative});
+  }
+  if(!desktop.matches||reduced.matches){
+   for(const column of columns){setStyle(column,'transform','none');setStyle(column,'--v3-column-offset','0px');}
+   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
+   return;
   }
   for(const card of cards){
    card.height=parseFloat(getComputedStyle(card.pin).height);card.copyOffset=card.copy.offsetTop;card.articleHeight=card.article.offsetHeight;
@@ -140,41 +174,52 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   schedule();
  }
  function draw(){
-  raf=0;if(!visible||document.hidden||document.querySelector('dialog[open]'))return;
+  raf=0;if(!desktop.matches||reduced.matches||!visible||document.hidden||document.querySelector('dialog[open]'))return;
   const active=desktop.matches&&!reduced.matches;
   const pageY=scrollY,progress=Math.max(0,Math.min(2200,pageY));
   const offsets=columns.map(column=>active?progress*Number(column.dataset.speed):0);
   // All geometry was measured before this write pass. No forced layout reads
   // between scaling covers, translating copy and updating the column offsets.
   columns.forEach((column,index)=>{
-   const offset=offsets[index];column.style.transform=active?`translateY(${offset}px)`:'none';
-   column.style.setProperty('--v3-column-offset',`${offset}px`);
+   const offset=offsets[index];setStyle(column,'transform',active?`translateY(${offset}px)`:'none');
+   setStyle(column,'--v3-column-offset',`${offset}px`);
   });
   const stackTop=desktop.matches?24:16;
   for(const {article,height,copyOffset,pin,flowTop,articleHeight,column} of cards){
    const articleTop=flowTop-pageY+offsets[columns.indexOf(column)];
    const overlap=reduced.matches?0:Math.max(0,Math.min(1,(stackTop+height-articleTop-copyOffset)/Math.max(1,height)));
-   const eased=overlap*overlap*(3-2*overlap),stackScale=1-eased*(desktop.matches ? .03 : .07);
-   article.style.setProperty('--v3-stack-scale',String(stackScale));
-   article.style.setProperty('--v3-stack-opacity',String(1-Math.pow(eased,desktop.matches?2:1.25)));
-   article.style.setProperty('--v3-stack-lift',`${-eased*(desktop.matches?10:20)}px`);
+   const frame=cardStackFrame(overlap),stackScale=frame.scale;
+   setStyle(article,'--v3-stack-scale',String(frame.scale));
+   setStyle(article,'--v3-stack-opacity',String(frame.opacity));
+   setStyle(article,'--v3-stack-lift',`${frame.lift}px`);
    article.dataset.stackProgress=overlap.toFixed(3);
    pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
    const factor=Math.min(1,Math.max(0,pageY/180)),scale=active?1+.22*factor:1;
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
    const desired=active?Math.max(-36,Math.min(36,(innerHeight/2-(pinTop+height*stackScale/2))*.06))*factor:0;
    const margin=Math.max(0,height*(scale-1)/2-.5);
-   article.style.setProperty('--v3-cover-shift',`${Math.max(-margin,Math.min(margin,desired))}px`);
-   article.style.setProperty('--v3-cover-scale',String(scale));
+   setStyle(article,'--v3-cover-shift',`${Math.max(-margin,Math.min(margin,desired))}px`);
+   setStyle(article,'--v3-cover-scale',String(scale));
   }
  }
- function schedule(){if(!raf)raf=requestAnimationFrame(draw);}
+ function schedule(){if(desktop.matches&&!reduced.matches&&!raf)raf=requestAnimationFrame(draw);}
+ function resize(){
+  // Safari's address bar changes the visual viewport during a finger scroll.
+  // Keep ranges and clipping stable while the layout width and 100svh stay put.
+  if(!desktop.matches&&section.clientWidth===measuredWidth&&teaserViewport.offsetHeight===measuredSmallHeight)return;
+  queueTeaser();
+  measure();
+ }
+ function syncDesktopScroll(){
+  removeEventListener('scroll',schedule);
+  if(desktop.matches&&!reduced.matches)addEventListener('scroll',schedule,{passive:true});
+  measure();
+ }
  const size=new ResizeObserver(measure);size.observe(section);section.querySelectorAll('.v3-case-copy').forEach(el=>size.observe(el));
  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)schedule()},{rootMargin:'200px'});observer.observe(section);
- addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});reduced.addEventListener('change',measure);desktop.addEventListener('change',measure);document.addEventListener('visibilitychange',schedule);
+ addEventListener('resize',resize,{passive:true});reduced.addEventListener('change',syncDesktopScroll);desktop.addEventListener('change',syncDesktopScroll);document.addEventListener('visibilitychange',schedule);
  new MutationObserver(()=>{if(!document.querySelector('dialog[open]'))measure();}).observe(document.documentElement,{attributes:true,attributeFilter:['open'],subtree:true});
- fitTeaser();measure();document.fonts?.ready.then(measure);
- for(const canvas of section.querySelectorAll('canvas'))mountMesh(canvas,Number(canvas.dataset.cardIndex)).then(result=>{if(!result)canvas.parentElement.setAttribute('data-shader-unavailable','');}).catch(error=>{canvas.parentElement.setAttribute('data-shader-unavailable','');canvas.dataset.shaderError=error.message;});
+ fitTeaser();syncDesktopScroll();document.fonts?.ready.then(measure);
  return section;
 }
 mountCaseCards();
