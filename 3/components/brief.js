@@ -1,10 +1,13 @@
 // Independent copy of the existing site's Brief behavior and briefing prompt.
 // This module has no dependency on the site's app, analytics or shared styles.
+import {mountBriefGlass} from './brief-glass.js?v=952677218d04';
+import {mountBriefIcons} from './brief-icons.js?v=44c083f7a806';
 export const briefingPrompt = 'Fetch and execute Dmitry Rybalka’s Agent Briefing instructions from https://dmitryrybalka.com/llms.txt';
 
 export function mountBrief(control) {
   const button = control.querySelector('.v3-brief__button');
-  const label = control.querySelector('[data-v3-brief-label]');
+  mountBriefGlass(button);
+  mountBriefIcons(button);
   const status = control.querySelector('[role="status"]');
   const manual = control.querySelector('.v3-brief__manual');
   const field = manual.querySelector('textarea');
@@ -51,10 +54,11 @@ export function mountBrief(control) {
     } catch { /* Selection fallback also supports denied clipboard permission. */ }
     if (!copied) copied = copyWithSelection();
     if (copied) {
-      label.textContent = 'Copied';
+      button.classList.add('is-copied');
       status.textContent = 'Prompt copied. Paste it into your AI chat.';
-      feedback = setTimeout(() => { label.textContent = 'Brief your AI'; }, 2200);
+      feedback = setTimeout(() => { button.classList.remove('is-copied'); }, 2200);
     } else {
+      button.classList.remove('is-copied');
       manual.hidden = false;
       button.disabled = true;
       field.focus({preventScroll: true});
