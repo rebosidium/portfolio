@@ -5,7 +5,7 @@
   --v3-brief-label-width: 130px;
   --v3-brief-padding-start: 32px;
   --v3-brief-padding-end: 24px;
-  --v3-brief-logos-width: 200px;
+  --v3-brief-logos-width: 192px;
   --v3-brief-gap: 22px;
   --v3-brief-logo-scale: 1;
   --v3-brief-background: rgb(255 255 255 / .46);
@@ -47,13 +47,13 @@
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
   border-radius: inherit; opacity: 0; transform: scale(.985, .94);
   box-shadow: inset 0 0 0 1px #ffffffd9, 0 0 0 1px #8e94a51c, 0 2px 9px #a7adbb14;
-  filter: blur(1.1px);
+  filter: blur(2px);
 }
 .v3-page-waves { position: fixed; inset: 0; z-index: 3; overflow: hidden; pointer-events: none; }
 .v3-page-wave {
   position: absolute; width: 160px; height: 160px; border-radius: 50%; opacity: 0;
   transform: translate(-50%, -50%) scale(0); pointer-events: none;
-  background: radial-gradient(circle, transparent 54%, #ffffff00 57%, #ffffffd9 61%, #9aa1b322 64%, #ffffff00 70%, transparent 74%);
+  background: radial-gradient(circle, transparent 43%, #ffffff00 47%, #ffffffa6 57%, #9aa1b314 66%, #ffffff00 78%, transparent 82%);
 }
 .v3-brief__button:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
 .v3-brief__button:disabled { cursor: default; }
@@ -66,7 +66,7 @@
 .is-copied .v3-brief__copied { opacity: 1; visibility: visible; transition: opacity 180ms ease 180ms, visibility 0s linear 180ms; }
 .v3-brief__check { display: block; width: 24px; height: 24px; flex: 0 0 24px; }
 .v3-brief__logos-space { display: block; position: relative; flex: 0 0 calc(var(--v3-brief-logos-width) * var(--v3-brief-logo-scale)); width: calc(var(--v3-brief-logos-width) * var(--v3-brief-logo-scale)); height: calc(28px * var(--v3-brief-logo-scale)); }
-.v3-brief__logos { position: absolute; left: 0; top: 0; display: flex; gap: 15px; transform: scale(var(--v3-brief-logo-scale)); transform-origin: top left; }
+.v3-brief__logos { position: absolute; left: 0; top: 0; display: flex; gap: 13px; transform: scale(var(--v3-brief-logo-scale)); transform-origin: top left; }
 .v3-brief__icon.v3-brief__icon--cursor { display: flex; align-items: center; justify-content: center; }
 .v3-brief__icon { display: block; position: relative; flex: 0 0 28px; width: 28px; height: 28px; }
 /* Preserve the source SVG dimensions; the wrapper carries Figma's masks. */
@@ -77,11 +77,11 @@
 .v3-brief__manual { box-sizing: border-box; width: 408px; max-width: 100%; margin-top: 20px; font-size: 16px; line-height: 1.5; }
 .v3-brief__manual label { display: block; margin-bottom: 8px; }
 .v3-brief__manual textarea { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #757575; border-radius: 12px; background: #fff; color: #232522; font: inherit; resize: vertical; }
-@media (max-width: 480px) {
-  .v3-brief { --v3-brief-height: 60px; --v3-brief-font-size: 18px; --v3-brief-label-width: 110px; --v3-brief-padding-start: 18px; --v3-brief-padding-end: 18px; --v3-brief-gap: 12px; --v3-brief-logo-scale: .8; }
+@media (max-width: 600px) {
+  .v3-brief { --v3-brief-height: 60px; --v3-brief-font-size: 18px; --v3-brief-label-width: 110px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 18px; --v3-brief-gap: 12px; --v3-brief-logo-scale: .75; }
 }
 @media (max-width: 359px) {
-  .v3-brief { --v3-brief-height: 56px; --v3-brief-font-size: 17px; --v3-brief-label-width: 98px; --v3-brief-padding-start: 14px; --v3-brief-padding-end: 14px; --v3-brief-gap: 10px; --v3-brief-logo-scale: .66; }
+  .v3-brief { --v3-brief-height: 56px; --v3-brief-font-size: 17px; --v3-brief-label-width: 98px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 12px; --v3-brief-gap: 8px; --v3-brief-logo-scale: .62; }
 }
 @media (prefers-reduced-motion: reduce) { .v3-brief__button, .v3-brief .v3-brief__label > span { transition: none; } }
 @supports not ((backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px))) { .v3-brief__glass { background: #ffffffd9; } }

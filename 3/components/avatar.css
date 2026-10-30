@@ -1,0 +1,69 @@
+.v3-portrait.v3-avatar-stage { display: block; padding: 0; border: 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; }
+.v3-avatar-stage canvas { position: absolute; display: block; visibility: hidden; pointer-events: none; }
+.v3-portrait.v3-avatar-stage canvas { width: 120.84%; height: 120.84%; max-width: none; left: -11.11%; top: 3.58%; }
+.v3-avatar-stage.portrait-rendered canvas { visibility: visible; }
+.v3-avatar-stage.portrait-rendered img { visibility: hidden; }
+.v3-avatar-stage:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
+.v3-avatar-dialog {
+  box-sizing: border-box; position: fixed; inset: 0; margin: 0; padding: 24px;
+  width: 100%; max-width: none; height: 100dvh; max-height: none;
+  border: 0; overflow: auto; background: transparent; color: #232522;
+  font-family: 'DM Sans', sans-serif; font-variation-settings: 'opsz' 14;
+}
+.v3-avatar-dialog[open] { display: grid; place-items: center; }
+.v3-avatar-dialog::backdrop { background: rgb(245 245 247 / .18); -webkit-backdrop-filter: blur(8px) saturate(120%); backdrop-filter: blur(8px) saturate(120%); animation: v3-avatar-frost-in 320ms ease both; }
+.v3-avatar-viewer { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.v3-avatar-large { position: relative; width: min(86vw, calc(100dvh - 140px), 860px); aspect-ratio: 1; user-select: none; -webkit-user-select: none; touch-action: pan-y pinch-zoom; cursor: grab; border-radius: 24px; }
+.v3-avatar-large.dragging { cursor: grabbing; }
+.v3-avatar-large img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.v3-avatar-large canvas { inset: 0; width: 100%; height: 100%; }
+.v3-avatar-hint { margin: 0; font-size: 15px; line-height: 22px; text-align: center; color: #66686d; }
+.v3-avatar-spin,.v3-avatar-hide { border: 0; border-radius: 100px; background: #ffffff9e; padding: 13px 30px; color: #232522; font: 500 18px/26px 'DM Sans',sans-serif; cursor: pointer; box-shadow: 0 3px 16px #00000008,inset 0 1px 0 #ffffffe0; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.v3-avatar-spin:focus-visible,.v3-avatar-hide:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
+@keyframes v3-avatar-frost-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion:reduce) { .v3-avatar-dialog::backdrop { animation: none; } }
+
+.v3-avatar-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.v3-avatar-spin,.v3-avatar-hide { display: inline-flex; align-items: center; justify-content: center; gap: 9px; }
+.v3-avatar-actions img { display: block; flex: 0 0 24px; }
+.v3-avatar-spin:disabled { opacity: .45; cursor: default; }
+@media(max-width:359px){.v3-avatar-actions{gap:8px}.v3-avatar-spin,.v3-avatar-hide{font-size:16px;padding:12px 18px;gap:7px}}
+
+/* Broad coloured light pools, like the quiet glow of a HomePod display. */
+.v3-avatar-mesh { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.v3-avatar-mesh::before,.v3-avatar-mesh::after {
+  content: ''; position: absolute; inset: -12%; pointer-events: none;
+  filter: blur(52px); transform-origin: 50% 50%;
+  animation-play-state: paused;
+}
+.v3-avatar-mesh::before {
+  background: radial-gradient(ellipse at 14% 25%, #ff259d 0, transparent 43%),radial-gradient(ellipse at 84% 22%, #4940ff 0, transparent 44%),radial-gradient(ellipse at 65% 88%, #00cfc0 0, transparent 48%);
+  opacity: .23;
+  animation: v3-avatar-mesh-flow 12s ease-in-out infinite alternate paused;
+}
+.v3-avatar-mesh::after {
+  background: radial-gradient(ellipse at 25% 80%, #00aaff 0, transparent 40%),radial-gradient(ellipse at 80% 65%, #ff7939 0, transparent 42%),radial-gradient(ellipse at 52% 8%, #df43ff 0, transparent 39%);
+  opacity: .14;
+  animation: v3-avatar-mesh-counterflow 15s ease-in-out infinite alternate paused;
+}
+.v3-avatar-dialog[open] .v3-avatar-mesh::before,.v3-avatar-dialog[open] .v3-avatar-mesh::after { animation-play-state: running; }
+@keyframes v3-avatar-mesh-flow {
+  from { transform: translate(-5%, -3%) scale(1) rotate(-5deg); opacity: .19; }
+  to { transform: translate(7%, 5%) scale(1.12) rotate(8deg); opacity: .28; }
+}
+@keyframes v3-avatar-mesh-counterflow {
+  from { transform: translate(6%, -3%) scale(1.08) rotate(6deg); opacity: .17; }
+  to { transform: translate(-6%, 6%) scale(.98) rotate(-9deg); opacity: .1; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .v3-avatar-mesh::before,.v3-avatar-mesh::after { animation: none; }
+}
+
+.v3-avatar-dialog:focus { outline: none; }
+.v3-avatar-spin { background: #000; color: #fff; box-shadow: 0 3px 16px #00000018,inset 0 1px 0 #ffffff26; }
+.v3-avatar-spin img { filter: brightness(0) invert(1); }
+
+@media(hover:hover) and (pointer:fine){.v3-portrait.v3-avatar-stage{transition:transform 460ms cubic-bezier(.37,0,.63,1)}.v3-portrait.v3-avatar-stage:hover{transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){.v3-portrait.v3-avatar-stage{transition:none}}
+
+.v3-portrait.v3-avatar-stage[data-return-focus]:focus-visible { outline: none; }

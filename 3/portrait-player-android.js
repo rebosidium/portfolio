@@ -1,0 +1,1015 @@
+// Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
+// Canvas only; the approved static starting pose remains available on failure.
+// Approved cursor-follow with manual rotation and spring return.
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706} = {}) {
+  const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
+  const ctx=canvas?.getContext('2d');
+  if(!ctx||!posterElement||!manifestURL){
+    const state=Object.freeze({generation:0,quality:null,desiredQuality:null,ready:false,allReady:false,loading:false,error:'Portrait unavailable',activeDownloads:0});
+    const allFramesReady=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
+    return {ready:Promise.resolve(false),introFinished:Promise.resolve(false),setDesktopCoverPose(){return false},clearDesktopCoverPose(){},get allFramesReady(){return allFramesReady},get loadingState(){return state},subscribeLoading(callback){if(typeof callback==='function'){try{callback(state)}catch{}}return ()=>{}},startIntro(){return false},skipIntro(){},destroy(){}};
+  }
+  let selectionAngle=initialAngle,destroyed=false,bufferReady=false,startupSettled=false,introConsumed=false;
+  let resolveStartup,introTime=0,introFrom=0,introPreparedIndex=-1,introRequested=false,introPath=[];
+  let resolveIntroFinished,introFinishedSettled=false;
+  const introFinished=new Promise(resolve=>{resolveIntroFinished=resolve});
+  const finishIntro=value=>{if(!introFinishedSettled){introFinishedSettled=true;resolveIntroFinished(value)}};
+  const startupReady=new Promise(resolve=>{resolveStartup=resolve});
+  const settleStartup=value=>{if(!startupSettled){startupSettled=true;resolveStartup(value)}};
+  const cleanup=[];
+  const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
+  const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const coarsePointer=window.matchMedia('(pointer: coarse)');
+  canvas.dataset.variant='touch-responsive-raw-bitmap';
+  const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  const FOLLOW_MAX_ANGLE=49,FOLLOW_DAMPING_MS=95,FOLLOW_DEAD_ZONE=8,FOLLOW_SOFT_RADIUS=1.5;
+  let cursorPoint=null,followVisible=true,followPaused=false;
+  const CACHE_LIMIT=12,DECODE_WORKERS=2,CHUNK_WORKERS=2,DAMPING_MS=60;
+  const DRAG_TURNS=3,DRAG_DAMPING_MS=20,RETURN_OMEGA=26,RETURN_DAMPING=.72,RETURN_MAX_SPEED=900;
+  const TOUCH_DRAG_TURNS=1,TOUCH_DRAG_DAMPING_MS=32,TOUCH_RETURN_MAX_SPEED=600;
+  // Menu release has no gesture velocity; give its mobile return a visible rebound.
+  const MENU_RETURN_OMEGA=18,MENU_RETURN_DAMPING=.55;
+  const RELEASE_WINDOW_MS=110,RELEASE_IDLE_MS=120;
+  const DECODE_MAX_STEP=16;
+  let motionElapsed=1000/60;
+  const decodeLimited=()=>!!(mobileLayout?.matches||coarsePointer.matches);
+  const displayCaughtUp=angle=>!decodeLimited()||Math.abs(angle-lastMotionPhase)<1.6;
+  let generation=0,bitmapEpoch=0,fetchController=null,manifest=null,urls=[],angles=[],blobs=[];
+  let sourceSize=[1200,1200],renderSize=[1200,1200],ready=false;
+  let raf=0,previousTick=0,mode='idle',drag=null,powerSpin=null;
+  let settleDampingMs=DAMPING_MS,settleMaxStep=12;
+  let inertiaVelocity=0,motionVelocity=0,lastMotionPhase=0,lastMotionDirection=0;
+  let returnRequested=false,returnStarted=0,returnCount=0;
+  let touchReturn=false;
+  let menuPoseActive=false,menuReturnRequested=false;
+  let mobileScrollFrontPhase=0,mobileScrollReturn=false;
+  let desktopCoverActive=false,desktopCoverProgress=0,desktopCoverFront=0;
+  let displayedIndex=-1,wantedIndex=0,currentAngle=0,targetAngle=0,clock=0;
+  let loadedBytes=0,loadedCount=0,resizeTimer=0,runtimeFetches=0;
+  const cache=new Map(),queue=[],inFlight=new Set(),failedFrames=new Set();
+  let variant=null,chunkStates=[],frameChunk=[],chunkPumpQueued=false,lastPreemptAt=-1000,loadStartedAt=0;
+  const activeChunks=new Set(),encodedWaiters=new Map();
+  let currentStartupReady=false,encodedAllReady=false,loadAttemptActive=false,loadQuality=null,loadError='';
+  let resolveAllFrames=null,lastLoadState=null;
+  let allFramesPromise=Promise.resolve(Object.freeze({generation:0,quality:null,ready:false}));
+  const loadSubscribers=new Set();
+  const introFrames=new Set();
+  let allowBackground=false,preparing=false;
+  let stats={draws:0,gaps:[],drawTimes:[],decodeTimes:[],lastDraw:0,waits:0};
+
+  const wrap=(value,length)=>((value%length)+length)%length;
+  const angleDistance=(a,b)=>Math.abs(wrap(a-b+180,360)-180);
+  const shortestDelta=(a,b)=>wrap(a-b+180,360)-180;
+  const cancelled=()=>new DOMException('Cancelled','AbortError');
+  function loadingState(){
+    const desiredQuality=chooseVariant(),qualityReady=currentStartupReady&&loadQuality===desiredQuality;
+    return Object.freeze({generation,quality:loadQuality,desiredQuality,ready:qualityReady,allReady:encodedAllReady,
+      loading:loadAttemptActive&&!(qualityReady&&encodedAllReady&&activeChunks.size===0),error:loadError,activeDownloads:activeChunks.size});
+  }
+  function notifyLoading(){
+    const state=loadingState();
+    if(lastLoadState&&Object.keys(state).every(key=>state[key]===lastLoadState[key]))return;
+    lastLoadState=state;
+    // Optional dependent components must not interrupt the portrait loader.
+    for(const callback of [...loadSubscribers]){try{callback(state)}catch{}}
+  }
+  function subscribeLoading(callback){
+    if(typeof callback!=='function')return ()=>{};
+    loadSubscribers.add(callback);
+    try{callback(loadingState())}catch{}
+    return ()=>loadSubscribers.delete(callback);
+  }
+  function settleAllFrames(value){
+    if(!resolveAllFrames)return;
+    const resolve=resolveAllFrames;resolveAllFrames=null;
+    resolve(Object.freeze({generation,quality:loadQuality,ready:value}));
+  }
+  function beginLoading(){
+    // Resolve obsolete waiters with their old token before creating a new one.
+    settleAllFrames(false);generation++;
+    currentStartupReady=encodedAllReady=false;loadAttemptActive=true;loadQuality=null;loadError='';
+    allFramesPromise=new Promise(resolve=>{resolveAllFrames=resolve});
+    delete canvas.dataset.allReady;delete canvas.dataset.allLoadedMs;
+    notifyLoading();return generation;
+  }
+  function setStatus(text){canvas.dataset.status=text}
+  function angleToIndex(angle){
+    const target=wrap(angle,360);
+    if(!angles.length)return wrap(Math.round(target/360*urls.length),urls.length);
+    let lo=0,hi=angles.length;
+    while(lo<hi){const mid=(lo+hi)>>1;if(angles[mid]<target)lo=mid+1;else hi=mid}
+    const before=wrap(lo-1,angles.length),after=wrap(lo,angles.length);
+    return angleDistance(angles[before],target)<angleDistance(angles[after],target)?before:after;
+  }
+  function indexToAngle(index){index=wrap(index,urls.length);return angles[index]??index/urls.length*360}
+  function updateAngle(angle){
+    const shown=wrap(angle,360);
+    const instruction=cursorFollow?'Move the pointer to turn Dmitry toward it. Drag to rotate freely; release to return to the front.':'Drag to rotate; release to return to the front.';
+    stage.setAttribute('aria-label',document.documentElement.lang==='ru'?'Дмитрий Рыбалка. '+(cursorFollow?'Двигайте указатель, чтобы повернуть портрет к нему. ':'')+'Перетаскивайте для вращения; отпустите — портрет повернётся к вам. Или используйте стрелки влево и вправо. Угол '+Math.round(shown)+' градусов.':'Dmitry Rybalka. '+instruction+' Or use Left and Right arrow keys. Current angle '+Math.round(shown)+' degrees.');
+    canvas.dataset.angle=String(shown);
+  }
+  function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
+  function sample(values,value){values.push(value);if(values.length>4096)values.splice(0,256)}
+  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(new URL(url,import.meta.url),options)}
+  function diagnostics(){
+    const resources=[...cache.values()].filter(e=>e.state==='ready');
+    const pixels=resources.reduce((sum,e)=>sum+e.resource.width*e.resource.height,0);
+    Object.assign(canvas.dataset,{
+      mode,phase:currentAngle.toFixed(3),targetPhase:targetAngle.toFixed(3),velocity:inertiaVelocity.toFixed(2),dragTurns:String(DRAG_TURNS),drawCount:String(stats.draws),maxGapMs:Math.max(0,...stats.gaps).toFixed(1),p95GapMs:percentile(stats.gaps,.95).toFixed(1),
+      p95DrawMs:percentile(stats.drawTimes,.95).toFixed(2),p95DecodeMs:percentile(stats.decodeTimes,.95).toFixed(1),decodeWaits:String(stats.waits),
+      decodedCacheCount:String(resources.length),bitmapMemoryMiB:(pixels*4/1024/1024).toFixed(2),encodedBytes:String(loadedBytes),
+      encodedReadyCount:String(loadedCount),renderSize:renderSize.join('x'),sourceSize:sourceSize.join('x'),networkDuringInteraction:String(runtimeFetches),activeDownloads:String(activeChunks.size)
+    });
+  }
+  function beginStats(){stats={draws:0,gaps:[],drawTimes:[],decodeTimes:[],lastDraw:0,waits:0}}
+  function closeResource(resource){try{resource?.dispose()}catch{}}
+  function rejectWaiters(entry,error){for(const waiter of entry.waiters.splice(0))waiter.reject(error)}
+  function clearDecoded(){
+    bitmapEpoch++;
+    for(const entry of cache.values()){if(entry.state==='ready')closeResource(entry.resource);rejectWaiters(entry,cancelled())}
+    cache.clear();queue.length=0;failedFrames.clear();
+  }
+  function menuReboundFrames(){
+    // Prepare the rebound before crossing front; predictive decoding can skip it.
+    return menuReturnRequested&&mobileLayout?.matches&&urls.length?[angleToIndex(targetAngle-6),angleToIndex(targetAngle-7),angleToIndex(targetAngle)]:[];
+  }
+  function trimCache(){
+    const decoded=[...cache.values()].filter(e=>e.state==='ready');
+    const limit=introFrames.size?introFrames.size+2:CACHE_LIMIT;
+    const rebound=new Set(menuReboundFrames());
+    const removable=decoded.filter(e=>!introFrames.has(e.index)&&!rebound.has(e.index)&&e.index!==displayedIndex&&e.index!==wantedIndex).sort((a,b)=>a.used-b.used);
+    let count=decoded.length;
+    while(count>limit&&removable.length){const entry=removable.shift();if(cache.get(entry.index)!==entry)continue;cache.delete(entry.index);closeResource(entry.resource);count--}
+  }
+  function physicalSize(){
+    const width=stage.clientWidth||sourceSize[0];
+    // Keep touch interaction at the same 2× CSS raster budget as the smooth
+    // predecoded welcome turn. The selected encoded quality remains unchanged.
+    const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()||!introConsumed||introFrames.size?2:Infinity));
+    const w=Math.min(sourceSize[0],Math.max(1,Math.ceil(width*ratio)));
+    return [w,Math.max(1,Math.round(w*sourceSize[1]/sourceSize[0]))];
+  }
+  function sizedResource(drawable,width,height,size,dispose){
+    if(width===size[0]&&height===size[1])return {drawable,width,height,dispose};
+    const surface=document.createElement('canvas');surface.width=size[0];surface.height=size[1];
+    const context=surface.getContext('2d');
+    if(!context){dispose();throw new Error('Не удалось подготовить портрет.')}
+    context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+    try{context.drawImage(drawable,0,0,surface.width,surface.height)}finally{dispose()}
+    return {drawable:surface,width:surface.width,height:surface.height,dispose:()=>{surface.width=surface.height=0}};
+  }
+  async function decodeBlob(blob,size){
+    if(typeof createImageBitmap==='function'){
+      // Touch keeps the original decoded bitmap; resize only when drawing it.
+      // The fully prepared welcome turn and desktop decoder remain unchanged.
+      if(decodeLimited()&&introConsumed&&!introFrames.size){
+        const bitmap=await createImageBitmap(blob);
+        return {drawable:bitmap,width:bitmap.width,height:bitmap.height,dispose:()=>bitmap.close()};
+      }
+      let bitmap;
+      try{bitmap=await createImageBitmap(blob,{resizeWidth:size[0],resizeHeight:size[1],resizeQuality:'high'})}
+      catch{bitmap=await createImageBitmap(blob)}
+      return sizedResource(bitmap,bitmap.width,bitmap.height,size,()=>bitmap.close());
+    }
+    const objectURL=URL.createObjectURL(blob),img=new Image();img.decoding='async';
+    try{
+      if(typeof img.decode==='function'){img.src=objectURL;await img.decode()}
+      else await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Не удалось прочитать кадр.'));img.src=objectURL});
+      return sizedResource(img,img.naturalWidth,img.naturalHeight,size,()=>{img.onload=img.onerror=null;img.removeAttribute('src');URL.revokeObjectURL(objectURL)});
+    }catch(error){img.removeAttribute('src');URL.revokeObjectURL(objectURL);throw error}
+  }
+  function scheduleRender(){if(!raf)raf=requestAnimationFrame(render)}
+  function pumpDecoder(){
+    queue.sort((a,b)=>a.priority-b.priority||b.used-a.used);
+    while(inFlight.size<DECODE_WORKERS&&queue.length){
+      const entry=queue.shift();
+      if(cache.get(entry.index)!==entry||entry.generation!==generation||entry.epoch!==bitmapEpoch)continue;
+      entry.state='decoding';inFlight.add(entry);
+      const started=performance.now(),size=renderSize.slice();
+      decodeBlob(blobs[entry.index],size).then(resource=>{
+        if(entry.generation!==generation||entry.epoch!==bitmapEpoch||cache.get(entry.index)!==entry){closeResource(resource);rejectWaiters(entry,cancelled());return}
+        entry.state='ready';entry.resource=resource;entry.used=++clock;
+        sample(stats.decodeTimes,performance.now()-started);
+        for(const waiter of entry.waiters.splice(0))waiter.resolve(entry);
+        trimCache();scheduleRender();
+      }).catch(error=>{
+        rejectWaiters(entry,error);
+        if(entry.generation!==generation||entry.epoch!==bitmapEpoch)return;
+        if(cache.get(entry.index)===entry)cache.delete(entry.index);
+        failedFrames.add(entry.index);
+        if(ready)fallback(error);
+      }).finally(()=>{inFlight.delete(entry);pumpDecoder()});
+    }
+  }
+  function requestDecode(index,priority=10){
+    index=wrap(index,urls.length);
+    if(!blobs[index]){ensureEncoded(index,priority);return null}
+    if(failedFrames.has(index)){
+      if(ready&&(index===wantedIndex||index===angleToIndex(targetAngle))){fallback(new Error('Frame decode failed'))}
+      return null;
+    }
+    let entry=cache.get(index);
+    if(entry){entry.used=++clock;if(entry.state==='queued'){entry.priority=Math.min(entry.priority,priority);pumpDecoder()}return entry}
+    entry={index,state:'queued',priority,used:++clock,generation,epoch:bitmapEpoch,waiters:[],resource:null};
+    cache.set(index,entry);queue.push(entry);pumpDecoder();return entry;
+  }
+  function decoded(index){const entry=cache.get(wrap(index,urls.length));if(entry?.state==='ready'){entry.used=++clock;return entry}return null}
+  function availableStep(proposed,direction){
+    const reach=Math.abs(proposed-currentAngle);
+    let best=null,bestDistance=0;
+    for(const entry of cache.values()){
+      if(entry.state!=='ready'||entry.index===displayedIndex)continue;
+      const angle=indexToAngle(entry.index);
+      const distance=direction>0?wrap(angle-currentAngle,360):wrap(currentAngle-angle,360);
+      if(distance>bestDistance&&distance<=reach+.001){bestDistance=distance;best={entry,angle:currentAngle+direction*distance}}
+    }
+    return best;
+  }
+  async function waitDecoded(index){
+    await waitEncoded(index,0);
+    const entry=requestDecode(index,0);
+    if(!entry)return Promise.reject(new Error('Не удалось подготовить кадр.'));
+    if(entry.state==='ready')return Promise.resolve(entry);
+    return new Promise((resolve,reject)=>entry.waiters.push({resolve,reject}));
+  }
+  function warmWindow(index,direction=1){
+    resetChunkPriorities();
+    if(mode==='settle')ensureEncoded(angleToIndex(targetAngle),0);
+    const offsets=[0,...Array.from({length:8},(_,i)=>(i+1)*direction),-direction,-2*direction,-3*direction];
+    const rebound=menuReboundFrames(),wanted=new Set([...rebound,...offsets.map(offset=>wrap(index+offset,urls.length))]);
+    if(displayedIndex>=0)wanted.add(displayedIndex);
+    for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    rebound.forEach(candidate=>requestDecode(candidate,0));
+    offsets.forEach((offset,i)=>requestDecode(index+offset,i===0?0:2+i));
+  }
+  function warmMotionLegacy(angle,velocity){
+    resetChunkPriorities();
+    const lead=Math.min(160,Math.max(16,percentile(stats.decodeTimes,.75)||25));
+    const index=angleToIndex(angle),direction=Math.sign(velocity)||lastMotionDirection||1;
+    const reach=Math.max(0,(angle-lastMotionPhase)*direction);
+    const bridge=angleToIndex(lastMotionPhase+direction*Math.min(90,reach));
+    const prediction=angleToIndex(angle+velocity*lead/1000);
+    const indices=[...menuReboundFrames(),...(reach>90?[bridge,angleToIndex(lastMotionPhase+direction*Math.min(45,reach)),prediction,index]:[prediction,index])];
+    indices.push(...[lead+20,lead+40].map(ms=>angleToIndex(angle+velocity*ms/1000)),wrap(index+direction,urls.length),wrap(index-direction,urls.length));
+    const wanted=new Set(indices);if(displayedIndex>=0)wanted.add(displayedIndex);
+    for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    [...new Set(indices)].forEach((candidate,i)=>requestDecode(candidate,i));
+  }
+  function paintMotionLegacy(angle,velocity){
+    const index=angleToIndex(angle),direction=Math.sign(velocity)||lastMotionDirection||1;
+    lastMotionDirection=direction;
+    wantedIndex=index;warmMotionLegacy(angle,velocity);
+    const destination=angle+shortestDelta(indexToAngle(index),angle);
+    const reach=(destination-lastMotionPhase)*direction,limit=Math.min(120,Math.max(0,reach));
+    let best=null,bestAdvance=-1,bestPhase=lastMotionPhase;
+    for(const entry of cache.values()){
+      if(entry.state!=='ready')continue;
+      const advance=direction>0?wrap(indexToAngle(entry.index)-lastMotionPhase,360):wrap(lastMotionPhase-indexToAngle(entry.index),360);
+      if(advance>limit+.001)continue;
+      if(advance>bestAdvance){best=entry;bestAdvance=advance;bestPhase=lastMotionPhase+direction*advance}
+    }
+    if(best&&(best.index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)){draw(best,indexToAngle(best.index));lastMotionPhase=bestPhase}
+    else if(!best)stats.waits++;
+    canvas.dataset.mode=mode;canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase=targetAngle.toFixed(3);canvas.dataset.velocity=inertiaVelocity.toFixed(2);
+  }
+  function warmMotion(angle,velocity){
+    if(!decodeLimited()){warmMotionLegacy(angle,velocity);return}
+    resetChunkPriorities();
+    const direction=Math.sign(angle-lastMotionPhase)||Math.sign(velocity)||lastMotionDirection||1;
+    const index=angleToIndex(angle),advance=Math.max(0,(angle-lastMotionPhase)*direction);
+    // Demand the next visible pose before speculating. Small bridges remain in
+    // the same bounded region, so a decoder never has to catch up by 120°.
+    const lead=Math.min(65,Math.max(16,percentile(stats.decodeTimes,.75)||25));
+    const boundedVelocity=direction*Math.min(Math.abs(velocity),DECODE_MAX_STEP*60);
+    const indices=[index,wrap(index-direction,urls.length),angleToIndex(lastMotionPhase+direction*advance*.5),
+      ...menuReboundFrames(),angleToIndex(angle+boundedVelocity*lead/1000),
+      angleToIndex(angle+direction*8),angleToIndex(angle+direction*16),
+      angleToIndex(angle+direction*24),wrap(index+direction,urls.length),wrap(index-2*direction,urls.length)];
+    const wanted=new Set(indices);if(displayedIndex>=0)wanted.add(displayedIndex);
+    for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    [...new Set(indices)].forEach((candidate,i)=>requestDecode(candidate,i));
+  }
+  function paintMotion(angle,velocity){
+    if(!decodeLimited()){paintMotionLegacy(angle,velocity);return}
+    const delta=angle-lastMotionPhase,direction=Math.sign(delta)||Math.sign(velocity)||lastMotionDirection||1;
+    lastMotionDirection=direction;
+    // The physics/input still advances normally. Only presentation advances in
+    // a short decoded bridge; retain the visible frame while its next is pending.
+    const step=mode==='drag'&&drag?.touch?24:DECODE_MAX_STEP;
+    const limit=Math.min(32,step*Math.max(.5,motionElapsed/(1000/60)));
+    const advance=Math.min(Math.abs(delta),limit),nextPhase=lastMotionPhase+direction*advance;
+    wantedIndex=angleToIndex(nextPhase);warmMotion(nextPhase,velocity);
+    let best=null,bestAdvance=-1,bestPhase=lastMotionPhase;
+    for(const entry of cache.values()){
+      if(entry.state!=='ready')continue;
+      const step=direction>0?wrap(indexToAngle(entry.index)-lastMotionPhase,360):wrap(lastMotionPhase-indexToAngle(entry.index),360);
+      if(step>advance+.001)continue;
+      if(step>bestAdvance){best=entry;bestAdvance=step;bestPhase=lastMotionPhase+direction*step}
+    }
+    if(best&&(best.index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)){draw(best,indexToAngle(best.index));lastMotionPhase=bestPhase}
+    else if(!best||advance>1.6&&bestAdvance<.1)stats.waits++;
+    canvas.dataset.mode=mode;canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase=targetAngle.toFixed(3);canvas.dataset.velocity=inertiaVelocity.toFixed(2);
+    canvas.dataset.displayPhase=lastMotionPhase.toFixed(3);canvas.dataset.motionMaxStep=String(step);
+  }
+  function draw(entry,angle){
+    if(!entry||entry.state!=='ready')return false;
+    const started=performance.now();
+    if(canvas.width!==renderSize[0]||canvas.height!==renderSize[1]){canvas.width=renderSize[0];canvas.height=renderSize[1]}
+    const resource=entry.resource,scale=Math.min(canvas.width/resource.width,canvas.height/resource.height);
+    const w=resource.width*scale,h=resource.height*scale;
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(resource.drawable,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
+    stage.classList.add('portrait-rendered');canvas.dataset.posterDrawn='true';
+    displayedIndex=entry.index;entry.used=++clock;selectionAngle=wrap(angle,360);
+    canvas.dataset.frame=String(entry.index);canvas.dataset.bitmapEpoch=String(bitmapEpoch);updateAngle(angle);
+    if(stats.lastDraw)sample(stats.gaps,started-stats.lastDraw);stats.lastDraw=started;stats.draws++;sample(stats.drawTimes,performance.now()-started);
+    trimCache();return true;
+  }
+  function stop(){
+    powerSpin=null;
+    if(mode==='intro')introConsumed=true;
+    mode='idle';previousTick=0;inertiaVelocity=motionVelocity=0;returnRequested=false;
+    touchReturn=false;
+    mobileScrollReturn=menuReturnRequested=false;
+    if(displayedIndex>=0){currentAngle+=shortestDelta(indexToAngle(displayedIndex),currentAngle);targetAngle=currentAngle}
+    lastMotionPhase=currentAngle;lastMotionDirection=0;
+    canvas.dataset.mode=mode;diagnostics();
+  }
+  function releaseDrag(){
+    if(!drag)return;const id=drag.id;drag=null;stage.classList.remove('dragging');
+    if(stage.hasPointerCapture?.(id))stage.releasePointerCapture(id);
+  }
+  function setTarget(angle,{shortest=true,session=false,damping=DAMPING_MS,maxStep=12}={}){
+    if(!ready)return;releaseDrag();
+    if(session){stop();beginStats()}
+    inertiaVelocity=motionVelocity=0;mode='settle';
+    settleDampingMs=damping;settleMaxStep=maxStep;
+    canvas.dataset.mode=mode;
+    targetAngle=shortest?currentAngle+shortestDelta(angle,currentAngle):angle;
+    canvas.dataset.targetPhase=targetAngle.toFixed(3);
+    scheduleRender();
+  }
+  function cursorAngle(){
+    if(!cursorPoint)return 0;
+    const rect=stage.getBoundingClientRect(),center=rect.left+rect.width/2,dx=cursorPoint.x-center;
+    const reach=Math.max(FOLLOW_DEAD_ZONE+1,dx<0?center:window.innerWidth-center);
+    const distance=Math.max(0,Math.abs(dx)-FOLLOW_DEAD_ZONE)/(reach-FOLLOW_DEAD_ZONE);
+    // Attenuate near the portrait in both axes, with a smooth join to full influence.
+    const radius=Math.max(1,Math.min(rect.width*FOLLOW_SOFT_RADIUS,center,window.innerWidth-center));
+    const proximity=Math.min(1,Math.hypot(dx,cursorPoint.y-(rect.top+rect.height/2))/radius);
+    const influence=proximity*proximity*(3-2*proximity);
+    return Math.sign(dx)*Math.min(1,distance)*influence*FOLLOW_MAX_ANGLE;
+  }
+  function applyCursorTarget(){
+    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
+    const angle=cursorAngle(),next=angleToIndex(angle);
+    canvas.dataset.followTarget=angle.toFixed(3);
+    if(mode==='idle'&&next===displayedIndex)return;
+    if(mode!=='follow'){releaseDrag();stop();beginStats();mode='follow';canvas.dataset.mode=mode;previousTick=0;}
+    const nextTarget=currentAngle+shortestDelta(angle,currentAngle);
+    const direction=Math.sign(nextTarget-currentAngle);
+    if(lastMotionDirection&&direction&&direction!==lastMotionDirection)currentAngle=lastMotionPhase;
+    targetAngle=currentAngle+shortestDelta(angle,currentAngle);
+    setStatus('Поворот за курсором');scheduleRender();
+  }
+  function renderFollow(elapsed,damping=FOLLOW_DAMPING_MS,maxStep=9){
+    const before=currentAngle,delta=targetAngle-currentAngle;
+    const eased=delta*(1-Math.exp(-elapsed/damping));
+    const limit=maxStep*elapsed/(1000/60);
+    currentAngle=Math.abs(delta)<.15?targetAngle:currentAngle+Math.max(-limit,Math.min(limit,eased));
+    motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    paintMotion(currentAngle,motionVelocity);
+    if(Math.abs(targetAngle-currentAngle)<.15&&displayCaughtUp(targetAngle)){
+      const index=angleToIndex(targetAngle),entry=decoded(index);
+      if(!entry){requestDecode(index,0);return}
+      if(index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,indexToAngle(index));
+      const scrolling=mode==='scroll',covering=mode==='cover';stop();
+      if(covering&&desktopCoverProgress===0)desktopCoverActive=false;setStatus(scrolling?'Готово · поворот по прокрутке':'Готово · слежу за курсором');
+    }
+  }
+  function returnToFront(velocity=0,frontPhase=null,touch=false){
+    if(!ready||media.matches||document.hidden)return;
+    // Start from the visible unwrapped pose, not a fast drag's decoder backlog.
+    currentAngle=lastMotionPhase;targetAngle=frontPhase??currentAngle+shortestDelta(0,currentAngle);
+    touchReturn=touch;
+    const maxSpeed=touch?TOUCH_RETURN_MAX_SPEED:RETURN_MAX_SPEED;
+    inertiaVelocity=Math.max(-maxSpeed,Math.min(maxSpeed,velocity));
+    returnRequested=true;mode='return';previousTick=0;returnStarted=performance.now();returnCount++;
+    Object.assign(canvas.dataset,{mode,returnCount:String(returnCount),returnFrom:currentAngle.toFixed(3),returnTarget:targetAngle.toFixed(3),returnProfile:menuReturnRequested&&mobileLayout?.matches?'mobile-menu':'gesture'});
+    canvas.dataset.returnTouch=String(touchReturn);canvas.dataset.returnInitialVelocity=inertiaVelocity.toFixed(2);
+    delete canvas.dataset.returnDurationMs;
+    setStatus('Возвращаюсь в анфас · можно снова вращать');scheduleRender();
+  }
+  function prepareMenuPose(){
+    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing)return false;
+    followPaused=true;skipIntro();setTarget(mobileLayout?.matches?45*1.3:45,{session:true});menuPoseActive=true;
+    return true;
+  }
+  function setMobileScrollPose(progress,fresh=false){
+    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing||drag||(returnRequested&&!mobileScrollReturn)||menuPoseActive)return false;
+    followPaused=true;skipIntro();
+    const velocity=motionVelocity;
+    if(fresh||mobileScrollReturn){stop();beginStats()}
+    if(fresh)mobileScrollFrontPhase=Math.round(lastMotionPhase/360)*360;
+    if(progress===0){
+      // Only the last few degrees settle independently; the turn itself follows scroll.
+      stop();returnToFront(Math.min(0,velocity),mobileScrollFrontPhase);mobileScrollReturn=true;return true;
+    }
+    // A paused scroll holds a partial pose; there is no timed run to the back.
+    if(mode!=='scroll'){stop();beginStats();mode='scroll';canvas.dataset.mode=mode;}
+    targetAngle=mobileScrollFrontPhase+180*progress;canvas.dataset.targetPhase=targetAngle.toFixed(3);
+    scheduleRender();
+    return true;
+  }
+  // Desktop panel overlap owns its pose; the mobile scroll controller remains independent.
+  function setDesktopCoverPose(progress){
+    if(destroyed||media.matches||mobileLayout?.matches||document.hidden||!ready||!startupSettled||preparing||!introFinishedSettled||drag||returnRequested||menuPoseActive)return false;
+    progress=Math.max(0,Math.min(1,progress));
+    if(!desktopCoverActive){desktopCoverFront=Math.round(lastMotionPhase/360)*360;desktopCoverActive=true;}
+    desktopCoverProgress=progress;followPaused=true;
+    if(mode!=='cover'){stop();beginStats();mode='cover';canvas.dataset.mode=mode;}
+    targetAngle=desktopCoverFront+180*progress;canvas.dataset.coverProgress=progress.toFixed(3);canvas.dataset.targetPhase=targetAngle.toFixed(3);
+    scheduleRender();return true;
+  }
+  function clearDesktopCoverPose(){
+    if(!desktopCoverActive)return;desktopCoverActive=false;desktopCoverProgress=0;
+    if(mode==='cover'){stop();if(ready&&!media.matches&&!document.hidden)returnToFront(0);}
+  }
+  function clearMobileScrollPose(){
+    if(destroyed||media.matches||drag||menuPoseActive||returnRequested)return false;
+    followPaused=true;skipIntro();
+    // Reuse the spring's pending return, which survives a quality reload.
+    if(!ready||preparing||document.hidden){if(!ready&&!loadAttemptActive)return false;returnRequested=true;return true;}
+    stop();returnToFront(0);return true;
+  }
+  function returnFromMenu(){
+    if(!menuPoseActive)return false;
+    menuPoseActive=false;
+    if(destroyed||media.matches)return false;
+    followPaused=true;releaseDrag();skipIntro();
+    const mobileMenu=!!mobileLayout?.matches;
+    // A quality change already preserves this pending spring through init().
+    if(!ready||preparing){if(!loadAttemptActive)return false;menuReturnRequested=mobileMenu;returnRequested=true;return true;}
+    stop();
+    menuReturnRequested=mobileMenu;
+    if(document.hidden){returnRequested=true;return true;}
+    returnToFront(0);return true;
+  }
+  function renderReturn(elapsed){
+    // Exact damped-spring step: stable across refresh rates and long frames.
+    const mobileMenu=menuReturnRequested&&mobileLayout?.matches;
+    const dt=elapsed/1000,w=mobileMenu?MENU_RETURN_OMEGA:RETURN_OMEGA,z=mobileMenu?MENU_RETURN_DAMPING:RETURN_DAMPING,wd=w*Math.sqrt(1-z*z),x=currentAngle-targetAngle,v=inertiaVelocity;
+    const decay=Math.exp(-z*w*dt),sine=Math.sin(wd*dt),cosine=Math.cos(wd*dt),before=currentAngle;
+    currentAngle=targetAngle+decay*(x*cosine+(v+z*w*x)/wd*sine);
+    inertiaVelocity=decay*(v*cosine-(z*w*v+w*w*x)/wd*sine);
+    motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    paintMotion(currentAngle,motionVelocity);
+    if(Math.abs(currentAngle-targetAngle)<.12&&Math.abs(inertiaVelocity)<5&&displayCaughtUp(targetAngle)){
+      const front=angleToIndex(0);wantedIndex=front;warmWindow(front,lastMotionDirection||1);
+      const entry=decoded(front);
+      // A slow decoder may delay the last pose, but cannot leave a near-front angle as the endpoint.
+      if(!entry){stats.waits++;return}
+      if(front!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,0);
+      currentAngle=targetAngle;lastMotionPhase=currentAngle;
+      canvas.dataset.returnDurationMs=(performance.now()-returnStarted).toFixed(1);
+      stop();setStatus('Готово · анфас');
+    }
+  }
+  function skipIntro(){
+    finishIntro(false);
+    introConsumed=true;introRequested=false;
+    if(mode==='intro'){releaseDrag();stop();canvas.dataset.introCancelled='true'}
+    releaseIntroFrames();
+  }
+  function releaseIntroFrames(){
+    const prepared=introFrames.size>0;
+    introFrames.clear();allowBackground=true;trimCache();queuePump();
+    if(prepared&&preparing){
+      for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(entry.index!==displayedIndex&&entry.index!==wantedIndex){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    }
+    if(ready&&startupSettled&&!preparing)warmWindow(Math.max(0,displayedIndex),1);
+    if(prepared)checkResize();
+  }
+  function startIntro(){
+    if(introConsumed||media.matches||document.hidden)return false;
+    // Keep the one welcome request if a resize temporarily evicts its bitmap.
+    introRequested=true;scheduleRender();return true;
+  }
+  function beginIntro(){
+    if(!introRequested||introConsumed||!ready||!bufferReady||!startupSettled||preparing)return;
+    // A resize may require preparing the complete short turn again.
+    let complete=true;
+    for(const index of introFrames)if(!decoded(index)){requestDecode(index,0);complete=false}
+    if(!complete)return;
+    const first=decoded(introPreparedIndex);
+    if(!first){requestDecode(introPreparedIndex,0);return}
+    introRequested=false;introConsumed=true;introTime=0;introFrom=indexToAngle(first.index)-360;
+    currentAngle=targetAngle=introFrom;lastMotionPhase=currentAngle;lastMotionDirection=1;
+    wantedIndex=first.index;beginStats();draw(first,indexToAngle(first.index));
+    mode='intro';previousTick=0;canvas.dataset.mode=mode;canvas.dataset.introCount='1';
+    scheduleRender();
+  }
+  function renderIntro(elapsed){
+    const nextTime=Math.min(1200,introTime+elapsed),progress=nextTime/1200;
+    const eased=(1-Math.cos(Math.PI*progress))/2;
+    const proposed=introFrom*(1-eased),next=angleToIndex(proposed);
+    wantedIndex=next;requestDecode(next,0);
+    const entry=decoded(next);
+    if(!entry){stats.waits++;return}
+    introTime=nextTime;currentAngle=proposed;targetAngle=0;
+    if(entry.index!==displayedIndex)draw(entry,indexToAngle(entry.index));
+    canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase='0';canvas.dataset.introProgress=progress.toFixed(3);
+    if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';finishIntro(true);releaseIntroFrames();stop();applyCursorTarget()}
+  }
+  // v3: a user-triggered four-turn spin with strong acceleration and easing out.
+  function spin(turns=4){
+    if(destroyed||!ready||preparing||media.matches||document.hidden)return false;
+    releaseDrag();skipIntro();stop();beginStats();
+    powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:3600};
+    targetAngle=currentAngle+powerSpin.turns*360;mode='power-spin';previousTick=0;
+    canvas.dataset.spinTurns=String(powerSpin.turns);canvas.dataset.spinProgress='0';
+    scheduleRender();return true;
+  }
+  function renderPowerSpin(elapsed){
+    if(!powerSpin)return;
+    powerSpin.time=Math.min(powerSpin.duration,powerSpin.time+elapsed);
+    const t=powerSpin.time/powerSpin.duration;
+    const eased=1-Math.pow(1-t,4);
+    const before=currentAngle;
+    currentAngle=powerSpin.from+powerSpin.turns*360*eased;
+    const velocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    paintMotion(currentAngle,velocity);
+    canvas.dataset.spinProgress=t.toFixed(3);canvas.dataset.spinSpeed=velocity.toFixed(2);
+    if(t===1){
+      const index=angleToIndex(targetAngle),entry=decoded(index);
+      if(!entry){requestDecode(index,0);return;}
+      draw(entry,indexToAngle(index));currentAngle=targetAngle;lastMotionPhase=currentAngle;
+      powerSpin=null;stop();
+    }
+  }
+  function render(now){
+    raf=0;
+    if(!ready)return;
+    if(introRequested)beginIntro();
+    const elapsed=previousTick?Math.max(0,Math.min(80,now-previousTick)):1000/60;previousTick=now;motionElapsed=elapsed;
+    if(mode==='intro')renderIntro(elapsed);
+    else if(mode==='power-spin')renderPowerSpin(elapsed);
+    else if(mode==='follow')renderFollow(elapsed);
+    else if(mode==='scroll')renderFollow(elapsed,45,24);
+    else if(mode==='cover')renderFollow(elapsed,70,14);
+    else if(mode==='return')renderReturn(elapsed);
+    else if(mode==='drag'){
+      const before=currentAngle;
+      const damping=drag?.touch?TOUCH_DRAG_DAMPING_MS:DRAG_DAMPING_MS;
+      currentAngle+=(targetAngle-currentAngle)*(1-Math.exp(-elapsed/damping));
+      if(Math.abs(targetAngle-currentAngle)<.15)currentAngle=targetAngle;
+      motionVelocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+      paintMotion(currentAngle,motionVelocity);
+    }else if(mode==='settle'){
+      const delta=targetAngle-currentAngle;
+      const eased=delta*(1-Math.exp(-elapsed/settleDampingMs));
+      const limit=settleMaxStep*elapsed/(1000/60);
+      let proposed=Math.abs(delta)<.15?targetAngle:currentAngle+Math.max(-limit,Math.min(limit,eased));
+      if(Math.abs(targetAngle-proposed)<.15)proposed=targetAngle;
+      const next=angleToIndex(proposed),direction=Math.sign(delta)||1;
+      wantedIndex=next;warmWindow(next,direction);
+      let entry=decoded(next),shownAngle=proposed;
+      if(!entry){const available=availableStep(proposed,direction);if(available){entry=available.entry;shownAngle=available.angle}}
+      if(entry){
+        currentAngle=shownAngle;
+        if(entry.index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)draw(entry,indexToAngle(entry.index));
+        if(Math.abs(targetAngle-currentAngle)<.15){currentAngle=targetAngle;mode='idle';updateAngle(indexToAngle(displayedIndex));setStatus('Готово · выбранный ракурс');diagnostics()}
+      }else stats.waits++;
+    }else if(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch){
+      wantedIndex=displayedIndex;if(!introFrames.size)warmWindow(displayedIndex,1);else requestDecode(displayedIndex,0);const entry=decoded(displayedIndex);if(entry){draw(entry,indexToAngle(displayedIndex));diagnostics()}
+    }
+    if(mode==='intro'||mode==='power-spin'||mode==='follow'||mode==='scroll'||mode==='cover'||mode==='settle'||mode==='drag'||mode==='return'||(displayedIndex>=0&&Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch))scheduleRender();
+  }
+  // Each shard is a stored ZIP. The manifest points directly to complete WebP
+  // payloads, so a frame can become usable before the shard finishes loading.
+  function loadProgress(){
+    canvas.dataset.activeDownloads=String(activeChunks.size);
+    Object.assign(canvas.dataset,{encodedReadyCount:String(loadedCount),encodedBytes:String(loadedBytes),totalBytes:String(variant?.encoded_bytes||0)});
+    if(urls.length>0&&loadedCount===urls.length){
+      encodedAllReady=true;canvas.dataset.allReady='true';
+      if(!canvas.dataset.allLoadedMs)canvas.dataset.allLoadedMs=(performance.now()-loadStartedAt).toFixed(1);
+      settleAllFrames(true);
+    }
+    notifyLoading();
+  }
+  function queuePump(){
+    if(chunkPumpQueued)return;chunkPumpQueued=true;
+    Promise.resolve().then(()=>{chunkPumpQueued=false;pumpChunks()});
+  }
+  function resetChunkPriorities(){
+    for(const chunk of chunkStates)if(chunk.state!=='done')chunk.priority=50;
+  }
+  function ensureEncoded(index,priority=10){
+    index=wrap(index,urls.length);
+    if(blobs[index])return;
+    const chunk=chunkStates[frameChunk[index]];
+    if(!chunk)return;
+    if(chunk.state==='failed'){
+      if(ready&&(index===wantedIndex||index===angleToIndex(targetAngle))){fallback(new Error('Frame download failed'))}
+      return;
+    }
+    chunk.priority=Math.min(chunk.priority,priority);queuePump();
+  }
+  function waitEncoded(index,priority=0){
+    index=wrap(index,urls.length);
+    if(blobs[index])return Promise.resolve();
+    const chunk=chunkStates[frameChunk[index]];
+    if(!chunk||chunk.state==='failed')return Promise.reject(new Error('Не удалось загрузить нужный ракурс.'));
+    ensureEncoded(index,priority);
+    return new Promise((resolve,reject)=>{
+      if(!encodedWaiters.has(index))encodedWaiters.set(index,[]);
+      encodedWaiters.get(index).push({resolve,reject});
+    });
+  }
+  function rejectEncoded(error,indices=null){
+    for(const [index,waiters] of encodedWaiters){
+      if(indices&&!indices.has(index))continue;
+      for(const waiter of waiters)waiter.reject(error);encodedWaiters.delete(index);
+    }
+  }
+  function acceptFrame(frame,bytes,token){
+    if(token!==generation)return;
+    const blob=new Blob([bytes],{type:'image/webp'});
+    if(blob.size!==frame.length)throw new Error('Кадр загружен не полностью.');
+    if(!blobs[frame.index]){
+      blobs[frame.index]=blob;loadedCount++;
+      for(const waiter of encodedWaiters.get(frame.index)||[])waiter.resolve();
+      encodedWaiters.delete(frame.index);
+      // Decode only the visible/predicted poses; retain encoded data for the rest.
+      if(ready&&(frame.index===wantedIndex||frame.index===angleToIndex(targetAngle)))requestDecode(frame.index,0);
+      loadProgress();scheduleRender();
+    }
+  }
+  async function readChunk(chunk,token){
+    const localController=new AbortController();chunk.controller=localController;
+    const abort=()=>localController.abort();fetchController.signal.addEventListener('abort',abort,{once:true});
+    if(fetchController.signal.aborted)abort();
+    const started=performance.now();chunk.received=0;
+    chunk.timedOut=false;
+    let deadline;
+    const armDeadline=()=>{clearTimeout(deadline);deadline=setTimeout(()=>{chunk.timedOut=true;localController.abort(new Error('Frame download timeout'))},15000)};
+    armDeadline();
+    try{
+      const response=await trackedFetch(chunk.file,{signal:localController.signal,cache:'force-cache',priority:chunk.startup?'high':'low'});
+      if(!response.ok)throw new Error('Не удалось загрузить часть поворота.');
+      const bytes=new Uint8Array(chunk.bytes);let received=0,cursor=0;
+      const expose=()=>{
+        while(cursor<chunk.frames.length){
+          const frame=chunk.frames[cursor];if(frame.offset+frame.length>received)break;
+          acceptFrame(frame,bytes.slice(frame.offset,frame.offset+frame.length),token);cursor++;
+        }
+      };
+      if(response.body?.getReader){
+        const reader=response.body.getReader();chunk.reader=reader;
+        try{
+          for(;;){
+            const {done,value}=await reader.read();if(token!==generation||localController.signal.aborted)throw cancelled();if(done)break;
+            if(received+value.byteLength>chunk.bytes)throw new Error('Получен неверный набор кадров.');
+            armDeadline();bytes.set(value,received);received+=value.byteLength;chunk.received=received;loadedBytes+=value.byteLength;
+            expose();loadProgress();
+          }
+        }catch(error){try{await reader.cancel()}catch{}throw error}
+        finally{try{reader.releaseLock()}catch{}chunk.reader=null}
+      }else{
+        const body=await response.arrayBuffer();if(token!==generation||localController.signal.aborted)throw cancelled();
+        if(body.byteLength!==chunk.bytes)throw new Error('Часть поворота загружена не полностью.');
+        bytes.set(new Uint8Array(body));received=body.byteLength;chunk.received=received;loadedBytes+=received;expose();loadProgress();
+      }
+      if(received!==chunk.bytes||cursor!==chunk.frames.length)throw new Error('Часть поворота загружена не полностью.');
+      if(token!==generation)throw cancelled();
+      chunk.state='done';chunk.finishedMs=performance.now()-started;
+    }finally{clearTimeout(deadline);fetchController?.signal.removeEventListener('abort',abort);chunk.controller=null}
+  }
+  function pumpChunks(){
+    if(!variant||document.hidden||media.matches||fetchController?.signal.aborted)return;
+    const token=generation;
+    const pending=chunkStates.filter(c=>c.state==='pending'&&(c.startup||c.priority<5||(bufferReady&&allowBackground))).sort((a,b)=>a.priority-b.priority||a.order-b.order);
+    // An obsolete background request must not block a newly requested pose.
+    // Limit pre-emption so fast gestures cannot endlessly restart the same file.
+    if(activeChunks.size>=CHUNK_WORKERS&&pending[0]?.priority<5&&performance.now()-lastPreemptAt>400){
+      const obsolete=[...activeChunks].filter(c=>c.priority>=50&&c.received<c.bytes*.5).sort((a,b)=>b.bytes-a.bytes)[0];
+      if(obsolete){lastPreemptAt=performance.now();obsolete.preempted=true;obsolete.controller?.abort()}
+    }
+    while(activeChunks.size<CHUNK_WORKERS&&pending.length){
+      const chunk=pending.shift();chunk.state='loading';chunk.preempted=false;activeChunks.add(chunk);
+      loadProgress();
+      readChunk(chunk,token).catch(error=>{
+        if(token!==generation)return;
+        if(error.name==='AbortError'&&chunk.preempted){chunk.state='pending';return}
+        if(error.name==='AbortError'&&!chunk.timedOut)return;
+        chunk.attempts++;
+        if(chunk.attempts<3){chunk.state='backoff';setTimeout(()=>{if(token!==generation)return;chunk.state='pending';queuePump()},chunk.attempts*350)}
+        else{
+          chunk.state='failed';rejectEncoded(error,new Set(chunk.frames.map(f=>f.index)));
+          fallback(error);
+        }
+      }).finally(()=>{activeChunks.delete(chunk);if(token===generation){loadProgress();queuePump()}});
+    }
+  }
+  function chooseVariant(){
+    // Select the encoded tier for the actual touch raster budget, avoiding
+    // decoding an 800/1200 source only to reduce it to 2× CSS afterwards.
+    const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
+    const physical=(stage.clientWidth||311)*ratio;
+    const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
+    // Shared cleaned set; historical filenames stay exact for cache/rollback.
+    return quality+'-dark';
+  }
+  function prepareVariant(data,key){
+    const value=data.variants?.[key],count=data.frames;
+    if(!value||!Number.isInteger(count)||count<2||count>1000||!Array.isArray(value.size)||value.size.length!==2||!value.size.every(n=>Number.isInteger(n)&&n>0&&n<=4096)||!Array.isArray(value.chunks)||!value.chunks.length)throw new Error('Не удалось прочитать описание поворота.');
+    if(!Array.isArray(data.frame_angles)||data.frame_angles.length!==count||!data.frame_angles.every((n,i)=>Number.isFinite(n)&&n>=0&&n<360&&(!i||n>data.frame_angles[i-1])))throw new Error('Не удалось прочитать ракурсы.');
+    const validIndices=indices=>Array.isArray(indices)&&indices.length>0&&new Set(indices).size===indices.length&&indices.every(i=>Number.isInteger(i)&&i>=0&&i<count);
+    if(!Number.isInteger(data.original_frames)||data.original_frames<2||data.original_frames>count||!validIndices(data.original_indices)||data.original_indices.length!==data.original_frames||!validIndices(data.intro_indices)||data.intro_indices.length<2||data.intro_indices.at(-1)!==data.front_index||!validIndices(data.startup_indices))throw new Error('Invalid startup frame set');
+    const originals=new Set(data.original_indices),intro=new Set(data.intro_indices),startup=new Set(data.startup_indices);
+    const near=data.original_indices.slice().sort((a,b)=>angleDistance(data.frame_angles[a],0)-angleDistance(data.frame_angles[b],0)).slice(0,Math.ceil(data.original_frames*.35));
+    const expected=new Set([...near,...data.intro_indices.filter(i=>!originals.has(i))]);
+    if(startup.size!==expected.size||[...expected].some(i=>!startup.has(i))||[...intro].some(i=>!startup.has(i))||[...expected].some(i=>!originals.has(i)&&!intro.has(i)))throw new Error('Invalid startup composition');
+    let previous=-360;
+    for(const index of data.intro_indices){const angle=data.frame_angles[index]===0?0:data.frame_angles[index]-360;if(angle<=previous)throw new Error('Invalid intro path');previous=angle}
+    const seen=new Set();frameChunk=new Array(count);
+    chunkStates=value.chunks.map((chunk,id)=>{
+      if(typeof chunk.file!=='string'||!new RegExp('^assets/seedance-(startup|rest)-'+key+'-[0-9]{2}\\.zip(?:\\?v=[a-f0-9]{12})?$').test(chunk.file)||!Number.isSafeInteger(chunk.bytes)||chunk.bytes<=0||chunk.bytes>10_000_000||!Array.isArray(chunk.frames)||!chunk.frames.length)throw new Error('Повреждено описание части поворота.');
+      const frames=chunk.frames.slice().sort((a,b)=>a.offset-b.offset);let end=0;
+      for(const frame of frames){
+        if(!Number.isInteger(frame.index)||frame.index<0||frame.index>=count||seen.has(frame.index)||!Number.isSafeInteger(frame.offset)||!Number.isSafeInteger(frame.length)||frame.offset<end||frame.length<=0||frame.offset+frame.length>chunk.bytes)throw new Error('Повреждено описание кадра.');
+        end=frame.offset+frame.length;seen.add(frame.index);frameChunk[frame.index]=id;
+      }
+      return {...chunk,frames,id,state:'pending',priority:50,order:id,attempts:0,received:0};
+    });
+    if(seen.size!==count||value.encoded_bytes!==chunkStates.reduce((sum,c)=>sum+c.bytes,0))throw new Error('Набор ракурсов неполный.');
+    return value;
+  }
+  async function init(){
+    if(destroyed||media.matches||document.hidden)return;
+    const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn,resumeMenuReturn=menuReturnRequested,resumeTouchReturn=touchReturn;
+    const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
+    const controller=fetchController;loadStartedAt=performance.now();
+    const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
+    releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;menuReturnRequested=resumeMenuReturn;touchReturn=resumeTouchReturn;ready=false;bufferReady=false;preparing=true;
+    if(introConsumed)releaseIntroFrames();
+    stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','true');
+    clearDecoded();cancelAnimationFrame(raf);raf=0;displayedIndex=-1;loadedBytes=0;loadedCount=0;runtimeFetches=0;blobs=[];urls=[];angles=[];variant=null;chunkStates=[];activeChunks.clear();
+    for(const name of ['ready','bitmapEpoch','frame','alpha','preloadMs','readyBytes','readyFrames','allReady','allLoadedMs'])delete canvas.dataset[name];
+    canvas.dataset.version='seedance';canvas.dataset.mode='loading';
+    loadProgress();
+    // Retain the displayed pose while an automatic quality change loads.
+    setStatus('Подготавливаю поворот…');beginStats();
+    try{
+      const response=await trackedFetch(manifestURL,{cache:'force-cache',signal:controller.signal});
+      if(!response.ok)throw new Error('Не удалось загрузить описание аватарки.');
+      const data=await response.json();if(token!==generation)return;
+      const key=chooseVariant();variant=prepareVariant(data,key);manifest=data;
+      urls=Array.from({length:data.frames},(_,i)=>String(i));angles=data.frame_angles.slice();blobs=new Array(urls.length);introPath=data.intro_indices.slice();
+      sourceSize=variant.size.slice();renderSize=physicalSize();
+      currentAngle=targetAngle=requestedAngle;wantedIndex=angleToIndex(currentAngle);updateAngle(currentAngle);
+      canvas.dataset.quality=key;canvas.dataset.totalFrameCount=String(data.frames);canvas.dataset.originalFrameCount=String(data.original_frames);
+      loadQuality=key;notifyLoading();
+      const initial=wantedIndex;
+      const near=Array.from({length:urls.length},(_,i)=>i).sort((a,b)=>angleDistance(indexToAngle(a),requestedAngle)-angleDistance(indexToAngle(b),requestedAngle));
+      const order=[];for(const index of near){const id=frameChunk[index];if(!order.includes(id))order.push(id)}
+      order.forEach((id,i)=>{chunkStates[id].order=i;chunkStates[id].priority=50+i});
+      // Prepare the original front buffer plus the denser welcome-turn frames.
+      const previousOriginal=data.original_indices.filter(index=>index<initial).at(-1)??data.original_indices.at(-1);
+      const firstWindow=introConsumed?[initial,wrap(initial-1,urls.length),wrap(initial+1,urls.length)]:[initial,previousOriginal,introPath[1]];
+      firstWindow.forEach((index,i)=>ensureEncoded(index,i));
+      const startupFrames=startupSettled?firstWindow:data.startup_indices;
+      await Promise.all([Promise.all(firstWindow.map(waitDecoded)),Promise.all(startupFrames.map(index=>waitEncoded(index,0)))]);
+      if(token!==generation)return;
+      const first=decoded(initial);if(!first)throw new Error('Не удалось подготовить первый ракурс.');
+      draw(first,indexToAngle(initial));currentAngle=targetAngle=selectionAngle=indexToAngle(initial);lastMotionPhase=currentAngle;
+      ready=bufferReady=true;
+      canvas.dataset.readyBytes=String(loadedBytes);canvas.dataset.readyFrames=String(loadedCount);
+      try{canvas.dataset.alpha=ctx.getImageData(0,0,1,1).data[3]===0?'verified':'opaque'}catch{}
+      setStatus('Можно вращать · остальные ракурсы загружаются в фоне');loadProgress();diagnostics();
+      canvas.dataset.startupFrameCount=String(startupFrames.length);canvas.dataset.startupFraction=(startupFrames.length/data.frames).toFixed(3);
+      if(!introConsumed){
+        introPreparedIndex=introPath[0];
+        wantedIndex=introPreparedIndex;
+        introFrames.clear();
+        for(const index of introPath)introFrames.add(index);
+        canvas.dataset.introPrefetchedFrames=String(introFrames.size);
+        await Promise.all([...introFrames].map(waitDecoded)).catch(error=>{if(!introConsumed||error.name!=='AbortError')throw error});
+        if(token!==generation)return;
+      }else{allowBackground=true;warmWindow(initial,1)}
+      preparing=false;
+      diagnostics();
+      stage.dataset.spinReady='true';stage.tabIndex=0;stage.setAttribute('aria-busy','false');canvas.dataset.ready='true';canvas.dataset.preloadMs=(performance.now()-loadStartedAt).toFixed(1);
+      currentStartupReady=true;notifyLoading();
+      settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
+      if(returnRequested){
+        // Encoded pose angles wrap at 360; keep a small negative spring overshoot negative.
+        if(mobileScrollReturn)currentAngle=lastMotionPhase=mobileScrollFrontPhase+shortestDelta(selectionAngle,mobileScrollFrontPhase);
+        returnToFront(0,mobileScrollReturn?mobileScrollFrontPhase:null,touchReturn);
+      }
+      else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);
+      else applyCursorTarget();
+    }catch(error){
+      if(token!==generation)return;fallback(error);
+    }finally{clearTimeout(startupDeadline)}
+  }
+  function checkResize(){
+    // A desired quality change closes dependent gates before the resize debounce.
+    notifyLoading();
+    if(!ready||!startupSettled||preparing)return;clearTimeout(resizeTimer);
+    // Finish the short welcome turn with its prepared bitmaps; resize once idle.
+    if(mode==='intro')return;
+    resizeTimer=setTimeout(()=>{
+      if(!ready||!startupSettled||preparing||mode==='intro')return;
+      if(manifest&&chooseVariant()!==canvas.dataset.quality){init();return}
+      const next=physicalSize();
+      if(Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;
+      renderSize=next;clearDecoded();wantedIndex=Math.max(0,displayedIndex);
+      if(introFrames.size){requestDecode(wantedIndex,0);for(const index of introFrames)requestDecode(index,1)}
+      else warmWindow(wantedIndex,1);
+      scheduleRender();
+    },120);
+  }
+  const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(checkResize):null;
+  resizeObserver?.observe(stage);
+  listen(window,'resize',()=>{checkResize();applyCursorTarget()});
+  let densityQuery;
+  const densityChanged=()=>{watchDensity();notifyLoading();checkResize()};
+  function watchDensity(){
+    densityQuery?.removeEventListener('change',densityChanged);
+    densityQuery=window.matchMedia(`(resolution: ${Math.max(1,window.devicePixelRatio||1)}dppx)`);
+    densityQuery.addEventListener('change',densityChanged);
+  }
+  watchDensity();cleanup.push(()=>densityQuery?.removeEventListener('change',densityChanged));
+  if(navigator.connection?.addEventListener)listen(navigator.connection,'change',()=>{notifyLoading();checkResize()});
+  if(cursorFollow){
+    listen(window,'pointermove',event=>{
+      if(event.pointerType!=='mouse'||!finePointer.matches)return;
+      cursorPoint={x:event.clientX,y:event.clientY};
+      // Manual rotation and its spring finish before cursor-follow can resume.
+      if(drag||returnRequested||mode==='return'||event.buttons)return;
+      followPaused=false;applyCursorTarget();
+    },{passive:true});
+    const resetCursor=()=>{cursorPoint=null;applyCursorTarget()};
+    listen(document,'pointerleave',resetCursor);listen(window,'blur',resetCursor);listen(window,'focus',applyCursorTarget);
+    listen(finePointer,'change',()=>{cursorPoint=null;if(!finePointer.matches&&mode==='follow')stop();else applyCursorTarget()});
+    if(typeof IntersectionObserver==='function'){
+      const observer=new IntersectionObserver(entries=>{
+        followVisible=entries[0].isIntersecting;
+        if(!followVisible&&mode==='follow'){stop();cancelAnimationFrame(raf);raf=0}
+        else if(followVisible)applyCursorTarget();
+      });
+      observer.observe(stage);cleanup.push(()=>observer.disconnect());
+    }
+  }
+  listen(stage,'pointerdown',event=>{
+    if(media.matches||event.button!==0||event.isPrimary===false)return;
+    if(cursorFollow)followPaused=true;
+    mobileScrollReturn=menuReturnRequested=false;
+    skipIntro();
+    if(!ready||!startupSettled||preparing){returnRequested=false;return}
+    if(drag){if(event.pointerId!==drag.id){releaseDrag();stop();setStatus('Готово · выбранный ракурс')}return}
+    if(event.isPrimary===false)return;
+    skipIntro();stop();beginStats();
+    const now=performance.now();
+    const touch=event.pointerType==='touch',turns=touch?TOUCH_DRAG_TURNS:DRAG_TURNS;
+    drag={id:event.pointerId,touch,x:event.clientX,y:event.clientY,angle:currentAngle,gain:360*turns/Math.max(1,stage.getBoundingClientRect().width),horizontal:false,samples:[{time:now,x:event.clientX}],lastMoved:now,direction:0,rebases:0,reversals:0};
+    Object.assign(canvas.dataset,{dragPointer:event.pointerType,dragGain:drag.gain.toFixed(3),dragDampingMs:String(touch?TOUCH_DRAG_DAMPING_MS:DRAG_DAMPING_MS),dragRebases:'0',dragReversals:'0'});
+    if(event.pointerType!=='touch'){stage.setPointerCapture(event.pointerId);stage.classList.add('dragging')}
+  });
+  function moveDrag(event){
+    if(!drag||event.pointerId!==drag.id)return;
+    const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+    if(!drag.horizontal){
+      if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)){releaseDrag();stop();return}
+      if(Math.abs(dx)<4)return;drag.horizontal=true;stage.setPointerCapture(event.pointerId);stage.classList.add('dragging');
+    }
+    if(event.cancelable)event.preventDefault();
+    const now=performance.now(),last=drag.samples.at(-1),movement=event.clientX-last.x,direction=Math.sign(movement);
+    if(direction){
+      if(drag.direction&&direction!==drag.direction){
+        drag.samples=[last];
+        canvas.dataset.dragReversals=String(++drag.reversals);
+        // Tiny touch direction changes retain continuous geometric input;
+        // the approved mouse rebase remains unchanged.
+        if(!drag.touch){
+          drag.angle+=lastMotionPhase-targetAngle;currentAngle=targetAngle=lastMotionPhase;
+          canvas.dataset.dragRebases=String(++drag.rebases);
+        }
+      }
+      drag.direction=direction;drag.lastMoved=now;
+    }
+    if(now>last.time)drag.samples.push({time:now,x:event.clientX});
+    else drag.samples[drag.samples.length-1]={time:now,x:event.clientX};
+    while(drag.samples.length>2&&drag.samples[1].time<now-RELEASE_WINDOW_MS)drag.samples.shift();
+    targetAngle=drag.angle+dx*drag.gain;inertiaVelocity=0;mode='drag';canvas.dataset.mode=mode;
+    setStatus('Вращение · отпустите, чтобы вернуться в анфас');scheduleRender();
+  }
+  listen(stage,'pointermove',moveDrag);
+  function finishDrag(event){
+    // Touch implicitly captures the poster first. Transferring capture to the
+    // stage emits a bubbling loss on that child; the gesture is still active.
+    if(event.type==='lostpointercapture'&&event.target!==stage)return;
+    if(!drag||event.pointerId!==drag.id)return;
+    if(event.type!=='pointerup'){
+      // Native mobile panning can cancel an already rotated touch before release.
+      const returnTouch=mobileLayout?.matches&&event.pointerType==='touch'&&drag.horizontal&&!media.matches&&!document.hidden;
+      releaseDrag();
+      if(returnTouch)returnToFront(0,null,true);
+      else{stop();setStatus('Готово · выбранный ракурс')}
+      return;
+    }
+    if(drag.horizontal&&Number.isFinite(event.clientX)&&Number.isFinite(event.clientY))moveDrag(event);
+    if(!drag)return;
+    const now=performance.now(),first=drag.samples[0],last=drag.samples.at(-1),duration=last.time-first.time;
+    const velocity=drag.horizontal&&now-drag.lastMoved<=RELEASE_IDLE_MS&&duration>0?(last.x-first.x)*drag.gain*1000/duration:0;
+    const moved=drag.horizontal,touch=drag.touch;releaseDrag();
+    if(!media.matches&&(moved||angleDistance(selectionAngle,0)>.12))returnToFront(velocity,null,touch);
+    else{diagnostics();setStatus('Готово · выбранный ракурс')}
+  }
+  for(const eventName of ['pointerup','pointercancel','lostpointercapture'])listen(stage,eventName,finishDrag);
+  listen(stage,'keydown',event=>{
+    if(['ArrowLeft','ArrowRight','Home'].includes(event.key)&&(!ready||preparing)){returnRequested=menuReturnRequested=false;}
+    if(!ready||!startupSettled||preparing)return;
+    skipIntro();
+    if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
+      event.preventDefault();setTarget(indexToAngle(angleToIndex(targetAngle)+(event.key==='ArrowRight'?1:-1)),{session:mode!=='settle'});
+    }else if(event.key==='Home'){event.preventDefault();setTarget(0,{session:true})}
+
+  });
+  function suspend(error=''){
+    settleAllFrames(false);generation++;
+    currentStartupReady=encodedAllReady=loadAttemptActive=false;loadError=error;
+    allFramesPromise=Promise.resolve(Object.freeze({generation,quality:loadQuality,ready:false}));
+    delete canvas.dataset.ready;delete canvas.dataset.allReady;delete canvas.dataset.allLoadedMs;
+    ready=bufferReady=false;preparing=false;skipIntro();settleStartup(false);releaseDrag();stop();fetchController?.abort();rejectEncoded(cancelled());
+    clearDecoded();cancelAnimationFrame(raf);raf=0;clearTimeout(resizeTimer);blobs=[];activeChunks.clear();
+    stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','false');
+    canvas.dataset.activeDownloads='0';notifyLoading();
+  }
+  function fallback(error){
+    suspend(error?.message||'');stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label',document.documentElement.lang==='ru'?'Дмитрий Рыбалка':'Dmitry Rybalka');
+    canvas.dataset.mode=media.matches?'reduced':'static';canvas.dataset.error=error?.message||'';
+    selectionAngle=0;ctx.clearRect(0,0,canvas.width,canvas.height);
+    // The static poster remains visible if a network/decode request fails.
+    posterElement.classList.add('image-ready');
+  }
+  listen(media,'change',()=>{if(media.matches)fallback();else init()});
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
+  listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
+  listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
+  if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
+    turn:setMobileScrollPose,clear:clearMobileScrollPose,subscribeLoading,
+    canRetry:()=>ready&&startupSettled&&!preparing&&!drag
+  },mobileLayout,media,mobileScrollStart,mobileCoverTop));
+  if(media.matches){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
+  else init();
+  return {ready:startupReady,introFinished,spin,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
+}
+
+// Mobile scroll owns only its requested pose; manual rotation and menu spring win.
+function mountMobilePortraitScroll(stage,player,mobile,reduced,start,coverTop){
+  const cleanup=[],root=document.documentElement;
+  let raf=0,destroyed=false,pageReady=!window.portraitReveal,lastY=scrollY,direction=0;
+  let owned=false,desired=0,applied=null,fresh=true,initial=true,ready=false;
+  let menuOpen=root.classList.contains('mobile-menu-open');
+  const listen=(target,name,handler)=>{target?.addEventListener(name,handler,{passive:true});cleanup.push(()=>target?.removeEventListener(name,handler))};
+  const schedule=()=>{if(!destroyed&&!raf)raf=requestAnimationFrame(update)};
+  function reset(){owned=false;desired=0;applied=null;fresh=true;direction=0;initial=true;lastY=scrollY}
+  function update(){
+    raf=0;if(destroyed||!pageReady||!mobile.matches||reduced.matches||document.hidden||root.classList.contains('mobile-menu-open'))return;
+    const rect=stage.getBoundingClientRect(),top=window.visualViewport?.offsetTop||0;
+    // Keep the endpoint at 85% hidden; each route can opt into an earlier start.
+    const boundary=typeof coverTop==='function'?coverTop():null;
+    const hidden=rect.height>0?(Number.isFinite(boundary)
+      // The foreground can hide the bottom while the viewport hides the top.
+      ?Math.min(1,Math.max(0,(top-rect.top)/rect.height)+Math.max(0,(rect.bottom-boundary)/rect.height))
+      :(top-rect.top)/rect.height):0;
+    const progress=Math.max(0,Math.min(1,(hidden-start)/(.85-start)));
+    const next=progress*progress*(3-2*progress);
+    if(owned||(direction!==0||initial&&scrollY>0)&&next>0){desired=next;owned=true}
+    initial=false;direction=0;
+    if(!owned||applied===desired)return;
+    if(player.turn(desired,fresh)){applied=desired;fresh=false;}
+    else if(player.canRetry())schedule();
+  }
+  listen(window,'scroll',()=>{const delta=scrollY-lastY;if(Math.abs(delta)>1){direction=Math.sign(delta);lastY=scrollY;schedule()}});
+  listen(window,'mobile:scene-painted',schedule);
+  listen(window,'resize',schedule);listen(window.visualViewport,'resize',schedule);
+  listen(window.visualViewport,'scroll',schedule);
+  listen(window,'pointerup',schedule);listen(window,'pointercancel',schedule);
+  listen(stage,'pointerdown',()=>{reset();initial=false;});
+  listen(stage,'keydown',event=>{if(['ArrowLeft','ArrowRight','Home'].includes(event.key)){reset();initial=false;}});
+  listen(document,'visibilitychange',()=>{applied=null;schedule()});
+  listen(window,'pageshow',()=>{initial=true;applied=null;lastY=scrollY;schedule()});
+  listen(mobile,'change',()=>{if(!mobile.matches&&owned)player.clear();reset();schedule()});
+  listen(reduced,'change',()=>{reset();schedule()});
+  const changes=new MutationObserver(()=>{
+    const open=root.classList.contains('mobile-menu-open');
+    if(open!==menuOpen){menuOpen=open;reset();initial=false;cancelAnimationFrame(raf);raf=0;}
+  });
+  changes.observe(root,{attributes:true,attributeFilter:['class']});cleanup.push(()=>changes.disconnect());
+  cleanup.push(player.subscribeLoading(state=>{if(ready&&!state.ready)applied=null;ready=state.ready;schedule()}));
+  window.portraitReveal?.then(()=>{pageReady=true;schedule()},()=>{pageReady=true;schedule()});schedule();
+  return ()=>{destroyed=true;cancelAnimationFrame(raf);cleanup.forEach(fn=>fn())};
+}

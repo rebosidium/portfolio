@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-build="a337649370de">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,16 +12,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..500;1,9..40,400..500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/3/page.css?v=8fe99786c8d9">
-  <link rel="stylesheet" href="/3/components/brief.css?v=8f68c35e47b9">
-  <script type="module" src="/3/components/brief.js?v=ee408405b453"></script>
+  <link rel="stylesheet" href="/3/components/brief.css?v=424876b5e581">
+  <script type="module" src="/3/components/brief.js?v=0bb6337c1f8a"></script>
+  <link rel="stylesheet" href="/3/components/mobile-menu.css?v=bc6e789e5c29">
+  <script type="module" src="/3/components/mobile-menu.js?v=ece26f1045a7"></script>
+  <link rel="stylesheet" href="/3/components/avatar.css?v=5beb410c9529">
+  <script type="module" src="/3/components/avatar.js?v=0975367e9732"></script>
+  <link rel="stylesheet" href="/3/components/case-cards.css?v=c23142ad7caa">
+  <script type="module" src="/3/components/case-cards.js?v=c3c4e23924dd"></script>
+  <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
 </head>
 <body>
   <div class="v3-page" data-node-id="797:5191">
     <header class="v3-header v3-grid">
       <div class="v3-identity" data-node-id="797:5203">
-        <span class="v3-portrait" data-node-id="797:5204"><img src="/3/assets/portrait.png?v=e5a3dd0c6362" alt="" width="68" height="68" fetchpriority="high"></span>
+        <button class="v3-portrait v3-avatar-stage" data-v3-avatar-small type="button" aria-label="Open full-screen portrait" aria-haspopup="dialog" aria-controls="v3-avatar-dialog"><img src="/3/assets/portrait-start-dark.webp?v=77771859cda3" alt="" width="68" height="68" fetchpriority="high" draggable="false"><canvas width="68" height="68" aria-hidden="true"></canvas></button>
         <span class="v3-name" data-node-id="797:5205">Dmitry Rybalka</span>
       </div>
+      <button class="v3-menu-toggle" type="button" aria-label="Open menu" aria-controls="v3-mobile-menu" aria-expanded="false" data-menu-icon="menu"><svg class="v3-menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><defs><path id="v3-menu-stroke-header" d="M4 12h16"/></defs><use class="v3-menu-stroke v3-menu-stroke--top" href="#v3-menu-stroke-header"/><use class="v3-menu-stroke v3-menu-stroke--bottom" href="#v3-menu-stroke-header"/></svg></button>
       <nav class="v3-nav" aria-label="Main navigation" data-node-id="797:5198">
         <a role="link" aria-disabled="true" data-node-id="797:5199">Work</a>
         <a role="link" aria-disabled="true" data-node-id="797:5200">About</a>
@@ -33,8 +41,6 @@
       <h1 class="v3-headline" data-node-id="797:5192">Product Designer &amp; Design Lead building large-scale products for <em>millions of users</em> across multiple markets</h1>
       <div class="v3-brief" data-v3-brief data-node-id="797:5283">
         <button class="v3-brief__button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="v3-brief-status" data-node-id="797:5284">
-          <svg class="v3-brief__filters" aria-hidden="true" focusable="false" width="0" height="0"><defs><filter id="v3-brief-liquid" x="-15%" y="-70%" width="130%" height="240%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".014 .065" numOctaves="2" seed="8" result="waves"/><feDisplacementMap in="SourceGraphic" in2="waves" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
-          <span class="v3-brief__wave" aria-hidden="true"></span><span class="v3-brief__wave" aria-hidden="true"></span>
           <span class="v3-brief__glass" aria-hidden="true"></span>
           <span class="v3-brief__content">
           <span class="v3-brief__label" aria-hidden="true" data-node-id="797:5285"><span class="v3-brief__idle" data-node-id="797:5286">Brief your AI</span><span class="v3-brief__copied" data-v3-brief-label><img class="v3-brief__check" src="/3/assets/lucide-check.svg?v=7f33acc9a77a" alt="" width="24" height="24"><span>Copied</span></span></span>
@@ -56,5 +62,30 @@
       </div>
     </main>
   </div>
+  <dialog class="v3-mobile-menu" id="v3-mobile-menu" aria-label="Navigation menu">
+    <button class="v3-menu-scrim" type="button" tabindex="-1" aria-label="Dismiss menu"></button>
+    <div class="v3-menu-panel">
+      <nav class="v3-menu-links" aria-label="Mobile navigation">
+        <a role="link" aria-disabled="true">Work</a>
+        <a role="link" aria-disabled="true">About</a>
+        <a role="link" aria-disabled="true">Contact</a>
+        <a role="link" aria-disabled="true">Resume</a>
+      </nav>
+    </div>
+    <button class="v3-menu-close" type="button" aria-label="Close menu" data-menu-icon="menu" autofocus><svg class="v3-menu-glyph" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><defs><path id="v3-menu-stroke-dialog" d="M4 12h16"/></defs><use class="v3-menu-stroke v3-menu-stroke--top" href="#v3-menu-stroke-dialog"/><use class="v3-menu-stroke v3-menu-stroke--bottom" href="#v3-menu-stroke-dialog"/></svg></button>
+  </dialog>
+  <dialog class="v3-avatar-dialog" id="v3-avatar-dialog" tabindex="-1" aria-label="Dmitry Rybalka — interactive portrait">
+    <div class="v3-avatar-mesh" aria-hidden="true"></div>
+    <div class="v3-avatar-viewer">
+      <div class="v3-avatar-large v3-avatar-stage" data-v3-avatar-large role="img" aria-label="Dmitry Rybalka. Drag to rotate" tabindex="0">
+        <img src="/3/assets/portrait-front-dark.webp?v=9ed62e5f8ab5" alt="" width="800" height="800" draggable="false">
+        <canvas width="800" height="800" aria-hidden="true"></canvas>
+      </div>
+      <div class="v3-avatar-actions">
+        <button class="v3-avatar-spin" type="button" disabled><img src="/3/assets/lucide-rotate-cw.svg?v=ddcfe6d87240" alt="" width="24" height="24"><span>Spin</span></button>
+        <button class="v3-avatar-hide" type="button"><img src="/3/assets/lucide-x.svg?v=4a9cdab38fbb" alt="" width="24" height="24"><span>Hide</span></button>
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>

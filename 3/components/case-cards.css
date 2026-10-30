@@ -1,0 +1,66 @@
+/* v3 case templates: Figma 588×400 cover + content-sized copy, radius32/smoothing1. */
+.v3-cases { width:min(1200px,calc(100% - 96px));margin:164px auto 0;padding:0 0 100px; }
+.v3-cases__title { width:calc((100% - 24px)/2);margin:0 0 0 -2px;font-size:74px;line-height:96px;font-weight:400;letter-spacing:-.74px; }
+.v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
+.v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
+.v3-case-column:first-child { padding-top:114px; }
+.v3-case-card { display:flex;flex-direction:column;gap:16px;min-width:0; }
+.v3-case-cover { position:relative;isolation:isolate;aspect-ratio:588/400;overflow:hidden;border-radius:32px;background:#f0f0f2; }
+.v3-case-cover canvas { position:absolute;inset:0;width:100%;height:100%;display:block;transform:translateY(var(--v3-cover-shift,0px)) scale(var(--v3-cover-scale,1)); }
+.v3-case-copy { box-sizing:border-box;padding:50px 42px;border-radius:32px;background:#fff; }
+.v3-case-copy h3 { margin:0;font-size:34px;line-height:1.4;font-weight:400;letter-spacing:0; }
+.v3-case-brand-lead { white-space:nowrap; }
+.v3-case-company { font-style:italic; }
+.v3-case-logo { position:relative;display:inline-block;vertical-align:-13px;width:54px;height:54px;margin:0 8px 0 6px;overflow:visible; }
+.v3-case-logo img { position:absolute;display:block;max-width:none;left:0;top:0;transform-origin:top left; }
+.v3-case-logo--larixon { mask:url('../assets/case-logos/larixon-mask.svg') center/54px 54px no-repeat; }
+.v3-case-cover[data-shader-unavailable]::after { content:'Preview unavailable';position:absolute;inset:0;display:grid;place-items:center;padding:24px;color:#6b6b70;font-size:16px;text-align:center; }
+@media(max-width:1100px){
+ .v3-cases{width:calc(100% - 80px)}
+ .v3-cases__title{font-size:60px;line-height:80px}
+ .v3-case-columns{margin-top:-7px}
+ .v3-case-copy{padding:36px 30px}
+ .v3-case-copy h3{font-size:28px}
+ .v3-case-logo{width:44px;height:44px;vertical-align:-11px;margin-inline:4px 6px}
+ .v3-case-logo--larixon{mask-size:44px 44px}
+}
+@media(max-width:800px){
+ .v3-cases{margin-top:108px;padding-bottom:40px}
+ .v3-cases__title{width:auto;font-size:48px;line-height:62px;letter-spacing:-.48px}
+ .v3-case-columns{display:flex;flex-direction:column;margin-top:40px;gap:56px}
+ .v3-case-column{display:contents;will-change:auto}
+ .v3-case-card{order:var(--v3-card-order);width:100%}
+ .v3-case-cover{aspect-ratio:588/400}
+ .v3-case-copy{min-height:0;padding:36px 32px}
+ .v3-case-copy h3{font-size:30px}
+}
+@media(max-width:480px){
+ .v3-cases{width:calc(100% - 48px);margin-top:88px}
+ .v3-cases__title{font-size:40px;line-height:52px;letter-spacing:-.4px}
+ .v3-case-columns{margin-top:32px;gap:40px}
+ .v3-case-card{gap:12px}
+ .v3-case-copy{padding:27px 25px}
+ .v3-case-copy h3{font-size:25px;line-height:1.4}
+ .v3-case-logo{width:36px;height:36px;vertical-align:-8px;margin-inline:3px 5px}
+ .v3-case-logo--larixon{mask-size:36px 36px}
+}
+@media(prefers-reduced-motion:reduce){.v3-case-column,.v3-case-cover canvas{transform:none!important;will-change:auto}}
+
+/* Cover-only tilt keeps the case text still and readable. No touch hover loop. */
+.v3-case-cover::before { content:'';position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(ellipse 340px 240px at var(--v3-card-pointer-x,50%) var(--v3-card-pointer-y,50%),#ffffff26,transparent 72%);transition:opacity 240ms ease; }
+@media(hover:hover) and (pointer:fine){
+ .v3-case-cover{transform:perspective(1100px) rotateX(var(--v3-card-rx,0deg)) rotateY(var(--v3-card-ry,0deg));transition:transform 340ms cubic-bezier(.22,1,.36,1)}
+ .v3-case-cover[data-hovering]::before{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){.v3-case-cover{transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
+
+/* One entrance per card; independent of the column/cover parallax transforms. */
+.v3-case-card[data-reveal],.v3-cases__title[data-reveal] {
+  transition:opacity 720ms ease,transform 900ms cubic-bezier(.22,1,.36,1);
+}
+.v3-case-card[data-reveal="pending"],.v3-cases__title[data-reveal="pending"] {
+  opacity:0;transform:translateY(32px);pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce) {
+  .v3-case-card[data-reveal],.v3-cases__title[data-reveal] {opacity:1;transform:none;transition:none}
+}
