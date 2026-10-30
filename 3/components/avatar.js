@@ -1,7 +1,7 @@
 // Independent v3 adapter. Register interaction before importing the frame
 // player so a cold module request cannot swallow the user's first tap.
 const playerModule = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches
-  ? '../portrait-player-android.js?v=35b745c0aced' : '../portrait-player.js?v=8a4d8472576d';
+  ? '../portrait-player-android.js?v=456b0a12fe60' : '../portrait-player.js?v=8e89eb46b3e7';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -11,6 +11,8 @@ const spinButton=dialog.querySelector('.v3-avatar-spin');
 const loader=dialog.querySelector('.v3-avatar-loader');
 const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+const navigation=document.querySelector('.v3-mobile-menu');
+const mobileNavigation=matchMedia('(max-width:767px), (max-width:1023px) and (pointer:coarse)');
 const manifestURL=new URL('../assets/seedance-manifest.json?v=8196c33636fb',import.meta.url).href;
 let mountPortrait,smallPlayer,largePlayer,largeState=null,moduleFailed=false;
 let locked=null,closing=false,animation=null,gesture=null,openGeneration=0;
@@ -117,13 +119,35 @@ small.addEventListener('blur',()=>{delete small.dataset.returnFocus;});
 document.addEventListener('keydown',event=>{if(['Tab','ArrowLeft','ArrowRight'].includes(event.key))delete small.dataset.returnFocus;});
 reduced.addEventListener('change',()=>{syncLoading();if(!reduced.matches){if(dialog.open)afterFirstPaint(()=>{if(dialog.open&&!closing)ensureLarge()?.resume();});else queuePreload();}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)queuePreload();});
-document.querySelector('.v3-mobile-menu').addEventListener('close',queuePreload);
+function syncNavigationPortrait(){
+ if(!navigation.open)return;
+ // Reopening cancels the celebration immediately. Settle intro readiness before
+ // pausing so an interrupted welcome turn cannot block background preloading.
+ smallPlayer?.skipIntro();smallPlayer?.pause();
+}
+new MutationObserver(syncNavigationPortrait).observe(navigation,{attributes:true,attributeFilter:['open']});
+navigation.addEventListener('close',()=>{
+ // Native close events are queued; ignore one belonging to an already reopened menu.
+ if(navigation.open)return;
+ smallPlayer?.resume();
+ const rect=small.getBoundingClientRect();
+ if(mobileNavigation.matches&&!dialog.open&&!reduced.matches&&!document.hidden&&primaryState?.ready&&primaryState?.allReady&&rect.bottom>0&&rect.top<innerHeight){
+  // Two quick turns plus a small overshoot, followed by a front-facing spring.
+  // A cold/incomplete frame set is skipped rather than showing a page loader.
+  if(smallPlayer?.spin(2.12,{duration:1200,returnToFront:true})){
+   const canvas=small.querySelector('canvas');
+   canvas.dataset.menuCloseSpinCount=String(Number(canvas.dataset.menuCloseSpinCount||0)+1);
+  }
+ }
+ queuePreload();
+});
 
 const loaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
 import(playerModule).then(({mountSeedancePortrait})=>{
  mountPortrait=mountSeedancePortrait;
  smallPlayer=mountPortrait(small,{interaction:'cursor',manifestURL});
  smallPlayer.ready.then(ready=>{if(ready)smallPlayer.startIntro();else smallPlayer.skipIntro();});
+ syncNavigationPortrait();
  // The reused player supplies angle instructions; this button opens the modal.
  const updateLabel=()=>{if(small.getAttribute('aria-label')!=='Open full-screen portrait')small.setAttribute('aria-label','Open full-screen portrait');};
  new MutationObserver(updateLabel).observe(small,{attributes:true,attributeFilter:['aria-label']});updateLabel();

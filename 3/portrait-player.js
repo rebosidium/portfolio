@@ -309,7 +309,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     return Math.sign(dx)*Math.min(1,distance)*influence*FOLLOW_MAX_ANGLE;
   }
   function applyCursorTarget(){
-    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
+    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||mode==='power-spin'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
     const angle=cursorAngle(),next=angleToIndex(angle);
     canvas.dataset.followTarget=angle.toFixed(3);
     if(mode==='idle'&&next===displayedIndex)return;
@@ -466,11 +466,12 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase='0';canvas.dataset.introProgress=progress.toFixed(3);
     if(progress===1){currentAngle=targetAngle=0;lastMotionPhase=0;mode='idle';canvas.dataset.introDone='true';finishIntro(true);releaseIntroFrames();stop();applyCursorTarget()}
   }
-  // v3: a user-triggered four-turn spin with strong acceleration and easing out.
-  function spin(turns=4){
+  // The large Spin keeps its four-turn profile. A short thumbnail impulse can
+  // overshoot slightly, then reuse the front-facing spring for its landing.
+  function spin(turns=4,{duration=3600,returnToFront:restoreFront=false}={}){
     if(destroyed||!ready||preparing||media.matches||document.hidden)return false;
     releaseDrag();skipIntro();stop();beginStats();
-    powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:3600};
+    powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:Math.max(700,Math.min(6000,duration)),restoreFront};
     targetAngle=currentAngle+powerSpin.turns*360;mode='power-spin';previousTick=0;
     canvas.dataset.spinTurns=String(powerSpin.turns);canvas.dataset.spinProgress='0';
     scheduleRender();return true;
@@ -489,7 +490,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       const index=angleToIndex(targetAngle),entry=decoded(index);
       if(!entry){requestDecode(index,0);return;}
       draw(entry,indexToAngle(index));currentAngle=targetAngle;lastMotionPhase=currentAngle;
+      const restoreFront=powerSpin.restoreFront;
       powerSpin=null;stop();
+      if(restoreFront){returnToFront(0);canvas.dataset.returnProfile='spin';}
     }
   }
   function render(now){
