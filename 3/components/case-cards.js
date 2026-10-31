@@ -1,6 +1,6 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
 import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
-import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=8ae136971f26';
+import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=b89e6cc90109';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57'},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},

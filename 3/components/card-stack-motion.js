@@ -12,6 +12,10 @@ function installStyles(){
  const frames=Array.from({length:31},(_,i)=>({at:n(i/30*100),...cardStackFrame(i/30,MOBILE_CARD_MOTION)}));
  style.textContent=`
  @keyframes v3-card-cover-stack{${frames.map(f=>`${f.at}%{width:${n(f.scale*100)}%;height:${n(f.scale*100)}%;border-radius:${n(32*f.scale)}px;opacity:${n(f.opacity)}}`).join('')}}
+ /* A fixed-size wrapper has an opacity-only end cap. Unlike the resizing
+    effect, it is compositor-eligible during a fling. Keep it fully opaque
+    until the fade ends, preserving the existing curve and reverse scroll. */
+ @keyframes v3-card-cover-cull{from{opacity:1}to{opacity:0}}
  @keyframes v3-card-copy-stack{${frames.map(f=>`${f.at}%{transform:translateY(${n(f.lift)}px)}`).join('')}}
  @media(max-width:800px){
   .v3-cases{container-type:inline-size}
@@ -22,6 +26,7 @@ function installStyles(){
    /* The article stays in normal flow. Its sticky pin and moving copy are
       descendants, so neither can feed motion back into the timeline. */
    .v3-case-card{view-timeline-name:--v3-card-stack;view-timeline-axis:block;view-timeline-inset:16px 0px}
+   .v3-case-cover-reveal{animation:v3-card-cover-cull steps(1,end) both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
    .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
    .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
   }
