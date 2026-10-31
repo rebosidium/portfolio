@@ -50,7 +50,9 @@ body { margin: 0; }
 /* Stable small-viewport units reserve room for the first case teaser while
    Safari toolbars expand/collapse; desktop Figma spacing stays unchanged. */
 @media (max-width: 480px) {
-  .v3-page { padding-block: 28px 56px; }
+  /* Extra scroll runway lets the penultimate cover finish fading when the
+     mobile Chrome toolbar collapses and the visible viewport grows. */
+  .v3-page { padding-block: 28px 108px; }
   .v3-grid { width: calc(100% - 48px); grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 16px; }
   .v3-identity { gap: 16px; }
   .v3-portrait { flex-basis: 52px; width: 52px; height: 52px; }

@@ -22,8 +22,8 @@ function installStyles(){
    /* The article stays in normal flow. Its sticky pin and moving copy are
       descendants, so neither can feed motion back into the timeline. */
    .v3-case-card{view-timeline-name:--v3-card-stack;view-timeline-axis:block;view-timeline-inset:16px 0px}
-   .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588)}
-   .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588)}
+   .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
+   .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
   }
  }`;
  document.head.append(style);
