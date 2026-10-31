@@ -32,7 +32,7 @@
 /* Auto margins center the group in the dynamic viewport, but collapse to zero
    on short windows so every item remains reachable through panel scrolling. */
 .v3-menu-links { display: flex; flex: none; flex-direction: column; align-items: center; gap: 24px; margin-block: auto; }
-.v3-menu-links a { display: flex; align-items: center; flex: none; min-height: 48px; color: #000; font-size: 29px; line-height: 40px; font-weight: 450; text-decoration: none; cursor: default; }
+.v3-menu-links a { display: flex; align-items: center; flex: none; min-height: 48px; color: #000; font-size: 36px; line-height: 48px; font-weight: 500; text-decoration: none; cursor: default; }
 .v3-menu-close { display: grid; position: absolute; z-index: 1; top: var(--v3-toggle-top, 32px); right: var(--v3-toggle-right, 24px); }
 @media (max-width:767px), (max-width:1023px) and (pointer:coarse) {
   .v3-menu-ready .v3-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
