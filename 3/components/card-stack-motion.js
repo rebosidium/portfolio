@@ -16,6 +16,10 @@ function installStyles(){
     effect, it is compositor-eligible during a fling. Keep it fully opaque
     until the fade ends, preserving the existing curve and reverse scroll. */
  @keyframes v3-card-cover-cull{from{opacity:1}to{opacity:0}}
+ /* Keep flowing iOS covers out of Safari's viewport-constrained color
+    sampling. Attach at the top edge, then detach only after the cover fades.
+    Both positions retain the same flow slot; no scroll handler is needed. */
+ @keyframes v3-card-pin-attachment{0%{position:relative;top:0px}.001%,99.999%{position:sticky;top:16px}100%{position:relative;top:0px}}
  @keyframes v3-card-copy-stack{${frames.map(f=>`${f.at}%{transform:translateY(${n(f.lift)}px)}`).join('')}}
  @media(max-width:800px){
   .v3-cases{container-type:inline-size}
@@ -26,6 +30,9 @@ function installStyles(){
    /* The article stays in normal flow. Its sticky pin and moving copy are
       descendants, so neither can feed motion back into the timeline. */
    .v3-case-card{view-timeline-name:--v3-card-stack;view-timeline-axis:block;view-timeline-inset:16px 0px}
+   @supports (-webkit-touch-callout:none){
+    .v3-case-cover-pin{animation:v3-card-pin-attachment linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing 0px exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
+   }
    .v3-case-cover-reveal{animation:v3-card-cover-cull steps(1,end) both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
    .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
    .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
