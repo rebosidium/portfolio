@@ -88,7 +88,9 @@ if (dialog && viewer && actions) {
   dialog.addEventListener('v3-avatar-closed', () => gameState(false));
   if (dialog.open) gameState(true);
 
-  const MAX_FLYING = 10;
+  // iOS Safari draws the glow around the numbers far denser than Chrome does, so it gets fewer and lighter ones.
+  const IOS = !!(window.CSS && CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
+  const MAX_FLYING = IOS ? 8 : 16;
   let combo = 0, lastTap = 0, side = 1, flying = 0, coolTimer = 0, bumpTimer = 0;
   // Ready-made award sets (nothing is generated): the longer and faster you tap, the higher the
   // combo and the closer the numbers get to 1000.
@@ -107,20 +109,9 @@ if (dialog && viewer && actions) {
 
   // The jokes live in a popover above the modal portrait; the bursts go in the same popover so
   // they stay on top of the falling jokes (viewport coordinates), else in a layer inside the dialog.
-  // The bursts live in their own layer inside that popover. A hole the shape of the Spin pill is cut out
-  // of the layer, so the numbers fly out from behind the button and never paint over it.
-  let flyLayer = null;
-  const holePath = r => {
-    const m = 3, x = r.left - m, y = r.top - m, w = r.width + m * 2, h = r.height + m * 2, rad = h / 2;
-    return `path(evenodd, 'M-4000 -4000H8000V8000H-4000Z M${x + rad} ${y}H${x + w - rad}A${rad} ${rad} 0 0 1 ${x + w - rad} ${y + h}H${x + rad}A${rad} ${rad} 0 0 1 ${x + rad} ${y}Z')`;
-  };
   const anchor = spin => {
     const r = spin.getBoundingClientRect(), host = document.querySelector('.v3-egg');
-    if (host?.matches?.(':popover-open')) {
-      if (!flyLayer || flyLayer.parentElement !== host) { flyLayer = document.createElement('div'); flyLayer.className = 'v3-fly-layer'; host.append(flyLayer); }
-      flyLayer.style.clipPath = holePath(r);
-      return {target: flyLayer, x: r.left + r.width / 2, y: r.top + r.height / 2};
-    }
+    if (host?.matches?.(':popover-open')) return {target: host, x: r.left + r.width / 2, y: r.top + r.height / 2};
     const box = viewer.getBoundingClientRect();
     return {target: layer, x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2};
   };
@@ -154,14 +145,14 @@ if (dialog && viewer && actions) {
   let lastRing = 0;
   const ring = (target, x, y, value) => {
     const now = performance.now();
-    if (reduced.matches || now - lastRing < 140) return;         // a few rings only, never a white haze
+    if (reduced.matches) return;
     lastRing = now;
     const el = document.createElement('i');
     el.className = 'v3-fly-ring';
     el.dataset.tier = String(visualTier(value));
     el.style.left = x + 'px'; el.style.top = y + 'px';
     target.append(el);
-    el.animate([{transform: 'translate(-50%,-50%) scale(.8)', opacity: .7}, {transform: 'translate(-50%,-50%) scale(1.4)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
+    el.animate([{transform: 'translate(-50%,-50%) scale(.7)', opacity: .95}, {transform: 'translate(-50%,-50%) scale(1.9)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
   };
 
   document.addEventListener('click', event => {
