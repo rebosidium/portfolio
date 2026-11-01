@@ -60,6 +60,7 @@ const JOKES = {
     'It’s not a bug, it’s a design decision',
     'Final_final_v7_REAL.fig',
     'design_final_final_2',
+    'frame_407_copy_copy_12',
     'I’m not opening Figma!',
     'Auto layout is life',
     'Figma is thinking…',
