@@ -698,6 +698,12 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // Mouse desktops follow a finer ladder (600/700/800/900, then 1200): the smallest set that is at most
     // 24 px short of the physical width, so a 458 px (916 physical) portrait no longer pulls the 27 MB set.
     if(!navigator.connection?.saveData&&pointerDesktop.matches)quality=String([600,700,800,900].find(size=>size+24>=physical)||1200);
+    // Touch devices (iPhone/iPad) rasterise at most 2x CSS (see physicalSize), so they pick by that width
+    // instead of the full device ratio: a 335 px portrait on a 3x phone needs the 700 set, not the 27 MB one.
+    else if(!navigator.connection?.saveData){
+      const touchPhysical=(stage.clientWidth||displayWidth?.()||311)*Math.min(2,Math.max(1,window.devicePixelRatio||1));
+      quality=String([600,700,800].find(size=>size+12>=touchPhysical)||1200);
+    }
     // Shared cleaned set; historical filenames stay exact for cache/rollback.
     return retainQuality&&Number.parseInt(loadQuality,10)>Number(quality)?loadQuality:quality+'-dark';
   }
