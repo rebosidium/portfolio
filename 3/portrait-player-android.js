@@ -132,7 +132,24 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
   function sample(values,value){values.push(value);if(values.length>4096)values.splice(0,256)}
-  function trackedFetch(url,options){if(ready)runtimeFetches++;return fetch(new URL(url,import.meta.url),renderPaused?{...options,priority:'low'}:options)}
+  // Frame archives come from jsDelivr (a CDN for GitHub repos), pinned to a commit so the URLs never go
+  // stale; the manifest and the rest of the site load from the site itself. A failed or aborted CDN
+  // request switches this page to the site's own copies. ?cdn=pages keeps everything on the site,
+  // ?cdn=raw uses GitHub Raw. When a new frame set is published, move CDN_COMMIT to the commit that holds it.
+  const CDN_COMMIT='a3168b36df665c7f20c0249d7ee34783a1206653';
+  const CDN_BASES={jsdelivr:'https://cdn.jsdelivr.net/gh/rebosidium/portfolio@'+CDN_COMMIT+'/3/',raw:'https://raw.githubusercontent.com/rebosidium/portfolio/'+CDN_COMMIT+'/3/'};
+  const cdnParam=new URLSearchParams(location.search).get('cdn');
+  const cdnBase=cdnParam==='pages'?null:CDN_BASES[cdnParam]||CDN_BASES.jsdelivr;
+  let cdnFailed=false;
+  async function trackedFetch(url,options){
+    if(ready)runtimeFetches++;
+    const init=renderPaused?{...options,priority:'low'}:options;
+    if(cdnBase&&!cdnFailed&&typeof url==='string'&&url.startsWith('assets/')){
+      try{const response=await fetch(new URL(url,cdnBase),init);if(response.ok)return response;cdnFailed=true}
+      catch(error){cdnFailed=true;if(error?.name==='AbortError'&&init?.signal?.aborted)throw error}
+    }
+    return fetch(new URL(url,import.meta.url),init);
+  }
   function diagnostics(){
     const resources=[...cache.values()].filter(e=>e.state==='ready');
     const pixels=resources.reduce((sum,e)=>sum+e.resource.width*e.resource.height,0);

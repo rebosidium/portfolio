@@ -5,7 +5,7 @@ import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
 // The head flag uses the same Android + coarse pointer test as the player choice.
 const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
 const playerModule = androidTouch
-  ? '../portrait-player-android.js?v=0fd889c2b615' : '../portrait-player.js?v=f3067a541dd1';
+  ? '../portrait-player-android.js?v=512bc78646b3' : '../portrait-player.js?v=aea5630b1a88';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
