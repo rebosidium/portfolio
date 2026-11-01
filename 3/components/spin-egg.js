@@ -56,7 +56,7 @@ const JOKES = {
     'Make the logo bigger 🔍',
     'Can you make it pop? 💥',
     'Contrast ratio: trust me',
-    '🌈 Gradients: never too many',
+    '🎨 Gradients: never too many',
     '#FF0000 is not a mood',
     'Orange 🟠 is the new teal',
     'Two greys 🩶. I can’t tell either.',
