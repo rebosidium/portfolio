@@ -132,14 +132,13 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function percentile(values,p){if(!values.length)return 0;const sorted=values.slice().sort((a,b)=>a-b);return sorted[Math.min(sorted.length-1,Math.ceil(sorted.length*p)-1)]}
   function sample(values,value){values.push(value);if(values.length>4096)values.splice(0,256)}
-  // Frame archives come from jsDelivr (a CDN for GitHub repos), pinned to a commit so the URLs never go
-  // stale; the manifest and the rest of the site load from the site itself. A failed or aborted CDN
-  // request switches this page to the site's own copies. ?cdn=pages keeps everything on the site,
-  // ?cdn=raw uses GitHub Raw. When a new frame set is published, move CDN_COMMIT to the commit that holds it.
+  // Frame archives load from the site itself. Optional sources for comparison: ?cdn=jsdelivr (jsDelivr, pinned to
+  // a commit so the URLs never go stale) or ?cdn=raw (GitHub Raw). A failed or aborted CDN request switches the
+  // page back to the site's own copies. When a new frame set is published, move CDN_COMMIT to the commit that holds it.
   const CDN_COMMIT='a3168b36df665c7f20c0249d7ee34783a1206653';
   const CDN_BASES={jsdelivr:'https://cdn.jsdelivr.net/gh/rebosidium/portfolio@'+CDN_COMMIT+'/3/',raw:'https://raw.githubusercontent.com/rebosidium/portfolio/'+CDN_COMMIT+'/3/'};
   const cdnParam=new URLSearchParams(location.search).get('cdn');
-  const cdnBase=cdnParam==='pages'?null:CDN_BASES[cdnParam]||CDN_BASES.jsdelivr;
+  const cdnBase=CDN_BASES[cdnParam]||null;
   let cdnFailed=false;
   async function trackedFetch(url,options){
     if(ready)runtimeFetches++;
@@ -848,10 +847,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function chooseVariant(){
     if(fixedVariant)return fixedVariant;
-    // Owner's comparison build: touch devices are shown the 600 px / WebP quality 80 set (8 MB).
-    // ?tier=auto returns to the normal ladder, ?tier=600q80 forces it on any device.
+    // Owner's comparison build: touch devices (iPhone, Android) are shown the plain 600 px set (WebP quality 90, 12 MB).
+    // ?tier=auto returns to the normal ladder, ?tier=600q80 forces the compressed 600 px set (8 MB) on any device.
     const tierParam=new URLSearchParams(location.search).get('tier');
-    if(tierParam==='600q80'||(tierParam!=='auto'&&matchMedia('(pointer: coarse)').matches))return '600q80-dark';
+    if(tierParam==='600q80')return '600q80-dark';
+    if(tierParam!=='auto'&&matchMedia('(pointer: coarse)').matches)return '600-dark';
     // Select the encoded tier for the actual touch raster budget, avoiding
     // decoding an 800/1200 source only to reduce it to 2× CSS afterwards.
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
