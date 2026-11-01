@@ -41,5 +41,15 @@
 .v3-avatar-spin__ring { position: absolute; overflow: visible; pointer-events: none; z-index: 2; transition: opacity 400ms ease; }
 .v3-avatar-spin__ring[hidden] { display: none; }
 .v3-avatar-spin__ring[data-done] { opacity: 0; }
-.v3-avatar-spin__track { stroke: #23252a1f; }
-.v3-avatar-spin__fill { stroke: #232522; stroke-linecap: round; transition: stroke-dasharray 320ms ease-out; }
+.v3-avatar-spin__track { stroke: #6a63da26; }
+.v3-avatar-spin__fill { stroke-linecap: round; transition: stroke-dasharray 320ms ease-out; }
+
+/* The large portrait stays half transparent until the whole head is loaded (Spin needs it); the header thumbnail is untouched. */
+.v3-avatar-dialog .v3-avatar-large { transition: opacity 600ms ease; }
+.v3-avatar-dialog[data-head-loading] .v3-avatar-large { opacity: .5; }
+@media (prefers-reduced-motion: reduce) { .v3-avatar-dialog[data-head-loading] .v3-avatar-large { opacity: 1; } }
+/* Spin shows a smooth percentage while loading, then icon + label fade in. */
+.v3-avatar-spin img, .v3-avatar-spin > span { transition: opacity 350ms ease; }
+.v3-avatar-spin[data-loading] img, .v3-avatar-spin[data-loading] > span { opacity: 0 !important; }
+.v3-avatar-spin__pct { position: absolute; inset: 0; display: grid; place-items: center; font: 500 18px/1 'DM Sans', sans-serif; font-style: normal; font-variant-numeric: tabular-nums; color: #fff; opacity: 0; transition: opacity 350ms ease; pointer-events: none; z-index: 1; }
+.v3-avatar-spin[data-loading] .v3-avatar-spin__pct { opacity: 1; }

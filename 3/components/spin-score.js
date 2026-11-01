@@ -143,7 +143,24 @@ if (dialog && viewer && actions) {
     const track = document.createElementNS(NS, 'path'), fill = document.createElementNS(NS, 'path');
     track.setAttribute('class', 'v3-avatar-spin__track'); fill.setAttribute('class', 'v3-avatar-spin__fill');
     for (const p of [track, fill]) { p.setAttribute('pathLength', '1'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-width', String(STROKE)); }
-    svg.append(track, fill); spinButton.append(svg);
+    const defs = document.createElementNS(NS, 'defs'), grad = document.createElementNS(NS, 'linearGradient');
+    const gradId = 'v3-spin-ring-' + Math.random().toString(36).slice(2, 7);
+    grad.setAttribute('id', gradId); grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+    for (const [offset, color] of [['0', '#9a5cff'], ['1', '#3d7bff']]) { const stop = document.createElementNS(NS, 'stop'); stop.setAttribute('offset', offset); stop.setAttribute('stop-color', color); grad.append(stop); }
+    defs.append(grad); fill.setAttribute('stroke', `url(#${gradId})`);
+    svg.append(defs, track, fill); spinButton.append(svg);
+    // While the head loads, the button shows its percentage instead of the icon and "Spin".
+    const pct = document.createElement('i');
+    pct.className = 'v3-avatar-spin__pct'; pct.setAttribute('aria-hidden', 'true'); pct.textContent = '0%';
+    spinButton.append(pct);
+    let shown = 0, pctRaf = 0;
+    const tickPct = () => {
+      pctRaf = 0;
+      shown += (progress * 100 - shown) * .16;
+      if (Math.abs(progress * 100 - shown) < .5) shown = progress * 100;
+      pct.textContent = Math.round(shown) + '%';
+      if (shown !== progress * 100) pctRaf = requestAnimationFrame(tickPct);
+    };
     let progress = 0, hideTimer = 0;
     const shape = () => {                       // a pill starting at top centre, clockwise
       const w = spinButton.offsetWidth + GAP * 2, h = spinButton.offsetHeight + GAP * 2, r = h / 2, o = STROKE / 2;
@@ -151,13 +168,19 @@ if (dialog && viewer && actions) {
       const d = `M ${w / 2 + o} ${o} H ${w - r + o} A ${r} ${r} 0 0 1 ${w - r + o} ${h + o} H ${r + o} A ${r} ${r} 0 0 1 ${r + o} ${o} Z`;
       track.setAttribute('d', d); fill.setAttribute('d', d);
       svg.style.inset = `${-(GAP + o)}px`;
+      grad.setAttribute('x1', '0'); grad.setAttribute('x2', String(w + STROKE)); grad.setAttribute('y1', '0'); grad.setAttribute('y2', '0');
     };
     const paint = () => {
       fill.style.strokeDasharray = `${progress.toFixed(4)} 1`;
       fill.style.opacity = progress > .004 ? '1' : '0';           // no dot at the very start
       clearTimeout(hideTimer);
-      if (progress >= 1) { svg.dataset.done = ''; hideTimer = setTimeout(() => { svg.hidden = true; }, 700); }
-      else { delete svg.dataset.done; svg.hidden = false; }
+      if (progress >= 1) {
+        svg.dataset.done = '';
+        hideTimer = setTimeout(() => { delete spinButton.dataset.loading; svg.hidden = true; }, 600);   // 100% shows briefly, then icon + Spin fade in
+      }
+      else { delete svg.dataset.done; svg.hidden = false; spinButton.dataset.loading = ''; }
+      if (!pctRaf) pctRaf = requestAnimationFrame(tickPct);
+      dialog.toggleAttribute('data-head-loading', progress < 1);
     };
     const read = () => {
       const d = canvas.dataset, total = Number(d.totalBytes) || 0, got = Number(d.encodedBytes) || 0;
