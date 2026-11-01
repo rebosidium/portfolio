@@ -3,7 +3,9 @@
 .v3-avatar-actions { position: relative; }
 .v3-avatar-actions { padding: 106px 0 0; }
 .v3-avatar-score { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
-.v3-avatar-score b { font-size: 48px; font-weight: 800; letter-spacing: -.5px; }
+.v3-avatar-score { --fs: 48px; }
+.v3-avatar-score__num { display: grid; place-items: center; height: var(--fs); }
+.v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-weight: 800; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
 .v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
 .v3-avatar-score[data-empty] { opacity: .32; }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
@@ -18,7 +20,7 @@
 /* Hide: a plain round glass button with only the cross, top right. */
 .v3-avatar-hide { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 16px); right: 16px; z-index: 6; width: 48px; height: 48px; padding: 0; gap: 0; border-radius: 50%; }
 .v3-avatar-hide span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-@media (max-width: 800px) { .v3-avatar-score { font-size: 18px; } .v3-avatar-score b { font-size: 42px; } .v3-fly-num { font-size: 26px; } }
+@media (max-width: 800px) { .v3-avatar-score { font-size: 18px; } .v3-avatar-score { --fs: 42px; } .v3-fly-num { font-size: 26px; } }
 @media (prefers-reduced-motion: reduce) { .v3-avatar-score { transition: none; } }
 /* Leave room for the score above the buttons on short screens; the portrait is 30% smaller on desktop. */
 .v3-avatar-large { width: min(86vw, calc(100dvh - 250px), 860px); }
@@ -33,3 +35,11 @@
 }
 .v3-avatar-hide:active { transform: scale(.92); }
 @media (prefers-reduced-motion: reduce) { .v3-avatar-hide, .v3-avatar-hide img { transition: none; } .v3-avatar-hide:hover img { transform: none; } }
+
+/* Spin preloader ring: 3px, outside the button, filling clockwise from the top as the head loads. */
+.v3-avatar-spin { position: relative; }
+.v3-avatar-spin__ring { position: absolute; overflow: visible; pointer-events: none; z-index: 2; transition: opacity 400ms ease; }
+.v3-avatar-spin__ring[hidden] { display: none; }
+.v3-avatar-spin__ring[data-done] { opacity: 0; }
+.v3-avatar-spin__track { stroke: #23252a1f; }
+.v3-avatar-spin__fill { stroke: #232522; stroke-linecap: round; transition: stroke-dasharray 320ms ease-out; }

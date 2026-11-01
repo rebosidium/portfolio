@@ -37,7 +37,12 @@ const JOKES = {
     'Can we circle back after the circle back?',
     'Junior role: 10 years of experience required',
     'Standup ran 47 minutes. Please sit down.',
-    'Free pizza: the team’s only KPI'
+    'Free pizza: the team’s only KPI',
+    'Wait, let me connect my headphones',
+    'Colleagues, I need to meet a courier',
+    'The dog ate my homework',
+    'Can anyone hear me?',
+    'Your voice turned into little squares'
   ],
   design: [
     'That pink is a bold choice',

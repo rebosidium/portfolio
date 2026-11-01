@@ -13,7 +13,10 @@ if (dialog && viewer && actions) {
   const number = document.createElement('b');
   const coins = document.createElement('div');      // small caption right under the digits
   coins.className = 'v3-avatar-coins'; coins.textContent = 'COINS';
-  score.append(number, coins);
+  const numberBox = document.createElement('div');  // reserves the room the digits grow into
+  numberBox.className = 'v3-avatar-score__num';
+  numberBox.append(number);
+  score.append(numberBox, coins);
   actions.append(score);
   const spinButton = actions.querySelector('.v3-avatar-spin'), hideButton = actions.querySelector('.v3-avatar-hide');
   hideButton?.setAttribute('aria-label', 'Hide');
@@ -25,8 +28,8 @@ if (dialog && viewer && actions) {
     if (!spinButton || !spinButton.offsetWidth) return;
     score.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
     const fs = parseFloat(getComputedStyle(number).fontSize) || 40;
-    const glyphTop = .16 * fs;                              // digits start this far inside the score box
-    const glyphHeight = Math.max(10, score.offsetHeight - glyphTop - 2);   // digits + the COINS caption
+    const glyphTop = 0;                                     // the reserved box is the visual block (digits grow into it)
+    const glyphHeight = Math.max(10, score.offsetHeight - 2);   // reserved digits + the COINS caption
     const spinTop = spinButton.getBoundingClientRect().top;
     const box = large?.getBoundingClientRect();
     const artBottom = box && box.height ? box.top + box.height * ART_BOTTOM : spinTop - glyphHeight - 28;
@@ -44,6 +47,9 @@ if (dialog && viewer && actions) {
   viewer.append(layer);
   const show = () => {
     number.textContent = format(total);
+    // The digits grow up to +40% (log scale, full size around 50 000 coins) inside their reserved box.
+    const grow = Math.min(1, Math.log10(1 + total) / Math.log10(1 + 50000));
+    number.style.setProperty('--k', (1 + .4 * grow).toFixed(3));
     score.toggleAttribute('data-empty', total === 0);
     placeScore();
   };
@@ -127,4 +133,40 @@ if (dialog && viewer && actions) {
       burst(spin, extra, combo * .6);
     }
   }, {passive: true});
+
+  // ---- Spin preloader: a 3px ring around the button fills as the whole head finishes loading ----
+  const canvas = dialog.querySelector('[data-v3-avatar-large] canvas');
+  if (spinButton && canvas) {
+    const NS = 'http://www.w3.org/2000/svg', GAP = 5, STROKE = 3;
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'v3-avatar-spin__ring'); svg.setAttribute('aria-hidden', 'true');
+    const track = document.createElementNS(NS, 'path'), fill = document.createElementNS(NS, 'path');
+    track.setAttribute('class', 'v3-avatar-spin__track'); fill.setAttribute('class', 'v3-avatar-spin__fill');
+    for (const p of [track, fill]) { p.setAttribute('pathLength', '1'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-width', String(STROKE)); }
+    svg.append(track, fill); spinButton.append(svg);
+    let progress = 0, hideTimer = 0;
+    const shape = () => {                       // a pill starting at top centre, clockwise
+      const w = spinButton.offsetWidth + GAP * 2, h = spinButton.offsetHeight + GAP * 2, r = h / 2, o = STROKE / 2;
+      svg.setAttribute('viewBox', `0 0 ${w + STROKE} ${h + STROKE}`);
+      const d = `M ${w / 2 + o} ${o} H ${w - r + o} A ${r} ${r} 0 0 1 ${w - r + o} ${h + o} H ${r + o} A ${r} ${r} 0 0 1 ${r + o} ${o} Z`;
+      track.setAttribute('d', d); fill.setAttribute('d', d);
+      svg.style.inset = `${-(GAP + o)}px`;
+    };
+    const paint = () => {
+      fill.style.strokeDasharray = `${progress.toFixed(4)} 1`;
+      fill.style.opacity = progress > .004 ? '1' : '0';           // no dot at the very start
+      clearTimeout(hideTimer);
+      if (progress >= 1) { svg.dataset.done = ''; hideTimer = setTimeout(() => { svg.hidden = true; }, 700); }
+      else { delete svg.dataset.done; svg.hidden = false; }
+    };
+    const read = () => {
+      const d = canvas.dataset, total = Number(d.totalBytes) || 0, got = Number(d.encodedBytes) || 0;
+      const next = d.allReady === 'true' || dialog.dataset.preloaded === 'true' ? 1 : total ? Math.min(.98, got / total) : 0;
+      if (next !== progress) { progress = Math.max(next, next === 1 ? 1 : 0); paint(); }   // restarts after a quality change
+    };
+    new ResizeObserver(shape).observe(spinButton); shape();
+    new MutationObserver(read).observe(canvas, {attributes: true, attributeFilter: ['data-encoded-bytes', 'data-total-bytes', 'data-all-ready']});
+    new MutationObserver(read).observe(dialog, {attributes: true, attributeFilter: ['data-preloaded', 'open']});
+    read(); paint();
+  }
 }

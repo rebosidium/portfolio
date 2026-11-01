@@ -1,5 +1,4 @@
 import {mountAvatarAmbience} from './avatar-ambience.js?v=c236389323c7';
-import {mountPortraitLoader} from './avatar-loading.js?v=7f155db9dbbf';
 import {mountSpinFeedback} from './avatar-spin-feedback.js?v=d4db6ae56b10';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
@@ -16,7 +15,6 @@ mountSpinFeedback(spinButton);
 const hideButton=dialog.querySelector('.v3-avatar-hide');
 mountSpinFeedback(hideButton);hideButton.dataset.feedbackReady='true';
 const loader=dialog.querySelector('.v3-avatar-loader');
-mountPortraitLoader(large,loader);
 const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const navigation=document.querySelector('.v3-mobile-menu');

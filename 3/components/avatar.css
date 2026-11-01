@@ -148,3 +148,7 @@ html[data-v3-android] .v3-avatar-mesh { display:none!important; }
 
 /* Animated colour background behind the portrait removed (heaviest idle effect); the frosted backdrop stays. */
 .v3-avatar-mesh { display: none !important; }
+
+/* Loading: no tile mosaic; the first frame simply shows muted until the portrait is ready. */
+.v3-avatar-large img { transition: opacity 420ms ease; }
+.v3-avatar-large[aria-busy="true"] img { opacity: .5; }
