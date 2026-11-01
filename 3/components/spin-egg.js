@@ -142,10 +142,10 @@ const nextPhrase = () => {
   try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* Private mode: session-only memory. */ }
   return text;
 };
-const STREAK_GAP = 900, MAX_VISIBLE = 9, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
+const MAX_VISIBLE = 9, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');
 const live = [], falling = new Set();
-let host = null, shown = 0, streak = 0, lastClick = 0, raf = 0, idle = 0, lastFrame = 0;
+let host = null, shown = 0, raf = 0, idle = 0, lastFrame = 0;
 const rand = (min, max) => min + Math.random() * (max - min);
 
 function ensureHost() {
@@ -174,8 +174,10 @@ function spawn(text, strong) {
     ? {el, x: rand(-8, 8), y: rand(0, 6), rot: rand(-2, 2), vx: 0, vy: 0, spin: 0, wobble: 0, scale: 1}
     : {el, x: rand(-38, 38), y: rand(6, 30), rot: rand(-10, 10), vx: 0, vy: 0, spin: 0, wobble: 0, scale: 1};
   ensureHost().append(el);
-  // The pile grows with every notification (up to +45%), never wider than the screen.
-  const growth = 1 + Math.min(.45, Math.max(0, shown - 1) * .045);
+  // The pile grows with every notification (up to +45% on phones, +85% on desktop),
+  // never wider than the screen.
+  const desktop = innerWidth > 800;
+  const growth = 1 + Math.min(desktop ? .85 : .45, Math.max(0, shown - 1) * (desktop ? .08 : .045));
   item.scale = Math.max(1, Math.min(growth, innerWidth * .94 / Math.max(1, el.offsetWidth)));
   place(item);
   live.push(item);
@@ -220,13 +222,12 @@ function step(now) {
     if (!live.length && host?.matches?.(':popover-open')) { try { host.hidePopover(); } catch { /* Already hidden. */ } }
   }
 }
+// The developer notice appears once, on the first click; every later click (even after a
+// pause) adds the next joke in the rotation.
+let announced = false;
 document.addEventListener('click', event => {
   const spin = event.target.closest?.('.v3-avatar-spin');
   if (!spin || spin.disabled) return;
-  const now = performance.now();
-  streak = now - lastClick <= STREAK_GAP ? streak + 1 : 1;
-  lastClick = now;
-  // The first click of a streak shows the developer notice; quick follow-ups pile up jokes.
-  if (streak === 1) { turn = 0; spawn('You are now a developer!', true); }
+  if (!announced) { announced = true; turn = 0; spawn('You are now a developer!', true); }
   else spawn(nextPhrase(), false);
 }, {passive: true});
