@@ -131,7 +131,8 @@ const JOKES = {
     'The AI deleted the tests. Tests now pass.',
     'console.log in production. Evacuate. 🚨',
     'Estimate: 2 days. Reality: 2 sprints.',
-    'Compacting conversation… 🗜️'
+    'Compacting conversation… 🗜️',
+    '🛎️ DETACH INSTANCE!!!'
   ]
 };
 const ORDER = ['office', 'design', 'tech'];
