@@ -74,7 +74,8 @@ export function mountSpinFeedback(button) {
   }
 
   listen(button, 'click', event => {
-    if (!event.isTrusted || button.disabled || button.getAttribute('aria-disabled') === 'true' || button.hasAttribute('data-feedback-pending')) return;
+    // Only real taps/clicks, plus the Space shortcut (it sets data-key-spin around its synthetic click).
+    if ((!event.isTrusted && !button.hasAttribute('data-key-spin')) || button.disabled || button.getAttribute('aria-disabled') === 'true' || button.hasAttribute('data-feedback-pending')) return;
     if (reduced.matches || document.hidden) { cancel(); return; }
     play();
   }, {capture:true});
