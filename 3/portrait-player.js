@@ -691,6 +691,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function chooseVariant(){
     if(fixedVariant)return fixedVariant;
+    // Owner's comparison build: touch devices are shown the 600 px / WebP quality 80 set (8 MB).
+    // ?tier=auto returns to the normal ladder, ?tier=600q80 forces it on any device.
+    const tierParam=new URLSearchParams(location.search).get('tier');
+    if(tierParam==='600q80'||(tierParam!=='auto'&&matchMedia('(pointer: coarse)').matches))return '600q80-dark';
     // A hidden, retained modal has no layout width. Use its future CSS width
     // to preload the correct quality instead of restarting when it opens.
     const physical=(stage.clientWidth||displayWidth?.()||311)*Math.max(1,window.devicePixelRatio||1);
