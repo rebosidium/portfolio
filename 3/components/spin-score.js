@@ -88,7 +88,7 @@ if (dialog && viewer && actions) {
   dialog.addEventListener('v3-avatar-closed', () => gameState(false));
   if (dialog.open) gameState(true);
 
-  const MAX_FLYING = 16;
+  const MAX_FLYING = 10;
   let combo = 0, lastTap = 0, side = 1, flying = 0, coolTimer = 0, bumpTimer = 0;
   // Ready-made award sets (nothing is generated): the longer and faster you tap, the higher the
   // combo and the closer the numbers get to 1000.
@@ -107,9 +107,20 @@ if (dialog && viewer && actions) {
 
   // The jokes live in a popover above the modal portrait; the bursts go in the same popover so
   // they stay on top of the falling jokes (viewport coordinates), else in a layer inside the dialog.
+  // The bursts live in their own layer inside that popover. A hole the shape of the Spin pill is cut out
+  // of the layer, so the numbers fly out from behind the button and never paint over it.
+  let flyLayer = null;
+  const holePath = r => {
+    const m = 3, x = r.left - m, y = r.top - m, w = r.width + m * 2, h = r.height + m * 2, rad = h / 2;
+    return `path(evenodd, 'M-4000 -4000H8000V8000H-4000Z M${x + rad} ${y}H${x + w - rad}A${rad} ${rad} 0 0 1 ${x + w - rad} ${y + h}H${x + rad}A${rad} ${rad} 0 0 1 ${x + rad} ${y}Z')`;
+  };
   const anchor = spin => {
     const r = spin.getBoundingClientRect(), host = document.querySelector('.v3-egg');
-    if (host?.matches?.(':popover-open')) return {target: host, x: r.left + r.width / 2, y: r.top + r.height / 2};
+    if (host?.matches?.(':popover-open')) {
+      if (!flyLayer || flyLayer.parentElement !== host) { flyLayer = document.createElement('div'); flyLayer.className = 'v3-fly-layer'; host.append(flyLayer); }
+      flyLayer.style.clipPath = holePath(r);
+      return {target: flyLayer, x: r.left + r.width / 2, y: r.top + r.height / 2};
+    }
     const box = viewer.getBoundingClientRect();
     return {target: layer, x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2};
   };
@@ -124,11 +135,12 @@ if (dialog && viewer && actions) {
     target.append(el); flying++;
     const wide = Math.min(innerWidth * .46, 560);
     const distance = Math.min(wide, 80 + strength * 10 + Math.random() * 60);
-    const angle = (-.7 + Math.random() * 1.1) * (Math.PI / 4);        // mostly sideways, a little up
-    const dx = Math.cos(angle) * distance * side, dy = Math.sin(angle) * distance - 12 - strength * 2.5;
-    const grow = 1 + Math.min(1.7, Math.log10(value) * .55) + Math.min(.3, strength / 120);
-    side = -side;
-    const pop = grow * 1.25;
+    // A fan over the whole upper half: sideways left/right as before, diagonally and straight up too.
+    const angle = -(Math.PI / 18 + Math.random() * Math.PI * 8 / 9);
+    const reach = Math.abs(Math.sin(angle)) > .7 ? .8 : 1;            // steep shots travel a little less
+    const dx = Math.cos(angle) * distance * reach, dy = Math.sin(angle) * distance * reach - 6;
+    const grow = 1 + Math.min(.6, Math.log10(value) * .24) + Math.min(.1, strength / 400);   // 1 … ~1.7: big awards stay readable, not a wall
+    const pop = grow * 1.12;
     el.animate([
       {transform: 'translate(-50%,-50%) scale(.35)', opacity: 1},
       {transform: `translate(calc(-50% + ${dx * .12}px),calc(-50% + ${dy * .12}px)) scale(${pop})`, opacity: 1, offset: .14},
@@ -139,14 +151,17 @@ if (dialog && viewer && actions) {
   };
 
   // A quick bright ring around the button on every click.
+  let lastRing = 0;
   const ring = (target, x, y, value) => {
-    if (reduced.matches) return;
+    const now = performance.now();
+    if (reduced.matches || now - lastRing < 140) return;         // a few rings only, never a white haze
+    lastRing = now;
     const el = document.createElement('i');
     el.className = 'v3-fly-ring';
     el.dataset.tier = String(visualTier(value));
     el.style.left = x + 'px'; el.style.top = y + 'px';
     target.append(el);
-    el.animate([{transform: 'translate(-50%,-50%) scale(.7)', opacity: .95}, {transform: 'translate(-50%,-50%) scale(1.9)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
+    el.animate([{transform: 'translate(-50%,-50%) scale(.8)', opacity: .7}, {transform: 'translate(-50%,-50%) scale(1.4)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
   };
 
   document.addEventListener('click', event => {
@@ -160,7 +175,7 @@ if (dialog && viewer && actions) {
     clearTimeout(coolTimer); coolTimer = setTimeout(() => { combo = 0; }, 900);
     if (!reduced.matches) { score.dataset.bump = ''; clearTimeout(bumpTimer); bumpTimer = setTimeout(() => delete score.dataset.bump, 80); }
     burst(spin, value, combo);
-    if (combo >= 6 && Math.random() < .5) {            // fast tapping throws a second number that counts too
+    if (combo >= 6 && Math.random() < .3) {            // fast tapping throws a second number that counts too
       const extra = tierFor(Math.max(0, combo - 6));
       total += extra; show();
       burst(spin, extra, combo * .6);
