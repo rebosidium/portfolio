@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="1da4f3ccdd61">
+<html lang="en" data-build="1c932482b177">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,6 +44,10 @@
   <link rel="stylesheet" href="/3/components/case-cards.css?v=b28288dd6954">
   <link rel="stylesheet" href="/3/components/card-gradient.css?v=217eed4fa325">
   <script type="module" src="/3/components/case-cards.js?v=5958af8e0f27"></script>
+  <link rel="stylesheet" href="/3/components/contact.css?v=4edfe8319eaf">
+  <script type="module" src="/3/components/contact.js?v=7c746db8b381"></script>
+  <link rel="stylesheet" href="/3/components/spin-egg.css?v=f12bc42b204e">
+  <script type="module" src="/3/components/spin-egg.js?v=4e61b31e0cfd"></script>
   <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
 </head>
 <body>
@@ -85,6 +89,44 @@
         <noscript><style>.v3-brief__button{display:none}.v3-brief__manual[hidden]{display:block}</style></noscript>
       </div>
     </main>
+    <section class="v3-contact" id="v3-contact" aria-labelledby="v3-contact-title" hidden>
+      <div class="v3-contact__field" aria-hidden="true"><span class="v3-contact__blob v3-contact__blob--violet"></span><span class="v3-contact__blob v3-contact__blob--lilac"></span><span class="v3-contact__blob v3-contact__blob--pink"></span><span class="v3-contact__blob v3-contact__blob--magenta"></span><span class="v3-contact__blob v3-contact__blob--cream"></span></div>
+      <div class="v3-contact__card">
+        <div class="v3-contact__intro">
+          <h2 class="v3-contact__title" id="v3-contact-title">Let’s Talk</h2>
+          <p class="v3-contact__lead"><span>Have a project or opportunity in mind?</span><span>Drop me a message — or just say hello.</span></p>
+        </div>
+        <div class="v3-contact__actions">
+          <a class="v3-contact__resume" role="link" aria-disabled="true"><span>Resume PDF</span><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg></a>
+          <div class="v3-brief" data-v3-brief>
+        <button class="v3-brief__button" type="button" aria-label="Brief your AI — copy Dmitry Rybalka’s briefing prompt" aria-describedby="v3-contact-brief-status">
+          <span class="v3-brief__glass" aria-hidden="true"></span>
+          <span class="v3-brief__content">
+          <span class="v3-brief__label" aria-hidden="true"><span class="v3-brief__idle"><span class="v3-brief__text">Brief your AI</span></span><span class="v3-brief__copied" data-v3-brief-label><img class="v3-brief__check" src="/3/assets/lucide-check.svg?v=7f33acc9a77a" alt="" width="24" height="24"><span class="v3-brief__text">Copied</span></span></span>
+          <span class="v3-brief__logos-space" aria-hidden="true"><span class="v3-brief__logos">
+            <span class="v3-brief__icon v3-brief__icon--claude"><img src="/3/assets/claude.svg?v=e2ddeedefe4c" alt=""></span>
+            <span class="v3-brief__icon v3-brief__icon--openai"><img src="/3/assets/openai.svg?v=6ed5478bb9d6" alt=""></span>
+            <span class="v3-brief__icon"><img src="/3/assets/codex.svg?v=94084f747fd6" alt=""></span>
+            <span class="v3-brief__icon"><img src="/3/assets/copilot.svg?v=3794bb672ef4" alt=""></span>
+            <span class="v3-brief__icon v3-brief__icon--cursor"><img src="/3/assets/cursor.svg?v=dc8a7f7c641f" alt=""></span>
+          </span></span>
+          </span>
+        </button>
+        <span class="v3-brief__status" id="v3-contact-brief-status" role="status" aria-live="polite">Copies a prompt to paste into your AI chat.</span>
+        <div class="v3-brief__manual" hidden>
+          <label for="v3-contact-brief-prompt">Copy this prompt into your AI chat</label>
+          <textarea id="v3-contact-brief-prompt" readonly rows="4" spellcheck="false">Read https://dmitryrybalka.com/llms.txt — it's Dmitry Rybalka's resume and portfolio. Give me a short overview of his experience and key projects, and help me assess his fit for the role I'm hiring for. If you can't open the link, tell me instead of guessing.</textarea>
+        </div>
+        <noscript><style>.v3-brief__button{display:none}.v3-brief__manual[hidden]{display:block}</style></noscript>
+      </div>
+        </div>
+        <div class="v3-contact__links">
+          <a class="v3-contact__link v3-contact__link--email" href="mailto:rebosidium@gmail.com"><span>rebosidium@gmail.com</span><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          <a class="v3-contact__link v3-contact__link--linkedin" href="https://www.linkedin.com/in/ribadima/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          <a class="v3-contact__link v3-contact__link--telegram" href="https://t.me/ribadima" target="_blank" rel="noopener noreferrer"><span>Telegram</span><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+        </div>
+      </div>
+    </section>
   </div>
   <dialog class="v3-mobile-menu" id="v3-mobile-menu" aria-label="Navigation menu">
     <button class="v3-menu-scrim" type="button" tabindex="-1" aria-label="Dismiss menu"></button>
