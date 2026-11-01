@@ -82,6 +82,8 @@ html[data-v3-game] body > :not(dialog):not(.v3-egg) *::after { animation-play-st
 }
 
 /* Desktop hint: Space spins as well. */
-.v3-avatar-keyhint { position: absolute; translate: -50% 0; white-space: nowrap; font: 500 13px/1 'DM Sans', sans-serif; color: #232522; opacity: .5; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.v3-avatar-keyhint { position: absolute; translate: -50% 0; white-space: nowrap; font: 500 15px/1 'DM Sans', sans-serif; color: #000; opacity: 1; transition: opacity 500ms ease; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.v3-avatar-keyhint[data-dismissed] { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .v3-avatar-keyhint { transition: none; } }
 .v3-avatar-keyhint kbd { font: inherit; font-weight: 700; padding: 3px 7px; margin-left: 2px; border-radius: 6px; background: #ffffffb3; box-shadow: inset 0 -1px 0 #0000001f, 0 1px 2px #00000014; }
 @media (hover: hover) and (pointer: fine) { .v3-avatar-actions { padding-bottom: 36px; } }

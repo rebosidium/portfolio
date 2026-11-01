@@ -238,6 +238,13 @@ if (dialog && viewer && actions) {
     hint.className = 'v3-avatar-keyhint'; hint.setAttribute('aria-hidden', 'true');
     hint.innerHTML = 'Click Spin or press <kbd>Space</kbd>';
     actions.append(hint);
+    // Dismiss once per visit, five seconds after the first accepted Spin.
+    // Space uses the same click path; repeated spins do not extend the hint.
+    let hintTimer = 0;
+    spinButton.addEventListener('click', () => {
+      if (spinButton.disabled || !dialog.open || hintTimer || hint.hasAttribute('data-dismissed')) return;
+      hintTimer = setTimeout(() => { hintTimer = 0; hint.dataset.dismissed = ''; }, 5000);
+    });
     const placeHint = () => {
       hint.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
       hint.style.top = (spinButton.offsetTop + spinButton.offsetHeight + 20) + 'px';
