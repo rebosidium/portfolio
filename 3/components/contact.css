@@ -64,7 +64,8 @@ body { position:relative; }
  .v3-contact__resume { height:60px;padding:0 20px;font-size:18px; }
  .v3-contact__resume svg { width:20px;height:20px; }
  .v3-contact__links { flex-direction:column;justify-content:flex-start;align-items:center;gap:20px;max-width:none;min-height:0; }
- .v3-contact__link { font-size:24px;gap:8px;padding:7px 0; }
+ .v3-contact__link { font-size:28px;gap:8px;padding:7px 0;max-width:100%;white-space:normal; }
+ .v3-contact__link span { min-width:0;overflow-wrap:anywhere; }
  .v3-contact__link svg { width:20px;height:20px; }
  .v3-contact__link--telegram { order:1; }
  .v3-contact__link--linkedin { order:2; }
@@ -74,8 +75,11 @@ body { position:relative; }
  .v3-contact__card { width:calc(100% - 48px); }
  .v3-contact__card { padding-inline:16px; }
 }
-@media (max-width:340px) {
- .v3-contact__link { font-size:20px; }
+/* Move the iOS content up independently of the full-bleed gradient field. */
+@supports (-webkit-touch-callout:none) {
+ @media (hover:none) and (pointer:coarse) {
+  .v3-contact__card { top:72px; }
+ }
 }
 @media (max-width:389px) {
  .v3-contact__title { font-size:44px;line-height:56px; }
