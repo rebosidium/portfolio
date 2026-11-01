@@ -1,3 +1,4 @@
+import {createPreparedSpinCache} from './prepared-spin-cache.js?v=6f6b701c2964';
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
@@ -60,14 +61,30 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   let allowBackground=false,preparing=false;
   let stats={draws:0,gaps:[],drawTimes:[],decodeTimes:[],lastDraw:0,waits:0};
 
+  // Only the large Android touch player gets this bounded, full-resolution
+  // fast-spin bank. The 240px thumbnail and oversized tiers keep their decoder.
+  const SPIN_POSES=36,SPIN_BUDGET=96*1024*1024;
+  const spinCache=createPreparedSpinCache({
+    budgetBytes:SPIN_BUDGET,workers:2,
+    decode:index=>decodeBlob(blobs[index],renderSize.slice()),dispose:closeResource,
+    onChange:()=>{if(!destroyed){loadProgress();diagnostics();}}
+  });
+  function usesSpinCache(){return !cursorFollow&&!fixedVariant&&decodeLimited()&&sourceSize[0]*sourceSize[1]*4*SPIN_POSES<=SPIN_BUDGET;}
+  function spinFramesSettled(){return !usesSpinCache()||spinCache.ready||spinCache.failed;}
+  function prepareSpinFrames(){
+    if(!usesSpinCache()||!ready||!currentStartupReady||preparing||introFrames.size||document.hidden||media.matches||!encodedAllReady||spinCache.ready||spinCache.busy||spinCache.failed)return;
+    const indices=Array.from({length:SPIN_POSES},(_,i)=>angleToIndex(i*360/SPIN_POSES));
+    void spinCache.prepare(indices,sourceSize[0]*sourceSize[1]*4);
+  }
+
   const wrap=(value,length)=>((value%length)+length)%length;
   const angleDistance=(a,b)=>Math.abs(wrap(a-b+180,360)-180);
   const shortestDelta=(a,b)=>wrap(a-b+180,360)-180;
   const cancelled=()=>new DOMException('Cancelled','AbortError');
   function loadingState(){
     const desiredQuality=chooseVariant(),qualityReady=currentStartupReady&&loadQuality===desiredQuality;
-    return Object.freeze({generation,quality:loadQuality,desiredQuality,ready:qualityReady,allReady:encodedAllReady,
-      loading:loadAttemptActive&&!(qualityReady&&encodedAllReady&&activeChunks.size===0),error:loadError,activeDownloads:activeChunks.size});
+    return Object.freeze({generation,quality:loadQuality,desiredQuality,ready:qualityReady,allReady:encodedAllReady&&spinFramesSettled(),
+      loading:loadAttemptActive&&!(qualityReady&&encodedAllReady&&spinFramesSettled()&&activeChunks.size===0),error:loadError,activeDownloads:activeChunks.size});
   }
   function notifyLoading(){
     const state=loadingState();
@@ -120,7 +137,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     Object.assign(canvas.dataset,{
       mode,phase:currentAngle.toFixed(3),targetPhase:targetAngle.toFixed(3),velocity:inertiaVelocity.toFixed(2),dragTurns:String(DRAG_TURNS),drawCount:String(stats.draws),maxGapMs:Math.max(0,...stats.gaps).toFixed(1),p95GapMs:percentile(stats.gaps,.95).toFixed(1),
       p95DrawMs:percentile(stats.drawTimes,.95).toFixed(2),p95DecodeMs:percentile(stats.decodeTimes,.95).toFixed(1),decodeWaits:String(stats.waits),
-      decodedCacheCount:String(resources.length),bitmapMemoryMiB:(pixels*4/1024/1024).toFixed(2),encodedBytes:String(loadedBytes),
+      decodedCacheCount:String(resources.length),bitmapMemoryMiB:((pixels*4+spinCache.memoryBytes)/1024/1024).toFixed(2),spinCacheCount:String(spinCache.entries.length),spinCacheMiB:(spinCache.memoryBytes/1024/1024).toFixed(2),spinCacheState:spinCache.ready?'ready':spinCache.busy?'preparing':spinCache.failed?'fallback':'empty',encodedBytes:String(loadedBytes),
       encodedReadyCount:String(loadedCount),renderSize:renderSize.join('x'),sourceSize:sourceSize.join('x'),networkDuringInteraction:String(runtimeFetches),activeDownloads:String(activeChunks.size)
     });
   }
@@ -131,6 +148,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     bitmapEpoch++;
     for(const entry of cache.values()){if(entry.state==='ready')closeResource(entry.resource);rejectWaiters(entry,cancelled())}
     cache.clear();queue.length=0;failedFrames.clear();
+    diagnostics();
   }
   function menuReboundFrames(){
     // Prepare the rebound before crossing front; predictive decoding can skip it.
@@ -300,6 +318,23 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     [...new Set(indices)].forEach((candidate,i)=>requestDecode(candidate,i));
   }
   function paintMotion(angle,velocity){
+    if(mode==='power-spin'&&powerSpin?.prepared&&spinCache.ready){
+      if(!powerSpin.detail&&Math.abs(velocity)>400){
+        let best=null,distance=Infinity;
+        for(const entry of spinCache.entries){const delta=angleDistance(indexToAngle(entry.index),angle);if(delta<distance){best=entry;distance=delta;}}
+        // Keep the fine decoder warm for the slow finish and subsequent drag.
+        warmMotion(angle,velocity);
+        if(best&&best.index!==displayedIndex)draw(best,indexToAngle(best.index));
+        lastMotionPhase=angle+shortestDelta(indexToAngle(best.index),angle);
+        canvas.dataset.mode=mode;canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.displayPhase=lastMotionPhase.toFixed(3);canvas.dataset.spinPresentation='prepared';
+        return;
+      }
+      // Change to detail once per impulse. If the nearest prepared view was
+      // just ahead of the clock, hold briefly rather than stepping backwards.
+      powerSpin.detail=true;
+      if(velocity>0&&angle<lastMotionPhase){warmMotion(lastMotionPhase,velocity);return;}
+      canvas.dataset.spinPresentation='detail';
+    }
     if(!decodeLimited()){paintMotionLegacy(angle,velocity);return}
     const delta=angle-lastMotionPhase,direction=Math.sign(delta)||Math.sign(velocity)||lastMotionDirection||1;
     lastMotionDirection=direction;
@@ -500,6 +535,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
     if(ready&&startupSettled&&!preparing)warmWindow(Math.max(0,displayedIndex),1);
     if(prepared)checkResize();
+    if(ready&&!preparing)loadProgress();
   }
   function startIntro({replay=false}={}){
     clearTimeout(resizeTimer);
@@ -548,19 +584,23 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function spin(turns=4,{duration=3600,returnToFront:restoreFront=false}={}){
     if(destroyed||!ready||preparing||media.matches||document.hidden)return false;
     releaseDrag();skipIntro();stop();beginStats();
-    powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:Math.max(700,Math.min(6000,duration)),restoreFront};
+    powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:Math.max(700,Math.min(6000,duration)),restoreFront,prepared:usesSpinCache()&&spinCache.ready,detail:false};
     targetAngle=currentAngle+powerSpin.turns*360;mode='power-spin';previousTick=0;
     canvas.dataset.spinTurns=String(powerSpin.turns);canvas.dataset.spinProgress='0';
     scheduleRender();return true;
   }
   function renderPowerSpin(elapsed){
     if(!powerSpin)return;
-    powerSpin.time=Math.min(powerSpin.duration,powerSpin.time+elapsed);
+    // A dropped browser frame must not advance a prepared portrait by 120deg.
+    // Only this large-player impulse clock is capped; drag/intro/return retain
+    // their existing timing, and the impulse still completes its full turns.
+    const spinElapsed=powerSpin.prepared?Math.min(elapsed,25):elapsed;
+    powerSpin.time=Math.min(powerSpin.duration,powerSpin.time+spinElapsed);
     const t=powerSpin.time/powerSpin.duration;
     const eased=1-Math.pow(1-t,4);
     const before=currentAngle;
     currentAngle=powerSpin.from+powerSpin.turns*360*eased;
-    const velocity=elapsed?(currentAngle-before)*1000/elapsed:0;
+    const velocity=spinElapsed?(currentAngle-before)*1000/spinElapsed:0;
     paintMotion(currentAngle,velocity);
     canvas.dataset.spinProgress=t.toFixed(3);canvas.dataset.spinSpeed=velocity.toFixed(2);
     if(t===1){
@@ -615,10 +655,14 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function loadProgress(){
     canvas.dataset.activeDownloads=String(activeChunks.size);
     Object.assign(canvas.dataset,{encodedReadyCount:String(loadedCount),encodedBytes:String(loadedBytes),totalBytes:String(variant?.encoded_bytes||0)});
-    if(urls.length>0&&loadedCount===urls.length){
-      encodedAllReady=true;canvas.dataset.allReady='true';
-      if(!canvas.dataset.allLoadedMs)canvas.dataset.allLoadedMs=(performance.now()-loadStartedAt).toFixed(1);
-      settleAllFrames(true);
+    if(loadAttemptActive&&urls.length>0&&loadedCount===urls.length){
+      encodedAllReady=true;
+      prepareSpinFrames();
+      if(spinFramesSettled()){
+        canvas.dataset.allReady='true';
+        if(!canvas.dataset.allLoadedMs)canvas.dataset.allLoadedMs=(performance.now()-loadStartedAt).toFixed(1);
+        settleAllFrames(true);
+      }else delete canvas.dataset.allReady;
     }
     notifyLoading();
   }
@@ -779,7 +823,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   async function init(){
     if(destroyed||media.matches||document.hidden)return;
     const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn,resumeMenuReturn=menuReturnRequested,resumeTouchReturn=touchReturn;
-    const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
+    const token=beginLoading();spinCache.clear();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
     const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
     releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;menuReturnRequested=resumeMenuReturn;touchReturn=resumeTouchReturn;ready=false;bufferReady=false;preparing=true;
@@ -831,7 +875,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       preparing=false;
       diagnostics();
       stage.dataset.spinReady='true';stage.tabIndex=0;stage.setAttribute('aria-busy','false');canvas.dataset.ready='true';canvas.dataset.preloadMs=(performance.now()-loadStartedAt).toFixed(1);
-      currentStartupReady=true;notifyLoading();
+      currentStartupReady=true;loadProgress();
       settleStartup(true);queuePump();resizeObserver?.observe(stage);checkResize();
       if(returnRequested){
         // Encoded pose angles wrap at 360; keep a small negative spring overshoot negative.
@@ -855,7 +899,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       if(manifest&&chooseVariant()!==canvas.dataset.quality){init();return}
       const next=physicalSize();
       if(fixedVariant==='240-dark'?next[0]===renderSize[0]&&next[1]===renderSize[1]:Math.abs(next[0]-renderSize[0])<8&&Math.abs(next[1]-renderSize[1])<8)return;
-      renderSize=next;clearDecoded();wantedIndex=Math.max(0,displayedIndex);
+      renderSize=next;clearDecoded();loadProgress();wantedIndex=Math.max(0,displayedIndex);
       if(introFrames.size){requestDecode(wantedIndex,0);for(const index of introFrames)requestDecode(index,1)}
       else warmWindow(wantedIndex,1);
       scheduleRender();
@@ -979,6 +1023,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     checkResize();queuePump();if(ready)scheduleRender();
   }
   function suspend(error=''){
+    spinCache.clear();
     settleAllFrames(false);generation++;
     currentStartupReady=encodedAllReady=loadAttemptActive=false;loadError=error;
     allFramesPromise=Promise.resolve(Object.freeze({generation,quality:loadQuality,ready:false}));
@@ -997,7 +1042,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   listen(media,'change',()=>{if(media.matches)fallback();else init()});
   // Preserve partial frame downloads when a tab becomes visible again.
-  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready&&!loadAttemptActive)init();else{queuePump();checkResize();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
+  listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready&&!loadAttemptActive)init();else{queuePump();checkResize();loadProgress();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
   listen(window,'pageshow',event=>{if(event.persisted&&!ready)init()});
   if(mobileLayout)cleanup.push(mountMobilePortraitScroll(stage,{
