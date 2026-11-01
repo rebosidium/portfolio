@@ -1,5 +1,5 @@
-// Easter egg: clicking Spin three times in a row shows a top notification, and
-// carrying on quickly piles up short jokes that stack, wobble loose and fall away.
+// Easter egg: clicking Spin shows a top notification, and carrying on quickly
+// piles up short jokes that stack, wobble loose and fall away.
 // Three kinds of jokes, shown in rotation: office/manager, designer, technical.
 const JOKES = {
   office: [
@@ -226,6 +226,7 @@ document.addEventListener('click', event => {
   const now = performance.now();
   streak = now - lastClick <= STREAK_GAP ? streak + 1 : 1;
   lastClick = now;
-  if (streak === 3) { turn = 0; spawn('You are now a developer!', true); }
-  else if (streak > 3) spawn(nextPhrase(), false);
+  // The first click of a streak shows the developer notice; quick follow-ups pile up jokes.
+  if (streak === 1) { turn = 0; spawn('You are now a developer!', true); }
+  else spawn(nextPhrase(), false);
 }, {passive: true});
