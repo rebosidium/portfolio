@@ -92,7 +92,8 @@ const JOKES = {
     'Mobile first, desktop last, designer never',
     'Logo in 5 minutes (it’s our whole brand)',
     'Wireframe approved. Colour: surprise me.',
-    'Dribbble 🏀 says yes. Users say: where’s the button?'
+    'Dribbble 🏀 says yes. Users say: where’s the button?',
+    'It’s Triple 💎💎💎 Diamond!'
   ],
   tech: [
     'Compiling confidence…',
