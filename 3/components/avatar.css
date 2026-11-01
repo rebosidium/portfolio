@@ -145,3 +145,6 @@ html[data-v3-android] .v3-avatar-mesh { display:none!important; }
 .v3-avatar-large picture { display:contents; }
 .v3-avatar-large[data-welcome-pending] canvas { visibility:hidden; }
 .v3-avatar-large[data-welcome-pending] img { visibility:visible; }
+
+/* Animated colour background behind the portrait removed (heaviest idle effect); the frosted backdrop stays. */
+.v3-avatar-mesh { display: none !important; }

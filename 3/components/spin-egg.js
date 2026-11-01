@@ -221,7 +221,7 @@ function step(now) {
   if (falling.size) raf = requestAnimationFrame(step);
   else {
     raf = 0;
-    if (!live.length && host?.matches?.(':popover-open')) { try { host.hidePopover(); } catch { /* Already hidden. */ } }
+    if (!live.length && !host?.querySelector('.v3-fly-num,.v3-fly-ring') && host?.matches?.(':popover-open')) { try { host.hidePopover(); } catch { /* Already hidden. */ } }
   }
 }
 // The first five clicks (even with pauses between them) show a fixed opening, like Android's

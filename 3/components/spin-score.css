@@ -1,0 +1,36 @@
+/* "Hamster combat" for the portrait Spin button (/4 test): the score sits right of Spin, each
+   click throws bright "+N" bursts sideways out of the button, Hide is a round X in the corner. */
+.v3-avatar-actions { position: relative; }
+.v3-avatar-actions { padding: 92px 0 36px; }
+.v3-avatar-score { position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
+.v3-avatar-score b { font-size: 48px; font-weight: 800; letter-spacing: -.5px; }
+.v3-avatar-coins { position: absolute; left: 50%; top: 0; translate: -50% 0; font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease; user-select: none; -webkit-user-select: none; pointer-events: none; }
+.v3-avatar-coins[data-empty] { opacity: .32; }
+.v3-avatar-score[data-empty] { opacity: .32; }
+.v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
+.v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.v3-fly-num { --stroke: #ff8a2a; --glow: #ffd23f; position: absolute; z-index: 5; left: 0; top: 0; font: 800 30px/1 'DM Sans', sans-serif; color: #fff; white-space: nowrap; will-change: transform, opacity; -webkit-text-stroke: 5px var(--stroke); paint-order: stroke fill; text-shadow: 0 0 10px var(--glow), 0 0 22px var(--glow), 0 0 40px var(--glow), 0 3px 0 #00000026; }
+.v3-fly-num[data-tier="2"] { --stroke: #ff6a3d; --glow: #ffb347; }
+.v3-fly-num[data-tier="3"] { --stroke: #ff2f92; --glow: #ff8ad0; }
+.v3-fly-num[data-tier="4"] { --stroke: #7a4dff; --glow: #6fd6ff; }
+.v3-fly-ring { position: absolute; z-index: 5; width: 96px; height: 54px; border-radius: 100px; border: 3px solid #fff; box-shadow: 0 0 18px 2px #ffd23f, inset 0 0 14px #ffffffb0; will-change: transform, opacity; }
+.v3-fly-ring[data-tier="3"] { box-shadow: 0 0 20px 3px #ff8ad0, inset 0 0 14px #ffffffb0; }
+.v3-fly-ring[data-tier="4"] { box-shadow: 0 0 22px 4px #6fd6ff, inset 0 0 14px #ffffffb0; }
+/* Hide: a plain round glass button with only the cross, top right. */
+.v3-avatar-hide { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 16px); right: 16px; z-index: 6; width: 48px; height: 48px; padding: 0; gap: 0; border-radius: 50%; }
+.v3-avatar-hide span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 800px) { .v3-avatar-score { font-size: 18px; } .v3-avatar-score b { font-size: 42px; } .v3-fly-num { font-size: 26px; } }
+@media (prefers-reduced-motion: reduce) { .v3-avatar-score { transition: none; } }
+/* Leave room for the score above the buttons on short screens; the portrait is 30% smaller on desktop. */
+.v3-avatar-large { width: min(86vw, calc(100dvh - 250px), 860px); }
+@media (min-width: 801px) { .v3-avatar-large { width: calc(min(86vw, calc(100dvh - 250px), 860px) * .7); } }
+
+/* Hide (round X): a clearly visible hover. */
+.v3-avatar-hide { transition: transform 220ms cubic-bezier(.22, 1, .36, 1), background-color 200ms ease, box-shadow 220ms ease; }
+.v3-avatar-hide img { transition: transform 320ms cubic-bezier(.22, 1, .36, 1); }
+@media (hover: hover) and (pointer: fine) {
+  .v3-avatar-hide:hover { transform: scale(1.14); background: #ffffff; box-shadow: 0 8px 26px #0000002e, inset 0 1px 0 #fff; }
+  .v3-avatar-hide:hover img { transform: rotate(90deg) scale(1.08); }
+}
+.v3-avatar-hide:active { transform: scale(.92); }
+@media (prefers-reduced-motion: reduce) { .v3-avatar-hide, .v3-avatar-hide img { transition: none; } .v3-avatar-hide:hover img { transform: none; } }

@@ -35,9 +35,16 @@ if(section){
   frame=0;
   if(!cardW||!stageW)return;
   const sectionTop=section.getBoundingClientRect().top,vh=innerHeight;
-  if(sectionTop>vh*1.2)return;
-  const linear=reduced.matches?1:clamp(1-sectionTop/vh,0,1),e=linear*linear*(3-2*linear);
-  const key=[e.toFixed(4),stageW,stageH,smallH,cardW,cardH,radius].join('|');
+  if(sectionTop>vh*1.2){ // far above the footer (e.g. jumped to the top): drop the Safari bar tint
+   if(bleed){bleed=false;lastKey='';const root=document.documentElement.style;root.backgroundColor='';root.backgroundImage='';root.backgroundAttachment='';}
+   return;
+  }
+  // The widening starts once the block is half on screen (top edge at mid-height) and ends
+  // when it reaches the top; the content keeps its own earlier timing.
+  const smoothstep=t=>t*t*(3-2*t);
+  const progress=reduced.matches?1:clamp(1-sectionTop/vh,0,1),ep=smoothstep(progress);
+  const e=smoothstep(reduced.matches?1:clamp(1-2*sectionTop/vh,0,1));
+  const key=[e.toFixed(4),ep.toFixed(4),stageW,stageH,smallH,cardW,cardH,radius].join('|');
   if(key===lastKey)return;
   lastKey=key;
   // The clip is as tall as the screen from the start and never grows upward:
@@ -53,7 +60,7 @@ if(section){
   const fit=clamp((smallH-32)/cardH,.7,1);
   card.style.transform=fit<1?`scale(${fit.toFixed(4)})`:'';
   for(const {el,delay,distance} of parts){
-   const q=reduced.matches?1:ease(clamp((e-delay)/.4,0,1));
+   const q=reduced.matches?1:ease(clamp((ep-delay)/.4,0,1));
    if(!distance){el.style.opacity='';el.style.transform='';continue;}
    el.style.opacity=Math.min(1,q*1.6).toFixed(3);
    el.style.transform=`translate3d(0,${((1-q)*distance).toFixed(1)}px,0)`;
