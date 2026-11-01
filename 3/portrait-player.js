@@ -694,7 +694,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // A hidden, retained modal has no layout width. Use its future CSS width
     // to preload the correct quality instead of restarting when it opens.
     const physical=(stage.clientWidth||displayWidth?.()||311)*Math.max(1,window.devicePixelRatio||1);
-    const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
+    let quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
+    // Mouse desktops follow a finer ladder (600/700/800/900, then 1200): the smallest set that is at most
+    // 24 px short of the physical width, so a 458 px (916 physical) portrait no longer pulls the 27 MB set.
+    if(!navigator.connection?.saveData&&pointerDesktop.matches)quality=String([600,700,800,900].find(size=>size+24>=physical)||1200);
     // Shared cleaned set; historical filenames stay exact for cache/rollback.
     return retainQuality&&Number.parseInt(loadQuality,10)>Number(quality)?loadQuality:quality+'-dark';
   }
