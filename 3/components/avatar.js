@@ -5,7 +5,7 @@ import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
 // The head flag uses the same Android + coarse pointer test as the player choice.
 const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
 const playerModule = androidTouch
-  ? '../portrait-player-android.js?v=0663aa751340' : '../portrait-player.js?v=c9cdb5233e30';
+  ? '../portrait-player-android.js?v=f9a6f7670972' : '../portrait-player.js?v=e1b375aa8218';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -19,7 +19,7 @@ const loadingStatus=dialog.querySelector('.v3-avatar-loading-status');
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const navigation=document.querySelector('.v3-mobile-menu');
 const mobileNavigation=matchMedia('(max-width:767px), (max-width:1023px) and (pointer:coarse)');
-const manifestURL=new URL('../assets/seedance-manifest.json?v=c45a38e5741a',import.meta.url).href;
+const manifestURL=new URL('../assets/seedance-manifest.json?v=22597dad6c35',import.meta.url).href;
 let mountPortrait,smallPlayer,largePlayer,largeState=null,moduleFailed=false;
 let openGeneration=0,welcomeGeneration=-1,backgroundWelcomeGeneration=-1;
 let preloadAllowed=false,preloadQueued=false,pageReady=false;

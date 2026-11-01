@@ -160,8 +160,16 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     try{context.drawImage(drawable,0,0,surface.width,surface.height)}finally{dispose()}
     return {drawable:surface,width:surface.width,height:surface.height,dispose:()=>{surface.width=surface.height=0}};
   }
+  // Mouse desktops draw manual frames from one source-size decode and let the canvas scale them: a
+  // per-frame high-quality resize in createImageBitmap made manual dragging stutter once the portrait
+  // was shown smaller than its tier. Touch devices (iPhone memory) keep the resized decode.
+  const pointerDesktop=matchMedia('(hover: hover) and (pointer: fine)');
   async function decodeBlob(blob,size){
     if(typeof createImageBitmap==='function'){
+      if(pointerDesktop.matches&&introConsumed&&!introFrames.size&&(sourceSize[0]>size[0]||sourceSize[1]>size[1])){
+        const full=await createImageBitmap(blob);
+        return {drawable:full,width:full.width,height:full.height,dispose:()=>full.close()};
+      }
       let bitmap;
       try{bitmap=await createImageBitmap(blob,{resizeWidth:size[0],resizeHeight:size[1],resizeQuality:'high'})}
       catch{bitmap=await createImageBitmap(blob)}

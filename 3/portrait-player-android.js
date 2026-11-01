@@ -64,6 +64,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   // Only the large Android touch player gets this bounded, full-resolution
   // fast-spin bank. The 240px thumbnail and oversized tiers keep their decoder.
   const SPIN_POSES=36,SPIN_BUDGET=96*1024*1024;
+  // The impulse follows a known curve, so the fine frames of its slow finish are decoded ahead of time.
+  const SPIN_PLAN_MS=250,SPIN_PLAN_STEP=1000/60,SPIN_TAIL_LIMIT=20,SPIN_FALLBACK_REACH=7;
   const spinCache=createPreparedSpinCache({
     budgetBytes:SPIN_BUDGET,workers:2,
     decode:index=>decodeBlob(blobs[index],renderSize.slice()),dispose:closeResource,
@@ -137,7 +139,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     Object.assign(canvas.dataset,{
       mode,phase:currentAngle.toFixed(3),targetPhase:targetAngle.toFixed(3),velocity:inertiaVelocity.toFixed(2),dragTurns:String(DRAG_TURNS),drawCount:String(stats.draws),maxGapMs:Math.max(0,...stats.gaps).toFixed(1),p95GapMs:percentile(stats.gaps,.95).toFixed(1),
       p95DrawMs:percentile(stats.drawTimes,.95).toFixed(2),p95DecodeMs:percentile(stats.decodeTimes,.95).toFixed(1),decodeWaits:String(stats.waits),
-      decodedCacheCount:String(resources.length),bitmapMemoryMiB:((pixels*4+spinCache.memoryBytes)/1024/1024).toFixed(2),spinCacheCount:String(spinCache.entries.length),spinCacheMiB:(spinCache.memoryBytes/1024/1024).toFixed(2),spinCacheState:spinCache.ready?'ready':spinCache.busy?'preparing':spinCache.failed?'fallback':'empty',encodedBytes:String(loadedBytes),
+      decodedCacheCount:String(resources.length),bitmapMemoryMiB:((pixels*4+spinCache.memoryBytes)/1024/1024).toFixed(2),spinFallbacks:String(stats.fallbacks||0),spinCacheCount:String(spinCache.entries.length),spinCacheMiB:(spinCache.memoryBytes/1024/1024).toFixed(2),spinCacheState:spinCache.ready?'ready':spinCache.busy?'preparing':spinCache.failed?'fallback':'empty',encodedBytes:String(loadedBytes),
       encodedReadyCount:String(loadedCount),renderSize:renderSize.join('x'),sourceSize:sourceSize.join('x'),networkDuringInteraction:String(runtimeFetches),activeDownloads:String(activeChunks.size)
     });
   }
@@ -156,7 +158,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function trimCache(){
     const decoded=[...cache.values()].filter(e=>e.state==='ready');
-    const limit=introFrames.size?introFrames.size+2:CACHE_LIMIT;
+    const limit=introFrames.size?introFrames.size+2:(powerSpin?.prepared?SPIN_TAIL_LIMIT:CACHE_LIMIT);
     const rebound=new Set(menuReboundFrames());
     const removable=decoded.filter(e=>!introFrames.has(e.index)&&!rebound.has(e.index)&&e.index!==displayedIndex&&e.index!==wantedIndex).sort((a,b)=>a.used-b.used);
     let count=decoded.length;
@@ -174,7 +176,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // Keep touch interaction at the same 2× CSS raster budget as the smooth
     // predecoded welcome turn. The selected encoded quality remains unchanged.
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()||!introConsumed||introFrames.size?2:Infinity));
-    const w=Math.min(sourceSize[0],Math.max(1,Math.ceil(width*ratio)));
+    // A canvas a few pixels short of the source (e.g. 699 of 700) uses the source size, so frames draw 1:1.
+    const wanted=Math.ceil(width*ratio);
+    const w=Math.min(sourceSize[0],Math.max(1,wanted<sourceSize[0]&&sourceSize[0]-wanted<=12?sourceSize[0]:wanted));
     return [w,Math.max(1,Math.round(w*sourceSize[1]/sourceSize[0]))];
   }
   function sizedResource(drawable,width,height,size,dispose){
@@ -317,13 +321,52 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
     [...new Set(indices)].forEach((candidate,i)=>requestDecode(candidate,i));
   }
+  // Angle and speed of the running impulse `ms` from now (ease-out quartic, same as renderPowerSpin).
+  function spinAngleAt(ms){
+    const duration=powerSpin.duration,time=Math.min(duration,powerSpin.time+ms),t=time/duration;
+    const span=powerSpin.turns*360;
+    return {angle:powerSpin.from+span*(1-Math.pow(1-t,4)),velocity:span*4*Math.pow(1-t,3)/(duration/1000)};
+  }
+  // Decode, in deadline order and without cancelling, the fine frames the next ~250 ms will show:
+  // above 400°/s the prepared poses are drawn (nothing to decode), 100–400°/s every second frame is
+  // enough, below that all of them.
+  function planSpinDecode(){
+    resetChunkPriorities();
+    const steps=Math.round(SPIN_PLAN_MS/SPIN_PLAN_STEP),wanted=new Set(),ordered=[];
+    const add=(angle,priority)=>{const index=angleToIndex(angle);if(!wanted.has(index)){wanted.add(index);ordered.push([index,priority])}};
+    add(currentAngle,0);
+    for(let k=1;k<=steps;k++){
+      const {angle,velocity}=spinAngleAt(k*SPIN_PLAN_STEP),speed=Math.abs(velocity);
+      if(speed>400||(speed>100&&k%2))continue;
+      add(angle,k);
+    }
+    if(displayedIndex>=0)wanted.add(displayedIndex);
+    for(let i=queue.length-1;i>=0;i--){const entry=queue[i];if(!wanted.has(entry.index)){queue.splice(i,1);if(cache.get(entry.index)===entry)cache.delete(entry.index);rejectWaiters(entry,cancelled())}}
+    ordered.forEach(([index,priority])=>requestDecode(index,priority));
+  }
+  // The fine frame is late: show the nearest prepared pose that is not behind the picture and at most
+  // SPIN_FALLBACK_REACH° from the clock, instead of freezing.
+  function drawSpinFallback(angle,direction){
+    let best=null,distance=Infinity;
+    for(const entry of spinCache.entries){
+      const poseAngle=indexToAngle(entry.index);
+      if(wrap((poseAngle-lastMotionPhase)*direction,360)>180)continue;      // behind the visible pose
+      const delta=angleDistance(poseAngle,angle);
+      if(delta<distance){best=entry;distance=delta}
+    }
+    if(!best||distance>SPIN_FALLBACK_REACH)return false;
+    if(best.index!==displayedIndex)draw(best,indexToAngle(best.index));
+    lastMotionPhase=angle+shortestDelta(indexToAngle(best.index),angle);
+    stats.fallbacks=(stats.fallbacks||0)+1;
+    return true;
+  }
   function paintMotion(angle,velocity){
     if(mode==='power-spin'&&powerSpin?.prepared&&spinCache.ready){
       if(!powerSpin.detail&&Math.abs(velocity)>400){
         let best=null,distance=Infinity;
         for(const entry of spinCache.entries){const delta=angleDistance(indexToAngle(entry.index),angle);if(delta<distance){best=entry;distance=delta;}}
-        // Keep the fine decoder warm for the slow finish and subsequent drag.
-        warmMotion(angle,velocity);
+        // The decoders are idle here: prepare the fine frames of the slow finish.
+        planSpinDecode();
         if(best&&best.index!==displayedIndex)draw(best,indexToAngle(best.index));
         lastMotionPhase=angle+shortestDelta(indexToAngle(best.index),angle);
         canvas.dataset.mode=mode;canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.displayPhase=lastMotionPhase.toFixed(3);canvas.dataset.spinPresentation='prepared';
@@ -332,7 +375,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       // Change to detail once per impulse. If the nearest prepared view was
       // just ahead of the clock, hold briefly rather than stepping backwards.
       powerSpin.detail=true;
-      if(velocity>0&&angle<lastMotionPhase){warmMotion(lastMotionPhase,velocity);return;}
+      if(velocity>0&&angle<lastMotionPhase){planSpinDecode();return;}
       canvas.dataset.spinPresentation='detail';
     }
     if(!decodeLimited()){paintMotionLegacy(angle,velocity);return}
@@ -343,7 +386,9 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const step=mode==='drag'&&drag?.touch?24:DECODE_MAX_STEP;
     const limit=Math.min(32,step*Math.max(.5,motionElapsed/(1000/60)));
     const advance=Math.min(Math.abs(delta),limit),nextPhase=lastMotionPhase+direction*advance;
-    wantedIndex=angleToIndex(nextPhase);warmMotion(nextPhase,velocity);
+    wantedIndex=angleToIndex(nextPhase);
+    const planned=mode==='power-spin'&&powerSpin?.prepared&&spinCache.ready;
+    if(planned)planSpinDecode();else warmMotion(nextPhase,velocity);
     let best=null,bestAdvance=-1,bestPhase=lastMotionPhase;
     for(const entry of cache.values()){
       if(entry.state!=='ready')continue;
@@ -352,7 +397,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       if(step>bestAdvance){best=entry;bestAdvance=step;bestPhase=lastMotionPhase+direction*step}
     }
     if(best&&(best.index!==displayedIndex||Number(canvas.dataset.bitmapEpoch)!==bitmapEpoch)){draw(best,indexToAngle(best.index));lastMotionPhase=bestPhase}
-    else if(!best||advance>1.6&&bestAdvance<.1)stats.waits++;
+    else if(!best||advance>1.6&&bestAdvance<.1){if(!(planned&&drawSpinFallback(angle,direction)))stats.waits++}
     canvas.dataset.mode=mode;canvas.dataset.phase=currentAngle.toFixed(3);canvas.dataset.targetPhase=targetAngle.toFixed(3);canvas.dataset.velocity=inertiaVelocity.toFixed(2);
     canvas.dataset.displayPhase=lastMotionPhase.toFixed(3);canvas.dataset.motionMaxStep=String(step);
   }
@@ -791,7 +836,11 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const ratio=Math.max(1,Math.min(window.devicePixelRatio||1,decodeLimited()?2:Infinity));
     // Hidden modal preloading uses the same future layout width as reopening.
     const physical=(stage.clientWidth||displayWidth?.()||311)*ratio;
-    const quality=navigator.connection?.saveData?'600':physical<=600?'600':physical<=800?'800':'1200';
+    // Tier ladder 600 / 700 / 800: the smallest set that is not more than TIER_SLACK px short of the
+    // physical width (a few pixels of upscale are invisible); 1200 only for larger rasters.
+    const TIER_SLACK=12,tiers=[400,600,700,800];
+    const fit=tiers.find(size=>size+TIER_SLACK>=physical);
+    const quality=navigator.connection?.saveData?'600':String(fit||1200);
     // Shared cleaned set; historical filenames stay exact for cache/rollback.
     return retainQuality&&Number.parseInt(loadQuality,10)>Number(quality)?loadQuality:quality+'-dark';
   }
