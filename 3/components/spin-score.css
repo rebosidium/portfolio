@@ -1,11 +1,10 @@
 /* "Hamster combat" for the portrait Spin button (/4 test): the score sits right of Spin, each
    click throws bright "+N" bursts sideways out of the button, Hide is a round X in the corner. */
 .v3-avatar-actions { position: relative; }
-.v3-avatar-actions { padding: 92px 0 36px; }
-.v3-avatar-score { position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
+.v3-avatar-actions { padding: 106px 0 0; }
+.v3-avatar-score { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
 .v3-avatar-score b { font-size: 48px; font-weight: 800; letter-spacing: -.5px; }
-.v3-avatar-coins { position: absolute; left: 50%; top: 0; translate: -50% 0; font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease; user-select: none; -webkit-user-select: none; pointer-events: none; }
-.v3-avatar-coins[data-empty] { opacity: .32; }
+.v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
 .v3-avatar-score[data-empty] { opacity: .32; }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
 .v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }

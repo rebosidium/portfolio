@@ -11,11 +11,10 @@ if (dialog && viewer && actions) {
   const score = document.createElement('div');
   score.className = 'v3-avatar-score'; score.setAttribute('aria-hidden', 'true');
   const number = document.createElement('b');
-  score.append(number);
+  const coins = document.createElement('div');      // small caption right under the digits
+  coins.className = 'v3-avatar-coins'; coins.textContent = 'COINS';
+  score.append(number, coins);
   actions.append(score);
-  const coins = document.createElement('div');      // small caption under the Spin button
-  coins.className = 'v3-avatar-coins'; coins.setAttribute('aria-hidden', 'true'); coins.textContent = 'COINS';
-  actions.append(coins);
   const spinButton = actions.querySelector('.v3-avatar-spin'), hideButton = actions.querySelector('.v3-avatar-hide');
   hideButton?.setAttribute('aria-label', 'Hide');
   // Keep the score centred above Spin, with the same visual gap above the digits (down to the
@@ -26,15 +25,14 @@ if (dialog && viewer && actions) {
     if (!spinButton || !spinButton.offsetWidth) return;
     score.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
     const fs = parseFloat(getComputedStyle(number).fontSize) || 40;
-    const glyphTop = .16 * fs, glyphHeight = .71 * fs;     // digits inside the line box, in px for DM Sans
+    const glyphTop = .16 * fs;                              // digits start this far inside the score box
+    const glyphHeight = Math.max(10, score.offsetHeight - glyphTop - 2);   // digits + the COINS caption
     const spinTop = spinButton.getBoundingClientRect().top;
     const box = large?.getBoundingClientRect();
     const artBottom = box && box.height ? box.top + box.height * ART_BOTTOM : spinTop - glyphHeight - 28;
     const gap = Math.max(8, (spinTop - artBottom - glyphHeight) / 2);
     const top = artBottom + gap - glyphTop;                 // viewport y of the score box
     score.style.top = (top - actions.getBoundingClientRect().top) + 'px';
-    coins.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
-    coins.style.top = (spinButton.offsetTop + spinButton.offsetHeight + 12) + 'px';
   };
   new ResizeObserver(placeScore).observe(actions);
   if (large) new ResizeObserver(placeScore).observe(large);
@@ -47,7 +45,6 @@ if (dialog && viewer && actions) {
   const show = () => {
     number.textContent = format(total);
     score.toggleAttribute('data-empty', total === 0);
-    coins.toggleAttribute('data-empty', total === 0);
     placeScore();
   };
   show();
