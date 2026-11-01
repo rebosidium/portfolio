@@ -785,7 +785,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const armDeadline=()=>{clearTimeout(deadline);deadline=setTimeout(()=>{chunk.timedOut=true;localController.abort(new Error('Frame download timeout'))},15000)};
     armDeadline();
     try{
-      const response=await trackedFetch(chunk.file,{signal:localController.signal,cache:'force-cache',priority:sequentialDownloads?'low':chunk.startup?'high':'low'});
+      const response=await trackedFetch(chunk.file,{signal:localController.signal,cache:chunk.attempts?'reload':'force-cache',priority:sequentialDownloads?'low':chunk.startup?'high':'low'});
       if(!response.ok)throw new Error('Не удалось загрузить часть поворота.');
       const bytes=new Uint8Array(chunk.bytes);let received=0,cursor=0;
       const expose=()=>{
@@ -870,7 +870,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(!value||!Number.isInteger(count)||count<2||count>1000||!Array.isArray(value.size)||value.size.length!==2||!value.size.every(n=>Number.isInteger(n)&&n>0&&n<=4096)||!Array.isArray(value.chunks)||!value.chunks.length)throw new Error('Не удалось прочитать описание поворота.');
     if(!Array.isArray(data.frame_angles)||data.frame_angles.length!==count||!data.frame_angles.every((n,i)=>Number.isFinite(n)&&n>=0&&n<360&&(!i||n>data.frame_angles[i-1])))throw new Error('Не удалось прочитать ракурсы.');
     const validIndices=indices=>Array.isArray(indices)&&indices.length>0&&new Set(indices).size===indices.length&&indices.every(i=>Number.isInteger(i)&&i>=0&&i<count);
-    if(!Number.isInteger(data.original_frames)||data.original_frames<2||data.original_frames>count||!validIndices(data.original_indices)||data.original_indices.length!==data.original_frames||!validIndices(data.intro_indices)||data.intro_indices.length<2||data.intro_indices.at(-1)!==data.front_index||!validIndices(data.startup_indices))throw new Error('Invalid startup frame set');
+    if(!Number.isInteger(data.original_frames)||data.original_frames<2||data.original_frames>count||!validIndices(data.original_indices)||data.original_indices.length!==data.original_frames||!validIndices(data.intro_indices)||data.intro_indices.length<2||data.intro_indices[data.intro_indices.length-1]!==data.front_index||!validIndices(data.startup_indices))throw new Error('Invalid startup frame set');
     const originals=new Set(data.original_indices),intro=new Set(data.intro_indices),startup=new Set(data.startup_indices);
     const near=data.original_indices.slice().sort((a,b)=>angleDistance(data.frame_angles[a],0)-angleDistance(data.frame_angles[b],0)).slice(0,Math.ceil(data.original_frames*.35));
     const expected=new Set([...near,...data.intro_indices.filter(i=>!originals.has(i))]);
@@ -906,7 +906,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // Retain the displayed pose while an automatic quality change loads.
     setStatus('Подготавливаю поворот…');beginStats();
     try{
-      const response=await trackedFetch(manifestURL,{cache:'force-cache',signal:controller.signal});
+      const response=await trackedFetch(manifestURL,{cache:'no-cache',signal:controller.signal});
       if(!response.ok)throw new Error('Не удалось загрузить описание аватарки.');
       const data=await response.json();if(token!==generation)return;
       const key=chooseVariant();variant=prepareVariant(data,key);manifest=data;
@@ -920,7 +920,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       const order=[];for(const index of near){const id=frameChunk[index];if(!order.includes(id))order.push(id)}
       order.forEach((id,i)=>{chunkStates[id].order=i;chunkStates[id].priority=50+i});
       // Prepare the original front buffer plus the denser welcome-turn frames.
-      const previousOriginal=data.original_indices.filter(index=>index<initial).at(-1)??data.original_indices.at(-1);
+      const previousOriginals=data.original_indices.filter(index=>index<initial);
+      const previousOriginal=previousOriginals[previousOriginals.length-1]??data.original_indices[data.original_indices.length-1];
       const firstWindow=introConsumed?[initial,wrap(initial-1,urls.length),wrap(initial+1,urls.length)]:[initial,previousOriginal,introPath[1]];
       firstWindow.forEach((index,i)=>ensureEncoded(index,i));
       const startupFrames=startupSettled?firstWindow:data.startup_indices;
@@ -1031,7 +1032,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
       if(Math.abs(dx)<4)return;drag.horizontal=true;stage.setPointerCapture(event.pointerId);stage.classList.add('dragging');
     }
     if(event.cancelable)event.preventDefault();
-    const now=performance.now(),last=drag.samples.at(-1),movement=event.clientX-last.x,direction=Math.sign(movement);
+    const now=performance.now(),last=drag.samples[drag.samples.length-1],movement=event.clientX-last.x,direction=Math.sign(movement);
     if(direction){
       if(drag.direction&&direction!==drag.direction){
         drag.samples=[last];
@@ -1067,7 +1068,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
     if(drag.horizontal&&Number.isFinite(event.clientX)&&Number.isFinite(event.clientY))moveDrag(event);
     if(!drag)return;
-    const now=performance.now(),first=drag.samples[0],last=drag.samples.at(-1),duration=last.time-first.time;
+    const now=performance.now(),first=drag.samples[0],last=drag.samples[drag.samples.length-1],duration=last.time-first.time;
     const velocity=drag.horizontal&&now-drag.lastMoved<=RELEASE_IDLE_MS&&duration>0?(last.x-first.x)*drag.gain*1000/duration:0;
     const moved=drag.horizontal,touch=drag.touch;releaseDrag();
     if(!media.matches&&(moved||angleDistance(selectionAngle,0)>.12))returnToFront(velocity,null,touch);

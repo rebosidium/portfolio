@@ -64,16 +64,17 @@ body { position:relative; }
  .v3-contact__resume { height:60px;padding:0 20px;font-size:18px; }
  .v3-contact__resume svg { width:20px;height:20px; }
  .v3-contact__links { flex-direction:column;justify-content:flex-start;align-items:center;gap:20px;max-width:none;min-height:0; }
- .v3-contact__link { font-size:28px;gap:8px;padding:7px 0;max-width:100%;white-space:normal; }
- .v3-contact__link span { min-width:0;overflow-wrap:anywhere; }
+ .v3-contact__link { font-size:28px;gap:8px;padding:7px 0;white-space:nowrap; }
  .v3-contact__link svg { width:20px;height:20px; }
  .v3-contact__link--telegram { order:1; }
  .v3-contact__link--linkedin { order:2; }
 }
-/* Same side margins as the case cards (.v3-cases): 48px total on phones. */
+/* Centred phone content has 12px side insets, including the email and its icon. */
 @media (max-width:480px) {
- .v3-contact__card { width:calc(100% - 48px); }
- .v3-contact__card { padding-inline:16px; }
+ .v3-contact__card { width:calc(100% - 24px);padding-inline:0; }
+}
+@media (max-width:359px) {
+ .v3-contact__lead,.v3-contact__link { font-size:24px; }
 }
 /* Move the iOS content up independently of the full-bleed gradient field. */
 @supports (-webkit-touch-callout:none) {

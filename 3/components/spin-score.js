@@ -74,8 +74,8 @@ if (dialog && viewer && actions) {
   };
   show();
 
-  // While the game is open the rest of the site is switched off: update polling stops and the
-  // page's animations behind the portrait are paused (see spin-score.css); both resume on close.
+  // Pause the page's animations behind the portrait (see spin-score.css).
+  // The updater defers reloads during healthy play, but can recover a failed loader.
   const root = document.documentElement;
   let gameOn = false;
   const gameState = on => {
@@ -200,7 +200,7 @@ if (dialog && viewer && actions) {
       pct.textContent = Math.round(shown) + '%';
       if (shown !== progress * 100) pctRaf = requestAnimationFrame(tickPct);
     };
-    let progress = 0, hideTimer = 0;
+    let progress = 0, hideTimer = 0, suspended = false;
     const shape = () => {                       // a pill starting at top centre, clockwise
       const w = spinButton.offsetWidth + GAP * 2, h = spinButton.offsetHeight + GAP * 2, r = h / 2, o = STROKE / 2;
       svg.setAttribute('viewBox', `0 0 ${w + STROKE} ${h + STROKE}`);
@@ -219,21 +219,29 @@ if (dialog && viewer && actions) {
       clearTimeout(hideTimer);
       if (progress >= 1) {
         svg.dataset.done = '';
-        hideTimer = setTimeout(() => { delete spinButton.dataset.loading; svg.hidden = true; }, 600);   // 100% shows briefly, then icon + Spin fade in
+        hideTimer = setTimeout(() => { delete spinButton.dataset.loading; svg.setAttribute('hidden', ''); }, 600);   // 100% shows briefly, then icon + Spin fade in
       }
-      else { delete svg.dataset.done; svg.hidden = false; spinButton.dataset.loading = ''; }
+      else { delete svg.dataset.done; svg.removeAttribute('hidden'); spinButton.dataset.loading = ''; }
       if (!pctRaf) pctRaf = requestAnimationFrame(tickPct);
       dialog.toggleAttribute('data-head-loading', progress < 1);
     };
     const read = () => {
+      if (dialog.hasAttribute('data-load-error') || reduced.matches) {
+        suspended = true;
+        clearTimeout(hideTimer); cancelAnimationFrame(pctRaf); pctRaf = 0;
+        svg.setAttribute('hidden', ''); delete spinButton.dataset.loading;
+        dialog.removeAttribute('data-head-loading');
+        return;
+      }
       const d = canvas.dataset, total = Number(d.totalBytes) || 0, got = Number(d.encodedBytes) || 0;
       const next = d.allReady === 'true' || dialog.dataset.preloaded === 'true' ? 1 : total ? Math.min(.98, got / total) : 0;
-      if (next !== progress) { progress = Math.max(next, next === 1 ? 1 : 0); paint(); }   // restarts after a quality change
+      if (suspended || next !== progress) { suspended = false; progress = Math.max(next, next === 1 ? 1 : 0); paint(); }   // restarts after a quality change
     };
     new ResizeObserver(shape).observe(spinButton, {box: 'border-box'}); shape();
     new MutationObserver(read).observe(canvas, {attributes: true, attributeFilter: ['data-encoded-bytes', 'data-total-bytes', 'data-all-ready']});
-    new MutationObserver(read).observe(dialog, {attributes: true, attributeFilter: ['data-preloaded', 'open']});
-    read(); paint();
+    new MutationObserver(read).observe(dialog, {attributes: true, attributeFilter: ['data-preloaded', 'data-load-error', 'open']});
+    reduced.addEventListener('change', read);
+    paint(); read();
   }
 
   // ---- Desktop: Space spins too, with a short hint under the button -------------------------

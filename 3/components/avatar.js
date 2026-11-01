@@ -5,7 +5,7 @@ import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
 // The head flag uses the same Android + coarse pointer test as the player choice.
 const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
 const playerModule = androidTouch
-  ? '../portrait-player-android.js?v=769b45e6e30f' : '../portrait-player.js?v=d360152f5c6f';
+  ? '../portrait-player-android.js?v=ca9a7e743580' : '../portrait-player.js?v=d360152f5c6f';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -28,15 +28,29 @@ let primaryState=null;
 
 function syncLoading(){
  const ready=!!largeState?.ready,complete=ready&&!!largeState?.allReady;
+ const failed=!!(moduleFailed||largeState?.error),wasFailed=dialog.hasAttribute('data-load-error');
+ dialog.toggleAttribute('data-load-error',failed);
  const loading=!reduced.matches&&!moduleFailed&&!largeState?.error&&!ready;
  loader.hidden=!loading;if(moduleFailed||largeState?.error||reduced.matches)delete large.dataset.welcomePending;
  dialog.dataset.preloaded=String(complete);
  large.setAttribute('aria-busy',String(loading));
- spinButton.disabled=!complete||reduced.matches;
- spinButton.title=ready&&!complete?'Downloading the remaining rotation views…':'';
- const message=dialog.open?(loading?'Loading portrait…':complete?'Portrait ready.':''):'';
+ spinButton.disabled=!failed&&(!complete||reduced.matches);
+ spinButton.querySelector('span').textContent=failed?'Reload':'Spin';
+ spinButton.title=failed?'Reload the page to retry the portrait':ready&&!complete?'Downloading the remaining rotation views…':'';
+ const message=dialog.open?(failed?'Portrait could not load. Use Reload to try again.':loading?'Loading portrait…':complete?'Portrait ready.':''):'';
  if(loadingStatus.textContent!==message)loadingStatus.textContent=message;
+ if(failed&&!wasFailed)document.dispatchEvent(new Event('v3-asset-error'));
 }
+// A failed import/download must offer recovery instead of a disabled 0% button.
+// Change only this document URL; preserve QA/owner flags and unrelated storage.
+spinButton.addEventListener('click',event=>{
+ if(!dialog.hasAttribute('data-load-error'))return;
+ event.preventDefault();event.stopImmediatePropagation();
+ const destination=new URL(location.href);
+ destination.searchParams.set('v3',document.documentElement.dataset.build);
+ destination.searchParams.set('_v3_refresh',String(Date.now()));
+ location.replace(destination.href);
+},true);
 
 function ensureLarge(){
  if(largePlayer||!mountPortrait||(!dialog.open&&!preloadAllowed))return largePlayer;
