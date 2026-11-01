@@ -80,9 +80,9 @@
 /* Never transform the article containing the sticky box: Safari can change
    its sticky reference when an entrance transform finishes. Reveal artwork
    and text inside their stable layout boxes instead. */
-.v3-case-card[data-reveal],.v3-cases__title[data-reveal] { transition:opacity 720ms ease; }
+.v3-case-card[data-reveal],.v3-cases__title[data-reveal] { transition:opacity 900ms ease; }
 .v3-cases__title[data-reveal],.v3-case-card[data-reveal] .v3-case-cover-reveal,.v3-case-card[data-reveal] .v3-case-copy h3 {
-  transition:opacity 720ms ease,transform 900ms cubic-bezier(.22,1,.36,1);
+  transition:opacity 900ms ease,transform 900ms cubic-bezier(.22,1,.36,1);
 }
 .v3-case-card[data-reveal="pending"],.v3-cases__title[data-reveal="pending"] { opacity:0;pointer-events:none; }
 .v3-cases__title[data-reveal="pending"],.v3-case-card[data-reveal="pending"] .v3-case-cover-reveal,.v3-case-card[data-reveal="pending"] .v3-case-copy h3 { transform:translateY(32px); }
