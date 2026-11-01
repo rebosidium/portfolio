@@ -21,6 +21,7 @@ const JOKES = {
     'That’s out of scope. Do it anyway.',
     'Synergy detected',
     'Coffee level: critical',
+    'That’s convenient. You just don’t know it yet.',
     'Let’s sync on the sync',
     'A meeting about the meeting, at 3',
     'Friendly reminder of my last friendly reminder',
@@ -222,12 +223,19 @@ function step(now) {
     if (!live.length && host?.matches?.(':popover-open')) { try { host.hidePopover(); } catch { /* Already hidden. */ } }
   }
 }
-// The developer notice appears once, on the first click; every later click (even after a
-// pause) adds the next joke in the rotation.
-let announced = false;
+// The first five clicks (even with pauses between them) show a fixed opening, like Android's
+// developer-mode countdown; every later click adds the next joke in the rotation.
+const INTRO = [
+  ['Click 2 more times to become a developer', false],
+  ['Click 1 more time to become a developer', false],
+  ['You are now a developer!', true],
+  ['You are now a vibe coder!', true],
+  ['I’M A VIBECODEEER, MOM!', true]
+];
+let introIndex = 0;
 document.addEventListener('click', event => {
   const spin = event.target.closest?.('.v3-avatar-spin');
   if (!spin || spin.disabled) return;
-  if (!announced) { announced = true; turn = 0; spawn('You are now a developer!', true); }
+  if (introIndex < INTRO.length) { const [text, strong] = INTRO[introIndex++]; spawn(text, strong); turn = 0; }
   else spawn(nextPhrase(), false);
 }, {passive: true});
