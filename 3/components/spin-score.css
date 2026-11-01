@@ -87,3 +87,15 @@ html[data-v3-game] body > :not(dialog):not(.v3-egg) *::after { animation-play-st
 @media (prefers-reduced-motion: reduce) { .v3-avatar-keyhint { transition: none; } }
 .v3-avatar-keyhint kbd { font: inherit; font-weight: 700; padding: 3px 7px; margin-left: 2px; border-radius: 6px; background: #ffffffb3; box-shadow: inset 0 -1px 0 #0000001f, 0 1px 2px #00000014; }
 @media (hover: hover) and (pointer: fine) { .v3-avatar-actions { padding-bottom: 36px; } }
+
+/* Phone held sideways: portrait on the left (with the jokes above it), score and Spin in a column on the right. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .v3-avatar-dialog { padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px)); }
+  .v3-avatar-viewer { display: grid; grid-template-columns: 1fr 1fr; align-items: center; justify-items: center; gap: 0; width: 100%; }
+  .v3-avatar-large { width: min(calc(100dvh - 24px), 46vw, 860px); }
+  .v3-avatar-actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0; }
+  /* The score sits right above Spin in the flow (JS placement is off: static ignores its left/top). */
+  .v3-avatar-score { position: static; translate: none; order: -1; }
+  .v3-avatar-score { --fs: 40px; }
+  .v3-egg__toast { left: 25%; max-width: min(44vw, 380px); }
+}

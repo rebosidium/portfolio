@@ -160,6 +160,7 @@ const nextPhrase = () => {
 };
 const MAX_VISIBLE = 5, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');
+const sideways = matchMedia('(orientation: landscape) and (max-height: 520px)');   // portrait on the left half, jokes over it
 const live = [], falling = new Set();
 let host = null, shown = 0, raf = 0, idle = 0, lastFrame = 0;
 const rand = (min, max) => min + Math.random() * (max - min);
@@ -194,7 +195,7 @@ function spawn(text, strong) {
   // never wider than the screen.
   const desktop = innerWidth > 800;
   const growth = 1 + Math.min(desktop ? .85 : .45, Math.max(0, shown - 1) * (desktop ? .08 : .045));
-  item.scale = Math.max(1, Math.min(growth, innerWidth * .94 / Math.max(1, el.offsetWidth)));
+  item.scale = Math.max(1, Math.min(growth, innerWidth * (sideways.matches ? .44 : .94) / Math.max(1, el.offsetWidth)));
   place(item);
   live.push(item);
   if (!reduced.matches) {
