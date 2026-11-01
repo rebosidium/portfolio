@@ -204,6 +204,10 @@ if (dialog && viewer && actions) {
     const shape = () => {                       // a pill starting at top centre, clockwise
       const w = spinButton.offsetWidth + GAP * 2, h = spinButton.offsetHeight + GAP * 2, r = h / 2, o = STROKE / 2;
       svg.setAttribute('viewBox', `0 0 ${w + STROKE} ${h + STROKE}`);
+      // Safari does not stretch an absolutely positioned SVG from inset alone.
+      // Keep its viewport identical to the path coordinate system.
+      svg.setAttribute('width', String(w + STROKE));
+      svg.setAttribute('height', String(h + STROKE));
       const d = `M ${w / 2 + o} ${o} H ${w - r + o} A ${r} ${r} 0 0 1 ${w - r + o} ${h + o} H ${r + o} A ${r} ${r} 0 0 1 ${r + o} ${o} Z`;
       track.setAttribute('d', d); fill.setAttribute('d', d);
       svg.style.inset = `${-(GAP + o)}px`;
@@ -226,7 +230,7 @@ if (dialog && viewer && actions) {
       const next = d.allReady === 'true' || dialog.dataset.preloaded === 'true' ? 1 : total ? Math.min(.98, got / total) : 0;
       if (next !== progress) { progress = Math.max(next, next === 1 ? 1 : 0); paint(); }   // restarts after a quality change
     };
-    new ResizeObserver(shape).observe(spinButton); shape();
+    new ResizeObserver(shape).observe(spinButton, {box: 'border-box'}); shape();
     new MutationObserver(read).observe(canvas, {attributes: true, attributeFilter: ['data-encoded-bytes', 'data-total-bytes', 'data-all-ready']});
     new MutationObserver(read).observe(dialog, {attributes: true, attributeFilter: ['data-preloaded', 'open']});
     read(); paint();
