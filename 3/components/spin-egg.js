@@ -42,7 +42,12 @@ const JOKES = {
     'Colleagues, I need to meet a courier',
     'The dog ate my homework',
     'Can anyone hear me?',
-    'Your voice turned into little squares'
+    'Your voice turned into little squares',
+    'That’s what she said',
+    'I declare bankruptcy!',
+    'Why waste time say lot word when few word do trick?',
+    'Identity theft is not a joke, Jim!',
+    'Dundie goes to… everyone'
   ],
   design: [
     'That pink is a bold choice',
