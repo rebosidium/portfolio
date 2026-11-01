@@ -26,7 +26,18 @@ if (dialog && viewer && actions) {
     // button lives directly in the dialog and fades with the viewer instead.
     dialog.append(hideButton);
     dialog.addEventListener('v3-avatar-closing', () => { hideButton.style.opacity = '0'; });
-    dialog.addEventListener('v3-avatar-opening', () => { hideButton.style.opacity = ''; });
+    // On phones the X sits exactly over the hamburger (same centre), so the close control is where the
+    // menu control was; elsewhere it keeps its corner position.
+    const placeHide = () => {
+      const r = document.querySelector('.v3-menu-toggle')?.getBoundingClientRect();
+      if (r && r.width && r.bottom > 0 && r.top < innerHeight) {
+        hideButton.style.top = (r.top + r.height / 2 - 24) + 'px';
+        hideButton.style.right = (document.documentElement.clientWidth - (r.left + r.width / 2) - 24) + 'px';
+      } else { hideButton.style.top = ''; hideButton.style.right = ''; }
+    };
+    dialog.addEventListener('v3-avatar-opening', () => { hideButton.style.opacity = ''; placeHide(); });
+    dialog.addEventListener('v3-avatar-opened', placeHide);
+    addEventListener('resize', placeHide, {passive: true});
   }
   // Keep the score centred above Spin, with the same visual gap above the digits (down to the
   // bottom of the portrait art) as below them (down to Spin).
@@ -62,6 +73,20 @@ if (dialog && viewer && actions) {
     placeScore();
   };
   show();
+
+  // While the game is open the rest of the site is switched off: update polling stops and the
+  // page's animations behind the portrait are paused (see spin-score.css); both resume on close.
+  const root = document.documentElement;
+  let gameOn = false;
+  const gameState = on => {
+    if (on === gameOn) return;
+    gameOn = on;
+    root.toggleAttribute('data-v3-game', on);
+    document.dispatchEvent(new Event(on ? 'v3-game-pause' : 'v3-game-resume'));
+  };
+  dialog.addEventListener('v3-avatar-opening', () => gameState(true));
+  dialog.addEventListener('v3-avatar-closed', () => gameState(false));
+  if (dialog.open) gameState(true);
 
   const MAX_FLYING = 16;
   let combo = 0, lastTap = 0, side = 1, flying = 0, coolTimer = 0, bumpTimer = 0;

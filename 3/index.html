@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="ddceef090636">
+<html lang="en" data-build="513ac91a406a">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,6 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&text=%2B0123456789%C2%A0&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/3/page.css?v=df2b96391f33">
   <link rel="stylesheet" href="/3/components/brief.css?v=9dfe114a6059">
   <script type="module" src="/3/components/brief.js?v=c73390d1a696"></script>
@@ -47,10 +48,10 @@
   <link rel="stylesheet" href="/3/components/contact.css?v=4edfe8319eaf">
   <script type="module" src="/3/components/contact.js?v=d7853b44f25e"></script>
   <link rel="stylesheet" href="/3/components/spin-egg.css?v=694c784f146f">
-  <script type="module" src="/3/components/spin-egg.js?v=a5dbedfc2f38"></script>
-  <link rel="stylesheet" href="/3/components/spin-score.css?v=2020de7751cd">
-  <script type="module" src="/3/components/spin-score.js?v=071e65c3191e"></script>
-  <script defer src="/3/components/updates.js?v=efae5bbf4db7"></script>
+  <script type="module" src="/3/components/spin-egg.js?v=c40ddb356d10"></script>
+  <link rel="stylesheet" href="/3/components/spin-score.css?v=68e5df588ced">
+  <script type="module" src="/3/components/spin-score.js?v=1992250245be"></script>
+  <script defer src="/3/components/updates.js?v=6b0c77cde611"></script>
 </head>
 <body>
   <div class="v3-page" data-node-id="797:5191">
@@ -189,7 +190,7 @@
       const token=++generation,start=performance.now();
       // Paint the native top layer, poster and loader before allocating blur surfaces.
       dialog.dataset.opening='';lock();dialog.showModal();emit('v3-avatar-opening');
-      if(!reduced.matches)animation=viewer.animate([{opacity:.6,transform:'scale(.985)'},{opacity:1,transform:'scale(1)'}],{duration:240,easing:'cubic-bezier(.22,1,.36,1)'});
+      if(!reduced.matches)animation=viewer.animate([{opacity:0,transform:'scale(.965)'},{opacity:1,transform:'scale(1)'}],{duration:460,easing:'cubic-bezier(.22,1,.36,1)'});
       dialog.focus({preventScroll:true});
       afterPaint(()=>{
         if(!dialog.open||closing||token!==generation)return;

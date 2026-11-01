@@ -5,7 +5,7 @@
   if(!valid(current))return;
   const cooldown=120000,initialCheckAt=Date.now()+3000;
   const entry=new URL(location.href),entryVersion=entry.searchParams.get('v3'),entryRefresh=Number(entry.searchParams.get('_v3_refresh'));
-  const attempts=new Map();let checking=false,reloading=false,interval;
+  const attempts=new Map();let checking=false,reloading=false,interval,gameOn=false;
   if(entry.searchParams.has('_v3_refresh')&&entryVersion===current){entry.searchParams.delete('_v3_refresh');try{history.replaceState(history.state,'',entry.href);}catch{}}
   const recent=(time,now)=>Number.isFinite(time)&&time>0&&Math.abs(now-time)<cooldown;
   function attempted(version,now){
@@ -13,7 +13,7 @@
     try{return recent(Number(sessionStorage.getItem(`v3:release:refresh:${version}`)),now);}catch{return false;}
   }
   async function check(){
-    if(checking||reloading||document.hidden||navigator.onLine===false||Date.now()<initialCheckAt)return;
+    if(gameOn||checking||reloading||document.hidden||navigator.onLine===false||Date.now()<initialCheckAt)return;
     checking=true;const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
     try{
       const endpoint=new URL('/3/version.json',location.origin);endpoint.searchParams.set('_check',String(Date.now()));
@@ -25,7 +25,10 @@
       reloading=true;location.replace(destination.href);
     }catch{reloading=false;}finally{clearTimeout(timeout);checking=false;}
   }
-  function visible(){clearInterval(interval);if(document.hidden)return;interval=setInterval(check,60000);check();}
+  function visible(){clearInterval(interval);if(gameOn||document.hidden)return;interval=setInterval(check,60000);check();}
   setTimeout(check,3000);addEventListener('online',check);addEventListener('focus',check);addEventListener('pageshow',visible);
   document.addEventListener('visibilitychange',visible);visible();
+  // The Spin game is open: no polling (and no surprise reload) until it is closed.
+  document.addEventListener('v3-game-pause',()=>{gameOn=true;clearInterval(interval);});
+  document.addEventListener('v3-game-resume',()=>{gameOn=false;visible();});
 })();

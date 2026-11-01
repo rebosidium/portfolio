@@ -123,7 +123,8 @@ const JOKES = {
     'We replaced the bug with a better bug',
     'The AI deleted the tests. Tests now pass.',
     'console.log in production. Evacuate.',
-    'Estimate: 2 days. Reality: 2 sprints.'
+    'Estimate: 2 days. Reality: 2 sprints.',
+    'Compacting conversation…'
   ]
 };
 const ORDER = ['office', 'design', 'tech'];
