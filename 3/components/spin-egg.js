@@ -149,7 +149,7 @@ const nextPhrase = () => {
   try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* Private mode: session-only memory. */ }
   return text;
 };
-const MAX_VISIBLE = 9, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
+const MAX_VISIBLE = 5, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');
 const live = [], falling = new Set();
 let host = null, shown = 0, raf = 0, idle = 0, lastFrame = 0;
@@ -238,10 +238,16 @@ const INTRO = [
   ['You are now a vibe coder!', true],
   ['I’M A VIBECODEEER, MOM!', true]
 ];
-let introIndex = 0;
+let introIndex = 0, lastJoke = 0;
 document.addEventListener('click', event => {
   const spin = event.target.closest?.('.v3-avatar-spin');
   if (!spin || spin.disabled) return;
   if (introIndex < INTRO.length) { const [text, strong] = INTRO[introIndex++]; spawn(text, strong); turn = 0; }
-  else spawn(nextPhrase(), false);
+  else {
+    // Fast tapping adds at most ~4 jokes a second, so the pile and the falling ones stay small.
+    const now = performance.now();
+    if (now - lastJoke < 260) return;
+    lastJoke = now;
+    spawn(nextPhrase(), false);
+  }
 }, {passive: true});

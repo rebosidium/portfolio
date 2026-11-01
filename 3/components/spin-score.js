@@ -20,6 +20,14 @@ if (dialog && viewer && actions) {
   actions.append(score);
   const spinButton = actions.querySelector('.v3-avatar-spin'), hideButton = actions.querySelector('.v3-avatar-hide');
   hideButton?.setAttribute('aria-label', 'Hide');
+  if (hideButton) {
+    // The viewer is scaled while the portrait opens and closes, and a transformed ancestor turns
+    // `position: fixed` into "relative to the viewer" (the X would slide toward the avatar), so the
+    // button lives directly in the dialog and fades with the viewer instead.
+    dialog.append(hideButton);
+    dialog.addEventListener('v3-avatar-closing', () => { hideButton.style.opacity = '0'; });
+    dialog.addEventListener('v3-avatar-opening', () => { hideButton.style.opacity = ''; });
+  }
   // Keep the score centred above Spin, with the same visual gap above the digits (down to the
   // bottom of the portrait art) as below them (down to Spin).
   const large = dialog.querySelector('[data-v3-avatar-large]');
@@ -55,7 +63,7 @@ if (dialog && viewer && actions) {
   };
   show();
 
-  const MAX_FLYING = 30;
+  const MAX_FLYING = 16;
   let combo = 0, lastTap = 0, side = 1, flying = 0, coolTimer = 0, bumpTimer = 0;
   // Ready-made award sets (nothing is generated): the longer and faster you tap, the higher the
   // combo and the closer the numbers get to 1000.

@@ -27,7 +27,7 @@
 @media (min-width: 801px) { .v3-avatar-large { width: calc(min(86vw, calc(100dvh - 250px), 860px) * .7); } }
 
 /* Hide (round X): a clearly visible hover. */
-.v3-avatar-hide { transition: transform 220ms cubic-bezier(.22, 1, .36, 1), background-color 200ms ease, box-shadow 220ms ease; }
+.v3-avatar-hide { transition: transform 220ms cubic-bezier(.22, 1, .36, 1), background-color 200ms ease, box-shadow 220ms ease, opacity 200ms ease; }
 .v3-avatar-hide img { transition: transform 320ms cubic-bezier(.22, 1, .36, 1); }
 @media (hover: hover) and (pointer: fine) {
   .v3-avatar-hide:hover { transform: scale(1.14); background: #ffffff; box-shadow: 0 8px 26px #0000002e, inset 0 1px 0 #fff; }
@@ -53,3 +53,7 @@
 .v3-avatar-spin[data-loading] img, .v3-avatar-spin[data-loading] > span { opacity: 0 !important; }
 .v3-avatar-spin__pct { position: absolute; inset: 0; display: grid; place-items: center; font: 500 18px/1 'DM Sans', sans-serif; font-style: normal; font-variant-numeric: tabular-nums; color: #fff; opacity: 0; transition: opacity 350ms ease; pointer-events: none; z-index: 1; }
 .v3-avatar-spin[data-loading] .v3-avatar-spin__pct { opacity: 1; }
+
+/* Android Chrome draws a square tap highlight around tapped buttons; the portrait controls have their own feedback. */
+.v3-avatar-spin, .v3-avatar-hide, .v3-avatar-large { -webkit-tap-highlight-color: transparent; }
+.v3-avatar-spin:focus:not(:focus-visible), .v3-avatar-hide:focus:not(:focus-visible) { outline: none; }
