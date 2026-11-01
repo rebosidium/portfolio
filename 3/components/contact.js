@@ -17,7 +17,7 @@ if(section){
  probe.style.cssText='position:absolute;visibility:hidden;pointer-events:none;width:0;height:100svh;left:0;top:0';
  probe.setAttribute('aria-hidden','true');section.append(probe);
  let cardW=0,cardH=0,stageW=0,stageH=0,smallH=0,radius=72,frame=0,lastKey='',bleed=false;
- const FIELD_EXTRA=120,FIELD_TOP=200; // keep in sync with `inset:-200px 0 -120px` of .v3-contact__field
+ const FIELD_EXTRA=120,FIELD_TOP=0; // keep in sync with `inset:-200px 0 -120px` of .v3-contact__field
  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
  const measure=()=>{
   cardW=card.offsetWidth;cardH=card.offsetHeight;stageW=section.clientWidth;stageH=section.offsetHeight;smallH=probe.offsetHeight||innerHeight;
@@ -67,12 +67,17 @@ if(section){
   }
   // Safari tints its edge zones and the toolbar area with the page background; mirror the field top-to-bottom.
   const full=e>=.999;
-  if(full!==bleed){bleed=full;const root=document.documentElement.style;root.backgroundColor=full?'#ff139c':'';root.backgroundImage=full?'linear-gradient(180deg,#9a82f4 0%,#8178ff 30%,#c466d2 62%,#ff139c 100%)':'';root.backgroundAttachment=full?'fixed':'';}
+  if(full!==bleed){bleed=full;const root=document.documentElement.style;root.backgroundColor=full?'#7a70f0':'';root.backgroundImage=full?'linear-gradient(180deg,#8f84f6 0%,#7a70f0 55%,#6f66e2 100%)':'';root.backgroundAttachment=full?'fixed':'';}
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(render);}
  new ResizeObserver(measure).observe(section);
  new ResizeObserver(measure).observe(card);
- addEventListener('scroll',schedule,{passive:true});
+ // Scrolling up from the very bottom: drop the Safari bar tint in the same task as the scroll event
+ // (without waiting for the next animation frame) so no violet shows behind the case cards.
+ addEventListener('scroll',()=>{
+  if(bleed&&section.getBoundingClientRect().top>2){bleed=false;lastKey='';const root=document.documentElement.style;root.backgroundColor='';root.backgroundImage='';root.backgroundAttachment='';}
+  schedule();
+ },{passive:true});
  addEventListener('resize',schedule,{passive:true});
  reduced.addEventListener('change',()=>{lastKey='';schedule();});
  document.fonts?.ready.then(measure);
