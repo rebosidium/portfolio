@@ -231,4 +231,23 @@ if (dialog && viewer && actions) {
     new MutationObserver(read).observe(dialog, {attributes: true, attributeFilter: ['data-preloaded', 'open']});
     read(); paint();
   }
+
+  // ---- Desktop: Space spins too, with a short hint under the button -------------------------
+  if (spinButton && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const hint = document.createElement('div');
+    hint.className = 'v3-avatar-keyhint'; hint.setAttribute('aria-hidden', 'true');
+    hint.innerHTML = 'Push the button or press <kbd>Space</kbd>';
+    actions.append(hint);
+    const placeHint = () => {
+      hint.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
+      hint.style.top = (spinButton.offsetTop + spinButton.offsetHeight + 14) + 'px';
+    };
+    new ResizeObserver(placeHint).observe(spinButton); placeHint();
+    document.addEventListener('keydown', event => {
+      if (event.code !== 'Space' || event.repeat || !dialog.open || dialog.hasAttribute('data-opening') || spinButton.disabled) return;
+      if (document.activeElement === spinButton) return;      // a focused button already reacts to Space itself
+      event.preventDefault();
+      spinButton.click();
+    });
+  }
 }
