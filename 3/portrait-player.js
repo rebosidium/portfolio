@@ -759,7 +759,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn,resumeMenuReturn=menuReturnRequested;
     const token=beginLoading();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
-    const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},20000);
+    // Slow connections may need several minutes to prepare the startup frames.
+    const startupDeadline=setTimeout(()=>{if(token===generation)fallback(new Error('Portrait startup timeout'))},3*60*1000);
     releaseDrag();stop();returnRequested=resumeReturn;mobileScrollReturn=resumeScrollReturn;menuReturnRequested=resumeMenuReturn;ready=false;bufferReady=false;preparing=true;
     if(introConsumed)releaseIntroFrames();
     stage.removeAttribute('data-spin-ready');stage.removeAttribute('tabindex');stage.setAttribute('aria-busy','true');
