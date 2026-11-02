@@ -1,6 +1,6 @@
 // Contact footer. It is the last block of the page: while it scrolls in, its
 // gradient field is revealed through a squircle clip that is as tall as the
-// screen from the start and widens from the 1200px card to full width, with
+// screen from the start and widens from the case-column width to full width, with
 // the corner radius going to 0. At the
 // bottom of the page the field fills the viewport (stage is >=100lvh tall).
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
@@ -16,11 +16,13 @@ if(section){
  const probe=document.createElement('span');
  probe.style.cssText='position:absolute;visibility:hidden;pointer-events:none;width:0;height:100svh;left:0;top:0';
  probe.setAttribute('aria-hidden','true');section.append(probe);
- let cardW=0,cardH=0,stageW=0,stageH=0,smallH=0,radius=72,frame=0,lastKey='',bleed=false;
+ let cardW=0,cardH=0,clipW=0,stageW=0,stageH=0,smallH=0,radius=72,frame=0,lastKey='',bleed=false;
  const FIELD_EXTRA=120,FIELD_TOP=0; // keep in sync with `inset:-200px 0 -120px` of .v3-contact__field
  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
  const measure=()=>{
-  cardW=card.offsetWidth;cardH=card.offsetHeight;stageW=section.clientWidth;stageH=section.offsetHeight;smallH=probe.offsetHeight||innerHeight;
+  // The clip starts at the .v3-cases width, not the card's: phone cards keep
+  // 12px outer insets for their links, which is wider than the case column.
+  cardW=card.offsetWidth;cardH=card.offsetHeight;clipW=cases?.offsetWidth||cardW;stageW=section.clientWidth;stageH=section.offsetHeight;smallH=probe.offsetHeight||innerHeight;
   radius=parseFloat(getComputedStyle(section).getPropertyValue('--v3-contact-radius'))||72;
   lastKey='';schedule();
  };
@@ -44,13 +46,13 @@ if(section){
   const smoothstep=t=>t*t*(3-2*t);
   const progress=reduced.matches?1:clamp(1-sectionTop/vh,0,1),ep=smoothstep(progress);
   const e=smoothstep(reduced.matches?1:clamp(1-2*sectionTop/vh,0,1));
-  const key=[e.toFixed(4),ep.toFixed(4),stageW,stageH,smallH,cardW,cardH,radius].join('|');
+  const key=[e.toFixed(4),ep.toFixed(4),stageW,stageH,smallH,clipW,cardH,radius].join('|');
   if(key===lastKey)return;
   lastKey=key;
   // The clip is as tall as the screen from the start and never grows upward:
   // only its width and corner radius change. The extra field above/below is
   // only revealed at the very end, when it is already outside the viewport.
-  const inset=(stageW-cardW)/2*(1-e),width=stageW-inset*2,height=stageH+FIELD_EXTRA*e;
+  const inset=(stageW-clipW)/2*(1-e),width=stageW-inset*2,height=stageH+FIELD_EXTRA*e;
   const tail=clamp((e-.9)/.1,0,1),r=radius*(1-tail*tail*(3-2*tail));
   if(e>=.999)field.style.clipPath='none';
   else if(r<.5)field.style.clipPath=`path('M ${inset.toFixed(3)} ${FIELD_TOP} H ${(inset+width).toFixed(3)} V ${(FIELD_TOP+height).toFixed(3)} H ${inset.toFixed(3)} Z')`;

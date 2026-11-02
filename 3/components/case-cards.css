@@ -19,7 +19,7 @@
    and desktop parallax without exposing a baked image cut. */
 .v3-case-cover-art { position:relative; }
 .v3-case-cover-window { position:absolute;z-index:1;left:5.9524%;bottom:0;width:88.2653%;height:110.7784%;overflow:hidden;pointer-events:none; }
-.v3-case-cover-image { position:absolute;left:0;top:4.864865%;display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)); }
+.v3-case-cover-image { position:absolute;left:0;top:4.864865%;display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
 /* Reveal trails the colour field; independent 2D properties keep the desktop
    scroll offset separate from the one-time entrance transition. */
 .v3-case-cover-window { opacity:1;transition:opacity 800ms ease 220ms; }

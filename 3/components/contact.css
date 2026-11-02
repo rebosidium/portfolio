@@ -2,7 +2,7 @@
    994px content; mobile card is centered. The moving gradient is CSS-only
    (transform animation, paused offscreen) like the case covers. */
 /* The section is a full-bleed stage (100lvh tall). contact.js reveals its
-   gradient field through a squircle clip that grows from the 1200px card to
+   gradient field through a squircle clip that grows from the .v3-cases width to
    the whole screen while scrolling, with the corner radius going to 0. */
 .v3-contact { --v3-contact-radius:72px;position:relative;isolation:isolate;display:flex;justify-content:center;align-items:center;box-sizing:border-box;width:100%;min-height:100vh;min-height:100svh;color:#fff; }
 .v3-contact[hidden] { display:none; }
@@ -69,9 +69,13 @@ body { position:relative; }
  .v3-contact__link--telegram { order:1; }
  .v3-contact__link--linkedin { order:2; }
 }
-/* Centred phone content has 12px side insets, including the email and its icon. */
+/* Centred phone content has 12px side insets, including the email and its icon.
+   The clip starts at the narrower .v3-cases width (12px further in per side), so
+   the lead keeps its own stable measure 24px inside that start: it never touches
+   the initial edge and does not reflow while the field widens. */
 @media (max-width:480px) {
  .v3-contact__card { width:calc(100% - 24px);padding-inline:0; }
+ .v3-contact__lead { max-width:calc(100% - 72px);text-wrap:balance; }
 }
 @media (max-width:359px) {
  .v3-contact__lead,.v3-contact__link { font-size:24px; }

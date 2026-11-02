@@ -1,6 +1,6 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
 import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
-import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=706d29d2f7bd';
+import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=9c8930ddd3f2';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',cover:{
   src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51',width:1200,height:1066,
@@ -177,7 +177,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   }
   if(!desktop.matches||reduced.matches){
    for(const column of columns){setStyle(column,'transform','none');setStyle(column,'--v3-column-offset','0px');}
-   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale','--v3-image-shift'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
+   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale','--v3-image-shift','--v3-image-scale'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
    return;
   }
   for(const card of cards){
@@ -214,7 +214,13 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
    const factor=Math.min(1,Math.max(0,pageY/180)),scale=active?1+.22*factor:1;
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
-   if(article.dataset.project==='larixon')setStyle(article,'--v3-image-shift',`${Math.max(-18,Math.min(18,(innerHeight/2-(pinTop+height/2))*.09))*factor}px`);
+   if(article.dataset.project==='larixon'){
+    // Follow the article's continuous flow, not the sticky pin's attachment
+    // points. Reverse scrolling retraces the same pose without a reset.
+    const t=Math.max(0,Math.min(1,(innerHeight-articleTop)/(innerHeight+height))),e=t*t*(3-2*t);
+    setStyle(article,'--v3-image-shift',`${(-12+44*e).toFixed(3)}px`);
+    setStyle(article,'--v3-image-scale',(1-.06*e).toFixed(5));
+   }
    const desired=active?Math.max(-36,Math.min(36,(innerHeight/2-(pinTop+height*stackScale/2))*.06))*factor:0;
    const margin=Math.max(0,height*(scale-1)/2-.5);
    setStyle(article,'--v3-cover-shift',`${Math.max(-margin,Math.min(margin,desired))}px`);
