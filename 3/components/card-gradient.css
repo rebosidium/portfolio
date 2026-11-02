@@ -30,6 +30,24 @@
 .v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--yellow { background:radial-gradient(closest-side,#034bec 0%,#0a42d6de 40%,#0637c400 100%); }
 .v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--purple { background:radial-gradient(closest-side,#a18bce 0%,#7c5db6d9 38%,#6d54aa00 100%); }
 .v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--teal { background:radial-gradient(closest-side,#5158ca 0%,#3b4fc4c9 42%,#3046b800 100%); }
+/* Leasing: broad sage, pale yellow and grey haze, drifting slowly behind
+   the original transparent artwork. Retains the shared visibility pause. */
+.v3-case-card[data-project="leasing"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 85% at 90% 8%,#ede5b2b3 0%,#e3dfb34d 48%,transparent 88%),
+ radial-gradient(ellipse 95% 90% at 8% 75%,#9cad9b99 0%,#a8b3a54d 48%,transparent 90%),
+ linear-gradient(145deg,#c8cebf 0%,#b9c2b2 50%,#929f98 100%); }
+.v3-case-card[data-project="leasing"] .v3-case-gradient__blob--coral {
+ --v3-gradient-duration:28s;left:-30%;top:-46%;width:116%;height:150%;
+ background:radial-gradient(closest-side,#8ea48799 0%,#a4b79a70 34%,#becab23d 64%,#becab200 100%); }
+.v3-case-card[data-project="leasing"] .v3-case-gradient__blob--yellow {
+ --v3-gradient-duration:34s;right:-38%;top:-44%;width:126%;height:146%;
+ background:radial-gradient(closest-side,#eee4a9c2 0%,#e6dfb18a 36%,#e2dfbe38 66%,#e2dfbe00 100%); }
+.v3-case-card[data-project="leasing"] .v3-case-gradient__blob--purple {
+ --v3-gradient-duration:38s;left:-36%;top:16%;width:118%;height:146%;
+ background:radial-gradient(closest-side,#85948c9c 0%,#9ca89e75 36%,#b5beb345 66%,#b5beb300 100%); }
+.v3-case-card[data-project="leasing"] .v3-case-gradient__blob--teal {
+ --v3-gradient-duration:42s;left:8%;bottom:-56%;width:128%;height:154%;
+ background:radial-gradient(closest-side,#9bad91b3 0%,#b0bc9f80 36%,#c7cbb53d 66%,#c7cbb500 100%); }
 /* Closed loops: the 0% and 100% poses are identical, so iterations join
    without a jump. Translate percentages refer to each blob's own box. */
 @keyframes v3-case-gradient-a {

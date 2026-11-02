@@ -16,8 +16,8 @@ const projects=[
   alt:'Isometric illustration of Raiffeisen Leasing agent portal screens'}},
  {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b',cover:{
-  src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=d1e1977b55d6',width:1200,height:1248,
-  srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=93ece43c3453 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=b905d7c005c0 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=d1e1977b55d6 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=876c62e34c9b 1920w',
+  src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=d25c1a880641',width:1200,height:1248,
+  srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=5d97b731f964 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=334e16392c84 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=d25c1a880641 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=5a52de5be4f0 1920w',
   alt:'Isometric illustration of GdeMaterial supplier discovery and ordering screens'}},
  {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
 ];
