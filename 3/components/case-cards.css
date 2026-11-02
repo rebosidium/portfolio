@@ -26,7 +26,7 @@
 .v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,4.864865%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
 /* Preserve the same 18px artwork rise and 36px clipping headroom at 588px
    across the terminal's taller 400px field and Larixon's 334px field. */
-.v3-case-card[data-project="brokerage"],.v3-case-card[data-project="leasing"] { --v3-image-top:4.12844%; }
+.v3-case-card[data-project="brokerage"],.v3-case-card[data-project="leasing"],.v3-case-card[data-project="gdematerial"] { --v3-image-top:4.12844%; }
 .v3-case-card[data-project="brokerage"] .v3-case-cover { background:
  radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
  radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),

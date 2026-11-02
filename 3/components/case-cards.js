@@ -15,7 +15,10 @@ const projects=[
   srcset:'/3/assets/case-covers/leasing-isometric-480-q94.webp?v=3e4d0b70c1c3 480w,/3/assets/case-covers/leasing-isometric-768-q94.webp?v=cba39d3225ea 768w,/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=f4c7f9a22734 1200w,/3/assets/case-covers/leasing-isometric-1920-q94.webp?v=7aac8f67f4f6 1920w',
   alt:'Isometric illustration of Raiffeisen Leasing agent portal screens'}},
  {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
- {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b'},
+ {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b',cover:{
+  src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=8cc9478ebd5c',width:1200,height:1037,
+  srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=1adc01dce2e9 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=fd4d78f168fe 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=8cc9478ebd5c 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=25f32f43b017 1920w',
+  alt:'Isometric illustration of GdeMaterial supplier search, ordering and delivery screens'}},
  {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
 ];
 // Widened cover artwork is 553.5/588 of the column width at every breakpoint.
