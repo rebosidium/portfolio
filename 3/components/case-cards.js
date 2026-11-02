@@ -60,16 +60,14 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   const leading=innerWidth>800?columns.map(column=>column.firstElementChild):[section.querySelector('.v3-case-card')];
   const current=parseFloat(getComputedStyle(section).marginTop)||0;
   const normalCoverTop=Math.min(...leading.map(flowY))-current;
-  let gap;
-  if(!desktop.matches){
-   // Share the available space equally above and below the complete hero.
-   // Remove its current margin before solving; stable svh avoids toolbar jumps.
-   const hero=document.querySelector('.v3-hero');
-   const heroGap=parseFloat(getComputedStyle(hero).marginTop)||0;
-   gap=Math.max(24,(height-peek-normalCoverTop+heroGap)/2);
-   const heroNext=`${Math.round(gap)}px`;
-   if(host.style.getPropertyValue('--v3-mobile-hero-gap')!==heroNext)host.style.setProperty('--v3-mobile-hero-gap',heroNext);
-  }else gap=Math.max(height<=800?24:64,height-peek-normalCoverTop);
+  // Balance the complete hero between the header and Case Studies on both
+  // layouts. Subtract its current margin so repeated measurements stay stable.
+  const hero=document.querySelector('.v3-hero');
+  const heroGap=parseFloat(getComputedStyle(hero).marginTop)||0;
+  const gap=Math.max(24,(height-peek-normalCoverTop+heroGap)/2);
+  const heroNext=`${Math.round(gap)}px`;
+  const heroProperty=desktop.matches?'--v3-desktop-hero-gap':'--v3-mobile-hero-gap';
+  if(host.style.getPropertyValue(heroProperty)!==heroNext)host.style.setProperty(heroProperty,heroNext);
   const next=`${Math.round(gap)}px`;
   if(section.style.getPropertyValue('--v3-case-teaser-gap')!==next){section.style.setProperty('--v3-case-teaser-gap',next);requestAnimationFrame(measure);}
  }
