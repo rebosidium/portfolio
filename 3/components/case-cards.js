@@ -1,6 +1,6 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
 import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
-import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=9c8930ddd3f2';
+import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=61d4cce35bd4';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',cover:{
   src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=96f03d764c7c',width:1200,height:969,

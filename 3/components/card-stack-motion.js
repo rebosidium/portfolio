@@ -38,7 +38,7 @@ function installStyles(){
    }
    .v3-case-cover-reveal{animation:v3-card-cover-cull steps(1,end) both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
    .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
-   .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
+   .v3-case-copy{transform:none}
    .v3-case-cover-image{animation:v3-card-image-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
   }
  }`;
