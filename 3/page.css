@@ -27,7 +27,7 @@ body { margin: 0; }
 .v3-name, .v3-nav { font-size: 24px; font-weight: 500; line-height: 31px; }
 .v3-name { white-space: nowrap; }
 .v3-nav { grid-column: 7 / -1; justify-self: end; display: flex; align-items: center; gap: 44px; }
-.v3-nav a { color: inherit; text-decoration: none; cursor: default; white-space: nowrap; }
+.v3-nav a { color: inherit; text-decoration: none; cursor: pointer; white-space: nowrap; }
 .v3-hero { margin-top: 115px; }
 .v3-headline { grid-column: 1 / span 10; margin: 0; font-size: 48px; line-height: 62px; font-weight: 400; letter-spacing: -.48px; }
 .v3-headline em { font-style: italic; }

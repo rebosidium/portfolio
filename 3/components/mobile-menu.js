@@ -135,13 +135,28 @@ toggle.addEventListener('click',()=>setOpen(!desiredOpen));
 closeButton.addEventListener('click',()=>setOpen(!desiredOpen));
 scrim.addEventListener('click',()=>setOpen(false));
 dialog.addEventListener('cancel',event=>{event.preventDefault();setOpen(false);});
-dialog.addEventListener('keydown',event=>{
-  if(event.key!=='Tab')return;
-  // All four draft links are deliberately disabled. Keep Safari's focus cycle
-  // on the available close control until navigation destinations are supplied.
-  event.preventDefault();closeButton.focus({preventScroll:true});
+// Native dialog focus containment now includes the three active links.
+// Keep the download's native click/activation; anchor scrolling waits until
+// closing has restored the body's scroll position and normal flow geometry.
+document.addEventListener('click',async event=>{
+  const link=event.target.closest('.v3-nav a[href],.v3-menu-links a[href]');
+  if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  const inMenu=dialog.contains(link);
+  if(link.hasAttribute('download')){if(inMenu)setOpen(false);return;}
+  const destination=new URL(link.href),id=destination.hash.slice(1);
+  if(destination.origin!==location.origin||destination.pathname!==location.pathname)return;
+  const target=document.getElementById(id);if(!target)return;
+  event.preventDefault();
+  if(inMenu){await setOpen(false,{returnFocus:false});if(dialog.open)return;}
+  window.v3Entrance?.finish();
+  // Contact previews the first 60% of the visible screen; the remaining
+  // footer unfolds as the visitor continues scrolling. Work starts at 24px.
+  const viewport=window.visualViewport?.height||innerHeight;
+  const offset=id==='v3-contact'?viewport*.4:24;
+  const top=Math.max(0,scrollY+target.getBoundingClientRect().top-offset);
+  if(location.hash!==destination.hash){const url=new URL(location.href);url.hash=destination.hash;history.pushState(null,'',url);}
+  scrollTo({top,behavior:reduced.matches?'instant':'smooth'});
 });
-dialog.addEventListener('click',event=>{if(event.target.closest('a[aria-disabled="true"]'))event.preventDefault();});
 mobile.addEventListener('change',()=>{if(!mobile.matches)setOpen(false,{instant:true,returnFocus:false});});
 reduced.addEventListener('change',()=>{
   if (!reduced.matches) return;
@@ -156,5 +171,5 @@ window.addEventListener('resize',()=>{
   if(!dialog.open)return;
   dialog.style.setProperty('--v3-toggle-right',getComputedStyle(document.querySelector('.v3-grid')).marginRight);
 },{passive:true});
-// Progressive enhancement: failed JS leaves the original visible four-item menu.
+// Progressive enhancement: failed JS leaves the visible header links available.
 if (typeof dialog.showModal === 'function') document.documentElement.classList.add('v3-menu-ready');
