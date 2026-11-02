@@ -11,25 +11,25 @@
  animation-delay:calc((var(--v3-gradient-phase,0) + var(--v3-gradient-offset)) * -1s);
  animation-play-state:paused;
 }
-/* Former Figma palette: coral/red and yellow on top, purple left, teal below. */
+/* Shared soft layers read the project-specific palette declared below. */
 .v3-case-gradient__blob--coral { --v3-gradient-name:v3-case-gradient-a;--v3-gradient-duration:15s;--v3-gradient-offset:0;
  left:-22%;top:-38%;width:82%;height:118%;
- background:radial-gradient(closest-side,#ff5f63 0%,#ff6a6ad9 38%,#ff6a6a66 62%,#ff6a6a00 100%); }
+ background:radial-gradient(closest-side,rgb(var(--v3-mesh-1) / 1.00000) 0%,rgb(var(--v3-mesh-1) / 0.85098) 38%,rgb(var(--v3-mesh-1) / 0.40000) 62%,rgb(var(--v3-mesh-1) / 0.00000) 100%); }
 .v3-case-gradient__blob--yellow { --v3-gradient-name:v3-case-gradient-b;--v3-gradient-duration:18s;--v3-gradient-offset:3.1;
  right:-24%;top:-34%;width:78%;height:112%;
- background:radial-gradient(closest-side,#ffd36a 0%,#ffcf65d9 38%,#ffc85c66 62%,#ffc85c00 100%); }
+ background:radial-gradient(closest-side,rgb(var(--v3-mesh-2) / 1.00000) 0%,rgb(var(--v3-mesh-2) / 0.85098) 38%,rgb(var(--v3-mesh-2) / 0.40000) 62%,rgb(var(--v3-mesh-2) / 0.00000) 100%); }
 .v3-case-gradient__blob--purple { --v3-gradient-name:v3-case-gradient-c;--v3-gradient-duration:20s;--v3-gradient-offset:6.7;
  left:-30%;top:18%;width:72%;height:116%;
- background:radial-gradient(closest-side,#a85cb0 0%,#a35aadd9 38%,#9878ac66 62%,#9878ac00 100%); }
+ background:radial-gradient(closest-side,rgb(var(--v3-mesh-3) / 1.00000) 0%,rgb(var(--v3-mesh-3) / 0.85098) 38%,rgb(var(--v3-mesh-3) / 0.40000) 62%,rgb(var(--v3-mesh-3) / 0.00000) 100%); }
 .v3-case-gradient__blob--teal { --v3-gradient-name:v3-case-gradient-d;--v3-gradient-duration:23s;--v3-gradient-offset:9.4;
  left:2%;bottom:-52%;width:112%;height:108%;
- background:radial-gradient(closest-side,#0fc4a6 0%,#0db7a0d9 38%,#1a9cb366 62%,#1a9cb300 100%); }
-/* Terminal palette: dark upper edge, electric blue and soft violet below.
+ background:radial-gradient(closest-side,rgb(var(--v3-mesh-4) / 1.00000) 0%,rgb(var(--v3-mesh-4) / 0.85098) 38%,rgb(var(--v3-mesh-4) / 0.40000) 62%,rgb(var(--v3-mesh-4) / 0.00000) 100%); }
+/* Terminal palette: light honey, cool lilac and mint around the dark artwork.
    Reuse the existing paused/offscreen-safe mesh motion, without new loops. */
-.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--coral { background:radial-gradient(closest-side,#020208 0%,#03030cdb 42%,#03030c00 100%); }
-.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--yellow { background:radial-gradient(closest-side,#034bec 0%,#0a42d6de 40%,#0637c400 100%); }
-.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--purple { background:radial-gradient(closest-side,#a18bce 0%,#7c5db6d9 38%,#6d54aa00 100%); }
-.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--teal { background:radial-gradient(closest-side,#5158ca 0%,#3b4fc4c9 42%,#3046b800 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--coral { background:radial-gradient(closest-side,rgb(223 203 120 / 1.00000) 0%,rgb(223 203 120 / 0.85882) 42%,rgb(223 203 120 / 0.00000) 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--yellow { background:radial-gradient(closest-side,rgb(246 226 162 / 1.00000) 0%,rgb(246 226 162 / 0.87059) 40%,rgb(246 226 162 / 0.00000) 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--purple { background:radial-gradient(closest-side,rgb(183 189 216 / 1.00000) 0%,rgb(183 189 216 / 0.85098) 38%,rgb(183 189 216 / 0.00000) 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--teal { background:radial-gradient(closest-side,rgb(199 213 196 / 1.00000) 0%,rgb(199 213 196 / 0.78824) 42%,rgb(199 213 196 / 0.00000) 100%); }
 /* Leasing: broad sage, pale yellow and grey haze, drifting slowly behind
    the original transparent artwork. Retains the shared visibility pause. */
 .v3-case-card[data-project="leasing"] .v3-case-cover { background:
@@ -38,16 +38,16 @@
  linear-gradient(145deg,#c8cebf 0%,#b9c2b2 50%,#929f98 100%); }
 .v3-case-card[data-project="leasing"] .v3-case-gradient__blob--coral {
  --v3-gradient-duration:28s;left:-30%;top:-46%;width:116%;height:150%;
- background:radial-gradient(closest-side,#8ea48799 0%,#a4b79a70 34%,#becab23d 64%,#becab200 100%); }
+ background:radial-gradient(closest-side,rgb(174 162 111 / 0.60000) 0%,rgb(174 162 111 / 0.43922) 34%,rgb(174 162 111 / 0.23922) 64%,rgb(174 162 111 / 0.00000) 100%); }
 .v3-case-card[data-project="leasing"] .v3-case-gradient__blob--yellow {
  --v3-gradient-duration:34s;right:-38%;top:-44%;width:126%;height:146%;
- background:radial-gradient(closest-side,#eee4a9c2 0%,#e6dfb18a 36%,#e2dfbe38 66%,#e2dfbe00 100%); }
+ background:radial-gradient(closest-side,rgb(228 203 123 / 0.76078) 0%,rgb(228 203 123 / 0.54118) 36%,rgb(228 203 123 / 0.21961) 66%,rgb(228 203 123 / 0.00000) 100%); }
 .v3-case-card[data-project="leasing"] .v3-case-gradient__blob--purple {
  --v3-gradient-duration:38s;left:-36%;top:16%;width:118%;height:146%;
- background:radial-gradient(closest-side,#85948c9c 0%,#9ca89e75 36%,#b5beb345 66%,#b5beb300 100%); }
+ background:radial-gradient(closest-side,rgb(120 156 177 / 0.61176) 0%,rgb(120 156 177 / 0.45882) 36%,rgb(120 156 177 / 0.27059) 66%,rgb(120 156 177 / 0.00000) 100%); }
 .v3-case-card[data-project="leasing"] .v3-case-gradient__blob--teal {
  --v3-gradient-duration:42s;left:8%;bottom:-56%;width:128%;height:154%;
- background:radial-gradient(closest-side,#9bad91b3 0%,#b0bc9f80 36%,#c7cbb53d 66%,#c7cbb500 100%); }
+ background:radial-gradient(closest-side,rgb(166 181 162 / 0.70196) 0%,rgb(166 181 162 / 0.50196) 36%,rgb(166 181 162 / 0.23922) 66%,rgb(166 181 162 / 0.00000) 100%); }
 /* Closed loops: the 0% and 100% poses are identical, so iterations join
    without a jump. Translate percentages refer to each blob's own box. */
 @keyframes v3-case-gradient-a {
@@ -80,3 +80,43 @@
 /* Mobile has no image parallax offset. Do not retain a neutral transform
    solely to promote the moving colour field to a composited backing. */
 @media(max-width:800px){.v3-case-gradient{transform:none}}
+
+/* Screenshot-specific colours; shared layer geometry and motion are unchanged. */
+.v3-case-card[data-project="larixon"] { --v3-mesh-1:174 141 204;--v3-mesh-2:228 181 204;--v3-mesh-3:141 159 197;--v3-mesh-4:179 155 204; }
+.v3-case-card[data-project="larixon"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 80% at 90% 0%,#E5BDD1 8%,#E5BDD155 48%,transparent 76%),
+ radial-gradient(ellipse 65% 65% at 0% 3%,#BC9ED6 6%,#AE8DCC99 40%,transparent 80%),
+ radial-gradient(ellipse 55% 62% at 0% 47%,#9C99C7 0%,#9C99C766 52%,transparent 90%),
+ radial-gradient(ellipse 90% 60% at 15% 100%,#A1B3D1 0%,#A1B3D1AA 54%,transparent 95%),
+ linear-gradient(155deg,#CFB9DD 15%,#B5A3D2 46%,#939BC5 78%,#8E9EBB); }
+.v3-case-card[data-project="brokerage"] { --v3-mesh-1:223 203 120;--v3-mesh-2:246 226 162;--v3-mesh-3:183 189 216;--v3-mesh-4:199 213 196; }
+.v3-case-card[data-project="brokerage"] .v3-case-cover { background:
+ radial-gradient(ellipse 100% 90% at 95% 35%,#F1DDA0 0%,#F1DDA066 48%,transparent 80%),
+ radial-gradient(ellipse 90% 75% at 10% 100%,#BEC9DF 0%,#BEC9DF7A 45%,transparent 85%),
+ linear-gradient(145deg,#E6DBB8 8%,#E1DCC5 40%,#C6CEBE 78%,#ADBED2); }
+.v3-case-card[data-project="leasing"] { --v3-mesh-1:174 162 111;--v3-mesh-2:228 203 123;--v3-mesh-3:120 156 177;--v3-mesh-4:166 181 162; }
+.v3-case-card[data-project="leasing"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 85% at 90% 8%,#E4CE8CB3 0%,#DDCEA54D 48%,transparent 88%),
+ radial-gradient(ellipse 95% 90% at 8% 75%,#9BAC9F99 0%,#AABAB44D 48%,transparent 90%),
+ linear-gradient(145deg,#CBCAB0 0%,#B5BEA6 50%,#88A6AD 100%); }
+.v3-case-card[data-project="yandex"] { --v3-mesh-1:228 161 104;--v3-mesh-2:240 205 110;--v3-mesh-3:216 137 125;--v3-mesh-4:137 182 196; }
+.v3-case-card[data-project="yandex"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 80% at 90% 0%,#F1D58A 8%,#F1D58A55 48%,transparent 76%),
+ radial-gradient(ellipse 65% 65% at 0% 3%,#E9AE7D 6%,#E4A16899 40%,transparent 80%),
+ radial-gradient(ellipse 55% 62% at 0% 47%,#DFA08B 0%,#D8897D66 52%,transparent 90%),
+ radial-gradient(ellipse 90% 60% at 15% 100%,#8EB8C5 0%,#89B6C4AA 54%,transparent 95%),
+ linear-gradient(155deg,#E2C6A3 15%,#C9B59D 46%,#8EAAB5 78%,#7A9CB4); }
+.v3-case-card[data-project="gdematerial"] { --v3-mesh-1:100 127 202;--v3-mesh-2:114 182 180;--v3-mesh-3:100 121 181;--v3-mesh-4:73 148 159; }
+.v3-case-card[data-project="gdematerial"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 80% at 90% 0%,#92C7BC 8%,#92C7BC55 48%,transparent 76%),
+ radial-gradient(ellipse 65% 65% at 0% 3%,#8299D5 6%,#647FCA99 40%,transparent 80%),
+ radial-gradient(ellipse 55% 62% at 0% 47%,#7487C3 0%,#6479B566 52%,transparent 90%),
+ radial-gradient(ellipse 90% 60% at 15% 100%,#6AAFAD 0%,#49949FAA 54%,transparent 95%),
+ linear-gradient(155deg,#ABC8D4 15%,#8DA9C7 46%,#4D8EAD 78%,#4E72B4); }
+.v3-case-card[data-project="medesk"] { --v3-mesh-1:87 127 166;--v3-mesh-2:169 195 208;--v3-mesh-3:141 143 193;--v3-mesh-4:88 166 165; }
+.v3-case-card[data-project="medesk"] .v3-case-cover { background:
+ radial-gradient(ellipse 90% 80% at 90% 0%,#BFC9DD 8%,#BFC9DD55 48%,transparent 76%),
+ radial-gradient(ellipse 65% 65% at 0% 3%,#7B9BB9 6%,#577FA699 40%,transparent 80%),
+ radial-gradient(ellipse 55% 62% at 0% 47%,#9D9CCB 0%,#8D8FC166 52%,transparent 90%),
+ radial-gradient(ellipse 90% 60% at 15% 100%,#78B7B7 0%,#58A6A5AA 54%,transparent 95%),
+ linear-gradient(155deg,#AEBBD5 15%,#95ACCA 46%,#5D90B8 78%,#557DAA); }
