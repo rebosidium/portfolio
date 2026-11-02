@@ -15,8 +15,8 @@ const projects=[
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b'},
  {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
 ];
-// Figma cover artwork is 519/588 of the column width at every breakpoint.
-const coverSizes='(max-width:480px) calc(88.2653vw - 42.3673px),(max-width:800px) calc(88.2653vw - 70.6122px),(max-width:1100px) calc(44.1327vw - 45.898px),(max-width:1296px) calc(44.1327vw - 52.9592px),519px';
+// Widened cover artwork is 553.5/588 of the column width at every breakpoint.
+const coverSizes='(max-width:480px) calc(94.13265vw - 45.18367px),(max-width:800px) calc(94.13265vw - 75.30612px),(max-width:1100px) calc(47.06633vw - 48.94898px),(max-width:1296px) calc(47.06633vw - 56.47959px),553.5px';
 export function mountCaseCards(host=document.querySelector('.v3-page')){
  if(!host||host.querySelector('.v3-cases'))return;
  const section=document.createElement('section');section.className='v3-cases';section.id='v3-case-studies';section.setAttribute('aria-labelledby','v3-cases-title');
@@ -86,14 +86,26 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  clipSVG.setAttribute('width','0');clipSVG.setAttribute('height','0');clipSVG.setAttribute('aria-hidden','true');clipSVG.setAttribute('focusable','false');
  clipSVG.style.cssText='position:absolute;pointer-events:none';clipSVG.append(clipDefs);section.append(clipSVG);
  const responsiveClips=new WeakMap();
+ function coverClipShape(element,width,height){
+  const common=element.classList.contains('v3-case-cover-art');
+  const insideArt=element.parentElement?.classList.contains('v3-case-cover-art');
+  // The shared silhouette owns real upper headroom; the field remains anchored
+  // at its bottom. Keep the lower squircle identical to the original field.
+  return{path:getSvgPath({width,height,cornerRadius:32,
+   ...(common?{topLeftCornerRadius:0,topRightCornerRadius:0}:{}),
+   ...(insideArt?{bottomLeftCornerRadius:0,bottomRightCornerRadius:0}:{}),
+   cornerSmoothing:1,preserveSmoothing:true})};
+ }
  function resizeCoverClip(element,width,height){
   let record=responsiveClips.get(element);
   if(!record){
-   const clip=document.createElementNS(svgNS,'clipPath'),path=document.createElementNS(svgNS,'path'),id=`v3-case-clip-${element.closest('.v3-case-card').dataset.project}`;
+   const suffix=element.classList.contains('v3-case-cover-art')?'-art':'';
+   const clip=document.createElementNS(svgNS,'clipPath'),path=document.createElementNS(svgNS,'path'),id=`v3-case-clip-${element.closest('.v3-case-card').dataset.project}${suffix}`;
    clip.setAttribute('id',id);clip.setAttribute('clipPathUnits','objectBoundingBox');clip.append(path);clipDefs.append(clip);
    record={id,path};responsiveClips.set(element,record);
   }
-  record.path.setAttribute('d',getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true}));
+  const shape=coverClipShape(element,width,height);
+  record.path.setAttribute('d',shape.path);
   record.path.setAttribute('transform',`scale(${1/width} ${1/height})`);
   setStyle(element,'clip-path',`url("#${record.id}")`);
  }
@@ -174,13 +186,15 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  fine.addEventListener('change',clearHover);reduced.addEventListener('change',clearHover);document.addEventListener('visibilitychange',()=>{if(document.hidden)clearHover();});
  function measure(){
   measuredWidth=section.clientWidth;measuredSmallHeight=teaserViewport.offsetHeight;
-  for(const element of section.querySelectorAll('.v3-case-cover,.v3-case-copy')){
-   const relative=!desktop.matches&&element.classList.contains('v3-case-cover');
+  for(const element of section.querySelectorAll('.v3-case-cover,.v3-case-copy,.v3-case-cover-art')){
+   const relative=element.classList.contains('v3-case-cover-art')||!desktop.matches&&element.classList.contains('v3-case-cover');
    const box=relative?element.closest('.v3-case-cover-pin'):element;
-   const style=getComputedStyle(box),width=parseFloat(style.width),height=parseFloat(style.height);if(!width||!height)continue;
+   const style=getComputedStyle(box),width=parseFloat(style.width),fieldHeight=parseFloat(style.height);
+   const height=element.classList.contains('v3-case-cover-art')?fieldHeight+width*Number(style.getPropertyValue('--v3-art-headroom'))/588:fieldHeight;
+   if(!width||!height)continue;
    const previous=clipSizes.get(element);if(previous?.width===width&&previous.height===height&&previous.relative===relative)continue;
    if(relative)resizeCoverClip(element,width,height);
-   else element.style.clipPath=`path('${getSvgPath({width,height,cornerRadius:32,cornerSmoothing:1,preserveSmoothing:true})}')`;
+   else element.style.clipPath=`path('${coverClipShape(element,width,height).path}')`;
    clipSizes.set(element,{width,height,relative});
   }
   if(!desktop.matches||reduced.matches){

@@ -4,7 +4,7 @@
 .v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
 .v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
 .v3-case-column:first-child { padding-top:114px; }
-.v3-case-card { --v3-case-gap:16px;--v3-cover-height:400;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
+.v3-case-card { --v3-case-gap:16px;--v3-cover-height:400;--v3-art-headroom:64;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
 /* One cover height drives the pin, the cover and every mobile range/boundary. */
 .v3-case-card[data-project="larixon"] { --v3-cover-height:334; }
 /* The sticky layout box and its visual cover have separate transforms:
@@ -12,17 +12,21 @@
 .v3-case-cover-pin { position:sticky;top:calc(24px - var(--v3-column-offset,0px));z-index:0;flex:none;width:100%;aspect-ratio:588/var(--v3-cover-height); }
 /* The stable pin owns layout; its visual child owns the shrinking artwork. */
 .v3-case-cover-reveal { width:100%;height:100%; }
-.v3-case-cover-visual { width:100%;height:100%;transform:translate3d(0,0,0) scale(var(--v3-stack-scale,1));transform-origin:center top;opacity:var(--v3-stack-opacity,1);will-change:transform,opacity; }
+.v3-case-cover-visual { position:relative;width:100%;height:100%;transform:translate3d(0,0,0) scale(var(--v3-stack-scale,1));transform-origin:center top;opacity:var(--v3-stack-opacity,1);will-change:transform,opacity; }
 .v3-case-cover-visual > .v3-case-cover,.v3-case-cover-art,.v3-case-cover-art > .v3-case-cover { width:100%;height:100%; }
 /* The full image moves inside a fixed local window. Its bottom is always
    flush with the gradient; extra space above allows the authored 18px rise
    and desktop parallax without exposing a baked image cut. */
-.v3-case-cover-art { position:relative; }
-.v3-case-cover-window { position:absolute;z-index:1;left:5.9524%;bottom:0;width:88.2653%;height:var(--v3-image-window-height,110.7784%);overflow:hidden;pointer-events:none; }
+.v3-case-cover-art { position:absolute;left:0;bottom:0;height:calc(100% * (var(--v3-cover-height) + var(--v3-art-headroom)) / var(--v3-cover-height));transform-origin:50% calc(100% * (var(--v3-art-headroom) + var(--v3-cover-height) / 2) / (var(--v3-cover-height) + var(--v3-art-headroom))); }
+/* The art wrapper clips both layers along one lower squircle. Only the
+   field's top corners need an inner clip; artwork may protrude above them.
+   The headroom is real box space, so desktop 3D compositing cannot trim it. */
+.v3-case-cover-art > .v3-case-cover { position:absolute;left:0;bottom:0;height:calc(100% * var(--v3-cover-height) / (var(--v3-cover-height) + var(--v3-art-headroom)));border-bottom-left-radius:0;border-bottom-right-radius:0; }
+.v3-case-cover-window { position:absolute;z-index:1;left:2.9762%;bottom:0;width:94.13265%;height:calc(100% * (var(--v3-cover-height) + 36) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
 .v3-case-cover-image { position:absolute;left:0;top:var(--v3-image-top,4.864865%);display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
 /* Preserve the same 18px artwork rise and 36px clipping headroom at 588px
    across the terminal's taller 400px field and Larixon's 334px field. */
-.v3-case-card[data-project="brokerage"] { --v3-image-window-height:109%;--v3-image-top:4.12844%; }
+.v3-case-card[data-project="brokerage"] { --v3-image-top:4.12844%; }
 .v3-case-card[data-project="brokerage"] .v3-case-cover { background:
  radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
  radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),

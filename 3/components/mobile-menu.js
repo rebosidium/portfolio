@@ -149,11 +149,10 @@ document.addEventListener('click',async event=>{
   event.preventDefault();
   if(inMenu){await setOpen(false,{returnFocus:false});if(dialog.open)return;}
   window.v3Entrance?.finish();
-  // Contact previews the first 60% of the visible screen; the remaining
-  // footer unfolds as the visitor continues scrolling. Work starts at 24px.
+  // Contact goes to the fully expanded footer at the end of the document.
+  // Work keeps its heading 24px below the viewport edge.
   const viewport=window.visualViewport?.height||innerHeight;
-  const offset=id==='v3-contact'?viewport*.4:24;
-  const top=Math.max(0,scrollY+target.getBoundingClientRect().top-offset);
+  const top=id==='v3-contact'?Math.max(0,document.documentElement.scrollHeight-viewport):Math.max(0,scrollY+target.getBoundingClientRect().top-24);
   if(location.hash!==destination.hash){const url=new URL(location.href);url.hash=destination.hash;history.pushState(null,'',url);}
   scrollTo({top,behavior:reduced.matches?'instant':'smooth'});
 });
