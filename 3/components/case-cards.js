@@ -199,7 +199,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    const relative=element.classList.contains('v3-case-cover-art')||!desktop.matches&&element.classList.contains('v3-case-cover');
    const box=relative?element.closest('.v3-case-cover-pin'):element;
    const style=getComputedStyle(box),width=parseFloat(style.width),fieldHeight=parseFloat(style.height);
-   const height=element.classList.contains('v3-case-cover-art')?fieldHeight+width*Number(style.getPropertyValue('--v3-art-headroom'))/588:fieldHeight;
+   const height=element.classList.contains('v3-case-cover-art')?fieldHeight+width*Number(style.getPropertyValue('--v3-art-headroom'))/588:relative?fieldHeight*Number(style.getPropertyValue('--v3-field-scale')||1):fieldHeight;
    if(!width||!height)continue;
    const previous=clipSizes.get(element);if(previous?.width===width&&previous.height===height&&previous.relative===relative)continue;
    if(relative)resizeCoverClip(element,width,height);
