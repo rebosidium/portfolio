@@ -3,8 +3,8 @@ import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
 import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=9c8930ddd3f2';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',cover:{
-  src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51',width:1200,height:1066,
-  srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=55f0a5ab4610 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=04065790d4b3 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=5991105d762d 1920w',
+  src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=96f03d764c7c',width:1200,height:969,
+  srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=0c0358bd31a9 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=0d58446df47a 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=96f03d764c7c 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=718281acd315 1920w',
   alt:'Isometric illustration of Larixon Classifieds product screens'}},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599',cover:{
   src:'/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=428f9b9cb724',width:1200,height:1196,
