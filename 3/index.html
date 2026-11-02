@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="e10945898613">
+<html lang="en" data-build="7ba5ae14d4d2">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -245,6 +245,7 @@
     small.addEventListener('blur',()=>{delete small.dataset.returnFocus;});
     document.addEventListener('keydown',event=>{if(['Tab','ArrowLeft','ArrowRight'].includes(event.key))delete small.dataset.returnFocus;});
     dialog.v3AvatarShell=Object.freeze({afterPaint,get closing(){return closing;}});
+    if(new URLSearchParams(location.search).has('game'))open();
   })();
   </script>
 </body>
