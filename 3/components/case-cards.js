@@ -3,28 +3,28 @@ import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
 import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=61d4cce35bd4';
 const projects=[
  {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',cover:{
-  src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=96f03d764c7c',width:1200,height:969,
-  srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=0c0358bd31a9 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=0d58446df47a 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=96f03d764c7c 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=718281acd315 1920w',
+  src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=d9ae8764fb1a',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=7fc531bb1fd1 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=0a3cf97c786f 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=d9ae8764fb1a 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=cfa2ff81b6b3 1920w',
   alt:'Isometric illustration of Larixon Classifieds product screens'}},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599',cover:{
-  src:'/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=60cf793bdc9d',width:1200,height:1002,
-  srcset:'/3/assets/case-covers/brokerage-isometric-480-q94.webp?v=368c6affa9d9 480w,/3/assets/case-covers/brokerage-isometric-768-q94.webp?v=d35e418b0b6c 768w,/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=60cf793bdc9d 1200w,/3/assets/case-covers/brokerage-isometric-1920-q94.webp?v=ffb21151fa36 1920w',
+  src:'/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=e4ba540ab8a7',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/brokerage-isometric-480-q94.webp?v=24537138a64b 480w,/3/assets/case-covers/brokerage-isometric-768-q94.webp?v=fbb698c6f987 768w,/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=e4ba540ab8a7 1200w,/3/assets/case-covers/brokerage-isometric-1920-q94.webp?v=2edc22bb95d3 1920w',
   alt:'Isometric illustration of the Raiffeisen professional trading terminal'}},
  {id:'leasing',prefix:'Connecting',company:'Raiffeisen Leasing',tail:'workflows, from the first calculation to a signed contract.',logo:'logo-raiffeisen.svg?v=74f1746e3599',cover:{
-  src:'/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=f4c7f9a22734',width:1200,height:1685,
-  srcset:'/3/assets/case-covers/leasing-isometric-480-q94.webp?v=3e4d0b70c1c3 480w,/3/assets/case-covers/leasing-isometric-768-q94.webp?v=cba39d3225ea 768w,/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=f4c7f9a22734 1200w,/3/assets/case-covers/leasing-isometric-1920-q94.webp?v=7aac8f67f4f6 1920w',
+  src:'/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=960f87e299e1',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/leasing-isometric-480-q94.webp?v=f4684d1a1d37 480w,/3/assets/case-covers/leasing-isometric-768-q94.webp?v=bb04f37f0ed2 768w,/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=960f87e299e1 1200w,/3/assets/case-covers/leasing-isometric-1920-q94.webp?v=884b4b860880 1920w',
   alt:'Isometric illustration of Raiffeisen Leasing agent portal screens'}},
  {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47',cover:{
-  src:'/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=049c2b57aea2',width:1200,height:1024,
-  srcset:'/3/assets/case-covers/yandex-isometric-480-q94.webp?v=c56b187a04b6 480w,/3/assets/case-covers/yandex-isometric-768-q94.webp?v=9c7465f7255a 768w,/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=049c2b57aea2 1200w,/3/assets/case-covers/yandex-isometric-1920-q94.webp?v=46737b782a21 1920w',
+  src:'/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=63ad9bc13248',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/yandex-isometric-480-q94.webp?v=3f7d1df6f191 480w,/3/assets/case-covers/yandex-isometric-768-q94.webp?v=493178b143a3 768w,/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=63ad9bc13248 1200w,/3/assets/case-covers/yandex-isometric-1920-q94.webp?v=601b8cc199ff 1920w',
   alt:'Isometric illustration of Yandex Market Analytics with an FMCG opportunity map, dashboards and onboarding screens'}},
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b',cover:{
-  src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=7b6b67a4aeca',width:1200,height:1160,
-  srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=13c0d86a4b1b 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=19078434ea41 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=7b6b67a4aeca 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=0958874a9651 1920w',
+  src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=cafb664b6e88',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=ec84b5dc5e23 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=7a6cfa1baa4b 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=cafb664b6e88 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=1795e9f75d85 1920w',
   alt:'Isometric illustration of GdeMaterial supplier discovery and ordering screens'}},
  {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4',cover:{
-  src:'/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=b4fdf74ff776',width:1200,height:1538,
-  srcset:'/3/assets/case-covers/medesk-isometric-480-q94.webp?v=a47f3064d615 480w,/3/assets/case-covers/medesk-isometric-768-q94.webp?v=4e84dd310d81 768w,/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=b4fdf74ff776 1200w,/3/assets/case-covers/medesk-isometric-1920-q94.webp?v=56b2c251cf49 1920w',
+  src:'/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=4d632f5a75e7',width:1200,height:1028,
+  srcset:'/3/assets/case-covers/medesk-isometric-480-q94.webp?v=632b6f972fe5 480w,/3/assets/case-covers/medesk-isometric-768-q94.webp?v=6cdbffc192a3 768w,/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=4d632f5a75e7 1200w,/3/assets/case-covers/medesk-isometric-1920-q94.webp?v=26c2eb6478f7 1920w',
   alt:'Isometric illustration of Medesk clinic scheduling, patient booking and website screens'}}
 ];
 // Widened cover artwork is 553.5/588 of the column width at every breakpoint.
