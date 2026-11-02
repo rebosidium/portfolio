@@ -35,9 +35,8 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   // Artwork protrudes above the clipped gradient, so it is the gradient's
   // sibling inside an unclipped wrapper that owns the shared hover tilt.
   const gradient='<div class="v3-case-cover" aria-hidden="true"></div>',{cover}=project;
-  // The first visual row loads eagerly; the first cover matches the HTML preload.
-  const eager=index===0||index===1&&matchMedia('(min-width:801px)').matches;
-  const art=cover?`<div class="v3-case-cover-art">${gradient}<div class="v3-case-cover-window"><img class="v3-case-cover-image" src="${cover.src}" srcset="${cover.srcset}" sizes="${coverSizes}" width="${cover.width}" height="${cover.height}" alt="${cover.alt}" loading="${eager?'eager':'lazy'}"${index===0?' fetchpriority="high"':''} decoding="async" draggable="false"></div></div>`:gradient;
+  // Load every cover immediately; the first cover matches the HTML preload.
+  const art=cover?`<div class="v3-case-cover-art">${gradient}<div class="v3-case-cover-window"><img class="v3-case-cover-image" src="${cover.src}" srcset="${cover.srcset}" sizes="${coverSizes}" width="${cover.width}" height="${cover.height}" alt="${cover.alt}" loading="eager"${index===0?' fetchpriority="high"':''} decoding="async" draggable="false"></div></div>`:gradient;
   article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual">${art}</div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
   columns[index%2].append(article);
  }
