@@ -57,7 +57,8 @@ if(section){
   else field.style.clipPath=`path('${shift(getSvgPath({width,height,cornerRadius:r,cornerSmoothing:1,preserveSmoothing:true}),inset,FIELD_TOP)}')`;
   // The content is centred in the screen-tall block and never moves relative to it;
   // it is only scaled down a little when the visible height is shorter than the content.
-  const fit=clamp((smallH-32)/cardH,.7,1);
+  // Phones scroll the full-size content instead of shrinking their controls.
+  const fit=innerWidth<=800?1:clamp((smallH-32)/cardH,.7,1);
   card.style.transform=fit<1?`scale(${fit.toFixed(4)})`:'';
   for(const {el,delay,distance} of parts){
    const q=reduced.matches?1:ease(clamp((ep-delay)/.4,0,1));

@@ -23,7 +23,7 @@ function installStyles(){
  @keyframes v3-card-copy-stack{${frames.map(f=>`${f.at}%{transform:translateY(${n(f.lift)}px)}`).join('')}}
  @media(max-width:800px){
   .v3-cases{container-type:inline-size}
-  .v3-card-stack-boundary{position:absolute;left:0;top:calc(100cqi * 400 / 588 + var(--v3-case-gap) - 1px);width:1px;height:1px;visibility:hidden;pointer-events:none}
+  .v3-card-stack-boundary{position:absolute;left:0;top:calc(100cqi * var(--v3-cover-height) / 588 + var(--v3-case-gap) - 1px);width:1px;height:1px;visibility:hidden;pointer-events:none}
  }
  @media(max-width:800px) and (prefers-reduced-motion:no-preference){
   @supports (animation-timeline:--v3-card-stack) and (view-timeline-name:--v3-card-stack) and (animation-range:exit-crossing 0px exit-crossing 1px) and (width:1cqi){
@@ -31,11 +31,11 @@ function installStyles(){
       descendants, so neither can feed motion back into the timeline. */
    .v3-case-card{view-timeline-name:--v3-card-stack;view-timeline-axis:block;view-timeline-inset:16px 0px}
    @supports (-webkit-touch-callout:none){
-    .v3-case-cover-pin{animation:v3-card-pin-attachment linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing 0px exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
+    .v3-case-cover-pin{animation:v3-card-pin-attachment linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing 0px exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
    }
-   .v3-case-cover-reveal{animation:v3-card-cover-cull steps(1,end) both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
-   .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
-   .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * 400 / 588 * .75)}
+   .v3-case-cover-reveal{animation:v3-card-cover-cull steps(1,end) both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
+   .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
+   .v3-case-copy{animation:v3-card-copy-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
   }
  }`;
  document.head.append(style);

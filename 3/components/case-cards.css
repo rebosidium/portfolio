@@ -1,22 +1,36 @@
-/* v3 case templates: Figma 588×400 cover + content-sized copy, radius32/smoothing1. */
+/* v3 case templates: Figma 588×400 cover (Larixon 588×334) + content-sized copy, radius32/smoothing1. */
 .v3-cases { width:min(1200px,calc(100% - 96px));margin:var(--v3-case-teaser-gap,164px) auto 0;padding:0 0 100px; }
 .v3-cases__title { width:calc((100% - 24px)/2);margin:0 0 0 -2px;font-size:74px;line-height:96px;font-weight:400;letter-spacing:-.74px; }
 .v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
 .v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
 .v3-case-column:first-child { padding-top:114px; }
-.v3-case-card { --v3-case-gap:16px;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
+.v3-case-card { --v3-case-gap:16px;--v3-cover-height:400;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
+/* One cover height drives the pin, the cover and every mobile range/boundary. */
+.v3-case-card[data-project="larixon"] { --v3-cover-height:334; }
 /* The sticky layout box and its visual cover have separate transforms:
    stacking never interferes with hover tilt or gradient-field parallax. */
-.v3-case-cover-pin { position:sticky;top:calc(24px - var(--v3-column-offset,0px));z-index:0;flex:none;width:100%;aspect-ratio:588/400; }
+.v3-case-cover-pin { position:sticky;top:calc(24px - var(--v3-column-offset,0px));z-index:0;flex:none;width:100%;aspect-ratio:588/var(--v3-cover-height); }
 /* The stable pin owns layout; its visual child owns the shrinking artwork. */
 .v3-case-cover-reveal { width:100%;height:100%; }
 .v3-case-cover-visual { width:100%;height:100%;transform:translate3d(0,0,0) scale(var(--v3-stack-scale,1));transform-origin:center top;opacity:var(--v3-stack-opacity,1);will-change:transform,opacity; }
-.v3-case-cover-visual > .v3-case-cover { width:100%;height:100%; }
+.v3-case-cover-visual > .v3-case-cover,.v3-case-cover-art,.v3-case-cover-art > .v3-case-cover { width:100%;height:100%; }
+/* The full image moves inside a fixed local window. Its bottom is always
+   flush with the gradient; extra space above allows the authored 18px rise
+   and desktop parallax without exposing a baked image cut. */
+.v3-case-cover-art { position:relative; }
+.v3-case-cover-window { position:absolute;z-index:1;left:5.9524%;bottom:0;width:88.2653%;height:110.7784%;overflow:hidden;pointer-events:none; }
+.v3-case-cover-image { position:absolute;left:0;top:4.864865%;display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)); }
+/* Reveal trails the colour field; independent 2D properties keep the desktop
+   scroll offset separate from the one-time entrance transition. */
+.v3-case-cover-window { opacity:1;transition:opacity 800ms ease 220ms; }
+.v3-case-cover-image { translate:0 0;transition:translate 900ms cubic-bezier(.22,1,.36,1) 220ms; }
+.v3-case-card[data-reveal="pending"] .v3-case-cover-window { opacity:0; }
+.v3-case-card[data-reveal="pending"] .v3-case-cover-image { translate:0 28px; }
 /* A static colour field covers first paint and reduced motion. Soft CSS
    colour layers animate above it without GPU API or secure-context gates. */
 /* Keep this local clip: it contains the gradient's 22% desktop overscan.
    The gradient clips its own blobs; viewport/sticky ancestors must stay unclipped. */
-.v3-case-cover { position:relative;isolation:isolate;aspect-ratio:588/400;overflow:hidden;border-radius:32px;background:
+.v3-case-cover { position:relative;isolation:isolate;aspect-ratio:588/var(--v3-cover-height);overflow:hidden;border-radius:32px;background:
  radial-gradient(ellipse 90% 80% at 90% 0%,#ffda70 8%,#ffce6555 48%,transparent 76%),
  radial-gradient(ellipse 65% 65% at 0% 3%,#ff696c 6%,#ea687d99 40%,transparent 80%),
  radial-gradient(ellipse 55% 62% at 0% 47%,#a25caa 0%,#9878ac66 52%,transparent 90%),
@@ -53,7 +67,7 @@
  /* Match the physical-phone width/height control. No forced 3D backing or
     transform scaling on the resizing child; its outer slot never changes. */
  .v3-case-cover-visual{margin-inline:auto;border-radius:32px;transform:none;will-change:auto}
- .v3-case-cover{aspect-ratio:588/400;border-radius:inherit}
+ .v3-case-cover{aspect-ratio:588/var(--v3-cover-height);border-radius:inherit}
  .v3-case-copy{min-height:0;padding:36px 32px}
  .v3-case-copy h3{font-size:30px}
 }
@@ -72,10 +86,12 @@
 /* Cover-only tilt keeps the case text still and readable. No touch hover loop. */
 .v3-case-cover::before { content:'';position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(ellipse 340px 240px at var(--v3-card-pointer-x,50%) var(--v3-card-pointer-y,50%),#ffffff26,transparent 72%);transition:opacity 240ms ease; }
 @media(min-width:801px) and (hover:hover) and (pointer:fine){
- .v3-case-cover{transform:perspective(1100px) rotateX(var(--v3-card-rx,0deg)) rotateY(var(--v3-card-ry,0deg));transition:transform 340ms cubic-bezier(.22,1,.36,1)}
- .v3-case-cover[data-hovering]::before{opacity:1}
+ .v3-case-cover,.v3-case-cover-art{transform:perspective(1100px) rotateX(var(--v3-card-rx,0deg)) rotateY(var(--v3-card-ry,0deg));transition:transform 340ms cubic-bezier(.22,1,.36,1)}
+ /* The art wrapper tilts gradient and image together; its gradient stays flat inside. */
+ .v3-case-cover-art > .v3-case-cover{transform:none;transition:none}
+ .v3-case-cover[data-hovering]::before,.v3-case-cover-art[data-hovering] > .v3-case-cover::before{opacity:1}
 }
-@media(prefers-reduced-motion:reduce){.v3-case-cover{transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
+@media(prefers-reduced-motion:reduce){.v3-case-cover,.v3-case-cover-art{transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
 
 /* Never transform the article containing the sticky box: Safari can change
    its sticky reference when an entrance transform finishes. Reveal artwork
@@ -87,6 +103,7 @@
 .v3-case-card[data-reveal="pending"],.v3-cases__title[data-reveal="pending"] { opacity:0;pointer-events:none; }
 .v3-cases__title[data-reveal="pending"],.v3-case-card[data-reveal="pending"] .v3-case-cover-reveal,.v3-case-card[data-reveal="pending"] .v3-case-copy h3 { transform:translateY(32px); }
 @media(prefers-reduced-motion:reduce) {
+  .v3-case-cover-window,.v3-case-cover-image {opacity:1;translate:none;transform:none;transition:none}
   .v3-case-card[data-reveal],.v3-cases__title[data-reveal],.v3-case-cover-reveal,.v3-case-copy h3 {opacity:1;transform:none!important;transition:none!important}
   .v3-case-cover-pin {position:relative;top:auto}
   .v3-case-cover-visual {transform:none;opacity:1;will-change:auto}

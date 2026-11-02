@@ -1,14 +1,19 @@
 import {getSvgPath} from './card-squircle.js?v=e69287c61f97';
 import {mountCardGradients} from './card-gradient.js?v=05712b4738ae';
-import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=acba1784ea1a';
+import {mountCardStack,cardStackFrame} from './card-stack-motion.js?v=706d29d2f7bd';
 const projects=[
- {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57'},
+ {id:'larixon',prefix:'Building for',company:'Larixon Classifieds',tail:'a design function across markets and product teams with 5M MAU.',logo:'larixon.svg?v=0165cbf89d57',cover:{
+  src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51',width:1200,height:1066,
+  srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=55f0a5ab4610 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=04065790d4b3 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=5991105d762d 1920w',
+  alt:'Isometric illustration of Larixon Classifieds product screens'}},
  {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
  {id:'leasing',prefix:'Connecting',company:'Raiffeisen Leasing',tail:'workflows, from the first calculation to a signed contract.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
  {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b'},
  {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
 ];
+// Figma cover artwork is 519/588 of the column width at every breakpoint.
+const coverSizes='(max-width:480px) calc(88.2653vw - 42.3673px),(max-width:800px) calc(88.2653vw - 70.6122px),(max-width:1100px) calc(44.1327vw - 45.898px),(max-width:1296px) calc(44.1327vw - 52.9592px),519px';
 export function mountCaseCards(host=document.querySelector('.v3-page')){
  if(!host||host.querySelector('.v3-cases'))return;
  const section=document.createElement('section');section.className='v3-cases';section.id='v3-case-studies';section.setAttribute('aria-labelledby','v3-cases-title');
@@ -18,7 +23,11 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  for(const [index,project]of projects.entries()){
   const article=document.createElement('article');article.className='v3-case-card';article.dataset.project=project.id;article.dataset.reveal='pending';article.style.setProperty('--v3-card-order',String(index));
   const [firstWord,...remainingWords]=project.company.split(' ');
-  article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual"><div class="v3-case-cover" aria-hidden="true"></div></div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
+  // Artwork protrudes above the clipped gradient, so it is the gradient's
+  // sibling inside an unclipped wrapper that owns the shared hover tilt.
+  const gradient='<div class="v3-case-cover" aria-hidden="true"></div>',{cover}=project;
+  const art=cover?`<div class="v3-case-cover-art">${gradient}<div class="v3-case-cover-window"><img class="v3-case-cover-image" src="${cover.src}" srcset="${cover.srcset}" sizes="${coverSizes}" width="${cover.width}" height="${cover.height}" alt="${cover.alt}" loading="lazy" decoding="async" draggable="false"></div></div>`:gradient;
+  article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual">${art}</div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
   columns[index%2].append(article);
  }
  host.append(section);
@@ -57,7 +66,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
  document.fonts?.ready.then(queueTeaser);
 
  let raf=0,visible=true;
- const covers=[...section.querySelectorAll('.v3-case-cover')];
+ const covers=[...section.querySelectorAll('.v3-case-cover')].map(cover=>cover.closest('.v3-case-cover-art')||cover);
  const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0,flowTop:0,articleHeight:0,column:article.parentElement}));
  mountCardStack(section);
  mountCardGradients(section);
@@ -168,7 +177,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   }
   if(!desktop.matches||reduced.matches){
    for(const column of columns){setStyle(column,'transform','none');setStyle(column,'--v3-column-offset','0px');}
-   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
+   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale','--v3-image-shift'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
    return;
   }
   for(const card of cards){
@@ -205,6 +214,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
    const factor=Math.min(1,Math.max(0,pageY/180)),scale=active?1+.22*factor:1;
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
+   if(article.dataset.project==='larixon')setStyle(article,'--v3-image-shift',`${Math.max(-18,Math.min(18,(innerHeight/2-(pinTop+height/2))*.09))*factor}px`);
    const desired=active?Math.max(-36,Math.min(36,(innerHeight/2-(pinTop+height*stackScale/2))*.06))*factor:0;
    const margin=Math.max(0,height*(scale-1)/2-.5);
    setStyle(article,'--v3-cover-shift',`${Math.max(-margin,Math.min(margin,desired))}px`);

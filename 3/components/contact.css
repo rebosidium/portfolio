@@ -75,6 +75,7 @@ body { position:relative; }
 }
 @media (max-width:359px) {
  .v3-contact__lead,.v3-contact__link { font-size:24px; }
+ .v3-contact__resume { height:56px;font-size:17px; }
 }
 /* Move the iOS content up independently of the full-bleed gradient field. */
 @supports (-webkit-touch-callout:none) {
