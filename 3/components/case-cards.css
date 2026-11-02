@@ -24,11 +24,13 @@
    field's top corners need an inner clip; artwork may protrude above them.
    The headroom is real box space, so desktop 3D compositing cannot trim it. */
 .v3-case-cover-art > .v3-case-cover { position:absolute;left:0;bottom:0;height:calc(100% * var(--v3-cover-height) * var(--v3-field-scale) / (var(--v3-cover-height) + var(--v3-art-headroom)));border-bottom-left-radius:0;border-bottom-right-radius:0; }
-.v3-case-cover-window { position:absolute;z-index:1;left:calc(2.9762% - 2px);bottom:0;width:calc(94.13265% + 4px);height:calc(100% * (var(--v3-cover-height) + 36) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
+.v3-case-cover-window { position:absolute;z-index:1;left:calc(2.9762% - 2px);bottom:0;width:calc(94.13265% + 4px);height:calc(100% * (var(--v3-cover-height) + var(--v3-image-window-headroom,36)) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
 .v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,4.864865%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
 /* Preserve the same 18px artwork rise and 36px clipping headroom at 588px
    across the terminal's taller 400px field and Larixon's 334px field. */
 .v3-case-card[data-project="brokerage"],.v3-case-card[data-project="leasing"],.v3-case-card[data-project="gdematerial"],.v3-case-card[data-project="medesk"],.v3-case-card[data-project="yandex"] { --v3-image-top:4.12844%; }
+/* Give the terminal 24px more window headroom and a 22px inset: the artwork rises 20px without scaling. */
+.v3-case-card[data-project="brokerage"] { --v3-image-window-headroom:60;--v3-image-top:4.78261%; }
 .v3-case-card[data-project="brokerage"] .v3-case-cover { background:
  radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
  radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),
