@@ -19,7 +19,10 @@ const projects=[
   src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=8093fa934c5c',width:1200,height:1160,
   srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=a1c4db9f37c7 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=f679607792b7 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=8093fa934c5c 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=1b37ea220c31 1920w',
   alt:'Isometric illustration of GdeMaterial supplier discovery and ordering screens'}},
- {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4'}
+ {id:'medesk',prefix:'Designing for',company:'Medesk',tail:'connected clinic and patient workflows across 35 countries.',logo:'logo-medesk.svg?v=f5badc4055d4',cover:{
+  src:'/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=b4fdf74ff776',width:1200,height:1538,
+  srcset:'/3/assets/case-covers/medesk-isometric-480-q94.webp?v=a47f3064d615 480w,/3/assets/case-covers/medesk-isometric-768-q94.webp?v=4e84dd310d81 768w,/3/assets/case-covers/medesk-isometric-1200-q94.webp?v=b4fdf74ff776 1200w,/3/assets/case-covers/medesk-isometric-1920-q94.webp?v=56b2c251cf49 1920w',
+  alt:'Isometric illustration of Medesk clinic scheduling, patient booking and website screens'}}
 ];
 // Widened cover artwork is 553.5/588 of the column width at every breakpoint.
 const coverSizes='(max-width:480px) calc(94.13265vw - 45.18367px),(max-width:800px) calc(94.13265vw - 75.30612px),(max-width:1100px) calc(47.06633vw - 48.94898px),(max-width:1296px) calc(47.06633vw - 56.47959px),553.5px';
