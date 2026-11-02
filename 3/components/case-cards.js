@@ -14,7 +14,10 @@ const projects=[
   src:'/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=f4c7f9a22734',width:1200,height:1685,
   srcset:'/3/assets/case-covers/leasing-isometric-480-q94.webp?v=3e4d0b70c1c3 480w,/3/assets/case-covers/leasing-isometric-768-q94.webp?v=cba39d3225ea 768w,/3/assets/case-covers/leasing-isometric-1200-q94.webp?v=f4c7f9a22734 1200w,/3/assets/case-covers/leasing-isometric-1920-q94.webp?v=7aac8f67f4f6 1920w',
   alt:'Isometric illustration of Raiffeisen Leasing agent portal screens'}},
- {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
+ {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47',cover:{
+  src:'/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=049c2b57aea2',width:1200,height:1024,
+  srcset:'/3/assets/case-covers/yandex-isometric-480-q94.webp?v=c56b187a04b6 480w,/3/assets/case-covers/yandex-isometric-768-q94.webp?v=9c7465f7255a 768w,/3/assets/case-covers/yandex-isometric-1200-q94.webp?v=049c2b57aea2 1200w,/3/assets/case-covers/yandex-isometric-1920-q94.webp?v=46737b782a21 1920w',
+  alt:'Isometric illustration of Yandex Market Analytics with an FMCG opportunity map, dashboards and onboarding screens'}},
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b',cover:{
   src:'/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=7b6b67a4aeca',width:1200,height:1160,
   srcset:'/3/assets/case-covers/gdematerial-isometric-480-q94.webp?v=13c0d86a4b1b 480w,/3/assets/case-covers/gdematerial-isometric-768-q94.webp?v=19078434ea41 768w,/3/assets/case-covers/gdematerial-isometric-1200-q94.webp?v=7b6b67a4aeca 1200w,/3/assets/case-covers/gdematerial-isometric-1920-q94.webp?v=0958874a9651 1920w',
