@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="4f7c0bc9f6e6">
+<html lang="en" data-build="ab6a99c11191">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +8,9 @@
   <meta name="description" content="Dmitry Rybalka — Product Designer & Design Lead building large-scale products for millions of users across multiple markets.">
   <title>Dmitry Rybalka — Product Designer & Design Lead · v3</title>
   <link rel="icon" href="data:,">
+  <!-- First case cover: same srcset/sizes as its eager img, so exactly one
+       variant is fetched and reused. No href: no fallback double download. -->
+  <link rel="preload" as="image" imagesrcset="/3/assets/case-covers/larixon-isometric-480-q94.webp?v=55f0a5ab4610 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=04065790d4b3 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=5991105d762d 1920w" imagesizes="(max-width:480px) calc(88.2653vw - 42.3673px),(max-width:800px) calc(88.2653vw - 70.6122px),(max-width:1100px) calc(44.1327vw - 45.898px),(max-width:1296px) calc(44.1327vw - 52.9592px),519px" fetchpriority="high">
   <script>
   // Android touch devices get a static portrait backdrop. Set before first paint
   // so a cold tap never shows the animated mesh. Same test as the player choice.
@@ -28,6 +31,16 @@
       timer=setTimeout(()=>{finish();dispatchEvent(new Event('v3-entrance-timeout'));},4500);
     }else finish();
   })();
+  // Optional portrait frame downloads wait for the eager case covers (decoded
+  // or failed). Fail open: window load (which those images delay) or 10s
+  // release it even if the case module never runs or a request stalls.
+  (()=>{
+    let release;const ready=new Promise(resolve=>{release=resolve;});
+    const timer=setTimeout(release,10000);
+    const settle=()=>{clearTimeout(timer);release();};
+    addEventListener('load',settle,{once:true});
+    window.v3CaseImages=Object.freeze({ready,settle});
+  })();
   </script>
   <script defer src="/3/components/page-entrance.js?v=3a238635f3c1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,10 +54,10 @@
   <script type="module" src="/3/components/mobile-menu.js?v=6c2cc0e28616"></script>
   <link rel="stylesheet" href="/3/components/avatar-effects.css?v=dd55cd4dcf8f">
   <link rel="stylesheet" href="/3/components/avatar.css?v=29ad70889197">
-  <script type="module" src="/3/components/avatar.js?v=b1da6ceb1f19"></script>
-  <link rel="stylesheet" href="/3/components/case-cards.css?v=b4f778752b06">
-  <link rel="stylesheet" href="/3/components/card-gradient.css?v=217eed4fa325">
-  <script type="module" src="/3/components/case-cards.js?v=bceb81ce2e19"></script>
+  <script type="module" src="/3/components/avatar.js?v=11046417f195"></script>
+  <link rel="stylesheet" href="/3/components/case-cards.css?v=f508a30f1dd2">
+  <link rel="stylesheet" href="/3/components/card-gradient.css?v=da34ba743426">
+  <script type="module" src="/3/components/case-cards.js?v=f761d7b24dae"></script>
   <link rel="stylesheet" href="/3/components/contact.css?v=7f56b87269f5">
   <link rel="stylesheet" href="/3/components/contact-gradient.css?v=d2204a9655d2">
   <script type="module" src="/3/components/contact.js?v=7502722c439d"></script>

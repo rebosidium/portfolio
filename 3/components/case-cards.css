@@ -18,8 +18,15 @@
    flush with the gradient; extra space above allows the authored 18px rise
    and desktop parallax without exposing a baked image cut. */
 .v3-case-cover-art { position:relative; }
-.v3-case-cover-window { position:absolute;z-index:1;left:5.9524%;bottom:0;width:88.2653%;height:110.7784%;overflow:hidden;pointer-events:none; }
-.v3-case-cover-image { position:absolute;left:0;top:4.864865%;display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
+.v3-case-cover-window { position:absolute;z-index:1;left:5.9524%;bottom:0;width:88.2653%;height:var(--v3-image-window-height,110.7784%);overflow:hidden;pointer-events:none; }
+.v3-case-cover-image { position:absolute;left:0;top:var(--v3-image-top,4.864865%);display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
+/* Preserve the same 18px artwork rise and 36px clipping headroom at 588px
+   across the terminal's taller 400px field and Larixon's 334px field. */
+.v3-case-card[data-project="brokerage"] { --v3-image-window-height:109%;--v3-image-top:4.12844%; }
+.v3-case-card[data-project="brokerage"] .v3-case-cover { background:
+ radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
+ radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),
+ linear-gradient(145deg,#02030a 8%,#080b28 40%,#293fa4 78%,#7566bb); }
 /* Stagger visibility only. The scroll pose owns all image movement in both
    directions; a delayed translate would pull it towards a second origin. */
 .v3-case-cover-window { opacity:1;transition:opacity 800ms ease 220ms; }

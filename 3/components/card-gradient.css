@@ -24,6 +24,12 @@
 .v3-case-gradient__blob--teal { --v3-gradient-name:v3-case-gradient-d;--v3-gradient-duration:23s;--v3-gradient-offset:9.4;
  left:2%;bottom:-52%;width:112%;height:108%;
  background:radial-gradient(closest-side,#0fc4a6 0%,#0db7a0d9 38%,#1a9cb366 62%,#1a9cb300 100%); }
+/* Terminal palette: dark upper edge, electric blue and soft violet below.
+   Reuse the existing paused/offscreen-safe mesh motion, without new loops. */
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--coral { background:radial-gradient(closest-side,#020208 0%,#03030cdb 42%,#03030c00 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--yellow { background:radial-gradient(closest-side,#034bec 0%,#0a42d6de 40%,#0637c400 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--purple { background:radial-gradient(closest-side,#a18bce 0%,#7c5db6d9 38%,#6d54aa00 100%); }
+.v3-case-card[data-project="brokerage"] .v3-case-gradient__blob--teal { background:radial-gradient(closest-side,#5158ca 0%,#3b4fc4c9 42%,#3046b800 100%); }
 /* Closed loops: the 0% and 100% poses are identical, so iterations join
    without a jump. Translate percentages refer to each blob's own box. */
 @keyframes v3-case-gradient-a {

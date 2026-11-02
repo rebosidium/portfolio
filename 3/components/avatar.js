@@ -25,6 +25,9 @@ let openGeneration=0,welcomeGeneration=-1,backgroundWelcomeGeneration=-1;
 let preloadAllowed=false,preloadQueued=false,pageReady=false;
 // The thumbnail state is only needed for the mobile menu-close spin.
 let primaryState=null;
+// Case covers come first. Only optional frame downloads wait: the static poster,
+// modal shell and an explicit open (which mounts the large player) never do.
+const caseImagesReady=window.v3CaseImages?.ready??Promise.resolve();
 
 function syncLoading(){
  const ready=!!largeState?.ready,complete=ready&&!!largeState?.allReady;
@@ -153,18 +156,22 @@ navigation.addEventListener('close',()=>{
 
 const loaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
 // Independent of the player import order: whichever finishes last queues it.
-Promise.all([loaded,document.fonts?.ready,window.v3Entrance?.contentReady]).then(()=>{pageReady=true;queuePreload();});
-import(playerModule).then(({mountSeedancePortrait})=>{
- mountPortrait=mountSeedancePortrait;
+Promise.all([loaded,document.fonts?.ready,window.v3Entrance?.contentReady,caseImagesReady]).then(()=>{pageReady=true;queuePreload();});
+function mountSmall(){
+ if(smallPlayer)return;
  smallPlayer=mountPortrait(small,{interaction:'cursor',manifestURL,fixedVariant:'240-dark'});
  smallPlayer.ready.then(async ready=>{await window.v3Entrance?.headerReady;if(ready)smallPlayer.startIntro();else smallPlayer.skipIntro();});
  syncNavigationPortrait();
  // The reused player supplies angle instructions; this button opens the modal.
  const updateLabel=()=>{if(small.getAttribute('aria-label')!=='Open full-screen portrait')small.setAttribute('aria-label','Open full-screen portrait');};
  new MutationObserver(updateLabel).observe(small,{attributes:true,attributeFilter:['aria-label']});updateLabel();
- if(dialog.open)afterFirstPaint(activateLarge);
- // The thumbnail state only gates the menu-close spin. The large preload is
- // queued here too in case the page became ready before this import.
+ // The thumbnail state only gates the menu-close spin.
  smallPlayer.subscribeLoading(state=>{primaryState=state;});
+}
+import(playerModule).then(({mountSeedancePortrait})=>{
+ mountPortrait=mountSeedancePortrait;
+ if(dialog.open)afterFirstPaint(activateLarge);
+ caseImagesReady.then(mountSmall).catch(()=>{moduleFailed=true;syncLoading();});
+ // The large preload is queued here too in case the page became ready before this import.
  queuePreload();
 }).catch(()=>{moduleFailed=true;syncLoading();});

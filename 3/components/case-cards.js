@@ -6,7 +6,10 @@ const projects=[
   src:'/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51',width:1200,height:1066,
   srcset:'/3/assets/case-covers/larixon-isometric-480-q94.webp?v=55f0a5ab4610 480w,/3/assets/case-covers/larixon-isometric-768-q94.webp?v=04065790d4b3 768w,/3/assets/case-covers/larixon-isometric-1200-q94.webp?v=ab0d084f5d51 1200w,/3/assets/case-covers/larixon-isometric-1920-q94.webp?v=5991105d762d 1920w',
   alt:'Isometric illustration of Larixon Classifieds product screens'}},
- {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
+ {id:'brokerage',prefix:'Designing for',company:'Raiffeisen Bank',tail:'a professional trading terminal for 500+ institutional clients.',logo:'logo-raiffeisen.svg?v=74f1746e3599',cover:{
+  src:'/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=428f9b9cb724',width:1200,height:1196,
+  srcset:'/3/assets/case-covers/brokerage-isometric-480-q94.webp?v=d6250d0462e6 480w,/3/assets/case-covers/brokerage-isometric-768-q94.webp?v=45277fa6191d 768w,/3/assets/case-covers/brokerage-isometric-1200-q94.webp?v=428f9b9cb724 1200w,/3/assets/case-covers/brokerage-isometric-1920-q94.webp?v=cb6919c850f1 1920w',
+  alt:'Isometric illustration of the Raiffeisen professional trading terminal'}},
  {id:'leasing',prefix:'Connecting',company:'Raiffeisen Leasing',tail:'workflows, from the first calculation to a signed contract.',logo:'logo-raiffeisen.svg?v=74f1746e3599'},
  {id:'yandex',prefix:'Helping',company:'Yandex Market',tail:'sellers understand performance and build better product catalogues.',logo:'logo-yandex.svg?v=2f51118ffe47'},
  {id:'gdematerial',prefix:'Creating for',company:'GdeMaterial',tail:'a marketplace for discovery, checkout and delivery.',logo:'logo-gdematerial.svg?v=2bfcfc37a73b'},
@@ -26,11 +29,16 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   // Artwork protrudes above the clipped gradient, so it is the gradient's
   // sibling inside an unclipped wrapper that owns the shared hover tilt.
   const gradient='<div class="v3-case-cover" aria-hidden="true"></div>',{cover}=project;
-  const art=cover?`<div class="v3-case-cover-art">${gradient}<div class="v3-case-cover-window"><img class="v3-case-cover-image" src="${cover.src}" srcset="${cover.srcset}" sizes="${coverSizes}" width="${cover.width}" height="${cover.height}" alt="${cover.alt}" loading="lazy" decoding="async" draggable="false"></div></div>`:gradient;
+  // The first visual row loads eagerly; the first cover matches the HTML preload.
+  const eager=index===0||index===1&&matchMedia('(min-width:801px)').matches;
+  const art=cover?`<div class="v3-case-cover-art">${gradient}<div class="v3-case-cover-window"><img class="v3-case-cover-image" src="${cover.src}" srcset="${cover.srcset}" sizes="${coverSizes}" width="${cover.width}" height="${cover.height}" alt="${cover.alt}" loading="${eager?'eager':'lazy'}"${index===0?' fetchpriority="high"':''} decoding="async" draggable="false"></div></div>`:gradient;
   article.innerHTML=`<div class="v3-case-cover-pin"><div class="v3-case-cover-reveal"><div class="v3-case-cover-visual">${art}</div></div></div><div class="v3-case-copy"><h3>${project.prefix} <span class="v3-case-brand-lead"><span class="v3-case-logo${project.id==='larixon'?' v3-case-logo--larixon':''}"><img src="/3/assets/case-logos/${project.logo}" alt="" decoding="async"></span><span class="v3-case-company">${firstWord}</span></span>${remainingWords.length?' <span class="v3-case-company">'+remainingWords.join(' ')+'</span>':''} ${project.tail}</h3></div>`;
   columns[index%2].append(article);
  }
  host.append(section);
+ // Release optional portrait downloads once every eager cover has decoded or failed.
+ const settled=img=>img.decode?img.decode().catch(()=>{}):img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener('load',resolve,{once:true});img.addEventListener('error',resolve,{once:true});});
+ Promise.all([...section.querySelectorAll('.v3-case-cover-image[loading="eager"]')].map(settled)).then(()=>window.v3CaseImages?.settle());
  const reduced=matchMedia('(prefers-reduced-motion:reduce)'),desktop=matchMedia('(min-width:801px)');
  // Size the initial teaser from stable flow boxes, not from the sticky
  // cover's transformed rectangle. Small viewport units ignore Safari toolbar
@@ -67,7 +75,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
 
  let raf=0,visible=true;
  const covers=[...section.querySelectorAll('.v3-case-cover')].map(cover=>cover.closest('.v3-case-cover-art')||cover);
- const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0,flowTop:0,articleHeight:0,column:article.parentElement}));
+ const cards=[...section.querySelectorAll('.v3-case-card')].map(article=>({article,image:article.querySelector('.v3-case-cover-image'),pin:article.querySelector('.v3-case-cover-pin'),copy:article.querySelector('.v3-case-copy'),height:0,copyOffset:0,flowTop:0,articleHeight:0,column:article.parentElement}));
  mountCardStack(section);
  mountCardGradients(section);
  const clipSizes=new WeakMap();
@@ -203,7 +211,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    setStyle(column,'--v3-column-offset',`${offset}px`);
   });
   const stackTop=desktop.matches?24:16;
-  for(const {article,height,copyOffset,pin,flowTop,articleHeight,column} of cards){
+  for(const {article,image,height,copyOffset,pin,flowTop,articleHeight,column} of cards){
    const articleTop=flowTop-pageY+offsets[columns.indexOf(column)];
    const overlap=reduced.matches?0:Math.max(0,Math.min(1,(stackTop+height-articleTop-copyOffset)/Math.max(1,height)));
    const frame=cardStackFrame(overlap),stackScale=frame.scale;
@@ -214,7 +222,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
    const factor=Math.min(1,Math.max(0,pageY/180)),scale=active?1+.22*factor:1;
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
-   if(article.dataset.project==='larixon'){
+   if(image){
     // Follow the article's continuous flow, not the sticky pin's attachment
     // points. Reverse scrolling retraces the same pose without a reset.
     const t=Math.max(0,Math.min(1,(innerHeight-articleTop)/(innerHeight+height))),e=t*t*(3-2*t);
