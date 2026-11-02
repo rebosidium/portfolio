@@ -1,10 +1,10 @@
-/* v3 case templates: full-height covers with compact lower padding + content-sized copy, radius32/smoothing1. */
+/* v3 case templates: full-height covers with a flush lower edge + content-sized copy, radius32/smoothing1. */
 .v3-cases { width:min(1200px,calc(100% - 96px));margin:var(--v3-case-teaser-gap,164px) auto 0;padding:0 0 100px; }
 .v3-cases__title { width:calc((100% - 24px)/2);margin:0 0 0 -2px;font-size:74px;line-height:96px;font-weight:400;letter-spacing:-.74px; }
 .v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
 .v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
 .v3-case-column:first-child { padding-top:114px; }
-.v3-case-card { --v3-case-gap:16px;--v3-cover-height:480;--v3-art-headroom:64;--v3-field-scale:.9375;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
+.v3-case-card { --v3-case-gap:16px;--v3-cover-height:456.2;--v3-art-headroom:64;--v3-field-scale:0.934239368698;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
 /* One cover height drives the pin, the cover and every mobile range/boundary. */
 /* The sticky layout box and its visual cover have separate transforms:
    stacking never interferes with hover tilt or gradient-field parallax. */
@@ -24,10 +24,10 @@
    The headroom is real box space, so desktop 3D compositing cannot trim it. */
 .v3-case-cover-art > .v3-case-cover { position:absolute;left:0;bottom:0;height:calc(100% * var(--v3-cover-height) * var(--v3-field-scale) / (var(--v3-cover-height) + var(--v3-art-headroom)));border-bottom-left-radius:0;border-bottom-right-radius:0; }
 .v3-case-cover-window { position:absolute;z-index:1;left:calc(2.9762% - 2px);bottom:0;width:calc(94.13265% + 4px);height:calc(100% * (var(--v3-cover-height) + var(--v3-image-window-headroom,36)) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
-.v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,3.488372%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
-/* Retain image geometry while trimming the empty mesh below it. The
-   terminal keeps its extra 20px rise and receives a 20px shorter slot. */
-.v3-case-card[data-project="brokerage"] { --v3-cover-height:460;--v3-image-window-headroom:60;--v3-image-top:4.230769%;--v3-field-scale:.9782608696; }
+.v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,3.657049980%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
+/* The slot ends at the untransformed image baseline. No lower mesh
+   padding is reserved for the overlapping fade; image geometry is unchanged. */
+.v3-case-card[data-project="brokerage"] { --v3-cover-height:436.2;--v3-image-window-headroom:60;--v3-image-top:4.433696090%;--v3-field-scale:0.977074736359; }
 .v3-case-card[data-project="brokerage"] .v3-case-cover { background:
  radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
  radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),
@@ -72,10 +72,7 @@
  .v3-cases__title{width:auto;font-size:48px;line-height:62px;letter-spacing:-.48px}
  .v3-case-columns{display:flex;flex-direction:column;margin-top:40px;gap:56px}
  .v3-case-column{display:contents;will-change:auto}
- /* Native image motion needs a small additional lower reserve on narrow
-    screens. The image itself retains its width and 18px/38px upper rise. */
- .v3-case-card{--v3-cover-height:500;--v3-field-scale:.94;--v3-image-top:3.358209%;order:var(--v3-card-order);width:100%}
- .v3-case-card[data-project="brokerage"]{--v3-cover-height:480;--v3-field-scale:.9791666667;--v3-image-top:4.074074%}
+ .v3-case-card{order:var(--v3-card-order);width:100%}
  .v3-case-cover-pin{top:16px}
  /* Match the physical-phone width/height control. No forced 3D backing or
     transform scaling on the resizing child; its outer slot never changes. */
