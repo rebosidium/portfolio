@@ -123,15 +123,18 @@ export function mountSpinFeedback(button) {
     // from the current angle/scale instead of jumping back to rest.
     const fromAngle = !continuousSpin && icon ? currentAngle(icon) : 0;
     const fromScale = currentScale(button);
+    // Keep the Spin frame's vertical size fixed while tapping. Its icon
+    // still rotates and the width gives a gentle press response.
+    const pressScale = value => continuousSpin ? `scale(${value},1)` : `scale(${value})`;
     pressAnimation?.cancel();
     if (!continuousSpin) iconAnimation?.cancel();
 
     pressAnimation = track(button.animate([
-      {transform: `scale(${fromScale})`, offset: 0, easing: 'cubic-bezier(.3,0,.5,1)'},
-      {transform: 'scale(.96)', offset: .28, easing: 'cubic-bezier(.2,.7,.3,1)'},
-      {transform: 'scale(1.025)', offset: .62, easing: 'ease-in-out'},
-      {transform: 'scale(.997)', offset: .84, easing: 'ease-in-out'},
-      {transform: 'scale(1)', offset: 1}
+      {transform: pressScale(fromScale), offset: 0, easing: 'cubic-bezier(.3,0,.5,1)'},
+      {transform: pressScale(.96), offset: .28, easing: 'cubic-bezier(.2,.7,.3,1)'},
+      {transform: pressScale(1.025), offset: .62, easing: 'ease-in-out'},
+      {transform: pressScale(.997), offset: .84, easing: 'ease-in-out'},
+      {transform: pressScale(1), offset: 1}
     ], {duration: 540, fill: 'none'}), animation => { if (pressAnimation === animation) pressAnimation = null; });
 
     if (icon) {

@@ -1,6 +1,6 @@
 import {mountAvatarAmbience} from './avatar-ambience.js?v=c236389323c7';
-import {mountSpinFeedback} from './avatar-spin-feedback.js?v=74477ea0c421';
-import {mountSpinStartCue} from './spin-start-cue.js';
+import {mountSpinFeedback} from './avatar-spin-feedback.js?v=473e028e0d09';
+import {mountSpinStartCue} from './spin-start-cue.js?v=5bb985e84f3b';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
 // The head flag uses the same Android + coarse pointer test as the player choice.
