@@ -27,7 +27,7 @@
 .v3-avatar-score[data-coin-tier="surstromming"] { --v3-coin-number:#dce2e9; }
 .v3-avatar-score[data-coin-tier="spam"] { --v3-coin-number:#ffefae; }
 .v3-avatar-score[data-coin-tier="trash"] { --v3-coin-number:#c5d5e8; }
-.v3-avatar-score[data-coin-tier="ufo"] { --v3-coin-number:#ded0ff; }
+.v3-avatar-score[data-coin-tier="ufo"] { --v3-coin-number:#c49aff; }
 .v3-avatar-score[data-coin-tier] b { color:var(--v3-coin-number,#fff); }
 .v3-avatar-score__num { display: grid; place-items: center; height: var(--fs); }
 .v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-family: 'Montserrat', 'DM Sans', sans-serif; font-weight: 900; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
