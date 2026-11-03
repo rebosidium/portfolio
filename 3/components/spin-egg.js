@@ -186,7 +186,7 @@ const nextPhrase = () => {
 };
 const MAX_VISIBLE = 5, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
 const COIN_LEVELS = {
-  wood:['🪵','WOOD LEVEL'],cracker:['🧂','CRACKER LEVEL'],stone:['🪨','STONE LEVEL'],'six-seven':['🫨','SIX SEVEN LEVEL'],lava:['🔥','LAVA LEVEL'],bronze:['🥉','BRONZE LEVEL'],silver:['🥈','SILVER LEVEL'],
+  wood:['🪵','WOOD LEVEL'],cracker:['🧂','CRACKER LEVEL'],stone:['🪨','STONE LEVEL'],amber:['🦟','AMBER LEVEL'],'six-seven':['🫨','SIX SEVEN LEVEL'],lava:['🔥','LAVA LEVEL'],bronze:['🥉','BRONZE LEVEL'],silver:['🥈','SILVER LEVEL'],
   gold:['🥇','GOLD LEVEL'],platinum:['🤍','PLATINUM LEVEL'],diamond:['💎','DIAMOND LEVEL'],
   ruby:['💎','RUBY LEVEL'],'black-diamond':['🖤','BLACK GEM'],emerald:['💚','EMERALD LEVEL'],holographic:['✨','HOLO LEVEL'],button:['🧵','BUTTON LEVEL'],soda:['🥤','RIBA DIMA'],
   donut:['🍩','DONUT LEVEL'],surstromming:['🐟','FISH CAN LEVEL'],spam:['🥫','SPAM LEVEL'],trash:['🗑️','TRASH LEGEND'],ufo:['🛸','UFO LEVEL'],chest:['🏴‍☠️','TREASURE LEVEL']

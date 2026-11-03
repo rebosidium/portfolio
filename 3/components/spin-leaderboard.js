@@ -1,5 +1,5 @@
-import {coinTierFor,coinImageURL} from './spin-coin.js?v=592abb30f938';
-import {createDemoLeaderboard} from './spin-leaderboard-data.js?v=ab5ccf64b62d';
+import {coinTierFor,coinImageURL} from './spin-coin.js?v=1eba002e9c3b';
+import {createDemoLeaderboard} from './spin-leaderboard-data.js?v=0e0f190e90ea';
 const trophy='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v6a4 4 0 0 1-8 0V3Z"/><path d="M8 5H4v2a4 4 0 0 0 4 4m8-6h4v2a4 4 0 0 1-4 4M12 13v5m-4 3h8m-6-3h4v3"/></svg>';
 const format=n=>n.toLocaleString('en-US').replaceAll(',','\u00a0');
 export function mountLeaderboard(game,hide) {

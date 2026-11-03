@@ -1,6 +1,6 @@
-import {createShareCard} from './spin-share-card.js?v=650df86938f1';
-import {coinTierFor} from './spin-coin.js?v=592abb30f938';
-import {mountCoinCollection} from './spin-coin-collection.js?v=d21e1539b2d7';
+import {createShareCard} from './spin-share-card.js?v=07327599468d';
+import {coinTierFor} from './spin-coin.js?v=1eba002e9c3b';
+import {mountCoinCollection} from './spin-coin-collection.js?v=7ed82c713338';
 
 const game = document.querySelector('.v3-avatar-dialog');
 const actions = game?.querySelector('.v3-avatar-actions');

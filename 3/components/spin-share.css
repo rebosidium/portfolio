@@ -20,6 +20,7 @@
 @keyframes v3-coin-spark { 0%,100% { opacity:0;transform:scale(.2) rotate(0deg); } 25%,65% { opacity:1;transform:scale(1) rotate(45deg); } }
 /* Additional materials reuse the existing short ray/aura/spark animations. */
 .v3-coin-upgrade[data-tier="cracker"] { --coin-ray:#f4cf9685; --coin-ray-soft:#fff2d538; --coin-aura:#e6b36f54; --coin-spark:#e9bd82; --coin-spark-edge:#fff0d6; }
+.v3-coin-upgrade[data-tier="amber"] { --coin-ray:#ffbd4c91; --coin-ray-soft:#fff1c23d; --coin-aura:#e99c2966; --coin-spark:#ffbd62; --coin-spark-edge:#fff4d7; }
 .v3-coin-upgrade[data-tier="six-seven"] { --coin-ray:#d6b0ff8a; --coin-ray-soft:#fff0fd38; --coin-aura:#b77bf46b; --coin-spark:#c79cfb; --coin-spark-edge:#fff0fd; }
 .v3-coin-upgrade[data-tier="lava"] { --coin-ray:#ff9d4f99; --coin-ray-soft:#ffe7a03d; --coin-aura:#ff5d235d; --coin-spark:#ffb769; --coin-spark-edge:#fff0bf; }
 .v3-coin-upgrade[data-tier="ruby"] { --coin-ray:#ff8daf85; --coin-ray-soft:#ffe5ed30; --coin-aura:#ff47776b; --coin-spark:#ff9fbe; --coin-spark-edge:#fff1f6; }
@@ -34,13 +35,13 @@
 .v3-coin-upgrade[data-tier="trash"] { --coin-ray:#bed0e27d; --coin-ray-soft:#f7fbff2e; --coin-aura:#9eb3c94d; --coin-spark:#b5cbe3; --coin-spark-edge:#f5faff; }
 .v3-coin-upgrade[data-tier="ufo"] { --coin-ray:#83ffe58f; --coin-ray-soft:#7dbdff3b; --coin-aura:#50eacb66; --coin-spark:#8affbd; --coin-spark-edge:#b5faff; }
 .v3-coin-upgrade[data-tier="chest"] { --coin-ray:#ffd27a91; --coin-ray-soft:#ffedba3b; --coin-aura:#e9a83966; --coin-spark:#f4bd56; --coin-spark-edge:#fff0bc; }
-.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__rays {
+.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="amber"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__rays {
   background:repeating-conic-gradient(from 8deg,transparent 0deg 9deg,var(--coin-ray) 10deg 14deg,var(--coin-ray-soft) 15deg 17deg,transparent 18deg 24deg);
 }
-.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__aura {
+.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="amber"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__aura {
   background:radial-gradient(circle,var(--coin-aura),transparent 68%);
 }
-.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__spark {
+.v3-coin-upgrade:is([data-tier="cracker"],[data-tier="amber"],[data-tier="six-seven"],[data-tier="lava"],[data-tier="ruby"],[data-tier="black-diamond"],[data-tier="emerald"],[data-tier="holographic"],[data-tier="button"],[data-tier="soda"],[data-tier="donut"],[data-tier="surstromming"],[data-tier="spam"],[data-tier="trash"],[data-tier="ufo"],[data-tier="chest"]) .v3-coin-upgrade__spark {
   background:linear-gradient(135deg,var(--coin-spark-edge),var(--coin-spark));
 }
 .v3-coin-upgrade[data-tier="black-diamond"] .v3-coin-upgrade__rays { background:repeating-conic-gradient(from 8deg,transparent 0deg 8deg,#241e1c70 9deg 12deg,#e8c47680 13deg 16deg,#fff3ce90 17deg 18deg,transparent 19deg 24deg); }

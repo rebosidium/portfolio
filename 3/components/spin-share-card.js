@@ -1,4 +1,4 @@
-import {coinTierFor, coinImageURL} from './spin-coin.js?v=592abb30f938';
+import {coinTierFor, coinImageURL} from './spin-coin.js?v=1eba002e9c3b';
 
 export const SHARE_CARD_WIDTH = 1200;
 export const SHARE_CARD_HEIGHT = 627;
