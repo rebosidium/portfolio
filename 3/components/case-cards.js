@@ -62,7 +62,9 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   teaserFrame=0;
   const flowY=element=>{let y=0;for(let node=element;node;node=node.offsetParent)y+=node.offsetTop;return y;};
   const height=teaserViewport.offsetHeight||innerHeight;
-  const peek=Math.max(28,Math.min(52,Math.round(height*.055)));
+  // On mobile show only a small screenshot tip below the complete heading.
+  // The artwork itself protrudes above this stable cover slot.
+  const peek=desktop.matches?Math.max(28,Math.min(52,Math.round(height*.055))):16;
   const leading=innerWidth>800?columns.map(column=>column.firstElementChild):[section.querySelector('.v3-case-card')];
   const current=parseFloat(getComputedStyle(section).marginTop)||0;
   const normalCoverTop=Math.min(...leading.map(flowY))-current;
