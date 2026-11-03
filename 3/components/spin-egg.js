@@ -48,7 +48,10 @@ const JOKES = {
     'Why waste time say lot word when few word do trick?',
     'Identity theft is not a joke, Jim!',
     'Dundie 🏆 goes to… everyone',
-    'OKR-R-R-RR-RRRR 🐯'
+    'OKR-R-R-RR-RRRR 🐯',
+    'I don’t tip. I leave Figma comments. 💸',
+    'This is Sparta! Three designers. One button. ⚔️',
+    '🎨 Dobby is free! First draft approved.'
   ],
   design: [
     'That 🩷 pink is a bold choice',
@@ -95,7 +98,10 @@ const JOKES = {
     'Dribbble 🏀 says yes. Users say: where’s the button?',
     'It’s Triple 💎💎💎 Diamond!',
     'DESIGN_SYSTEM.md: 60 Shades of Grey.',
-    'Banned purple 🟣 in DESIGN_SYSTEM.md.'
+    'Banned purple 🟣 in DESIGN_SYSTEM.md.',
+    '🐢 Run, Figma, run! It’s only 60,000 layers.',
+    'Shut the fuck up, Donny! Just fix the 🔘 button.',
+    'Red pill or blue pill? The AI made a 🟣 gradient.'
   ],
   tech: [
     'Compiling confidence…',
@@ -139,7 +145,10 @@ const JOKES = {
     'Bought more tokens. Only $19,000. 💸',
     'AGENTS.md / 60,000 lines.',
     'Banned bugs in AGENTS.md.',
-    'Not reading code, Karpathy-style. 😎'
+    'Not reading code, Karpathy-style. 😎',
+    '🚀 Houston, we have a problem. Token limit reached.',
+    'No, I am your father. Source: 🤖 ChatGPT.',
+    'D’ya like dags? The AI gave mine eight legs. 🕷️'
   ]
 };
 const ORDER = ['office', 'design', 'tech'];
