@@ -238,9 +238,9 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    const articleTop=flowTop-pageY+offsets[columns.indexOf(column)];
    const overlap=reduced.matches?0:Math.max(0,Math.min(1,(stackTop+height-articleTop-copyOffset)/Math.max(1,height)));
    const frame=cardStackFrame(overlap),stackScale=frame.scale;
-   // Finish fading 16px before sticky releases. A 64px smooth end cap
+   // Finish fading 16px before sticky releases. A 128px smooth end cap
    // leaves room for Safari's asynchronous scrolling to advance between draws.
-   const tail=Math.max(0,Math.min(1,(articleTop+articleHeight-height-stackTop-16)/64));
+   const tail=Math.max(0,Math.min(1,(articleTop+articleHeight-height-stackTop-16)/128));
    setStyle(article,'--v3-stack-scale',String(frame.scale));
    setStyle(article,'--v3-stack-opacity',String(frame.opacity*tail*tail*(3-2*tail)));
    setStyle(article,'--v3-stack-lift',`${frame.lift}px`);
