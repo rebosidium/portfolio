@@ -863,7 +863,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     // physical width (a few pixels of upscale are invisible); 1200 only for larger rasters.
     const TIER_SLACK=12,tiers=[400,600,700,800];
     const fit=tiers.find(size=>size+TIER_SLACK>=physical);
-    const quality=navigator.connection?.saveData?'600':String(fit||1200);
+    const quality=String(fit||1200);
     // Shared cleaned set; historical filenames stay exact for cache/rollback.
     return retainQuality&&Number.parseInt(loadQuality,10)>Number(quality)?loadQuality:quality+'-dark';
   }

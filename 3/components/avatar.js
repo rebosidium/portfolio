@@ -5,7 +5,7 @@ import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
 // The head flag uses the same Android + coarse pointer test as the player choice.
 const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
 const playerModule = androidTouch
-  ? '../portrait-player-android.js?v=f27cc715381e' : '../portrait-player.js?v=40e53f7b1b8c';
+  ? '../portrait-player-android.js?v=dc27d0451381' : '../portrait-player.js?v=581a4ef41fee';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -94,7 +94,7 @@ function welcomeIfReady(){
 
 function connectionAllowsPreload(){
  const connection=navigator.connection;
- return !connection?.saveData&&!['slow-2g','2g','3g'].includes(connection?.effectiveType);
+ return !['slow-2g','2g','3g'].includes(connection?.effectiveType);
 }
 function canPreload(){
  // Last in line: after window load, fonts and the main entrance content. It
