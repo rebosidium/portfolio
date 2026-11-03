@@ -72,10 +72,8 @@
 .v3-brief__logos { position: absolute; left: 0; top: 0; display: flex; gap: 13px; transform: translateZ(0) scale(var(--v3-brief-logo-scale)); transform-origin: top left; }
 .v3-brief__icon.v3-brief__icon--cursor { display: flex; align-items: center; justify-content: center; }
 .v3-brief__icon { display: block; position: relative; flex: 0 0 28px; width: 28px; height: 28px; }
-/* Preserve the source SVG dimensions; the wrapper carries Figma's masks. */
+/* Preserve the original SVG dimensions; decorative marks arrive inline with the button. */
 .v3-brief__icon img { display: block; max-width: none; }
-.v3-brief__icon--claude { mask: url('../assets/claude-mask.svg') 0 0 / 28px 28px no-repeat; }
-.v3-brief__icon--openai { mask: url('../assets/openai-mask.svg') 0 0 / 28px 28px no-repeat; }
 .v3-brief__status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .v3-brief__manual { box-sizing: border-box; width: 408px; max-width: 100%; margin-top: 20px; font-size: 16px; line-height: 1.5; }
 .v3-brief__manual label { display: block; margin-bottom: 8px; }
