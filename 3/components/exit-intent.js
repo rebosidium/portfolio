@@ -12,22 +12,27 @@ if(dialog){
   const resume=dialog.querySelector('[data-v3-exit-resume]');
   const game=dialog.querySelector('[data-v3-exit-game]');
   const MIN_VISIT_MS=2000;
+  const EXIT_EDGE_PX=50,EXIT_DELAY_MS=40,EARLY_EDGE_PX=32;
   // Temporary public testing: restore7 here to remember successful shows.
   const REMEMBER_DAYS=0;
   const repeatPreview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)
     &&document.documentElement.hasAttribute('data-v3-exit-repeat');
   const repeat=repeatPreview||REMEMBER_DAYS===0;
-  let detector=null,armedTimer=0,shown=false,suspended=false,locked=null,previousFocus=null,imagesReady=false,imageWarmup=null;
+  let detector=null,armedTimer=0,intentTimer=0,lastPointerY=null,upwardTravel=0,shown=false,suspended=false,locked=null,previousFocus=null,imagesReady=false,imageWarmup=null;
 
   const setState=state=>{dialog.dataset.exitState=state;};
   const eligible=()=>desktop.matches&&!document.hidden&&!suspended;
-  const canOpen=()=>eligible()&&imagesReady&&!shown&&!dialog.open
+  const canOpen=()=>eligible()&&performance.now()>=MIN_VISIT_MS&&imagesReady&&!shown&&!dialog.open
     &&!document.querySelector('dialog[open]')
     &&!document.querySelector('.v3-avatar-dialog')?.v3AvatarShell?.closing;
 
   function detach(){
     clearTimeout(armedTimer);armedTimer=0;
+    resetIntent();
     detector?.destroy();detector=null;
+  }
+  function resetIntent(){
+    clearTimeout(intentTimer);intentTimer=0;lastPointerY=null;upwardTravel=0;
   }
   const saveStyle=(element,name)=>({element,name,value:element.style.getPropertyValue(name),priority:element.style.getPropertyPriority(name)});
   function lock(){
@@ -74,7 +79,7 @@ if(dialog){
     if(shown){setState(dialog.open?'open':'shown');return;}
     const remaining=Math.max(0,MIN_VISIT_MS-performance.now());
     detector=globalThis.ouibounce(false,{
-      timer:remaining,delay:80,sensitivity:30,aggressive:repeat,
+      timer:remaining,delay:EXIT_DELAY_MS,sensitivity:EXIT_EDGE_PX,aggressive:repeat,
       cookieName:repeatPreview?'portfolioV3ExitPreviewSeen':'portfolioV3ExitSeen',
       cookieExpire:repeat?-1:REMEMBER_DAYS,sitewide:true,
       beforeFire:canOpen,callback:open
@@ -90,6 +95,20 @@ if(dialog){
     }));
     imageWarmup.then(()=>{imagesReady=true;});
   }
+
+  // Recognize an upward exit before the cursor reaches the browser chrome.
+  // Horizontal navigation, entry from the toolbar and held buttons do not count.
+  document.documentElement.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse'||event.buttons||!canOpen()){resetIntent();return;}
+    const dy=lastPointerY===null?0:lastPointerY-event.clientY;
+    lastPointerY=event.clientY;upwardTravel=dy>0?upwardTravel+dy:0;
+    if(event.clientY>EARLY_EDGE_PX||dy<0){clearTimeout(intentTimer);intentTimer=0;}
+    if(event.clientY<=EARLY_EDGE_PX&&upwardTravel>=24&&dy>0&&!intentTimer){
+      intentTimer=setTimeout(()=>{intentTimer=0;detector?.fire();},EXIT_DELAY_MS);
+    }
+  },{passive:true});
+  document.documentElement.addEventListener('mouseenter',resetIntent);
+  document.documentElement.addEventListener('pointerdown',resetIntent,{passive:true});
 
   closeButton.addEventListener('click',()=>close());
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
