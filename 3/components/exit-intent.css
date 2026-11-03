@@ -8,12 +8,14 @@
  font-family:'DM Sans',sans-serif;font-optical-sizing:none;font-variation-settings:'opsz' 14;word-spacing:1px;scrollbar-width:thin;
 }
 .v3-exit-dialog:focus{outline:none}
+.v3-exit-dialog[data-v3-exit-preparing]:not([open]){display:block;visibility:hidden;pointer-events:none}
 .v3-exit-dialog::backdrop{background:rgb(18 15 28 / .24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 /* Clip decorative overflow at the full modal edge, keeping the CV corner
    free to cross the slanted artwork edge without creating inner scrolling. */
 .v3-exit__layout{display:grid;grid-template-columns:41.365047% minmax(0,1fr);min-height:55.842812cqw;overflow:clip}
 .v3-exit__art{position:relative;min-width:0;overflow:visible;isolation:isolate}
-.v3-exit__art .v3-contact__field,.v3-exit__scene-clip{-webkit-mask:url(/3/assets/exit-intent-panel-mask.svg) center/100% 100% no-repeat;mask:url(/3/assets/exit-intent-panel-mask.svg) center/100% 100% no-repeat}
+.v3-exit__art .v3-contact__field,.v3-exit__scene-clip{-webkit-mask:url(/3/assets/exit-intent-panel-mask.svg?v=c14e87452c10) center/100% 100% no-repeat;mask:url(/3/assets/exit-intent-panel-mask.svg?v=c14e87452c10) center/100% 100% no-repeat}
+@media(min-width:721px){.v3-exit-dialog[data-v3-exit-mask-fallback] :is(.v3-contact__field,.v3-exit__scene-clip){-webkit-mask:none;mask:none;clip-path:polygon(0 0,89.25% 0,100% 100%,0 100%)}}
 .v3-exit__art .v3-contact__field{inset:0;z-index:0;clip-path:none;background:linear-gradient(160deg,#3dbf75,#5c98dd 28%,#896df2 52%,#f54752 76%,#ff9e47)}
 .v3-exit__art .v3-contact__blob--violet{background:radial-gradient(closest-side,#3dbf75,transparent)}
 .v3-exit__art .v3-contact__blob--pink{background:radial-gradient(closest-side,#f54752,transparent)}

@@ -1,11 +1,11 @@
 // The local Ouibounce fork owns exit detection. This adapter owns eligibility,
 // native-dialog lifecycle and the two existing portfolio actions.
 import './vendor/ouibounce.js?v=c6e4a5d869cb';
-import {mountExitGradient} from './exit-gradient.js?v=89e29b2b867a';
+import {mountExitGradient} from './exit-gradient.js?v=e9432d28d093';
 
 const dialog=document.getElementById('v3-exit-dialog');
 if(dialog){
-  mountExitGradient(dialog.querySelector('.v3-exit__art'),dialog.querySelector('.v3-exit__art .v3-contact__field'),{dialog});
+  const background=mountExitGradient(dialog.querySelector('.v3-exit__art'),dialog.querySelector('.v3-exit__art .v3-contact__field'),{dialog});
   const desktop=matchMedia('(min-width:1024px) and (hover:hover) and (pointer:fine)');
   const desktopInput=matchMedia('(hover:hover) and (pointer:fine)');
   const closeButton=dialog.querySelector('[data-v3-exit-close]');
@@ -18,13 +18,19 @@ if(dialog){
   const repeatPreview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)
     &&document.documentElement.hasAttribute('data-v3-exit-repeat');
   const repeat=repeatPreview||REMEMBER_DAYS===0;
-  let detector=null,armedTimer=0,intentTimer=0,lastPointerY=null,upwardTravel=0,shown=false,suspended=false,locked=null,previousFocus=null,imagesReady=false,imageWarmup=null;
+  let detector=null,armedTimer=0,intentTimer=0,lastPointerY=null,upwardTravel=0,shown=false,suspended=false,locked=null,previousFocus=null,imagesReady=false,imageWarmup=null,pendingReadyExit=false;
 
   const setState=state=>{dialog.dataset.exitState=state;};
   const eligible=()=>desktop.matches&&!document.hidden&&!suspended;
-  const canOpen=()=>eligible()&&performance.now()>=MIN_VISIT_MS&&imagesReady&&!shown&&!dialog.open
+  const canPresent=()=>eligible()&&performance.now()>=MIN_VISIT_MS&&!shown&&!dialog.open
     &&!document.querySelector('dialog[open]')
     &&!document.querySelector('.v3-avatar-dialog')?.v3AvatarShell?.closing;
+  const canOpen=()=>canPresent()&&imagesReady&&background.ready;
+  function beforeFire(){
+    if(!canPresent())return false;
+    if(!canOpen()){pendingReadyExit=true;return false;}
+    pendingReadyExit=false;return true;
+  }
 
   function detach(){
     clearTimeout(armedTimer);armedTimer=0;
@@ -32,7 +38,7 @@ if(dialog){
     detector?.destroy();detector=null;
   }
   function resetIntent(){
-    clearTimeout(intentTimer);intentTimer=0;lastPointerY=null;upwardTravel=0;
+    clearTimeout(intentTimer);intentTimer=0;lastPointerY=null;upwardTravel=0;pendingReadyExit=false;
   }
   const saveStyle=(element,name)=>({element,name,value:element.style.getPropertyValue(name),priority:element.style.getPropertyPriority(name)});
   function lock(){
@@ -64,6 +70,8 @@ if(dialog){
     // beforeFire has already checked this synchronously. No event/async boundary
     // separates the guard from opening, so suppression is only consumed on show.
     previousFocus=document.activeElement;
+    // Repaint the prepared canvas synchronously before its first visible frame.
+    background.prepare();
     lock();
     try{dialog.showModal();}catch(error){unlock();throw error;}
     shown=true;setState('open');dialog.focus({preventScroll:true});
@@ -82,7 +90,7 @@ if(dialog){
       timer:remaining,delay:EXIT_DELAY_MS,sensitivity:EXIT_EDGE_PX,aggressive:repeat,
       cookieName:repeatPreview?'portfolioV3ExitPreviewSeen':'portfolioV3ExitSeen',
       cookieExpire:repeat?-1:REMEMBER_DAYS,sitewide:true,
-      beforeFire:canOpen,callback:open
+      beforeFire,callback:open
     });
     if(detector.isDisabled()){
       detach();setState('suppressed');return;
@@ -90,10 +98,20 @@ if(dialog){
     setState(remaining?'waiting':'armed');
     armedTimer=setTimeout(()=>{if(!shown&&eligible())setState('armed');},remaining);
     // Warm the popup artwork only on eligible desktop visits.
-    imageWarmup??=Promise.all([...dialog.querySelectorAll('img[loading="lazy"]')].map(image=>{
-      image.loading='eager';return image.decode?.().catch(()=>{});
-    }));
-    imageWarmup.then(()=>{imagesReady=true;});
+    if(!imageWarmup){
+      const images=[...dialog.querySelectorAll('img[loading="lazy"]')].map(image=>{
+        image.loading='eager';return image.decode?.().catch(()=>{});
+      });
+      const mask=new Image();mask.crossOrigin='anonymous';mask.src=document.querySelector('[data-v3-exit-mask-preload]').href;
+      const maskReady=mask.decode().catch(()=>{dialog.setAttribute('data-v3-exit-mask-fallback','');});
+      const fonts=Promise.all([400,500,700,900].map(weight=>document.fonts.load(`${weight} 40px "DM Sans"`).catch(()=>{})));
+      background.prepare();
+      imageWarmup=Promise.all([...images,maskReady,fonts]);
+    }
+    imageWarmup.then(()=>{
+      imagesReady=true;dialog.dataset.exitPrepared=String(background.ready);
+      if(pendingReadyExit&&canOpen())detector?.fire();
+    });
   }
 
   // Recognize an upward exit before the cursor reaches the browser chrome.

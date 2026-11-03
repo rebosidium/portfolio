@@ -1,82 +1,99 @@
-// Archived footer experiment #4, Stripe: the same local MIT wave-gradient
-// library, seed, 30fps and pointer reaction, scoped to the exit dialog.
+// Archived footer experiment #4, Stripe, scoped to the exit dialog.
+// Desktop preparation compiles and paints one hidden frame; standby has no loop.
 import {WaveGradient} from './vendor/wave-gradient.js?v=61c3e837881e';
 
 export function mountExitGradient(section,field,{dialog}){
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  const desktop=matchMedia('(min-width:1024px) and (hover:hover) and (pointer:fine)');
   const colors=['#7b70f2','#ffb15c','#f54752','#3dbf75','#5c98dd'];
   const pointer={x:0,y:0,tx:0,ty:0,energy:0};
   const scene=section.querySelector('.v3-exit__scene');
-  let stop=null,gamePaused=false;
+  let gradient=null,canvas=null,observer=null,raf=0,last=0,running=false,ready=false,gamePaused=false,suspended=false;
+  const usable=()=>!document.hidden&&!gamePaused&&!suspended&&(desktop.matches||dialog.open);
 
-  function stopCurrent(){stop?.();stop=null;}
-  function start(){
-    if(stop)return;
-    const canvas=document.createElement('canvas');
-    canvas.className='v3-contact__gl v3-exit__stripe';
+  function pause(){
+    running=false;cancelAnimationFrame(raf);raf=0;
+    if(gradient)gradient.shouldRender=false;
+  }
+  function release(){
+    pause();observer?.disconnect();observer=null;
+    const gl=gradient?.gl;
+    gradient?.destroy();gradient=null;
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+    canvas?.remove();canvas=null;ready=false;delete field.dataset.grad;
+  }
+  function paint(){
+    if(!gradient)return;
+    gradient.resize();
+    gradient.clipSpace.setUniform('realtime',reduced.matches?6000:gradient.time);
+    gradient.gl.drawElements(gradient.drawMode,gradient.drawCount,gradient.gl.UNSIGNED_INT,0);
+    gradient.gl.flush();
+  }
+  function create(){
+    if(ready)return;
+    canvas=document.createElement('canvas');canvas.className='v3-contact__gl v3-exit__stripe';
     canvas.setAttribute('aria-hidden','true');field.prepend(canvas);
-    let gradient,raf=0,observer,last=0,disposed=false;
-    const cleanup=()=>{
-      disposed=true;cancelAnimationFrame(raf);observer?.disconnect();
-      const gl=gradient?.gl;
-      gradient?.destroy();gl?.getExtension('WEBGL_lose_context')?.loseContext();
-      canvas.remove();delete field.dataset.grad;
-    };
     try{
-      gradient=new WaveGradient(canvas,{colors,fps:30,speed:reduced.matches?0:1.1,seed:4});
+      gradient=new WaveGradient(canvas,{colors,fps:30,speed:1.1,seed:4});
+      // Its constructor queues a RAF. Stop it before it can start an idle loop.
+      gradient.shouldRender=false;
+      paint();gradient.gl.finish();
       field.dataset.grad='stripe';
-      // The archived library keeps its frame loop even at speed0. Paint a
-      // single frame for reduced motion instead, including after a resize.
-      const paintStatic=()=>{
-        gradient.shouldRender=false;
-        gradient.clipSpace.setUniform('realtime',6000);
-        gradient.gl.drawElements(gradient.drawMode,gradient.drawCount,gradient.gl.UNSIGNED_INT,0);
-      };
-      observer=new ResizeObserver(()=>{gradient.resize();if(reduced.matches)paintStatic();});
-      observer.observe(field);
-      if(reduced.matches)paintStatic();
-      else{
-        const tick=now=>{
-          if(disposed)return;
-          raf=requestAnimationFrame(tick);
-          if(now-last<1000/30-2)return;last=now;
-          pointer.x+=(pointer.tx-pointer.x)*.055;
-          pointer.y+=(pointer.ty-pointer.y)*.055;pointer.energy*=.955;
-          scene?.style.setProperty('--cv-x',(pointer.x*20).toFixed(2)+'px');
-          scene?.style.setProperty('--cv-y',(pointer.y*16).toFixed(2)+'px');
-          scene?.style.setProperty('--cv-turn',(pointer.x*3).toFixed(2)+'deg');
-          // Overscan exceeds parallax at every aspect ratio, so narrowing
-          // the panel cannot uncover a band at its edges.
-          const x=pointer.x*-Math.min(18,field.clientWidth*.04);
-          const y=pointer.y*-Math.min(18,field.clientHeight*.04);
-          canvas.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(1.12)`;
-          gradient.speed=1.1*(1+pointer.energy*4);
-        };
-        raf=requestAnimationFrame(tick);
-      }
-      stop=cleanup;
+      observer=new ResizeObserver(()=>{if(dialog.open&&gradient)paint();});observer.observe(field);
+      ready=true;
     }catch{
-      // Preserve the popup's multicolor CSS field without a WebGL2 context.
-      const gl=canvas.getContext('webgl2');
-      gradient?.destroy();gl?.getExtension('WEBGL_lose_context')?.loseContext();
-      observer?.disconnect();cancelAnimationFrame(raf);canvas.remove();
-      field.dataset.grad='0';stop=()=>{delete field.dataset.grad;};
+      const gl=gradient?.gl||canvas.getContext('webgl2');
+      gradient?.destroy();gradient=null;gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      canvas.remove();canvas=null;observer?.disconnect();observer=null;
+      field.dataset.grad='0';ready=true;
     }
   }
+  function prepare(){
+    if(!usable())return false;
+    const hidden=!dialog.open;
+    // Measure the real responsive layout without opening, focusing or painting it.
+    if(hidden)dialog.setAttribute('data-v3-exit-preparing','');
+    try{create();paint();return ready;}
+    finally{if(hidden)dialog.removeAttribute('data-v3-exit-preparing');}
+  }
+  function tick(now){
+    if(!running)return;raf=requestAnimationFrame(tick);
+    if(now-last<1000/30-2)return;last=now;
+    pointer.x+=(pointer.tx-pointer.x)*.055;
+    pointer.y+=(pointer.ty-pointer.y)*.055;pointer.energy*=.955;
+    scene?.style.setProperty('--cv-x',(pointer.x*20).toFixed(2)+'px');
+    scene?.style.setProperty('--cv-y',(pointer.y*16).toFixed(2)+'px');
+    scene?.style.setProperty('--cv-turn',(pointer.x*3).toFixed(2)+'deg');
+    const x=pointer.x*-Math.min(18,field.clientWidth*.04),y=pointer.y*-Math.min(18,field.clientHeight*.04);
+    canvas.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(1.12)`;
+    gradient.speed=1.1*(1+pointer.energy*4);
+    gradient.time+=(1000/30)*gradient.speed;
+    paint();
+  }
   function sync(){
-    if(dialog.open&&!document.hidden&&!gamePaused)start();else stopCurrent();
+    if(!usable()){release();return;}
+    if(!dialog.open){pause();if(!ready)prepare();return;}
+    prepare();
+    if(!gradient||reduced.matches){pause();return;}
+    if(!running){
+      // Own one cancellable loop. The vendor's constructor RAF stays stopped.
+      running=true;last=0;
+      raf=requestAnimationFrame(tick);
+    }
   }
   addEventListener('pointermove',event=>{
     if(!dialog.open||reduced.matches)return;
-    const x=Math.max(-1,Math.min(1,event.clientX/innerWidth*2-1));
-    const y=Math.max(-1,Math.min(1,event.clientY/innerHeight*2-1));
+    const x=Math.max(-1,Math.min(1,event.clientX/innerWidth*2-1)),y=Math.max(-1,Math.min(1,event.clientY/innerHeight*2-1));
     pointer.energy=Math.min(1,pointer.energy+Math.hypot(x-pointer.tx,y-pointer.ty)*2.4);
     pointer.tx=x;pointer.ty=y;
   },{passive:true});
   new MutationObserver(sync).observe(dialog,{attributes:true,attributeFilter:['open']});
+  desktop.addEventListener('change',sync);
   document.addEventListener('visibilitychange',sync);
-  document.addEventListener('v3-game-pause',()=>{gamePaused=true;sync();});
+  document.addEventListener('v3-game-pause',()=>{gamePaused=true;release();});
   document.addEventListener('v3-game-resume',()=>{gamePaused=false;sync();});
-  reduced.addEventListener('change',()=>{stopCurrent();sync();});
-  sync();
+  reduced.addEventListener('change',()=>{pause();sync();});
+  addEventListener('pagehide',()=>{suspended=true;release();});
+  addEventListener('pageshow',()=>{suspended=false;sync();});
+  return{prepare,get ready(){return ready;}};
 }
