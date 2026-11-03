@@ -8,8 +8,8 @@
   --v3-brief-logos-width: 192px;
   --v3-brief-gap: 22px;
   --v3-brief-logo-scale: 1;
-  --v3-brief-background: rgb(255 255 255 / .46);
-  --v3-brief-color: #232522;
+  --v3-brief-background: var(--v3-glass-surface);
+  --v3-brief-color: var(--v3-ink);
   --v3-brief-radius: 100px;
   max-width: 100%;
   min-width: 0;
@@ -36,12 +36,12 @@
 .v3-brief__filters { position: absolute; pointer-events: none; }
 .v3-brief__glass {
   position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: 1;
-  background: linear-gradient(135deg, #ffffff55, #ffffff08 54%, #ffffff30), var(--v3-brief-background);
+  background: var(--v3-glass-sheen), var(--v3-brief-background);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: inset 0 1px 0 #fffffff0, inset 0 -1px 0 #3737450c, inset 1px 0 0 #ffffff80, inset -1px 0 0 #ffffff55;
+  box-shadow: var(--v3-glass-edge);
 }
-.v3-brief__glass::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(115deg, #ffffff35, transparent 48%, #ffffff12); }
+.v3-brief__glass::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--v3-glass-highlight); }
 .v3-brief__content { position: relative; z-index: 2; display: flex; align-items: center; gap: var(--v3-brief-gap); width: 100%; }
 .v3-brief__wave {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -55,7 +55,7 @@
   transform: translate(-50%, -50%) scale(0); pointer-events: none;
   background: radial-gradient(circle, transparent 43%, #ffffff00 47%, #ffffffa6 57%, #9aa1b314 66%, #ffffff00 78%, transparent 82%);
 }
-.v3-brief__button:focus-visible { outline: 2px solid #232522; outline-offset: 5px; }
+.v3-brief__button:focus-visible { outline: 2px solid var(--v3-focus); outline-offset: 5px; }
 .v3-brief__button:disabled { cursor: default; }
 .v3-brief__label { position: relative; flex: 0 0 var(--v3-brief-label-width); height: 36px; white-space: nowrap; }
 .v3-brief__idle, .v3-brief__copied { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; transform: translateZ(0); backface-visibility: hidden; will-change: opacity; }
@@ -79,7 +79,7 @@
 .v3-brief__status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .v3-brief__manual { box-sizing: border-box; width: 408px; max-width: 100%; margin-top: 20px; font-size: 16px; line-height: 1.5; }
 .v3-brief__manual label { display: block; margin-bottom: 8px; }
-.v3-brief__manual textarea { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #757575; border-radius: 12px; background: #fff; color: #232522; font: inherit; resize: vertical; }
+.v3-brief__manual textarea { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #757575; border-radius: 12px; background: var(--v3-card-solid); color: var(--v3-ink); font: inherit; resize: vertical; }
 @media (max-width: 600px) {
   .v3-brief { --v3-brief-height: 60px; --v3-brief-font-size: 18px; --v3-brief-label-width: 110px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 28px; --v3-brief-gap: 12px; --v3-brief-logo-scale: .75; }
 }
@@ -89,8 +89,11 @@
   .v3-brief { --v3-brief-height: 56px; --v3-brief-font-size: 17px; --v3-brief-label-width: 98px; --v3-brief-padding-start: 28px; --v3-brief-padding-end: 24px; --v3-brief-gap: 8px; --v3-brief-logo-scale: .59; }
 }
 @media (prefers-reduced-motion: reduce) { .v3-brief__button, .v3-brief .v3-brief__label > span { transition: none; } }
-@supports not ((backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px))) { .v3-brief__glass { background: #ffffffd9; } }
+@supports not ((backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px))) { .v3-brief__glass { background: var(--v3-glass-solid); } }
 
 /* Keep the same compositor origin before, during and after the logo wave.
    Fractional mobile scaling must not switch back to a differently snapped raster. */
 .v3-brief__icon { transform:translate3d(0,0,0); backface-visibility:hidden; will-change:transform; }
+
+/* Only monochrome assets change polarity; coloured product marks remain original. */
+.v3-brief__icon--openai img,.v3-brief__icon--cursor img,.v3-brief__check { filter:var(--v3-monochrome-filter); }

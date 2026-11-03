@@ -2,12 +2,12 @@
    click throws bright "+N" bursts sideways out of the button, Hide is a round X in the corner. */
 .v3-avatar-actions { position: relative; }
 .v3-avatar-actions { padding: 106px 0 0; }
-.v3-avatar-score { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: #0b0b0c; opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
+.v3-avatar-score { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: var(--v3-score-ink); opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
 .v3-avatar-score { --fs: 48px; }
 .v3-avatar-score__num { display: grid; place-items: center; height: var(--fs); }
 .v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-family: 'Montserrat', 'DM Sans', sans-serif; font-weight: 900; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
 .v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
-.v3-avatar-score[data-empty] { opacity: .32; }
+.v3-avatar-score[data-empty] { opacity: var(--v3-score-empty-opacity); }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
 .v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .v3-fly-num { --stroke: #ff8a2a; --glow: #ffd23f; position: absolute; z-index: 5; left: 0; top: 0; font: 900 30px/1 'Montserrat', 'DM Sans', sans-serif; color: #fff; white-space: nowrap; will-change: transform, opacity; -webkit-text-stroke: 5px var(--stroke); paint-order: stroke fill; text-shadow: 0 0 10px var(--glow), 0 0 22px var(--glow), 0 0 40px var(--glow), 0 3px 0 #00000026; }
@@ -30,7 +30,7 @@
 .v3-avatar-hide { transition: transform 220ms cubic-bezier(.22, 1, .36, 1), background-color 200ms ease, box-shadow 220ms ease, opacity 200ms ease; }
 .v3-avatar-hide img { transition: transform 320ms cubic-bezier(.22, 1, .36, 1); }
 @media (hover: hover) and (pointer: fine) {
-  .v3-avatar-hide:hover { transform: scale(1.14); background: #ffffff; box-shadow: 0 8px 26px #0000002e, inset 0 1px 0 #fff; }
+  .v3-avatar-hide:hover { transform: scale(1.14); background: var(--v3-control-hover); box-shadow: 0 8px 26px #0000002e, inset 0 1px 0 #fff; }
   .v3-avatar-hide:hover img { transform: rotate(90deg) scale(1.08); }
 }
 .v3-avatar-hide:active { transform: scale(.92); }
@@ -82,10 +82,10 @@ html[data-v3-game] body > :not(dialog):not(.v3-egg) *::after { animation-play-st
 }
 
 /* Desktop hint: Space spins as well. */
-.v3-avatar-keyhint { position: absolute; translate: -50% 0; white-space: nowrap; font: 500 15px/1 'DM Sans', sans-serif; color: #000; opacity: 1; transition: opacity 500ms ease; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.v3-avatar-keyhint { position: absolute; translate: -50% 0; white-space: nowrap; font: 500 15px/1 'DM Sans', sans-serif; color: var(--v3-text); opacity: 1; transition: opacity 500ms ease; pointer-events: none; user-select: none; -webkit-user-select: none; }
 .v3-avatar-keyhint[data-dismissed] { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .v3-avatar-keyhint { transition: none; } }
-.v3-avatar-keyhint kbd { font: inherit; font-weight: 700; padding: 3px 7px; margin-left: 2px; border-radius: 6px; background: #ffffffb3; box-shadow: inset 0 -1px 0 #0000001f, 0 1px 2px #00000014; }
+.v3-avatar-keyhint kbd { font: inherit; font-weight: 700; padding: 3px 7px; margin-left: 2px; border-radius: 6px; background: var(--v3-keycap-surface); box-shadow: inset 0 -1px 0 #0000001f, 0 1px 2px #00000014; }
 @media (hover: hover) and (pointer: fine) { .v3-avatar-actions { padding-bottom: 36px; } }
 
 /* Phone held sideways: portrait on the left (with the jokes above it), score and Spin in a column on the right. */

@@ -92,15 +92,11 @@ function welcomeIfReady(){
  welcomeGeneration=openGeneration;largePlayer.startIntro({replay:true});
 }
 
-function connectionAllowsPreload(){
- const connection=navigator.connection;
- return !['slow-2g','2g','3g'].includes(connection?.effectiveType);
-}
 function canPreload(){
  // Last in line: after window load, fonts and the main entrance content. It
  // never waits for (or depends on) the thumbnail. Opening the dialog mounts
  // the player on its own; hover, focus and pointerdown never warm it.
- return !reduced.matches&&connectionAllowsPreload()&&pageReady;
+ return !reduced.matches&&pageReady;
 }
 function beginPreload(){
  // The player module may still be loading; its import requeues this.
@@ -114,7 +110,6 @@ function queuePreload(){
  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:2000});
  else setTimeout(run,600);
 }
-navigator.connection?.addEventListener?.('change',queuePreload);
 
 // The shell also works when this entire adapter is delayed by the network.
 dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;large.dataset.welcomePending='';syncLoading();});

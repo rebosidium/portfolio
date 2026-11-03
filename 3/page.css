@@ -5,8 +5,58 @@
   font-variation-settings: 'opsz' 14;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  color: #000;
-  background: #f5f5f7;
+  color-scheme: light dark;
+  --v3-page-background: #f5f5f7;
+  --v3-text: #000;
+  --v3-ink: #232522;
+  --v3-muted: #66686d;
+  --v3-score-ink: #0b0b0c;
+  --v3-glass-solid: #ffffffd9;
+  --v3-focus: #232522;
+  --v3-card-surface: rgb(255 255 255 / .78);
+  --v3-card-solid: #fff;
+  --v3-card-rim: #ffffffb3;
+  --v3-glass-surface: rgb(255 255 255 / .46);
+  --v3-glass-sheen: linear-gradient(135deg, #ffffff55, #ffffff08 54%, #ffffff30);
+  --v3-glass-highlight: linear-gradient(115deg, #ffffff35, transparent 48%, #ffffff12);
+  --v3-glass-edge: inset 0 1px 0 #fffffff0, inset 0 -1px 0 #3737450c, inset 1px 0 0 #ffffff80, inset -1px 0 0 #ffffff55;
+  --v3-control-surface: #ffffff9e;
+  --v3-control-hover: #fff;
+  --v3-control-rim: #ffffffe0;
+  --v3-keycap-surface: #ffffffb3;
+  --v3-toast-surface: rgb(255 255 255 / .94);
+  --v3-portrait-backdrop: rgb(245 245 247 / .18);
+  --v3-monochrome-filter: none;
+  --v3-score-empty-opacity: .32;
+  color: var(--v3-text);
+  background: var(--v3-page-background);
+}
+/* Native media queries also update an already open page when the OS theme changes. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --v3-page-background: #141416;
+    --v3-text: #f3f3f5;
+    --v3-ink: #f3f3f5;
+    --v3-muted: #b0b0b9;
+    --v3-score-ink: #f3f3f5;
+    --v3-glass-solid: #2e2e34;
+    --v3-focus: #c9baff;
+    --v3-card-surface: rgb(28 28 32 / .94);
+    --v3-card-solid: #1c1c20;
+    --v3-card-rim: #ffffff24;
+    --v3-glass-surface: rgb(46 46 52 / .78);
+    --v3-glass-sheen: linear-gradient(135deg, #ffffff0a, #ffffff02 54%, #ffffff05);
+    --v3-glass-highlight: linear-gradient(115deg, #ffffff08, transparent 48%, #ffffff03);
+    --v3-glass-edge: inset 0 1px 0 #ffffff2e, inset 0 -1px 0 #00000040, inset 1px 0 0 #ffffff12, inset -1px 0 0 #ffffff0a;
+    --v3-control-surface: #35353bc9;
+    --v3-control-hover: #45454c;
+    --v3-control-rim: #ffffff2e;
+    --v3-keycap-surface: #ffffff1a;
+    --v3-toast-surface: rgb(39 39 44 / .97);
+    --v3-portrait-backdrop: rgb(10 10 13 / .64);
+    --v3-monochrome-filter: brightness(0) invert(1);
+    --v3-score-empty-opacity: .52;
+  }
 }
 /* Keep viewport ancestors unclipped. Physical iPhone A/B showed that outer
    overflow clipping makes sticky, resizing covers flicker under backdrop glass.
