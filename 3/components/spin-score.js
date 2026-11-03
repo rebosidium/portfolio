@@ -1,4 +1,5 @@
 import {createCoinProgression,coinTierFor} from './spin-coin.js';
+import {mountLeaderboard} from './spin-leaderboard.js?v=15821181a72a';
 
 // Spin "hamster combat" (/4 test). Every Spin click scores points; clicking quickly builds a
 // combo, so awards grow (+1, +2, +3, +5, +10, +20) and the "+N" bursts that fly sideways out of
@@ -45,6 +46,7 @@ if (dialog && viewer && actions) {
     dialog.addEventListener('v3-avatar-opened', placeHide);
     addEventListener('resize', placeHide, {passive: true});
   }
+  mountLeaderboard(dialog,hideButton);
   // Centre the score on the portrait's lower crop line.
   const large = dialog.querySelector('[data-v3-avatar-large]');
   const placeScore = () => {
@@ -274,7 +276,7 @@ if (dialog && viewer && actions) {
     };
     new ResizeObserver(placeHint).observe(spinButton); placeHint();
     document.addEventListener('keydown', event => {
-      if (event.defaultPrevented || event.code !== 'Space' || event.repeat || !dialog.open || dialog.hasAttribute('data-opening') || spinButton.disabled || document.querySelector('.v3-share-dialog[open]')) return;
+      if (event.defaultPrevented || event.code !== 'Space' || event.repeat || !dialog.open || dialog.hasAttribute('data-opening') || spinButton.disabled || document.querySelector('.v3-share-dialog[open],.v3-leaderboard[open]')) return;
       if (document.activeElement === spinButton) return;      // a focused button already reacts to Space itself
       if (document.activeElement?.closest('button,a,input,textarea,select,[contenteditable]')) return;
       event.preventDefault();

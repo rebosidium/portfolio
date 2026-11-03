@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="a95f03288a60">
+<html lang="en" data-build="a783a091bdfb">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,13 +65,14 @@
   <script type="module" src="/3/components/contact.js?v=7502722c439d"></script>
   <script type="module" src="/3/components/contact-gradient.js?v=bfd90a363ea4"></script>
   <link rel="stylesheet" href="/3/components/spin-egg.css?v=3a759b6dafd9">
-  <script type="module" src="/3/components/spin-egg.js?v=da97d7926de0"></script>
+  <script type="module" src="/3/components/spin-egg.js?v=602beeaa94aa"></script>
   <link rel="stylesheet" href="/3/components/spin-score.css?v=6eefcc558530">
-  <script type="module" src="/3/components/spin-score.js?v=1886a25a60b2"></script>
+  <script type="module" src="/3/components/spin-score.js?v=8a7985cc0578"></script>
   <link rel="stylesheet" href="/3/components/spin-share.css?v=2a0c6444a67e">
   <link rel="stylesheet" href="/3/components/spin-coin-return-effect.css?v=8bae5c48d7ac">
   <link rel="stylesheet" href="/3/components/spin-coin-collection.css?v=3469ba6e4160">
   <script type="module" src="/3/components/spin-share.js?v=ab9cee55de31"></script>
+  <link rel="stylesheet" href="/3/components/spin-leaderboard.css?v=f391921000e4">
   <script defer src="/3/components/updates.js?v=063f2d875ec4"></script>
 </head>
 <body>
@@ -246,7 +247,8 @@
       if(event.key!=='Tab')return;
       const share=dialog.querySelector('.v3-score-share:not([hidden])');
       const collected=[...dialog.querySelectorAll('.v3-coin-collection:not([hidden]) button:not(:disabled)')];
-      const controls=[...(large.hasAttribute('tabindex')?[large]:[]),...collected,...(share?[share]:[]),...(!spin.disabled?[spin]:[]),hide];
+      const league=dialog.querySelector('.v3-leaderboard-toggle');
+      const controls=[...(large.hasAttribute('tabindex')?[large]:[]),...collected,...(share?[share]:[]),...(!spin.disabled?[spin]:[]),...(league?[league]:[]),hide];
       const index=controls.indexOf(document.activeElement);event.preventDefault();
       controls[index<0?(event.shiftKey?controls.length-1:0):(index+(event.shiftKey?-1:1)+controls.length)%controls.length].focus({preventScroll:true});
     });

@@ -302,14 +302,14 @@ const INTRO = [
 let introIndex = 0, lastJoke = 0;
 document.addEventListener('v3-game-share-invite', event => {
   const game = document.querySelector('.v3-avatar-dialog[open]');
-  if (!game || document.querySelector('.v3-share-dialog[open]') || typeof event.detail?.text !== 'string') return;
+  if (!game || document.querySelector('.v3-share-dialog[open],.v3-leaderboard[open]') || typeof event.detail?.text !== 'string') return;
   const currentTier = game.querySelector('.v3-avatar-score')?.dataset.coinTier;
   const tierId = validCoinTier(event.detail.tierId) ? event.detail.tierId : validCoinTier(currentTier) ? currentTier : 'wood';
   const message = spawn(event.detail.text, true, true);
   message.dataset.coinTier = tierId;
 });
 document.addEventListener('v3-coin-level', event => {
-  if (!document.querySelector('.v3-avatar-dialog[open]') || document.querySelector('.v3-share-dialog[open]')) return;
+  if (!document.querySelector('.v3-avatar-dialog[open]') || document.querySelector('.v3-share-dialog[open],.v3-leaderboard[open]')) return;
   const tier = event.detail?.tier;
   if (!tier || !validCoinTier(tier.id)) return;
   const [emoji, label] = COIN_LEVELS[tier.id];
