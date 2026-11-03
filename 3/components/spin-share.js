@@ -1,4 +1,4 @@
-import {createShareCard} from './spin-share-card.js?v=07327599468d';
+import {createShareCard} from './spin-share-card.js?v=b63f94669fce';
 import {coinTierFor} from './spin-coin.js?v=1eba002e9c3b';
 import {mountCoinCollection} from './spin-coin-collection.js?v=7ed82c713338';
 
@@ -38,14 +38,14 @@ if (game && actions) {
   sheet.id = 'v3-share-dialog'; sheet.className = 'v3-share-dialog';
   sheet.setAttribute('aria-labelledby', 'v3-share-title');
   sheet.innerHTML = `
-    <div class="v3-share-heading"><div><p class="v3-share-eyebrow">SPIN DESIGNER</p><h2 id="v3-share-title">Your reward.</h2></div><button type="button" class="v3-share-close" aria-label="Back to game">×</button></div>
-    <div class="v3-share-preview" aria-busy="true"><div class="v3-share-preview-fallback"><strong></strong><span>CAN YOU BEAT IT?</span></div><img alt="Your latest reward and score" hidden></div>
+    <div class="v3-share-heading"><h2 id="v3-share-title">Your reward.</h2><button type="button" class="v3-share-close" aria-label="Back to game"><img src="/3/assets/lucide-x.svg" alt="" width="24" height="24"></button></div>
+    <div class="v3-share-preview" aria-busy="true"><div class="v3-share-preview-fallback"><strong></strong><span>Can you beat my score?</span></div><img alt="Your latest reward and score" hidden></div>
     <p class="v3-share-summary"></p>
-    <button type="button" class="v3-share-native">Share… <span aria-hidden="true">↗</span></button>
+    <button type="button" class="v3-share-native">Share… <span class="v3-share-action-arrow" aria-hidden="true">↗</span></button>
     <div class="v3-share-destinations">
       <button type="button" class="v3-share-linkedin"><span class="v3-share-in" aria-hidden="true">in</span> LinkedIn</button>
-      <button type="button" class="v3-share-telegram">Telegram ↗</button>
-      <button type="button" class="v3-share-copy-link">Copy link ↗</button>
+      <button type="button" class="v3-share-telegram">Telegram <span class="v3-share-action-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="v3-share-copy-link">Copy link <span class="v3-share-action-arrow" aria-hidden="true">↗</span></button>
     </div>
     <button type="button" class="v3-share-download" disabled>Save image ↓</button>
     <p class="v3-share-status" role="status" aria-live="polite"></p>
