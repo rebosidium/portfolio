@@ -125,6 +125,15 @@ html[data-v3-android] .v3-avatar-mesh { display:none!important; }
  -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
 }
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
+/* Keep Spin a light action surface in the dark portrait viewer. */
+@media (prefers-color-scheme: dark) {
+ .v3-avatar-spin {
+  background:#fff;
+  color:#232522;
+  box-shadow:0 3px 16px #00000018,inset 0 1px 0 #fffffff0;
+ }
+ .v3-avatar-spin img { filter:brightness(0); }
+}
 
 /* Hover: the white circle grows +3px on a damped spring (zeta .5, ~16% visible
    overshoot = ~0.5px, soft landing); leaving eases back without a bounce.

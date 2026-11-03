@@ -51,7 +51,7 @@
 /* Spin shows a smooth percentage while loading, then icon + label fade in. */
 .v3-avatar-spin img, .v3-avatar-spin > span { transition: opacity 350ms ease; }
 .v3-avatar-spin[data-loading] img, .v3-avatar-spin[data-loading] > span { opacity: 0 !important; }
-.v3-avatar-spin__pct { position: absolute; inset: 0; display: grid; place-items: center; font: 500 18px/1 'DM Sans', sans-serif; font-style: normal; font-variant-numeric: tabular-nums; color: #fff; opacity: 0; transition: opacity 350ms ease; pointer-events: none; z-index: 1; }
+.v3-avatar-spin__pct { position: absolute; inset: 0; display: grid; place-items: center; font: 500 18px/1 'DM Sans', sans-serif; font-style: normal; font-variant-numeric: tabular-nums; color: inherit; opacity: 0; transition: opacity 350ms ease; pointer-events: none; z-index: 1; }
 .v3-avatar-spin[data-loading] .v3-avatar-spin__pct { opacity: 1; }
 
 /* Android Chrome draws a square tap highlight around tapped buttons; the portrait controls have their own feedback. */
