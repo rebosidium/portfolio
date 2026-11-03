@@ -238,9 +238,9 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    const articleTop=flowTop-pageY+offsets[columns.indexOf(column)];
    const overlap=reduced.matches?0:Math.max(0,Math.min(1,(stackTop+height-articleTop-copyOffset)/Math.max(1,height)));
    const frame=cardStackFrame(overlap),stackScale=frame.scale;
-   // Finish fading 32px before sticky releases. A 64px smooth end cap
+   // Finish fading 16px before sticky releases. A 64px smooth end cap
    // leaves room for Safari's asynchronous scrolling to advance between draws.
-   const tail=Math.max(0,Math.min(1,(articleTop+articleHeight-height-stackTop-32)/64));
+   const tail=Math.max(0,Math.min(1,(articleTop+articleHeight-height-stackTop-16)/64));
    setStyle(article,'--v3-stack-scale',String(frame.scale));
    setStyle(article,'--v3-stack-opacity',String(frame.opacity*tail*tail*(3-2*tail)));
    setStyle(article,'--v3-stack-lift',`${frame.lift}px`);
@@ -250,9 +250,9 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
    // Sticky stops at the article bottom, while the white copy retains its
    // existing upward lift. Bound the artwork without changing its layout.
-   // Reserve 32px behind the panel for asynchronous scroll frames.
+   // Reserve 16px behind the panel for asynchronous scroll frames.
    const copyBottom=articleTop+articleHeight+frame.lift;
-   setStyle(article,'--v3-cover-bottom-cut',`${Math.max(-256,pinTop+height-copyBottom+32).toFixed(3)}px`);
+   setStyle(article,'--v3-cover-bottom-cut',`${Math.max(-256,pinTop+height-copyBottom+16).toFixed(3)}px`);
    if(image){
     // The entire art wrapper follows continuous article flow. Image, mesh
     // and clip share one pose; reverse scrolling retraces it without a reset.
