@@ -1,5 +1,5 @@
-import {createCoinProgression,coinTierFor} from './spin-coin.js?v=245f55d91e23';
-import {mountLeaderboard} from './spin-leaderboard.js?v=729626679d4e';
+import {createCoinProgression,coinTierFor} from './spin-coin.js?v=592abb30f938';
+import {mountLeaderboard} from './spin-leaderboard.js?v=686ae3e037bf';
 
 // Spin "hamster combat" (/4 test). Every Spin click scores points; clicking quickly builds a
 // combo, so awards grow (+1, +2, +3, +5, +10, +20) and the "+N" bursts that fly sideways out of

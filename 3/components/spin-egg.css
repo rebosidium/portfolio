@@ -44,6 +44,10 @@
   --v3-celebration-ink:#303234; --v3-celebration-border:#f1f1ef; --v3-celebration-glow:#b8b8c24d;
   --v3-celebration-surface:linear-gradient(115deg,#f1f0ec 0%,#bfc1c4 52%,#e2e2df 100%);
 }
+.v3-egg__toast--share[data-coin-tier="six-seven"] {
+  --v3-celebration-ink:#3b245b; --v3-celebration-border:#f5eaff; --v3-celebration-glow:#b78afd70;
+  --v3-celebration-surface:linear-gradient(115deg,#efe4ff 0%,#c9a5f5 52%,#e2c6ff 75%,#ac83df 100%);
+}
 .v3-egg__toast--share[data-coin-tier="lava"] {
   --v3-celebration-ink:#fff1d4; --v3-celebration-border:#ee763b; --v3-celebration-glow:#f86e3473;
   --v3-celebration-surface:linear-gradient(115deg,#211c22 0%,#592621 40%,#352126 72%,#692b22 100%);

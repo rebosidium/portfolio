@@ -4,6 +4,7 @@ export const COIN_TIERS = Object.freeze([
   {id: 'wood', label: 'Wood', minimum: 0},
   {id: 'cracker', label: 'Salt cracker', minimum: 10000},
   {id: 'stone', label: 'Stone', minimum: 40000},
+  {id: 'six-seven', label: 'Six seven', minimum: 67000},
   {id: 'lava', label: 'Lava', minimum: 80000},
   {id: 'bronze', label: 'Bronze', minimum: 130000},
   {id: 'silver', label: 'Silver', minimum: 180000},
