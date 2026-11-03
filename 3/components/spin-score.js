@@ -226,7 +226,7 @@ if (dialog && viewer && actions) {
       dialog.toggleAttribute('data-head-loading', progress < 1);
     };
     const read = () => {
-      if (dialog.hasAttribute('data-load-error') || reduced.matches) {
+      if (dialog.hasAttribute('data-load-error')) {
         suspended = true;
         clearTimeout(hideTimer); cancelAnimationFrame(pctRaf); pctRaf = 0;
         svg.setAttribute('hidden', ''); delete spinButton.dataset.loading;

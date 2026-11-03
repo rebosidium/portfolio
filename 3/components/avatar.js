@@ -5,7 +5,7 @@ import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
 // The head flag uses the same Android + coarse pointer test as the player choice.
 const androidTouch=document.documentElement.hasAttribute('data-v3-android')||/Android/i.test(navigator.userAgent)&&matchMedia('(pointer:coarse)').matches;
 const playerModule = androidTouch
-  ? '../portrait-player-android.js?v=217512255d9b' : '../portrait-player.js?v=38d82632b43d';
+  ? '../portrait-player-android.js?v=f27cc715381e' : '../portrait-player.js?v=40e53f7b1b8c';
 const small=document.querySelector('[data-v3-avatar-small]');
 const large=document.querySelector('[data-v3-avatar-large]');
 const dialog=document.querySelector('.v3-avatar-dialog');
@@ -33,11 +33,11 @@ function syncLoading(){
  const ready=!!largeState?.ready,complete=ready&&!!largeState?.allReady;
  const failed=!!(moduleFailed||largeState?.error),wasFailed=dialog.hasAttribute('data-load-error');
  dialog.toggleAttribute('data-load-error',failed);
- const loading=!reduced.matches&&!moduleFailed&&!largeState?.error&&!ready;
- loader.hidden=!loading;if(moduleFailed||largeState?.error||reduced.matches)delete large.dataset.welcomePending;
+ const loading=!moduleFailed&&!largeState?.error&&!ready;
+ loader.hidden=!loading;if(moduleFailed||largeState?.error)delete large.dataset.welcomePending;
  dialog.dataset.preloaded=String(complete);
  large.setAttribute('aria-busy',String(loading));
- spinButton.disabled=!failed&&(!complete||reduced.matches);
+ spinButton.disabled=!failed&&!complete;
  spinButton.querySelector('span').textContent=failed?'Reload':'Spin';
  spinButton.title=failed?'Reload the page to retry the portrait':ready&&!complete?'Downloading the remaining rotation views…':'';
  const message=dialog.open?(failed?'Portrait could not load. Use Reload to try again.':loading?'Loading portrait…':complete?'Portrait ready.':''):'';
@@ -60,7 +60,7 @@ function ensureLarge(){
  // Retain one controller and frame set across closes. The width hint matches
  // CSS min() while the native dialog is display:none during preloading.
  largePlayer=mountPortrait(large,{
-  interaction:'drag',manifestURL,paused:!dialog.open||shell.closing,retainQuality:true,sequentialDownloads:true,
+  interaction:'drag',manifestURL,paused:!dialog.open||shell.closing,retainQuality:true,sequentialDownloads:true,respectReducedMotion:false,
   displayWidth:()=>Math.max(1,Math.min(innerWidth*.86,innerHeight-140,860))
  });
  // Android fallback: no dynamic ambience layer, RAF loop or motion trails.
@@ -86,9 +86,9 @@ function activateLarge(){
 }
 
 function welcomeIfReady(){
- // Current-generation state recovers after reduced motion/quality changes;
+ // Current-generation state recovers after quality changes;
  // the original one-shot ready promise may already have settled false.
- if(!largePlayer||!largeState?.ready||!dialog.open||dialog.hasAttribute('data-opening')||shell.closing||reduced.matches||welcomeGeneration===openGeneration)return;
+ if(!largePlayer||!largeState?.ready||!dialog.open||dialog.hasAttribute('data-opening')||shell.closing||welcomeGeneration===openGeneration)return;
  welcomeGeneration=openGeneration;largePlayer.startIntro({replay:true});
 }
 
@@ -117,7 +117,7 @@ function queuePreload(){
 navigator.connection?.addEventListener?.('change',queuePreload);
 
 // The shell also works when this entire adapter is delayed by the network.
-dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;if(!reduced.matches)large.dataset.welcomePending='';syncLoading();});
+dialog.addEventListener('v3-avatar-opening',()=>{++openGeneration;large.dataset.welcomePending='';syncLoading();});
 dialog.addEventListener('v3-avatar-opened',activateLarge);
 dialog.addEventListener('v3-avatar-closing',()=>{++openGeneration;largePlayer?.skipIntro();largePlayer?.pause();});
 dialog.addEventListener('v3-avatar-closed',()=>{delete large.dataset.welcomePending;smallPlayer?.returnFromMenu();syncLoading();});
@@ -127,7 +127,7 @@ function claimLargeInteraction(){if(dialog.open&&largeState?.ready)welcomeGenera
 large.addEventListener('pointerdown',claimLargeInteraction,{capture:true,passive:true});
 large.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home'].includes(event.key))claimLargeInteraction();},{capture:true});
 spinButton.addEventListener('click',()=>{claimLargeInteraction();largePlayer?.spin?.(4);});
-reduced.addEventListener('change',()=>{syncLoading();if(!reduced.matches){if(dialog.open)afterFirstPaint(()=>{if(dialog.open&&!shell.closing){welcomeGeneration=-1;activateLarge();}});else queuePreload();}});
+reduced.addEventListener('change',queuePreload);
 function syncBackgroundMotion(){dialog.toggleAttribute('data-background-paused',document.hidden);}
 syncBackgroundMotion();
 document.addEventListener('visibilitychange',()=>{syncBackgroundMotion();if(!document.hidden)queuePreload();});

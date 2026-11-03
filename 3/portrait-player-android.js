@@ -2,7 +2,7 @@ import {createPreparedSpinCache} from './prepared-spin-cache.js?v=6f6b701c2964';
 // Adapted from the approved Seedance 2.0 demo player (spin-player-seedance-v1.js).
 // Canvas only; the approved static starting pose remains available on failure.
 // Approved cursor-follow with manual rotation and spring return.
-export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706,displayWidth=null,paused=false,retainQuality=false,fixedVariant=null,sequentialDownloads=false} = {}) {
+export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mobileLayout=null,mobileScrollStart=.35,mobileCoverTop=null,initialAngle=-56.3529411764706,displayWidth=null,paused=false,retainQuality=false,fixedVariant=null,sequentialDownloads=false,respectReducedMotion=true} = {}) {
   const canvas=stage?.querySelector('canvas'),posterElement=stage?.querySelector('img');
   const ctx=canvas?.getContext('2d');
   if(!ctx||!posterElement||!manifestURL){
@@ -23,6 +23,8 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   const cleanup=[];
   const listen=(target,name,handler,options)=>{target.addEventListener(name,handler,options);cleanup.push(()=>target.removeEventListener(name,handler,options));};
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+  // The full-screen game opts into playback; page thumbnails retain the system preference.
+  const motionReduced=()=>respectReducedMotion&&media.matches;
   const coarsePointer=window.matchMedia('(pointer: coarse)');
   canvas.dataset.variant='touch-responsive-raw-bitmap';
   const cursorFollow=interaction==='cursor',finePointer=window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
@@ -74,7 +76,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function usesSpinCache(){return !cursorFollow&&!fixedVariant&&decodeLimited()&&sourceSize[0]*sourceSize[1]*4*SPIN_POSES<=SPIN_BUDGET;}
   function spinFramesSettled(){return !usesSpinCache()||spinCache.ready||spinCache.failed;}
   function prepareSpinFrames(){
-    if(!usesSpinCache()||!ready||!currentStartupReady||preparing||introFrames.size||document.hidden||media.matches||!encodedAllReady||spinCache.ready||spinCache.busy||spinCache.failed)return;
+    if(!usesSpinCache()||!ready||!currentStartupReady||preparing||introFrames.size||document.hidden||motionReduced()||!encodedAllReady||spinCache.ready||spinCache.busy||spinCache.failed)return;
     const indices=Array.from({length:SPIN_POSES},(_,i)=>angleToIndex(i*360/SPIN_POSES));
     void spinCache.prepare(indices,sourceSize[0]*sourceSize[1]*4);
   }
@@ -467,7 +469,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     return Math.sign(dx)*Math.min(1,distance)*influence*FOLLOW_MAX_ANGLE;
   }
   function applyCursorTarget(){
-    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||mode==='power-spin'||!finePointer.matches||media.matches||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
+    if(!cursorFollow||desktopCoverActive||followPaused||drag||returnRequested||mode==='return'||mode==='power-spin'||!finePointer.matches||motionReduced()||document.hidden||!followVisible||!ready||!startupSettled||preparing||!introConsumed||introRequested||mode==='intro')return;
     const angle=cursorAngle(),next=angleToIndex(angle);
     canvas.dataset.followTarget=angle.toFixed(3);
     if(mode==='idle'&&next===displayedIndex)return;
@@ -494,7 +496,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
   }
   function returnToFront(velocity=0,frontPhase=null,touch=false){
-    if(!ready||media.matches||document.hidden)return;
+    if(!ready||motionReduced()||document.hidden)return;
     // Start from the visible unwrapped pose, not a fast drag's decoder backlog.
     currentAngle=lastMotionPhase;targetAngle=frontPhase??currentAngle+shortestDelta(0,currentAngle);
     touchReturn=touch;
@@ -507,12 +509,12 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     setStatus('Возвращаюсь в анфас · можно снова вращать');scheduleRender();
   }
   function prepareMenuPose(){
-    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing)return false;
+    if(destroyed||motionReduced()||document.hidden||!ready||!startupSettled||preparing)return false;
     followPaused=true;skipIntro();setTarget(mobileLayout?.matches?45*1.3:45,{session:true});menuPoseActive=true;
     return true;
   }
   function setMobileScrollPose(progress,fresh=false){
-    if(destroyed||media.matches||document.hidden||!ready||!startupSettled||preparing||drag||(returnRequested&&!mobileScrollReturn)||menuPoseActive)return false;
+    if(destroyed||motionReduced()||document.hidden||!ready||!startupSettled||preparing||drag||(returnRequested&&!mobileScrollReturn)||menuPoseActive)return false;
     followPaused=true;skipIntro();
     const velocity=motionVelocity;
     if(fresh||mobileScrollReturn){stop();beginStats()}
@@ -529,7 +531,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   // Desktop panel overlap owns its pose; the mobile scroll controller remains independent.
   function setDesktopCoverPose(progress){
-    if(destroyed||media.matches||mobileLayout?.matches||document.hidden||!ready||!startupSettled||preparing||!introFinishedSettled||drag||returnRequested||menuPoseActive)return false;
+    if(destroyed||motionReduced()||mobileLayout?.matches||document.hidden||!ready||!startupSettled||preparing||!introFinishedSettled||drag||returnRequested||menuPoseActive)return false;
     progress=Math.max(0,Math.min(1,progress));
     if(!desktopCoverActive){desktopCoverFront=Math.round(lastMotionPhase/360)*360;desktopCoverActive=true;}
     desktopCoverProgress=progress;followPaused=true;
@@ -539,10 +541,10 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function clearDesktopCoverPose(){
     if(!desktopCoverActive)return;desktopCoverActive=false;desktopCoverProgress=0;
-    if(mode==='cover'){stop();if(ready&&!media.matches&&!document.hidden)returnToFront(0);}
+    if(mode==='cover'){stop();if(ready&&!motionReduced()&&!document.hidden)returnToFront(0);}
   }
   function clearMobileScrollPose(){
-    if(destroyed||media.matches||drag||menuPoseActive||returnRequested)return false;
+    if(destroyed||motionReduced()||drag||menuPoseActive||returnRequested)return false;
     followPaused=true;skipIntro();
     // Reuse the spring's pending return, which survives a quality reload.
     if(!ready||preparing||document.hidden){if(!ready&&!loadAttemptActive)return false;returnRequested=true;return true;}
@@ -551,7 +553,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function returnFromMenu(){
     if(!menuPoseActive)return false;
     menuPoseActive=false;
-    if(destroyed||media.matches)return false;
+    if(destroyed||motionReduced())return false;
     followPaused=true;releaseDrag();skipIntro();
     const mobileMenu=!!mobileLayout?.matches;
     // A quality change already preserves this pending spring through init().
@@ -600,7 +602,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function startIntro({replay=false}={}){
     clearTimeout(resizeTimer);
-    if(media.matches||document.hidden||destroyed)return false;
+    if(motionReduced()||document.hidden||destroyed)return false;
     if(introConsumed){
       if(!replay)return false;
       releaseDrag();stop();introConsumed=false;
@@ -643,7 +645,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   // The large Spin keeps its four-turn profile. A short thumbnail impulse can
   // overshoot slightly, then reuse the front-facing spring for its landing.
   function spin(turns=4,{duration=3600,returnToFront:restoreFront=false}={}){
-    if(destroyed||!ready||preparing||media.matches||document.hidden)return false;
+    if(destroyed||!ready||preparing||motionReduced()||document.hidden)return false;
     releaseDrag();skipIntro();stop();beginStats();
     powerSpin={from:currentAngle,turns:Math.max(1,Math.min(6,turns)),time:0,duration:Math.max(700,Math.min(6000,duration)),restoreFront,prepared:usesSpinCache()&&spinCache.ready,detail:false};
     targetAngle=currentAngle+powerSpin.turns*360;mode='power-spin';previousTick=0;
@@ -816,7 +818,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }finally{clearTimeout(deadline);fetchController?.signal.removeEventListener('abort',abort);chunk.controller=null}
   }
   function pumpChunks(){
-    if(!variant||document.hidden||media.matches||fetchController?.signal.aborted)return;
+    if(!variant||document.hidden||motionReduced()||fetchController?.signal.aborted)return;
     const token=generation;
     const workers=sequentialDownloads?1:CHUNK_WORKERS;
     // A cold start warms startup first. Later quality upgrades already have a
@@ -891,7 +893,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     return value;
   }
   async function init(){
-    if(destroyed||media.matches||document.hidden)return;
+    if(destroyed||motionReduced()||document.hidden)return;
     const requestedAngle=selectionAngle,resumeReturn=returnRequested,resumeScrollReturn=mobileScrollReturn,resumeMenuReturn=menuReturnRequested,resumeTouchReturn=touchReturn;
     const token=beginLoading();spinCache.clear();fetchController?.abort();rejectEncoded(cancelled());fetchController=new AbortController();
     const controller=fetchController;loadStartedAt=performance.now();
@@ -1011,7 +1013,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     }
   }
   listen(stage,'pointerdown',event=>{
-    if(media.matches||event.button!==0||event.isPrimary===false)return;
+    if(motionReduced()||event.button!==0||event.isPrimary===false)return;
     if(cursorFollow)followPaused=true;
     mobileScrollReturn=menuReturnRequested=false;
     skipIntro();
@@ -1061,7 +1063,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     if(!drag||event.pointerId!==drag.id)return;
     if(event.type!=='pointerup'){
       // Native mobile panning can cancel an already rotated touch before release.
-      const returnTouch=mobileLayout?.matches&&event.pointerType==='touch'&&drag.horizontal&&!media.matches&&!document.hidden;
+      const returnTouch=mobileLayout?.matches&&event.pointerType==='touch'&&drag.horizontal&&!motionReduced()&&!document.hidden;
       releaseDrag();
       if(returnTouch)returnToFront(0,null,true);
       else{stop();setStatus('Готово · выбранный ракурс')}
@@ -1072,7 +1074,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     const now=performance.now(),first=drag.samples[0],last=drag.samples[drag.samples.length-1],duration=last.time-first.time;
     const velocity=drag.horizontal&&now-drag.lastMoved<=RELEASE_IDLE_MS&&duration>0?(last.x-first.x)*drag.gain*1000/duration:0;
     const moved=drag.horizontal,touch=drag.touch;releaseDrag();
-    if(!media.matches&&(moved||angleDistance(selectionAngle,0)>.12))returnToFront(velocity,null,touch);
+    if(!motionReduced()&&(moved||angleDistance(selectionAngle,0)>.12))returnToFront(velocity,null,touch);
     else{diagnostics();setStatus('Готово · выбранный ракурс')}
   }
   for(const eventName of ['pointerup','pointercancel','lostpointercapture'])listen(stage,eventName,finishDrag);
@@ -1091,7 +1093,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   function resume(){
     if(destroyed)return;
     renderPaused=false;
-    if(!ready&&!loadAttemptActive&&!media.matches&&!document.hidden){init();return;}
+    if(!ready&&!loadAttemptActive&&!motionReduced()&&!document.hidden){init();return;}
     checkResize();queuePump();if(ready)scheduleRender();
   }
   function suspend(error=''){
@@ -1107,12 +1109,12 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
   }
   function fallback(error){
     suspend(error?.message||'');stage.classList.remove('portrait-rendered');stage.setAttribute('aria-label',document.documentElement.lang==='ru'?'Дмитрий Рыбалка':'Dmitry Rybalka');
-    canvas.dataset.mode=media.matches?'reduced':'static';canvas.dataset.error=error?.message||'';
+    canvas.dataset.mode=motionReduced()?'reduced':'static';canvas.dataset.error=error?.message||'';
     selectionAngle=0;ctx.clearRect(0,0,canvas.width,canvas.height);
     // The static poster remains visible if a network/decode request fails.
     posterElement.classList.add('image-ready');
   }
-  listen(media,'change',()=>{if(media.matches)fallback();else init()});
+  if(respectReducedMotion)listen(media,'change',()=>{if(motionReduced())fallback();else init()});
   // Preserve partial frame downloads when a tab becomes visible again.
   listen(document,'visibilitychange',()=>{if(document.hidden){cursorPoint=null;skipIntro();releaseDrag();stop();cancelAnimationFrame(raf);raf=0;}else if(!ready&&!loadAttemptActive)init();else{queuePump();checkResize();loadProgress();if(returnRequested)returnToFront();else if(desktopCoverActive)setDesktopCoverPose(desktopCoverProgress);else applyCursorTarget()}});
   listen(window,'pagehide',()=>{suspend();resizeObserver?.disconnect()});
@@ -1121,7 +1123,7 @@ export function mountSeedancePortrait(stage, {manifestURL,interaction='drag',mob
     turn:setMobileScrollPose,clear:clearMobileScrollPose,subscribeLoading,
     canRetry:()=>ready&&startupSettled&&!preparing&&!drag
   },mobileLayout,media,mobileScrollStart,mobileCoverTop));
-  if(media.matches){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
+  if(motionReduced()){finishIntro(false);canvas.dataset.mode='reduced';introConsumed=true;settleStartup(false);notifyLoading();}
   else init();
   return {pause,resume,ready:startupReady,introFinished,spin,setDesktopCoverPose,clearDesktopCoverPose,get allFramesReady(){return allFramesPromise},get loadingState(){return loadingState()},subscribeLoading,startIntro,skipIntro,prepareMenuPose,returnFromMenu,destroy(){destroyed=true;suspend();resizeObserver?.disconnect();cleanup.forEach(fn=>fn());loadSubscribers.clear();stage.classList.remove('portrait-rendered');}};
 }
