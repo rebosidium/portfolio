@@ -96,4 +96,16 @@
 .v3-spin-cue__sheen { display:block; position:absolute; inset:-60% -40%; background:linear-gradient(105deg,#c5a0ff00 30%,#d8baff9c 43%,#fffffff2 50%,#c3a0ffb8 57%,#c5a0ff00 70%); animation:v3-spin-first-sheen 3600ms ease-in-out infinite; }
 .v3-avatar-spin[data-start-cue] > img,.v3-avatar-spin[data-start-cue] > span { position:relative; z-index:1; }
 @keyframes v3-spin-first-sheen { 0%,12% { transform:translateX(-100%) skewX(-10deg);opacity:0; } 18% { opacity:1; } 55% { opacity:1; } 66%,100% { transform:translateX(100%) skewX(-10deg);opacity:0; } }
+/* A brief nudge, then a long rest. Independent rotate preserves press/scale. */
+@media (prefers-reduced-motion:no-preference) {
+  .v3-avatar-dialog[open]:not([data-opening]):not([data-load-error]) .v3-avatar-spin[data-start-cue]:not(:disabled):not([data-loading]) { animation:v3-spin-first-wiggle 5200ms ease-in-out 4500ms infinite; }
+}
+@keyframes v3-spin-first-wiggle {
+  0%,18%,100% { rotate:0deg; }
+  3% { rotate:-2deg; }
+  6% { rotate:2.5deg; }
+  9% { rotate:-1.7deg; }
+  12% { rotate:1deg; }
+  15% { rotate:-.5deg; }
+}
 @media (prefers-reduced-motion:reduce) { .v3-spin-cue__sheen { animation:none; transform:none; opacity:.35; } }
