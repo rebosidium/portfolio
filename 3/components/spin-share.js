@@ -84,7 +84,7 @@ if (game && actions) {
   };
   const onScore = value => {
     total = value;
-    shareButton.hidden = total < COIN_TIERS[1].minimum;
+    shareButton.hidden = total < COIN_TIERS[0].minimum;
     requestAnimationFrame(placeButton);
     clearTimeout(idle);
     const crossed = milestones.filter(n => total >= n).at(-1) || 0;
