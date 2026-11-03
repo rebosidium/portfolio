@@ -51,7 +51,8 @@ const JOKES = {
     'OKR-R-R-RR-RRRR 🐯',
     'I don’t tip. I leave Figma comments. 💸',
     'This is Sparta! Three designers. One button. ⚔️',
-    '🎨 Dobby is free! First draft approved.'
+    '🎨 Dobby is free! First draft approved.',
+    '🤝 Privet Tovarisch'
   ],
   design: [
     'That 🩷 pink is a bold choice',
@@ -101,7 +102,8 @@ const JOKES = {
     'Banned purple 🟣 in DESIGN_SYSTEM.md.',
     '🐢 Run, Figma, run! It’s only 60,000 layers.',
     'Shut the fuck up, Donny! Just fix the 🔘 button.',
-    'Red pill or blue pill? The AI made a 🟣 gradient.'
+    'Red pill or blue pill? The AI made a 🟣 gradient.',
+    'It’s interesting to me, so it must be interesting to you. 😏'
   ],
   tech: [
     'Compiling confidence…',
