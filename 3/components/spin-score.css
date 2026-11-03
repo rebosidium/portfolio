@@ -37,6 +37,7 @@
 .v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-family: 'Montserrat', 'DM Sans', sans-serif; font-weight: 900; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
 .v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
 .v3-avatar-score[data-empty] { opacity:1; }
+.v3-avatar-score[data-empty] b { opacity:.45; }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
 .v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .v3-fly-num { --stroke: #ff8a2a; --glow: #ffd23f; position: absolute; z-index: 5; left: 0; top: 0; font: 900 30px/1 'Montserrat', 'DM Sans', sans-serif; color: #fff; white-space: nowrap; will-change: transform, opacity; -webkit-text-stroke: 5px var(--stroke); paint-order: stroke fill; text-shadow: 0 0 10px var(--glow), 0 0 22px var(--glow), 0 0 40px var(--glow), 0 3px 0 #00000026; }
