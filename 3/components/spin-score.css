@@ -36,7 +36,7 @@
 .v3-avatar-score__num { display: grid; place-items: center; height: var(--fs); }
 .v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-family: 'Montserrat', 'DM Sans', sans-serif; font-weight: 900; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
 .v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
-.v3-avatar-score[data-empty] { visibility:hidden; }
+.v3-avatar-score[data-empty] { opacity:1; }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
 .v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .v3-fly-num { --stroke: #ff8a2a; --glow: #ffd23f; position: absolute; z-index: 5; left: 0; top: 0; font: 900 30px/1 'Montserrat', 'DM Sans', sans-serif; color: #fff; white-space: nowrap; will-change: transform, opacity; -webkit-text-stroke: 5px var(--stroke); paint-order: stroke fill; text-shadow: 0 0 10px var(--glow), 0 0 22px var(--glow), 0 0 40px var(--glow), 0 3px 0 #00000026; }
@@ -47,7 +47,7 @@
 .v3-fly-ring[data-tier="3"] { box-shadow: 0 0 20px 3px #ff8ad0, inset 0 0 14px #ffffffb0; }
 .v3-fly-ring[data-tier="4"] { box-shadow: 0 0 22px 4px #6fd6ff, inset 0 0 14px #ffffffb0; }
 /* Hide: a plain round glass button with only the cross, top right. */
-.v3-avatar-hide { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 16px; right:auto; z-index: 6; width: 48px; height: 48px; padding: 0; gap: 0; border-radius: 50%; }
+.v3-avatar-hide { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 16px); right: 16px; left:auto; z-index: 6; width: 48px; height: 48px; padding: 0; gap: 0; border-radius: 50%; }
 .v3-avatar-hide span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 800px) { .v3-avatar-score { font-size: 18px; } .v3-avatar-score { --fs: 42px; } .v3-fly-num { font-size: 26px; } }
 @media (prefers-reduced-motion: reduce) { .v3-avatar-score { transition: none; } }

@@ -28,7 +28,7 @@ export function mountLeaderboard(game,hide) {
     }
     board.querySelector('tbody').append(fragment);
   }
-  function place(){if(!game.open)return;const style=getComputedStyle(hide);toggle.style.top=style.top;toggle.style.right=style.left;toggle.style.left='auto';}
+  function place(){if(!game.open)return;const style=getComputedStyle(hide);toggle.style.top=style.top;toggle.style.left=style.right;toggle.style.right='auto';}
   function close(){if(!board.open)return;board.close();delete game.dataset.leaderboardOpen;if(game.open&&!game.v3AvatarShell?.closing)toggle.focus({preventScroll:true});}
   toggle.addEventListener('click',()=>{if(!game.open||game.v3AvatarShell?.closing)return;populate();game.dataset.leaderboardOpen='';board.showModal();scroll.scrollTop=0;closeButton.focus({preventScroll:true});});
   closeButton.addEventListener('click',close);

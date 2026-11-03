@@ -1,5 +1,5 @@
 import {createCoinProgression,coinTierFor} from './spin-coin.js?v=da6b4412d4e6';
-import {mountLeaderboard} from './spin-leaderboard.js?v=caed31ee4da9';
+import {mountLeaderboard} from './spin-leaderboard.js?v=7a5ed7d04bbd';
 
 // Spin "hamster combat" (/4 test). Every Spin click scores points; clicking quickly builds a
 // combo, so awards grow (+1, +2, +3, +5, +10, +20) and the "+N" bursts that fly sideways out of
@@ -33,15 +33,15 @@ if (dialog && viewer && actions) {
     // button lives directly in the dialog and fades with the viewer instead.
     dialog.append(hideButton);
     dialog.addEventListener('v3-avatar-closing', () => { hideButton.style.opacity = '0'; });
-    // Align Close on the left and the labeled leaderboard on the right
+    // Align Close on the right and the labeled leaderboard on the left
     // using the same untransformed header baseline.
     const placeHide = () => {
       const r = document.querySelector('.v3-menu-toggle')?.getBoundingClientRect();
       if (r && r.width && r.bottom > 0 && r.top < innerHeight) {
         hideButton.style.top = (r.top + r.height / 2 - 24) + 'px';
-        hideButton.style.left = (document.documentElement.clientWidth - (r.left + r.width / 2) - 24) + 'px';
-      } else { hideButton.style.top = ''; hideButton.style.left = ''; }
-      hideButton.style.right = 'auto';
+        hideButton.style.right = (document.documentElement.clientWidth - (r.left + r.width / 2) - 24) + 'px';
+      } else { hideButton.style.top = ''; hideButton.style.right = ''; }
+      hideButton.style.left = 'auto';
     };
     dialog.addEventListener('v3-avatar-opening', () => { hideButton.style.opacity = ''; placeHide(); });
     dialog.addEventListener('v3-avatar-opened', placeHide);
