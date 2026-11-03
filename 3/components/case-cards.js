@@ -32,7 +32,7 @@ const coverSizes='(max-width:480px) calc(94.13265vw - 45.18367px),(max-width:800
 export function mountCaseCards(host=document.querySelector('.v3-page')){
  if(!host||host.querySelector('.v3-cases'))return;
  const section=document.createElement('section');section.className='v3-cases';section.id='v3-case-studies';section.setAttribute('aria-labelledby','v3-cases-title');
- section.innerHTML='<h2 class="v3-cases__title" id="v3-cases-title">Case Studies</h2><div class="v3-case-columns"><div class="v3-case-column" data-speed="0.13"></div><div class="v3-case-column" data-speed="-0.10"></div></div>';
+ section.innerHTML='<h2 class="v3-cases__title" id="v3-cases-title">Work</h2><div class="v3-case-columns"><div class="v3-case-column" data-speed="0.13"></div><div class="v3-case-column" data-speed="-0.10"></div></div>';
  section.querySelector('.v3-cases__title').dataset.reveal='pending';
  const columns=[...section.querySelectorAll('.v3-case-column')];
  for(const [index,project]of projects.entries()){
