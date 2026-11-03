@@ -93,7 +93,9 @@ const JOKES = {
     'Logo in 5 minutes (it’s our whole brand)',
     'Wireframe approved. Colour: surprise me.',
     'Dribbble 🏀 says yes. Users say: where’s the button?',
-    'It’s Triple 💎💎💎 Diamond!'
+    'It’s Triple 💎💎💎 Diamond!',
+    'DESIGN_SYSTEM.md: 60 Shades of Grey.',
+    'Banned purple 🟣 in DESIGN_SYSTEM.md.'
   ],
   tech: [
     'Compiling confidence…',
@@ -132,31 +134,43 @@ const JOKES = {
     'console.log in production. Evacuate. 🚨',
     'Estimate: 2 days. Reality: 2 sprints.',
     'Compacting conversation… 🗜️',
-    '🛎️ DETACH INSTANCE!!!'
+    '🛎️ DETACH INSTANCE!!!',
+    'Finally, someone listens to me. For $20 a month. 🥹',
+    'Bought more tokens. Only $19,000. 💸',
+    'AGENTS.md / 60,000 lines.',
+    'Banned bugs in AGENTS.md.',
+    'Not reading code, Karpathy-style. 😎'
   ]
 };
 const ORDER = ['office', 'design', 'tech'];
-// Within each kind every joke is shown once before any repeats, also across page reloads
-// (remembered in localStorage when available). A kind that runs out restarts, never opening
-// with the joke it just showed.
+// Show the entire pool before repeating: rotate kinds, skipping any exhausted ones.
+// Unequal kind sizes must not restart the shortest deck while others still have unseen jokes.
+// Keep history and the rotation cursor across reloads when localStorage is available.
 const SEEN_KEY = 'v3-egg-seen-v2';
-let seen = {office: [], design: [], tech: []}, turn = 0;
+let seen = {office: [], design: [], tech: []}, turn = 0, last = '';
 try {
   const stored = JSON.parse(localStorage.getItem(SEEN_KEY) || '{}');
-  for (const kind of ORDER) if (Array.isArray(stored[kind])) seen[kind] = stored[kind].filter(text => JOKES[kind].includes(text));
+  for (const kind of ORDER) if (Array.isArray(stored[kind])) seen[kind] = [...new Set(stored[kind].filter(text => JOKES[kind].includes(text)))];
+  if (Number.isSafeInteger(stored.turn) && stored.turn >= 0) turn = stored.turn % ORDER.length;
+  if (ORDER.some(kind => JOKES[kind].includes(stored.last))) last = stored.last;
 } catch { /* Keep empty memory. */ }
 const nextPhrase = () => {
-  const kind = ORDER[turn++ % ORDER.length];
-  let fresh = JOKES[kind].filter(text => !seen[kind].includes(text));
-  if (!fresh.length) {
-    const last = seen[kind][seen[kind].length - 1];
-    seen[kind] = last ? [last] : [];
-    fresh = JOKES[kind].filter(text => !seen[kind].includes(text));
+  if (ORDER.every(kind => JOKES[kind].every(text => seen[kind].includes(text)))) {
+    for (const kind of ORDER) seen[kind] = [];
   }
-  const text = fresh[Math.floor(Math.random() * fresh.length)];
-  seen[kind].push(text);
-  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* Private mode: session-only memory. */ }
-  return text;
+  for (let i = 0; i < ORDER.length; i++) {
+    const kind = ORDER[turn];
+    turn = (turn + 1) % ORDER.length;
+    const fresh = JOKES[kind].filter(text => !seen[kind].includes(text));
+    if (!fresh.length) continue;
+    const choices = fresh.filter(text => text !== last);
+    const pool = choices.length ? choices : fresh;
+    const text = pool[Math.floor(Math.random() * pool.length)];
+    seen[kind].push(text);
+    last = text;
+    try { localStorage.setItem(SEEN_KEY, JSON.stringify({...seen, turn, last})); } catch { /* Private mode: session-only memory. */ }
+    return text;
+  }
 };
 const MAX_VISIBLE = 5, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');
@@ -252,7 +266,7 @@ let introIndex = 0, lastJoke = 0;
 document.addEventListener('click', event => {
   const spin = event.target.closest?.('.v3-avatar-spin');
   if (!spin || spin.disabled) return;
-  if (introIndex < INTRO.length) { const [text, strong] = INTRO[introIndex++]; spawn(text, strong); turn = 0; }
+  if (introIndex < INTRO.length) { const [text, strong] = INTRO[introIndex++]; spawn(text, strong); }
   else {
     // Fast tapping adds at most ~4 jokes a second, so the pile and the falling ones stay small.
     const now = performance.now();
