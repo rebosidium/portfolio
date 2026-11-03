@@ -2,6 +2,13 @@
 /* Expand only the circular aperture. Artwork stays anchored to its centre at
    a fixed CSS size, so hover reveals more of the portrait without zooming it. */
 .v3-avatar-aperture { position:absolute;inset:-4px;overflow:hidden;border-radius:50%;background:#fff;pointer-events:none;clip-path:circle(calc(50% - 4px) at 50% 50%); }
+/* In dark mode, keep white behind the portrait but tuck it half a CSS pixel
+   inside the artwork clip so it cannot fringe the dark shirt's lower edge.
+   Inheriting the animated clip keeps the same inset throughout the hover spring. */
+@media (prefers-color-scheme: dark) {
+ .v3-avatar-aperture { background:transparent; }
+ .v3-avatar-aperture::before { content:'';position:absolute;inset:.5px;border-radius:inherit;clip-path:inherit;background:#fff; }
+}
 /* The aperture box is fixed 4px larger than the stage, so the artwork never
    re-lays out and the hover overshoot (radius <+3.5px) is never cut off by
    its own border-radius: only the clip radius moves. The hover shadow is a separate layer that only
