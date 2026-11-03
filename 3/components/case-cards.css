@@ -4,7 +4,7 @@
 .v3-case-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-top:-23px; }
 .v3-case-column { display:flex;flex-direction:column;gap:80px;min-width:0;will-change:transform; }
 .v3-case-column:first-child { padding-top:114px; }
-.v3-case-card { --v3-case-gap:16px;--v3-cover-height:456.2;--v3-art-headroom:64;--v3-field-scale:0.934239368698;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
+.v3-case-card { --v3-case-gap:16px;--v3-cover-height:456.2;--v3-image-rise:18;--v3-art-headroom:64;--v3-field-scale:0.934239368698;position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--v3-case-gap);min-width:0; }
 /* One cover height drives the pin, the cover and every mobile range/boundary. */
 /* The sticky layout box and its visual cover have separate transforms:
    stacking never interferes with hover tilt or gradient-field parallax. */
@@ -18,22 +18,22 @@
 /* Keep vertical clipping at the authored window, with a transparent 2px
    gutter on each side. Safari can retain a stale raster edge when the
    unscaled image touches a fractional clip boundary inside a 3D cover. */
-.v3-case-cover-art { position:absolute;left:0;bottom:0;height:calc(100% * (var(--v3-cover-height) + var(--v3-art-headroom)) / var(--v3-cover-height));transform-origin:50% calc(100% * (var(--v3-art-headroom) + var(--v3-cover-height) / 2) / (var(--v3-cover-height) + var(--v3-art-headroom))); }
+.v3-case-cover-art { translate:0 var(--v3-image-shift,0px);scale:var(--v3-image-scale,1);position:absolute;left:0;bottom:0;height:calc(100% * (var(--v3-cover-height) + var(--v3-art-headroom)) / var(--v3-cover-height));transform-origin:50% calc(100% * (var(--v3-art-headroom) + var(--v3-cover-height) / 2) / (var(--v3-cover-height) + var(--v3-art-headroom))); }
 /* The art wrapper clips both layers along one lower squircle. Only the
    field's top corners need an inner clip; artwork may protrude above them.
    The headroom is real box space, so desktop 3D compositing cannot trim it. */
 .v3-case-cover-art > .v3-case-cover { position:absolute;left:0;bottom:0;height:calc(100% * var(--v3-cover-height) * var(--v3-field-scale) / (var(--v3-cover-height) + var(--v3-art-headroom)));border-bottom-left-radius:0;border-bottom-right-radius:0; }
 .v3-case-cover-window { position:absolute;z-index:1;left:calc(2.9762% - 2px);bottom:0;width:calc(94.13265% + 4px);height:calc(100% * (var(--v3-cover-height) + var(--v3-image-window-headroom,36)) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
-.v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,3.657049980%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none;transform:translateY(var(--v3-image-shift,0px)) scale(var(--v3-image-scale,1));transform-origin:center top; }
+.v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,3.657049980%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none; }
 /* The slot ends at the untransformed image baseline. No lower mesh
    padding is reserved for the overlapping fade; image geometry is unchanged. */
-.v3-case-card[data-project="brokerage"] { --v3-cover-height:436.2;--v3-image-window-headroom:60;--v3-image-top:4.433696090%;--v3-field-scale:0.977074736359; }
+.v3-case-card[data-project="brokerage"] { --v3-cover-height:436.2;--v3-image-rise:38;--v3-image-window-headroom:60;--v3-image-top:4.433696090%;--v3-field-scale:0.977074736359; }
 .v3-case-card[data-project="brokerage"] .v3-case-cover { background:
  radial-gradient(ellipse 100% 90% at 95% 35%,#0649d9 0%,#073ab866 48%,transparent 80%),
  radial-gradient(ellipse 90% 75% at 10% 100%,#8e78c8 0%,#725ab67a 45%,transparent 85%),
  linear-gradient(145deg,#02030a 8%,#080b28 40%,#293fa4 78%,#7566bb); }
-/* Stagger visibility only. The scroll pose owns all image movement in both
-   directions; a delayed translate would pull it towards a second origin. */
+/* Stagger visibility only. Scroll parallax belongs to the shared art wrapper,
+   so the mesh, image and lower clip always keep the same baseline. */
 .v3-case-cover-window { opacity:1;transition:opacity 800ms ease 220ms; }
 .v3-case-card[data-reveal="pending"] .v3-case-cover-window { opacity:0; }
 /* A static colour field covers first paint and reduced motion. Soft CSS
@@ -72,8 +72,10 @@
  .v3-cases__title{width:auto;font-size:48px;line-height:62px;letter-spacing:-.48px}
  .v3-case-columns{display:flex;flex-direction:column;margin-top:40px;gap:56px}
  .v3-case-column{display:contents;will-change:auto}
- .v3-case-card{order:var(--v3-card-order);width:100%}
- .v3-case-cover-pin{top:16px}
+ /* Keep the image's upper protrusion inside the physical viewport when
+    pinned. The terminal has a larger rise than the other covers. */
+ .v3-case-card{--v3-pin-top:max(16px,calc(100cqi * var(--v3-image-rise) / 588 + 4px));order:var(--v3-card-order);width:100%}
+ .v3-case-cover-pin{top:var(--v3-pin-top)}
  /* Match the physical-phone width/height control. No forced 3D backing or
     transform scaling on the resizing child; its outer slot never changes. */
  .v3-case-cover-visual{margin-inline:auto;border-radius:32px;transform:none;will-change:auto}
@@ -101,7 +103,7 @@
  .v3-case-cover-art > .v3-case-cover{transform:none;transition:none}
  .v3-case-cover[data-hovering]::before,.v3-case-cover-art[data-hovering] > .v3-case-cover::before{opacity:1}
 }
-@media(prefers-reduced-motion:reduce){.v3-case-cover,.v3-case-cover-art{transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
+@media(prefers-reduced-motion:reduce){.v3-case-cover,.v3-case-cover-art{translate:none;scale:none;transform:none!important;transition:none}.v3-case-cover::before{display:none;transition:none}}
 
 /* Never transform the article containing the sticky box: Safari can change
    its sticky reference when an entrance transform finishes. Reveal artwork
