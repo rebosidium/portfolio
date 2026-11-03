@@ -125,13 +125,14 @@ html[data-v3-android] .v3-avatar-mesh { display:none!important; }
  -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
 }
 .v3-avatar-spin img { filter: brightness(0) invert(1); }
-/* Keep Spin a light action surface in the dark portrait viewer. */
+/* Use the hero Brief's light glass recipe, with its highlight above the sheen. */
 @media (prefers-color-scheme: dark) {
  .v3-avatar-spin {
-  background:#fff;
+  background:var(--v3-light-glass-highlight),var(--v3-light-glass-sheen),#ffffffd9;
   color:#232522;
-  box-shadow:0 3px 16px #00000018,inset 0 1px 0 #fffffff0;
+  box-shadow:0 4px 16px #00000024,var(--v3-light-glass-edge),inset 0 -2px 3px #23252212;
  }
+ .v3-avatar-spin:hover { box-shadow:0 4px 16px #00000024,0 8px 28px #00000004,var(--v3-light-glass-edge),inset 0 -2px 3px #23252212; }
  .v3-avatar-spin img { filter:brightness(0); }
 }
 
