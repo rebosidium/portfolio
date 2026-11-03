@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="a8de102f94c1">
+<html lang="en" data-build="091fb4136ff8">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,7 +47,7 @@
   <script defer src="/3/components/page-entrance.js?v=3a238635f3c1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&text=%2B0123456789%C2%A0&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/3/page.css?v=677a41d4aad4">
   <link rel="stylesheet" href="/3/components/brief.css?v=bef2d941e4c8">
@@ -75,6 +75,9 @@
   <link rel="stylesheet" href="/3/components/spin-leaderboard.css?v=f391921000e4">
   <link rel="stylesheet" href="/3/components/spin-share-dialog.css?v=273dda04216d">
   <link rel="stylesheet" href="/3/components/spin-game-theme.css?v=45d611b3296b">
+  <link rel="preload" as="image" href="/3/assets/exit-intent-cookie-88-q94.webp?v=ec8e82b5ea18" media="(min-width:1024px) and (hover:hover) and (pointer:fine)" fetchpriority="high">
+  <link rel="stylesheet" href="/3/components/exit-intent.css?v=64102625395c">
+  <script type="module" src="/3/components/exit-intent.js?v=314b4113a930"></script>
   <script defer src="/3/components/updates.js?v=063f2d875ec4"></script>
 </head>
 <body>
@@ -154,6 +157,42 @@
       </div>
     </section>
   </div>
+  <dialog class="v3-exit-dialog" id="v3-exit-dialog" tabindex="-1" aria-labelledby="v3-exit-title" aria-describedby="v3-exit-intro" data-node-id="1056:19260">
+    <button class="v3-exit__close" type="button" aria-label="Close popup" data-v3-exit-close><img src="/3/assets/lucide-x.svg?v=4a9cdab38fbb" alt="" width="24" height="24"></button>
+    <div class="v3-exit__layout">
+      <div class="v3-exit__art" aria-hidden="true" data-node-id="1056:19075">
+        <div class="v3-contact__field"><span class="v3-contact__blob v3-contact__blob--violet"></span><span class="v3-contact__blob v3-contact__blob--lilac"></span><span class="v3-contact__blob v3-contact__blob--pink"></span><span class="v3-contact__blob v3-contact__blob--magenta"></span><span class="v3-contact__blob v3-contact__blob--cream"></span></div>
+        <div class="v3-exit__scene">
+          <div class="v3-exit__scene-clip">
+          <div class="v3-exit__glows"></div>
+          <div class="v3-exit__take">TAKE<br>IT</div>
+          <div class="v3-exit__paper v3-exit__paper--far"><img src="/3/assets/exit-resume-back.png?v=f73d7e1d3bb7" width="339" height="384" alt="" loading="lazy" decoding="async"></div>
+          <div class="v3-exit__paper v3-exit__paper--side"><img src="/3/assets/exit-resume-back.png?v=f73d7e1d3bb7" width="339" height="384" alt="" loading="lazy" decoding="async"></div>
+          <div class="v3-exit__paper v3-exit__paper--low"><img src="/3/assets/exit-resume-back.png?v=f73d7e1d3bb7" width="339" height="384" alt="" loading="lazy" decoding="async"></div>
+          </div>
+          <div class="v3-exit__paper v3-exit__paper--front"><img src="/3/assets/exit-resume-avatar-v2.png?v=8fdcd017290a" width="608" height="768" alt="" loading="lazy" decoding="async"></div>
+        </div>
+      </div>
+      <div class="v3-exit__content" data-node-id="1036:18976">
+        <div class="v3-exit__heading">
+          <h2 class="v3-exit__title" id="v3-exit-title">Wait. Don’t Go Yet.</h2>
+          <p class="v3-exit__intro" id="v3-exit-intro">Take my résumé with you.</p>
+        </div>
+        <dl class="v3-exit__benefits">
+          <div class="v3-exit__benefit"><dt>100% FREE</dt><dd>No payment.<br>No subscription.</dd></div>
+          <div class="v3-exit__benefit"><dt>1 FILE</dt><dd>My experience and contact details in one place.</dd></div>
+          <div class="v3-exit__benefit"><dt>0 SIGN-UPS</dt><dd>Download it now.<br>Keep it for later.</dd></div>
+        </dl>
+        <div class="v3-exit__actions">
+          <a class="v3-contact__resume v3-exit__resume" href="/3/assets/dmitry-rybalka-resume-en.pdf?v=3e979e8fa668" download="Dmitry-Rybalka-Resume-EN.pdf" data-v3-exit-resume><span>Resume PDF</span><img src="/3/assets/exit-intent-download-v2.svg?v=a1f8cf541082" alt="" width="20" height="20"></a>
+          <span class="v3-exit__or">or</span>
+          <div class="v3-brief v3-exit__game">
+            <button class="v3-brief__button v3-exit__game-button" type="button" data-v3-exit-game><span class="v3-brief__glass" aria-hidden="true"></span><span class="v3-brief__content"><img fetchpriority="high" class="v3-exit__cookie" src="/3/assets/exit-intent-cookie-88-q94.webp?v=ec8e82b5ea18" alt="" width="44" height="44" loading="lazy" decoding="async"><span>Spin My Head</span></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
   <dialog class="v3-mobile-menu" id="v3-mobile-menu" aria-label="Navigation menu">
     <button class="v3-menu-scrim" type="button" tabindex="-1" aria-label="Dismiss menu"></button>
     <div class="v3-menu-panel">
