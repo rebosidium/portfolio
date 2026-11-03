@@ -189,7 +189,7 @@ const COIN_LEVELS = {
   wood:['🪵','WOOD LEVEL'],cracker:['🧂','CRACKER LEVEL'],stone:['🪨','STONE LEVEL'],lava:['🔥','LAVA LEVEL'],bronze:['🥉','BRONZE LEVEL'],silver:['🥈','SILVER LEVEL'],
   gold:['🥇','GOLD LEVEL'],platinum:['🤍','PLATINUM LEVEL'],diamond:['💎','DIAMOND LEVEL'],
   ruby:['💎','RUBY LEVEL'],'black-diamond':['🖤','BLACK GEM'],emerald:['💚','EMERALD LEVEL'],holographic:['✨','HOLO LEVEL'],button:['🧵','BUTTON LEVEL'],soda:['🥤','RIBA DIMA'],
-  donut:['🍩','DONUT LEVEL'],surstromming:['🐟','FISH CAN LEVEL'],spam:['🥫','SPAM LEVEL'],trash:['🗑️','TRASH LEGEND'],ufo:['🛸','UFO LEVEL']
+  donut:['🍩','DONUT LEVEL'],surstromming:['🐟','FISH CAN LEVEL'],spam:['🥫','SPAM LEVEL'],trash:['🗑️','TRASH LEGEND'],ufo:['🛸','UFO LEVEL'],chest:['🏴‍☠️','TREASURE LEVEL']
 };
 const validCoinTier = id => typeof id === 'string' && Object.hasOwn(COIN_LEVELS, id);
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');

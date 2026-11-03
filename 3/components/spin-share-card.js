@@ -1,9 +1,9 @@
-import {coinTierFor, coinImageURL} from './spin-coin.js';
+import {coinTierFor, coinImageURL} from './spin-coin.js?v=245f55d91e23';
 
 export const SHARE_CARD_WIDTH = 1200;
 export const SHARE_CARD_HEIGHT = 627;
 
-export async function createShareCard({score, portraitUrl = '/3/assets/portrait-front-dark.webp'}) {
+export async function createShareCard({score}) {
   if (!Number.isSafeInteger(score) || score < 0) throw new TypeError('Invalid score');
   const canvas = document.createElement('canvas');
   canvas.width = SHARE_CARD_WIDTH; canvas.height = SHARE_CARD_HEIGHT;
@@ -11,36 +11,39 @@ export async function createShareCard({score, portraitUrl = '/3/assets/portrait-
   if (!ctx) throw new Error('Canvas unavailable');
   // Use a nonbreaking separator: the existing Montserrat subset includes it.
   const digits = String(score).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+  const tier = coinTierFor(score);
   await Promise.all([
-    document.fonts.load(`900 128px "Montserrat"`, digits).catch(() => {}),
-    document.fonts.load('500 26px "DM Sans"').catch(() => {})
+    document.fonts.load(`900 130px "Montserrat"`, digits).catch(() => {}),
+    document.fonts.load('700 25px "DM Sans"', tier.label).catch(() => {}),
+    document.fonts.load('500 30px "DM Sans"').catch(() => {})
   ]);
   const background = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  background.addColorStop(0, '#eee3fb'); background.addColorStop(.5, '#faf9fc'); background.addColorStop(1, '#d9f6ef');
+  background.addColorStop(0, '#18151e'); background.addColorStop(1, '#30223e');
   ctx.fillStyle = background; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#797182'; ctx.font = '700 18px "DM Sans", sans-serif';
-  ctx.fillText('S P I N   C H A L L E N G E', 66, 82);
+  ctx.fillStyle = '#b3a0c5'; ctx.font = '700 18px "DM Sans", sans-serif';
+  ctx.fillText('S P I N   D E S I G N E R', 66, 82);
+  ctx.fillStyle = '#d6bbf3'; ctx.font = '700 25px "DM Sans", sans-serif';
+  ctx.fillText(tier.label, 66, 179);
   let size = 130;
-  do { ctx.font = `900 ${size}px "Montserrat", sans-serif`; if (ctx.measureText(digits).width <= 655) break; size -= 2; } while (size > 30);
-  ctx.fillStyle = '#17141c'; ctx.fillText(digits, 60, 272);
-  ctx.font = '700 22px "DM Sans", sans-serif'; ctx.fillStyle = '#72677e';
-  ctx.fillText('C O I N S', 148, 338);
+  do {
+    ctx.font = `900 ${size}px "Montserrat", sans-serif`;
+    if (ctx.measureText(digits).width <= 650) break;
+    size -= 2;
+  } while (size > 24);
+  ctx.font = `900 ${size}px "Montserrat", sans-serif`;
+  // Keep even Number.MAX_SAFE_INTEGER inside the left text column.
+  const width = ctx.measureText(digits).width;
+  if (width > 650) ctx.font = `900 ${size * 650 / width}px "Montserrat", sans-serif`;
+  ctx.fillStyle = '#fbf7ff'; ctx.fillText(digits, 60, 316);
+  ctx.font = '700 22px "DM Sans", sans-serif'; ctx.fillStyle = '#b3a0c5';
+  ctx.fillText('C O I N S', 66, 364);
   try {
-    const coin = new Image(); coin.src = coinImageURL(coinTierFor(score)); await coin.decode();
-    ctx.drawImage(coin, 60, 287, 78, 78);
+    const coin = new Image(); coin.src = coinImageURL(tier); await coin.decode();
+    ctx.drawImage(coin, 730, 83, 440, 440);
   } catch { /* The numeric score remains usable without its optional icon. */ }
-  ctx.font = '500 35px "DM Sans", sans-serif'; ctx.fillStyle = '#292231';
-  ctx.fillText('Can you beat my score?', 64, 418);
-  ctx.fillStyle = '#6f647c'; ctx.font = '500 21px "DM Sans", sans-serif';
-  ctx.fillText('Dmitry Rybalka · Designer portfolio', 66, 554);
-  ctx.beginPath(); ctx.arc(952, 283, 169, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-  try {
-    const image = new Image(); image.src = portraitUrl;
-    await image.decode();
-    ctx.save(); ctx.beginPath(); ctx.arc(952, 283, 169, 0, Math.PI * 2); ctx.clip();
-    // The source is a square portrait on white. Cropping inside the aperture
-    // retains the existing portrait treatment rather than drawing a square.
-    ctx.drawImage(image, 747, 118, 410, 410); ctx.restore();
-  } catch { /* The score card still works when the optional portrait fails. */ }
+  ctx.font = '500 30px "DM Sans", sans-serif'; ctx.fillStyle = '#e2d6ee';
+  ctx.fillText('Can you beat my score?', 66, 445);
+  ctx.fillStyle = '#b3a0c5'; ctx.font = '500 21px "DM Sans", sans-serif';
+  ctx.fillText('dmitryrybalka.com/3', 66, 554);
   return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG export failed')), 'image/png'));
 }

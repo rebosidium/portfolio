@@ -1,26 +1,27 @@
-import {playCoinReturnEffect} from './spin-coin-return-effect.js';
+import {playCoinReturnEffect} from './spin-coin-return-effect.js?v=5eea94eeefc6';
 
 export const COIN_TIERS = Object.freeze([
   {id: 'wood', label: 'Wood', minimum: 0},
-  {id: 'cracker', label: 'Salt cracker', minimum: 50},
-  {id: 'stone', label: 'Stone', minimum: 100},
-  {id: 'lava', label: 'Lava', minimum: 500},
-  {id: 'bronze', label: 'Bronze', minimum: 1000},
-  {id: 'silver', label: 'Silver', minimum: 5000},
-  {id: 'gold', label: 'Gold', minimum: 15000},
-  {id: 'platinum', label: 'Platinum', minimum: 50000},
-  {id: 'diamond', label: 'Diamond', minimum: 100000},
-  {id: 'ruby', label: 'Ruby', minimum: 150000},
-  {id: 'black-diamond', label: 'Black diamond', minimum: 175000},
-  {id: 'emerald', label: 'Emerald', minimum: 187500},
-  {id: 'holographic', label: 'Holographic', minimum: 200000},
-  {id: 'button', label: 'Button', minimum: 250000},
-  {id: 'soda', label: 'Riba Dima', minimum: 300000},
-  {id: 'donut', label: 'Donut', minimum: 350000},
-  {id: 'surstromming', label: 'Surströmming', minimum: 400000},
-  {id: 'spam', label: 'SPAM', minimum: 425000},
-  {id: 'trash', label: 'Trash lid', minimum: 450000},
-  {id: 'ufo', label: 'UFO', minimum: 500000}
+  {id: 'cracker', label: 'Salt cracker', minimum: 10000},
+  {id: 'stone', label: 'Stone', minimum: 40000},
+  {id: 'lava', label: 'Lava', minimum: 80000},
+  {id: 'bronze', label: 'Bronze', minimum: 130000},
+  {id: 'silver', label: 'Silver', minimum: 180000},
+  {id: 'gold', label: 'Gold', minimum: 230000},
+  {id: 'platinum', label: 'Platinum', minimum: 280000},
+  {id: 'diamond', label: 'Diamond', minimum: 330000},
+  {id: 'ruby', label: 'Ruby', minimum: 380000},
+  {id: 'black-diamond', label: 'Black diamond', minimum: 430000},
+  {id: 'emerald', label: 'Emerald', minimum: 480000},
+  {id: 'holographic', label: 'Holographic', minimum: 530000},
+  {id: 'button', label: 'Button', minimum: 580000},
+  {id: 'soda', label: 'Riba Dima', minimum: 630000},
+  {id: 'donut', label: 'Donut', minimum: 680000},
+  {id: 'surstromming', label: 'Surströmming', minimum: 730000},
+  {id: 'spam', label: 'SPAM', minimum: 780000},
+  {id: 'trash', label: 'Trash lid', minimum: 830000},
+  {id: 'ufo', label: 'UFO', minimum: 880000},
+  {id: 'chest', label: 'Treasure chest', minimum: 980000}
 ]);
 export const coinTierFor = score => COIN_TIERS.findLast(tier => score >= tier.minimum) || COIN_TIERS[0];
 export const coinImageURL = tier => `/3/assets/coins/${tier.id}.png`;

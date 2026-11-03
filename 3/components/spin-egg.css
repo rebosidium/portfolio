@@ -111,3 +111,7 @@
   --v3-celebration-ink:#173e2e; --v3-celebration-border:#d4ffe4; --v3-celebration-glow:#83e8b078;
   --v3-celebration-surface:linear-gradient(115deg,#effff3 0%,#b5d9cd 33%,#e1f2f7 62%,#9fceb4 83%,#d9f6df 100%);
 }
+.v3-egg__toast--share[data-coin-tier="chest"] {
+  --v3-celebration-ink:#4b2a10; --v3-celebration-border:#ffe8ab; --v3-celebration-glow:#f6b64670;
+  --v3-celebration-surface:linear-gradient(115deg,#ffeab8 0%,#e9b65a 45%,#ffd881 72%,#d9953e 100%);
+}

@@ -1,6 +1,6 @@
-import {createShareCard} from './spin-share-card.js';
-import {coinTierFor} from './spin-coin.js';
-import {mountCoinCollection} from './spin-coin-collection.js';
+import {createShareCard} from './spin-share-card.js?v=1d8589887615';
+import {coinTierFor} from './spin-coin.js?v=245f55d91e23';
+import {mountCoinCollection} from './spin-coin-collection.js?v=52275d0f4f5e';
 
 const game = document.querySelector('.v3-avatar-dialog');
 const actions = game?.querySelector('.v3-avatar-actions');
@@ -38,27 +38,20 @@ if (game && actions) {
   sheet.id = 'v3-share-dialog'; sheet.className = 'v3-share-dialog';
   sheet.setAttribute('aria-labelledby', 'v3-share-title');
   sheet.innerHTML = `
-    <div class="v3-share-heading"><div><p class="v3-share-eyebrow">SPIN CHALLENGE</p><h2 id="v3-share-title">Make it a challenge.</h2></div><button type="button" class="v3-share-close" aria-label="Back to game">×</button></div>
-    <div class="v3-share-preview" aria-busy="true"><div class="v3-share-preview-fallback"><strong></strong><span>COINS · CAN YOU BEAT IT?</span></div><img alt="Your score challenge card" hidden></div>
+    <div class="v3-share-heading"><div><p class="v3-share-eyebrow">SPIN DESIGNER</p><h2 id="v3-share-title">Your reward.</h2></div><button type="button" class="v3-share-close" aria-label="Back to game">×</button></div>
+    <div class="v3-share-preview" aria-busy="true"><div class="v3-share-preview-fallback"><strong></strong><span>CAN YOU BEAT IT?</span></div><img alt="Your latest reward and score" hidden></div>
     <p class="v3-share-summary"></p>
+    <button type="button" class="v3-share-native">Share… <span aria-hidden="true">↗</span></button>
     <div class="v3-share-destinations">
-      <button type="button" class="v3-share-linkedin"><span class="v3-share-in" aria-hidden="true">in</span><span>LinkedIn</span><span aria-hidden="true">↗</span></button>
-      <button type="button" class="v3-share-telegram">Telegram <span aria-hidden="true">↗</span></button>
-      <button type="button" class="v3-share-native">More apps <span aria-hidden="true">↗</span></button>
+      <button type="button" class="v3-share-linkedin"><span class="v3-share-in" aria-hidden="true">in</span> LinkedIn</button>
+      <button type="button" class="v3-share-telegram">Telegram ↗</button>
+      <button type="button" class="v3-share-copy-link">Copy link ↗</button>
     </div>
-    <section class="v3-share-linkedin-panel" aria-label="LinkedIn post" hidden>
-      <p>Give your network a little challenge.</p>
-      <textarea aria-label="LinkedIn post text" rows="4"></textarea>
-      <div class="v3-share-linkedin-actions"><button type="button" class="v3-share-copy-post">Copy post text</button><button type="button" class="v3-share-open-linkedin" disabled>Open LinkedIn ↗</button></div>
-      <p class="v3-share-instructions">Copy the text, open LinkedIn, then paste it into your post.</p>
-    </section>
-    <div class="v3-share-tools"><button type="button" class="v3-share-copy-link">Copy challenge link</button><button type="button" class="v3-share-download" disabled>Save image</button></div>
+    <button type="button" class="v3-share-download" disabled>Save image ↓</button>
     <p class="v3-share-status" role="status" aria-live="polite"></p>
-    <p class="v3-share-local">Local preview · links are available on this computer and the connected phone.</p>
   `;
   document.body.append(sheet);
   const $ = selector => sheet.querySelector(selector);
-  $('.v3-share-local').hidden = !localResults;
   const preview = $('.v3-share-preview img');
   const status = message => { $('.v3-share-status').textContent = message; };
   const nativeButton = $('.v3-share-native');
@@ -160,9 +153,8 @@ if (game && actions) {
     cardObjectURL = null; preview.hidden = true; preview.removeAttribute('src');
     $('.v3-share-preview-fallback strong').textContent = format(result.score);
     $('.v3-share-preview').setAttribute('aria-busy', 'true');
-    $('.v3-share-summary').textContent = `${format(result.score)} coins. Your friends’ next distraction.`;
-    $('.v3-share-linkedin-panel').hidden = true;
-    $('.v3-share-open-linkedin').disabled = true;
+    $('.v3-share-summary').textContent = `${coinTierFor(result.score).label} · ${format(result.score)} coins`;
+    $('.v3-share-linkedin').disabled = true;
     $('.v3-share-download').disabled = true;
     status('Preparing your challenge…');
     sheet.showModal();
@@ -172,14 +164,12 @@ if (game && actions) {
       cardObjectURL = URL.createObjectURL(result.blob); preview.src = cardObjectURL; preview.hidden = false;
       $('.v3-share-preview').setAttribute('aria-busy', 'false');
       $('.v3-share-download').disabled = false;
-      $('.v3-share-open-linkedin').disabled = false;
-      $('.v3-share-linkedin-panel textarea').value = postText(result);
+      $('.v3-share-linkedin').disabled = false;
       status('Your challenge is ready.');
     } catch {
       if (token !== generation || !sheet.open) return;
       $('.v3-share-preview').setAttribute('aria-busy', 'false');
-      $('.v3-share-linkedin-panel textarea').value = postText(result);
-      $('.v3-share-open-linkedin').disabled = false;
+      $('.v3-share-linkedin').disabled = false;
       if (result.blob) {
         cardObjectURL = URL.createObjectURL(result.blob); preview.src = cardObjectURL; preview.hidden = false;
         $('.v3-share-download').disabled = false;
@@ -198,12 +188,8 @@ if (game && actions) {
   }
   $('.v3-share-copy-link').addEventListener('click', () => { if (snapshot) copy(snapshot.url.href, 'Challenge link copied.'); });
   $('.v3-share-linkedin').addEventListener('click', () => {
-    $('.v3-share-linkedin-panel').hidden = !$('.v3-share-linkedin-panel').hidden;
-    $('.v3-share-linkedin-panel textarea').value = postText(snapshot);
-    if (!$('.v3-share-linkedin-panel').hidden) $('.v3-share-linkedin-panel').scrollIntoView({block: 'nearest', behavior: 'instant'});
-  });
-  $('.v3-share-copy-post').addEventListener('click', () => copy($('.v3-share-linkedin-panel textarea').value, 'Post text copied. Paste it into LinkedIn.'));
-  $('.v3-share-open-linkedin').addEventListener('click', () => {
+    if (!snapshot) return;
+    copy(postText(snapshot), 'Text copied. Paste it into your LinkedIn post.');
     const destination = new URL('https://www.linkedin.com/sharing/share-offsite/');
     destination.searchParams.set('url', snapshot.url.href);
     window.open(destination.href, '_blank', 'noopener,noreferrer');
@@ -229,6 +215,6 @@ if (game && actions) {
     const downloadURL = URL.createObjectURL(snapshot.blob);
     const link = document.createElement('a'); link.href = downloadURL; link.download = `spin-${snapshot.score}-coins.png`; link.click();
     setTimeout(() => URL.revokeObjectURL(downloadURL), 60000);
-    status('Image download started. Add your challenge link when you post it.');
+    status('Image download started.');
   });
 }

@@ -1,0 +1,46 @@
+.v3-share-dialog {
+  box-sizing:border-box;
+  width:min(520px,calc(100% - 32px));
+  max-width:calc(100% - 32px);
+  max-height:calc(100dvh - 32px);
+  margin:auto;
+  padding:24px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  border:1px solid #51415f;
+  border-radius:28px;
+  background:linear-gradient(145deg,#231c2b,#19151f);
+  color:#f7f1ff;
+  color-scheme:dark;
+  box-shadow:0 24px 90px #0008;
+  font:500 14px/1.45 'DM Sans',sans-serif;
+}
+.v3-share-dialog::backdrop { background:#09060dc9; }
+.v3-share-dialog * { box-sizing:border-box; }
+.v3-share-dialog button { appearance:none; font-family:inherit; cursor:pointer; transition:background-color 140ms ease,color 140ms ease; }
+.v3-share-dialog button:disabled { cursor:default; opacity:.45; }
+.v3-share-dialog button:focus-visible,.v3-share-dialog textarea:focus-visible { outline:2px solid #d5b4ff; outline-offset:3px; }
+.v3-share-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px; }
+.v3-share-eyebrow { margin:0 0 6px; color:#b4a2c6; font-size:10px; font-weight:700; letter-spacing:.16em; }
+.v3-share-heading h2 { margin:0; color:#f7f1ff; font:650 28px/1.15 'DM Sans',sans-serif; letter-spacing:-.04em; }
+.v3-share-close { display:grid; place-items:center; flex:0 0 40px; width:40px; height:40px; padding:0; border:0; border-radius:50%; background:#ffffff0b; color:#d9cce5; font-size:29px; line-height:1; }
+.v3-share-close:hover { background:#ffffff16; color:#fff; }
+.v3-share-preview { position:relative; aspect-ratio:1200/627; overflow:hidden; border:1px solid #4c3b5b; border-radius:18px; background:#1a1521; }
+.v3-share-preview-fallback { position:absolute; inset:0; display:grid; place-content:center; gap:9px; padding:16px; text-align:center; }
+.v3-share-preview-fallback strong { color:#f4eaff; font:900 clamp(24px,7vw,54px)/1.05 'Montserrat',sans-serif; overflow-wrap:anywhere; }
+.v3-share-preview-fallback span { color:#b4a2c6; font-size:9px; font-weight:700; letter-spacing:.14em; }
+.v3-share-preview img { position:relative; display:block; width:100%; height:100%; object-fit:contain; }
+.v3-share-summary { margin:14px 0 18px; color:#cbbad9; font-size:14px; text-align:center; overflow-wrap:anywhere; }
+.v3-share-native { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; min-height:48px; padding:13px 18px; border:0; border-radius:15px; background:#d3b6ff; color:#281936; font-size:16px; font-weight:700; line-height:22px; }
+.v3-share-native:hover { background:#dfcaff; }
+.v3-share-destinations { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px; }
+.v3-share-destinations > button { display:flex; align-items:center; justify-content:center; gap:4px; min-width:0; min-height:44px; padding:10px 4px; border:1px solid #554364; border-radius:12px; background:#2d2436; color:#f0e5fa; font-size:13px; font-weight:600; line-height:18px; white-space:nowrap; }
+.v3-share-destinations > button:hover { background:#3c2e48; }
+.v3-share-in { display:inline-block; flex:0 0 14px; width:14px; height:14px; border-radius:2px; background:#d2bce6; color:#2d2038; font:800 11px/14px Arial,sans-serif; text-align:center; }
+.v3-share-download { display:block; min-height:40px; margin:12px auto 0; padding:8px 14px; border:0; border-radius:10px; background:transparent; color:#d1b6ed; font-size:13px; font-weight:600; line-height:20px; }
+.v3-share-download:hover { background:#ffffff08; color:#ead7ff; }
+.v3-share-status { min-height:18px; margin:8px 0 0; color:#b8a7c6; font-size:12px; line-height:18px; text-align:center; overflow-wrap:anywhere; }
+.v3-share-manual { box-sizing:border-box; width:100%; min-height:90px; margin-top:12px; padding:12px; resize:vertical; border:1px solid #685076; border-radius:12px; background:#17111e; color:#f4eaff; font:400 12px/1.5 'DM Sans',sans-serif; }
+@media (max-width:359px) { .v3-share-destinations > button { padding-inline:3px; font-size:12px; } }
+@media (prefers-reduced-motion:reduce) { .v3-share-dialog button { transition:none; } }

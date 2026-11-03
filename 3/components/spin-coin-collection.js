@@ -1,6 +1,7 @@
-import {COIN_TIERS, coinTierFor, coinImageURL} from './spin-coin.js';
+import {COIN_TIERS, coinTierFor, coinImageURL} from './spin-coin.js?v=245f55d91e23';
 
 const mountedCollections = new WeakMap();
+const MAX_ROW_COLUMNS = 10, FUTURE_SLOTS = 2;
 
 export function mountCoinCollection({game, actions, shareButton, sheet}) {
   if (!game || !actions || !shareButton || !sheet) return () => {};
@@ -18,9 +19,10 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
   const collection = document.createElement('div');
   collection.className = 'v3-coin-collection'; collection.hidden = true;
   collection.setAttribute('role', 'group'); collection.setAttribute('aria-label', 'Coin collection');
-  const firstRow = document.createElement('div'), secondRow = document.createElement('div');
-  firstRow.className = secondRow.className = 'v3-coin-collection__row';
-  const rowColumns = Math.max(1, Math.ceil(COIN_TIERS.length / 2));
+  const rowColumns = Math.min(MAX_ROW_COLUMNS, COIN_TIERS.length + FUTURE_SLOTS);
+  const rows = Array.from({length:Math.ceil((COIN_TIERS.length + FUTURE_SLOTS) / rowColumns)}, () => {
+    const row = document.createElement('div'); row.className = 'v3-coin-collection__row'; return row;
+  });
   collection.style.setProperty('--v3-collection-slot-size', `calc((100% - ${(rowColumns - 1) * 5}px) / ${rowColumns})`);
   const slots = COIN_TIERS.map((tier, index) => {
     const slot = document.createElement('button');
@@ -29,10 +31,19 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
     slot.setAttribute('aria-label', `${tier.label}: not collected`);
     slot.title = `${tier.label}: not collected`;
     listen(slot, 'click', () => { if (!slot.disabled) { stopIdle(); shareButton.click(); } });
-    (index < rowColumns ? firstRow : secondRow).append(slot);
+    rows[Math.floor(index / rowColumns)].append(slot);
     return slot;
   });
-  collection.append(firstRow, secondRow); actions.append(collection);
+  // Future spaces belong only to the display, never to the earned tiers or
+  // render loop. Even a completed collection leaves them empty and disabled.
+  for (let index = 0; index < FUTURE_SLOTS; index++) {
+    const slot = document.createElement('button'); slot.type = 'button'; slot.disabled = true;
+    slot.className = 'v3-coin-collection__slot'; slot.dataset.future = '';
+    slot.setAttribute('aria-label', `Future coin ${index + 1}: coming soon`);
+    slot.title = 'Coming soon';
+    rows[Math.floor((COIN_TIERS.length + index) / rowColumns)].append(slot);
+  }
+  collection.append(...rows); actions.append(collection);
 
   const place = () => {
     if (destroyed || collection.hidden || !game.open || !portrait) return;
