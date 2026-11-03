@@ -12,6 +12,10 @@ function installStyles(){
  const frames=Array.from({length:31},(_,i)=>({at:n(i/30*100),...cardStackFrame(i/30,MOBILE_CARD_MOTION)}));
  style.textContent=`
  @keyframes v3-card-cover-stack{${frames.map(f=>`${f.at}%{width:${n(f.scale*100)}%;height:${n(f.scale*100)}%;border-radius:${n(32*f.scale)}px;opacity:${n(f.opacity)}}`).join('')}}
+ /* Android's asynchronous flings must not resize the sticky artwork on the
+    main thread while its inner parallax advances on the compositor. Keep
+    the authored box and clip fixed; scale the complete cover instead. */
+ @keyframes v3-card-cover-composite{${frames.map(f=>`${f.at}%{transform:scale(${n(f.scale)});opacity:${n(f.opacity)}}`).join('')}}
  /* A fixed-size wrapper has an opacity-only end cap. Unlike the resizing
     effect, it is compositor-eligible during a fling. Keep it fully opaque
     until the fade ends, preserving the existing curve and reverse scroll. */
@@ -40,11 +44,14 @@ function installStyles(){
    .v3-case-cover-visual{animation:v3-card-cover-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
    .v3-case-copy{transform:none}
    .v3-case-cover-art{animation:v3-card-art-stack linear both;animation-duration:auto;animation-timeline:--v3-card-stack;animation-range:exit-crossing var(--v3-case-gap) exit-crossing calc(var(--v3-case-gap) + 100cqi * var(--v3-cover-height) / 588 * .75)}
+   .v3-cases[data-cover-compositor] .v3-case-cover-visual{animation-name:v3-card-cover-composite;will-change:transform,opacity}
   }
  }`;
  document.head.append(style);
 }
 export function mountCardStack(section){
+ // Preserve the width/height path accepted on physical iOS Safari.
+ section.toggleAttribute('data-cover-compositor',/Android/i.test(navigator.userAgent));
  installStyles();
  const mobile=matchMedia('(max-width:800px)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
  const markers=new Map();let observer;
