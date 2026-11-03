@@ -185,6 +185,13 @@ const nextPhrase = () => {
   }
 };
 const MAX_VISIBLE = 5, NEAT = 3, IDLE_RELEASE = 3200, GRAVITY = 2300;
+const COIN_LEVELS = {
+  wood:['🪵','WOOD LEVEL'],cracker:['🧂','CRACKER LEVEL'],stone:['🪨','STONE LEVEL'],lava:['🔥','LAVA LEVEL'],bronze:['🥉','BRONZE LEVEL'],silver:['🥈','SILVER LEVEL'],
+  gold:['🥇','GOLD LEVEL'],platinum:['🤍','PLATINUM LEVEL'],diamond:['💎','DIAMOND LEVEL'],
+  ruby:['💎','RUBY LEVEL'],'black-diamond':['🖤','BLACK GEM'],emerald:['💚','EMERALD LEVEL'],holographic:['✨','HOLO LEVEL'],button:['🧵','BUTTON LEVEL'],soda:['🥤','RIBA DIMA'],
+  donut:['🍩','DONUT LEVEL'],surstromming:['🐟','FISH CAN LEVEL'],spam:['🥫','SPAM LEVEL'],trash:['🗑️','TRASH LEGEND'],ufo:['🛸','UFO LEVEL']
+};
+const validCoinTier = id => typeof id === 'string' && Object.hasOwn(COIN_LEVELS, id);
 const reduced = matchMedia('(prefers-reduced-motion:reduce)');
 const sideways = matchMedia('(orientation: landscape) and (max-height: 520px)');   // portrait on the left half, jokes over it
 const live = [], falling = new Set();
@@ -207,21 +214,38 @@ function ensureHost() {
 function place(item) {
   item.el.style.transform = `translate(-50%,0) translate(${item.x.toFixed(1)}px,${item.y.toFixed(1)}px) rotate(${item.rot.toFixed(2)}deg) scale(${item.scale.toFixed(3)})`;
 }
-function spawn(text, strong) {
+function spawn(text, strong, shareInvite = false) {
   const el = document.createElement('div');
   el.className = 'v3-egg__toast' + (strong ? ' v3-egg__toast--strong' : '');
   el.textContent = text;
+  if (shareInvite) {
+    el.classList.add('v3-egg__toast--share');
+  }
   // The first three notifications stack neatly; later ones land on top crooked.
-  const neat = shown++ < NEAT;
+  const neat = shown++ < NEAT || shareInvite;
   const item = neat
     ? {el, x: rand(-8, 8), y: rand(0, 6), rot: rand(-2, 2), vx: 0, vy: 0, spin: 0, wobble: 0, scale: 1}
     : {el, x: rand(-38, 38), y: rand(6, 30), rot: rand(-10, 10), vx: 0, vy: 0, spin: 0, wobble: 0, scale: 1};
+  if (shareInvite) {
+    item.x = rand(-10, 10); item.y = rand(0, 6);
+    item.rot = rand(2.5, 5.5) * (Math.random() < .5 ? -1 : 1);
+  }
   ensureHost().append(el);
   // The pile grows with every notification (up to +45% on phones, +85% on desktop),
   // never wider than the screen.
   const desktop = innerWidth > 800;
   const growth = 1 + Math.min(desktop ? .85 : .45, Math.max(0, shown - 1) * (desktop ? .08 : .045));
-  item.scale = Math.max(1, Math.min(growth, innerWidth * (sideways.matches ? .44 : .94) / Math.max(1, el.offsetWidth)));
+  if (shareInvite) {
+    // Fit the projected, rotated capsule, including its sideways offset.
+    // Keep the large type without letting the crooked corners leave the lane.
+    const angle = Math.abs(item.rot) * Math.PI / 180;
+    const projectedWidth = el.offsetWidth * Math.cos(angle) + el.offsetHeight * Math.sin(angle);
+    const available = innerWidth * (sideways.matches ? .44 : 1) - 40 - 2 * Math.abs(item.x);
+    const celebrationGrowth = 1.12 + Math.min(.18, Math.max(0, shown - 1) * .02);
+    item.scale = Math.min(celebrationGrowth, Math.max(1, available) / Math.max(1, projectedWidth));
+  } else {
+    item.scale = Math.max(1, Math.min(growth, innerWidth * (sideways.matches ? .44 : .94) / Math.max(1, el.offsetWidth)));
+  }
   place(item);
   live.push(item);
   if (!reduced.matches) {
@@ -233,6 +257,7 @@ function spawn(text, strong) {
   while (live.length > (reduced.matches ? 1 : MAX_VISIBLE)) release(live.shift());
   clearTimeout(idle);
   idle = setTimeout(releaseAll, IDLE_RELEASE);
+  return el;
 }
 function release(item) {
   if (reduced.matches) { item.el.remove(); return; }
@@ -275,6 +300,22 @@ const INTRO = [
   ['I’M A VIBECODEEER, MOM!', true]
 ];
 let introIndex = 0, lastJoke = 0;
+document.addEventListener('v3-game-share-invite', event => {
+  const game = document.querySelector('.v3-avatar-dialog[open]');
+  if (!game || document.querySelector('.v3-share-dialog[open]') || typeof event.detail?.text !== 'string') return;
+  const currentTier = game.querySelector('.v3-avatar-score')?.dataset.coinTier;
+  const tierId = validCoinTier(event.detail.tierId) ? event.detail.tierId : validCoinTier(currentTier) ? currentTier : 'wood';
+  const message = spawn(event.detail.text, true, true);
+  message.dataset.coinTier = tierId;
+});
+document.addEventListener('v3-coin-level', event => {
+  if (!document.querySelector('.v3-avatar-dialog[open]') || document.querySelector('.v3-share-dialog[open]')) return;
+  const tier = event.detail?.tier;
+  if (!tier || !validCoinTier(tier.id)) return;
+  const [emoji, label] = COIN_LEVELS[tier.id];
+  const message = spawn(`${emoji} ${label}`, true, true);
+  message.dataset.coinTier = tier.id;
+});
 document.addEventListener('click', event => {
   const spin = event.target.closest?.('.v3-avatar-spin');
   if (!spin || spin.disabled) return;

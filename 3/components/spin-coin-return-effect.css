@@ -1,0 +1,57 @@
+.v3-coin-return-fx {
+  --coin-return-core:#ffde72;
+  --coin-return-edge:#fff6d0;
+  position:absolute;
+  inset:0;
+  overflow:visible;
+  pointer-events:none;
+  z-index:3;
+}
+.v3-coin-return-fx[data-tier="wood"] { --coin-return-core:#dda76c; --coin-return-edge:#fff0d6; }
+.v3-coin-return-fx[data-tier="cracker"] { --coin-return-core:#eac18a; --coin-return-edge:#fff4de; }
+.v3-coin-return-fx[data-tier="stone"] { --coin-return-core:#b9c5d5; --coin-return-edge:#f6f9ff; }
+.v3-coin-return-fx[data-tier="lava"] { --coin-return-core:#ff9b4d; --coin-return-edge:#ffe8ad; }
+.v3-coin-return-fx[data-tier="bronze"] { --coin-return-core:#ffb17c; --coin-return-edge:#ffe4be; }
+.v3-coin-return-fx[data-tier="silver"] { --coin-return-core:#cce3fb; --coin-return-edge:#fff; }
+.v3-coin-return-fx[data-tier="platinum"] { --coin-return-core:#9bdcff; --coin-return-edge:#f3fcff; }
+.v3-coin-return-fx[data-tier="diamond"] { --coin-return-core:#85efff; --coin-return-edge:#e4c5ff; }
+.v3-coin-return-fx[data-tier="ruby"] { --coin-return-core:#ff779c; --coin-return-edge:#ffe8f1; }
+.v3-coin-return-fx[data-tier="black-diamond"] { --coin-return-core:#e8d4a6; --coin-return-edge:#fffdf0; }
+.v3-coin-return-fx[data-tier="emerald"] { --coin-return-core:#8aebb2; --coin-return-edge:#ffe6a6; }
+.v3-coin-return-fx[data-tier="holographic"] { --coin-return-core:#af8cff; --coin-return-edge:#b8fff2; }
+.v3-coin-return-fx[data-tier="button"] { --coin-return-core:#edcf9d; --coin-return-edge:#fff9e8; }
+.v3-coin-return-fx[data-tier="soda"] { --coin-return-core:#ff997f; --coin-return-edge:#fff0dc; }
+.v3-coin-return-fx[data-tier="donut"] { --coin-return-core:#ff8bd2; --coin-return-edge:#fff1ac; }
+.v3-coin-return-fx[data-tier="surstromming"] { --coin-return-core:#ffe36c; --coin-return-edge:#ffc6a3; }
+.v3-coin-return-fx[data-tier="spam"] { --coin-return-core:#f9d56d; --coin-return-edge:#d3e1ff; }
+.v3-coin-return-fx[data-tier="trash"] { --coin-return-core:#b5cbe3; --coin-return-edge:#f5faff; }
+.v3-coin-return-fx[data-tier="ufo"] { --coin-return-core:#7dffbc; --coin-return-edge:#b5faff; }
+.v3-coin-return-fx__ring {
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:38px;
+  height:30px;
+  box-sizing:border-box;
+  border:2px solid var(--coin-return-core);
+  border-radius:50%;
+  opacity:0;
+}
+.v3-coin-return-fx__spark {
+  position:absolute;
+  left:50%;
+  top:50%;
+  aspect-ratio:1;
+  background:linear-gradient(135deg,var(--coin-return-edge),var(--coin-return-core));
+  clip-path:polygon(50% 0,63% 37%,100% 50%,63% 63%,50% 100%,37% 63%,0 50%,37% 37%);
+  opacity:0;
+}
+.v3-coin-return-fx[data-tier="donut"] .v3-coin-return-fx__spark { clip-path:none; border-radius:50%; }
+.v3-coin-return-fx[data-tier="donut"] .v3-coin-return-fx__spark:nth-child(4n+2) { background:#fff1ac; }
+.v3-coin-return-fx[data-tier="donut"] .v3-coin-return-fx__spark:nth-child(4n+3) { background:#8ff1ed; }
+.v3-coin-return-fx[data-tier="donut"] .v3-coin-return-fx__spark:nth-child(4n) { background:#ff91cc; }
+.v3-coin-return-fx[data-tier="donut"] .v3-coin-return-fx__spark:nth-child(4n+1) { background:#c5a2ff; }
+.v3-coin-return-fx[data-tier="black-diamond"] .v3-coin-return-fx__ring { box-shadow:0 0 0 1px #211b1680; }
+.v3-coin-return-fx[data-tier="black-diamond"] .v3-coin-return-fx__spark:nth-child(3n+2) { background:#fffdf0; }
+.v3-coin-return-fx[data-tier="black-diamond"] .v3-coin-return-fx__spark:nth-child(3n) { background:#e8c477; }
+@media (prefers-reduced-motion:reduce) { .v3-coin-return-fx { display:none; } }

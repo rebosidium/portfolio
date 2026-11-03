@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="8bd7ff239a4d">
+<html lang="en" data-build="8859a7bd8862">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +56,7 @@
   <script type="module" src="/3/components/mobile-menu.js?v=0436ea122ead"></script>
   <link rel="stylesheet" href="/3/components/avatar-effects.css?v=dd55cd4dcf8f">
   <link rel="stylesheet" href="/3/components/avatar.css?v=66eb814024f7">
-  <script type="module" src="/3/components/avatar.js?v=50c1ee78a82d"></script>
+  <script type="module" src="/3/components/avatar.js?v=6802735c4028"></script>
   <link rel="stylesheet" href="/3/components/case-cards.css?v=c41914eba7f7">
   <link rel="stylesheet" href="/3/components/card-gradient.css?v=349192e0d7df">
   <script type="module" src="/3/components/case-cards.js?v=ff7816c0093b"></script>
@@ -64,10 +64,14 @@
   <link rel="stylesheet" href="/3/components/contact-gradient.css?v=d2204a9655d2">
   <script type="module" src="/3/components/contact.js?v=7502722c439d"></script>
   <script type="module" src="/3/components/contact-gradient.js?v=bfd90a363ea4"></script>
-  <link rel="stylesheet" href="/3/components/spin-egg.css?v=36d19fec787d">
-  <script type="module" src="/3/components/spin-egg.js?v=5fe97fec198e"></script>
-  <link rel="stylesheet" href="/3/components/spin-score.css?v=5229d93cdaf7">
-  <script type="module" src="/3/components/spin-score.js?v=b2aa9606dc12"></script>
+  <link rel="stylesheet" href="/3/components/spin-egg.css?v=3a759b6dafd9">
+  <script type="module" src="/3/components/spin-egg.js?v=da97d7926de0"></script>
+  <link rel="stylesheet" href="/3/components/spin-score.css?v=742222754531">
+  <script type="module" src="/3/components/spin-score.js?v=1886a25a60b2"></script>
+  <link rel="stylesheet" href="/3/components/spin-share.css?v=bcb69a27531f">
+  <link rel="stylesheet" href="/3/components/spin-coin-return-effect.css?v=8bae5c48d7ac">
+  <link rel="stylesheet" href="/3/components/spin-coin-collection.css?v=b0ebd100a094">
+  <script type="module" src="/3/components/spin-share.js?v=ab9cee55de31"></script>
   <script defer src="/3/components/updates.js?v=063f2d875ec4"></script>
 </head>
 <body>
@@ -167,7 +171,7 @@
         <span class="v3-avatar-loader" aria-hidden="true"></span>
       </div>
       <div class="v3-avatar-actions">
-        <button class="v3-avatar-spin" type="button" disabled><img src="/3/assets/lucide-rotate-cw.svg?v=ddcfe6d87240" alt="" width="24" height="24"><span>Spin</span></button>
+        <button class="v3-avatar-spin" type="button" disabled><img src="/3/assets/lucide-rotate-cw.svg?v=ddcfe6d87240" alt="" width="24" height="24"><span>Spin Designer</span></button>
         <button class="v3-avatar-hide" type="button"><img src="/3/assets/lucide-x.svg?v=4a9cdab38fbb" alt="" width="24" height="24"><span>Hide</span></button>
       </div>
       <span class="v3-avatar-loading-status" role="status" aria-live="polite"></span>
@@ -240,7 +244,9 @@
     // A second tap and backdrop clicks are inert. Only Hide/Escape dismiss.
     dialog.addEventListener('keydown',event=>{
       if(event.key!=='Tab')return;
-      const controls=[...(large.hasAttribute('tabindex')?[large]:[]),...(!spin.disabled?[spin]:[]),hide];
+      const share=dialog.querySelector('.v3-score-share:not([hidden])');
+      const collected=[...dialog.querySelectorAll('.v3-coin-collection:not([hidden]) button:not(:disabled)')];
+      const controls=[...(large.hasAttribute('tabindex')?[large]:[]),...collected,...(share?[share]:[]),...(!spin.disabled?[spin]:[]),hide];
       const index=controls.indexOf(document.activeElement);event.preventDefault();
       controls[index<0?(event.shiftKey?controls.length-1:0):(index+(event.shiftKey?-1:1)+controls.length)%controls.length].focus({preventScroll:true});
     });

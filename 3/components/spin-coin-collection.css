@@ -1,0 +1,47 @@
+.v3-coin-collection {
+  position:absolute;
+  width:min(304px,calc(100vw - 64px));
+  display:grid;
+  gap:4.5px;
+  translate:-50% 0;
+  transform-origin:center;
+  pointer-events:none;
+}
+.v3-coin-collection[hidden] { display:none!important; }
+.v3-coin-collection__row { display:flex; justify-content:center; gap:5px; width:100%; }
+.v3-coin-collection__slot {
+  position:relative;
+  box-sizing:border-box;
+  flex:0 0 var(--v3-collection-slot-size);
+  aspect-ratio:1;
+  padding:0;
+  margin:0;
+  border:0;
+  appearance:none;
+  border-radius:50%;
+  background:rgb(135 133 146 / .055);
+}
+.v3-coin-collection__slot[data-filled] { background:transparent; pointer-events:auto; cursor:pointer; }
+.v3-coin-collection__slot:focus-visible { outline:2px solid var(--v3-focus,#8b6ae8); outline-offset:3px; }
+.v3-coin-collection__slot img { position:absolute; inset:2px; display:block; width:calc(100% - 4px); height:calc(100% - 4px); max-width:none; object-fit:contain; }
+.v3-coin-collection__slot[data-flying] img { visibility:hidden; }
+.v3-coin-collection-flight { position:fixed; display:block; object-fit:contain; max-width:none; pointer-events:none; opacity:0; z-index:20; transform-origin:center; }
+.v3-avatar-dialog[data-coin-collection] .v3-avatar-actions { padding-top:200px; }
+.v3-avatar-dialog[data-share-idle] .v3-score-share,
+.v3-avatar-dialog[data-share-idle] .v3-coin-collection { animation:v3-coin-collection-idle 2200ms ease-in-out infinite; }
+@keyframes v3-coin-collection-idle { 0%,100% { scale:1; } 50% { scale:1.035; } }
+@media (prefers-color-scheme:dark) {
+  .v3-coin-collection__slot { background:rgb(218 215 232 / .04); }
+  .v3-coin-collection__slot[data-filled] { background:transparent; }
+}
+@media (max-height:680px) and (orientation:portrait) {
+  .v3-avatar-dialog[data-coin-collection] .v3-avatar-large { max-width:max(100px,calc(100dvh - 340px)); }
+}
+@media (orientation:landscape) and (max-height:520px) {
+  .v3-avatar-dialog[data-coin-collection] .v3-avatar-actions { width:100%; padding-top:148px; }
+  .v3-coin-collection { width:min(304px,calc(50vw - 64px)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .v3-avatar-dialog[data-share-idle] .v3-score-share,
+  .v3-avatar-dialog[data-share-idle] .v3-coin-collection { animation:none; }
+}

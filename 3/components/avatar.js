@@ -1,5 +1,6 @@
 import {mountAvatarAmbience} from './avatar-ambience.js?v=c236389323c7';
-import {mountSpinFeedback} from './avatar-spin-feedback.js?v=1efdeb44c695';
+import {mountSpinFeedback} from './avatar-spin-feedback.js?v=74477ea0c421';
+import {mountSpinStartCue} from './spin-start-cue.js';
 // The inline document shell owns immediate opening, focus and dismissal.
 // This independent adapter adds playback without holding the modal behind imports.
 // The head flag uses the same Android + coarse pointer test as the player choice.
@@ -12,6 +13,7 @@ const dialog=document.querySelector('.v3-avatar-dialog');
 const shell=dialog.v3AvatarShell;
 const spinButton=dialog.querySelector('.v3-avatar-spin');
 mountSpinFeedback(spinButton);
+mountSpinStartCue(spinButton,dialog);
 const hideButton=dialog.querySelector('.v3-avatar-hide');
 mountSpinFeedback(hideButton);hideButton.dataset.feedbackReady='true';
 const loader=dialog.querySelector('.v3-avatar-loader');
@@ -38,7 +40,7 @@ function syncLoading(){
  dialog.dataset.preloaded=String(complete);
  large.setAttribute('aria-busy',String(loading));
  spinButton.disabled=!failed&&!complete;
- spinButton.querySelector('span').textContent=failed?'Reload':'Spin';
+ spinButton.querySelector('span').textContent=failed?'Reload':'Spin Designer';
  spinButton.title=failed?'Reload the page to retry the portrait':ready&&!complete?'Downloading the remaining rotation views…':'';
  const message=dialog.open?(failed?'Portrait could not load. Use Reload to try again.':loading?'Loading portrait…':complete?'Portrait ready.':''):'';
  if(loadingStatus.textContent!==message)loadingStatus.textContent=message;

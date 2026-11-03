@@ -4,10 +4,37 @@
 .v3-avatar-actions { padding: 106px 0 0; }
 .v3-avatar-score { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 50%; top: 0; translate: -50% 0; margin: 0; padding: 0; white-space: nowrap; text-align: center; font: 500 20px/1.1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; color: var(--v3-score-ink); opacity: 1; transition: opacity 500ms ease, scale 160ms cubic-bezier(.22, 1, .36, 1); user-select: none; -webkit-user-select: none; pointer-events: none; }
 .v3-avatar-score { --fs: 48px; }
+.v3-avatar-score { flex-direction:row; gap:12px; color:#fff; text-shadow:0 2px 12px #0004; z-index:4; }
+.v3-avatar-coin-icon { position:relative; display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; filter:drop-shadow(0 3px 5px #0005); transform-origin:center; }
+.v3-avatar-coin-icon img { position:absolute; inset:0; display:block; width:48px; height:48px; object-fit:contain; max-width:none; }
+.v3-avatar-score b { -webkit-text-stroke:2px #18161d; paint-order:stroke fill; }
+.v3-avatar-score[data-coin-tier="wood"] { --v3-coin-number:#ffe6c9; }
+.v3-avatar-score[data-coin-tier="cracker"] { --v3-coin-number:#ffe3b6; }
+.v3-avatar-score[data-coin-tier="stone"] { --v3-coin-number:#e0e5ed; }
+.v3-avatar-score[data-coin-tier="lava"] { --v3-coin-number:#ffc49a; }
+.v3-avatar-score[data-coin-tier="bronze"] { --v3-coin-number:#ffd1b1; }
+.v3-avatar-score[data-coin-tier="silver"] { --v3-coin-number:#edf2ff; }
+.v3-avatar-score[data-coin-tier="gold"] { --v3-coin-number:#ffe78f; }
+.v3-avatar-score[data-coin-tier="platinum"] { --v3-coin-number:#ddf4ff; }
+.v3-avatar-score[data-coin-tier="diamond"] { --v3-coin-number:#b4f2ff; }
+.v3-avatar-score[data-coin-tier="ruby"] { --v3-coin-number:#ffb2c8; }
+.v3-avatar-score[data-coin-tier="black-diamond"] { --v3-coin-number:#f1ead8; }
+.v3-avatar-score[data-coin-tier="emerald"] { --v3-coin-number:#bdf4c7; }
+.v3-avatar-score[data-coin-tier="holographic"] { --v3-coin-number:#d0bdff; }
+.v3-avatar-score[data-coin-tier="button"] { --v3-coin-number:#fff0d4; }
+.v3-avatar-score[data-coin-tier="soda"] { --v3-coin-number:#ffb5a6; }
+.v3-avatar-score[data-coin-tier="donut"] { --v3-coin-number:#ffcdf1; }
+.v3-avatar-score[data-coin-tier="surstromming"] { --v3-coin-number:#dce2e9; }
+.v3-avatar-score[data-coin-tier="spam"] { --v3-coin-number:#ffefae; }
+.v3-avatar-score[data-coin-tier="trash"] { --v3-coin-number:#c5d5e8; }
+.v3-avatar-score[data-coin-tier="ufo"] { --v3-coin-number:#ded0ff; }
+.v3-avatar-score[data-coin-tier] b { color:var(--v3-coin-number,#fff); }
 .v3-avatar-score__num { display: grid; place-items: center; height: var(--fs); }
 .v3-avatar-score b { display: block; font-size: var(--fs); line-height: 1; font-family: 'Montserrat', 'DM Sans', sans-serif; font-weight: 900; letter-spacing: -.5px; scale: var(--k, 1); transition: scale 260ms cubic-bezier(.22, 1, .36, 1); }
 .v3-avatar-coins { font: 700 13px/1 'DM Sans', sans-serif; letter-spacing: .24em; text-indent: .24em; }
 .v3-avatar-score[data-empty] { opacity: var(--v3-score-empty-opacity); }
+.v3-avatar-score[data-empty] { opacity:1; }
+.v3-avatar-score[data-empty] b { opacity:.45; }
 .v3-avatar-score[data-bump] { scale: 1.14; transition-duration: 70ms; }
 .v3-avatar-fly { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .v3-fly-num { --stroke: #ff8a2a; --glow: #ffd23f; position: absolute; z-index: 5; left: 0; top: 0; font: 900 30px/1 'Montserrat', 'DM Sans', sans-serif; color: #fff; white-space: nowrap; will-change: transform, opacity; -webkit-text-stroke: 5px var(--stroke); paint-order: stroke fill; text-shadow: 0 0 10px var(--glow), 0 0 22px var(--glow), 0 0 40px var(--glow), 0 3px 0 #00000026; }
@@ -68,10 +95,10 @@
 .v3-portrait.v3-avatar-stage:focus-visible { border-radius: 50%; }   /* a round focus ring instead of a square one */
 
 /* Game open: everything behind the portrait stops animating (resumes when the game closes). */
-html[data-v3-game] body > :not(dialog):not(.v3-egg),
-html[data-v3-game] body > :not(dialog):not(.v3-egg) *,
-html[data-v3-game] body > :not(dialog):not(.v3-egg) *::before,
-html[data-v3-game] body > :not(dialog):not(.v3-egg) *::after { animation-play-state: paused !important; }
+html[data-v3-game] body > :not(dialog):not(.v3-egg):not(.v3-coin-upgrade),
+html[data-v3-game] body > :not(dialog):not(.v3-egg):not(.v3-coin-upgrade) *,
+html[data-v3-game] body > :not(dialog):not(.v3-egg):not(.v3-coin-upgrade) *::before,
+html[data-v3-game] body > :not(dialog):not(.v3-egg):not(.v3-coin-upgrade) *::after { animation-play-state: paused !important; }
 
 /* The portrait opens a little more gently: the close X fades in with the viewer. */
 .v3-avatar-dialog[open] .v3-avatar-hide { animation: v3-hide-in 460ms cubic-bezier(.22, 1, .36, 1) both; }
@@ -98,7 +125,7 @@ html[data-v3-game] body > :not(dialog):not(.v3-egg) *::after { animation-play-st
   .v3-avatar-large { width: min(calc(100dvh - 24px), 46vw, 860px); }
   .v3-avatar-actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0; }
   /* The score sits right above Spin in the flow (JS placement is off: static ignores its left/top). */
-  .v3-avatar-score { position: static; translate: none; order: -1; }
+  .v3-avatar-score { position: absolute; translate: -50% 0; }
   .v3-avatar-score { --fs: 40px; }
   .v3-egg__toast { left: 25%; max-width: min(44vw, 380px); }
 }

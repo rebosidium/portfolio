@@ -1,3 +1,5 @@
+import {createCoinProgression,coinTierFor} from './spin-coin.js';
+
 // Spin "hamster combat" (/4 test). Every Spin click scores points; clicking quickly builds a
 // combo, so awards grow (+1, +2, +3, +5, +10, +20) and the "+N" bursts that fly sideways out of
 // the button get bigger and travel further. The score survives closing the portrait.
@@ -6,18 +8,22 @@ const viewer = dialog?.querySelector('.v3-avatar-viewer');
 const actions = dialog?.querySelector('.v3-avatar-actions');
 if (dialog && viewer && actions) {
   const reduced = matchMedia('(prefers-reduced-motion:reduce)');
-  let total = 0;                                          // every visit starts from zero
+  const entry = new URL(location.href);
+  const previewScore = Number(entry.searchParams.get('preview_score'));
+  const localPreview = ['127.0.0.1', 'localhost', '[::1]'].includes(location.hostname) && entry.searchParams.get('analytics_test') === '1';
+  let total = localPreview && Number.isSafeInteger(previewScore) && previewScore >= 0 ? previewScore : 0;
   const format = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');   // 27 552, no commas
   const score = document.createElement('div');
   score.className = 'v3-avatar-score'; score.setAttribute('aria-hidden', 'true');
   const number = document.createElement('b');
-  const coins = document.createElement('div');      // small caption right under the digits
-  coins.className = 'v3-avatar-coins'; coins.textContent = 'COINS';
+  const coins = document.createElement('span');
+  coins.className = 'v3-avatar-coin-icon';
   const numberBox = document.createElement('div');  // reserves the room the digits grow into
   numberBox.className = 'v3-avatar-score__num';
   numberBox.append(number);
-  score.append(numberBox, coins);
+  score.append(coins, numberBox);
   actions.append(score);
+  const coinProgress = createCoinProgression(coins, reduced);
   const spinButton = actions.querySelector('.v3-avatar-spin'), hideButton = actions.querySelector('.v3-avatar-hide');
   hideButton?.setAttribute('aria-label', 'Hide');
   if (hideButton) {
@@ -39,22 +45,15 @@ if (dialog && viewer && actions) {
     dialog.addEventListener('v3-avatar-opened', placeHide);
     addEventListener('resize', placeHide, {passive: true});
   }
-  // Keep the score centred above Spin, with the same visual gap above the digits (down to the
-  // bottom of the portrait art) as below them (down to Spin).
+  // Centre the score on the portrait's lower crop line.
   const large = dialog.querySelector('[data-v3-avatar-large]');
-  const ART_BOTTOM = .974;                                // the bust ends at 97.4% of the square portrait box
   const placeScore = () => {
     if (!spinButton || !spinButton.offsetWidth) return;
-    score.style.left = (spinButton.offsetLeft + spinButton.offsetWidth / 2) + 'px';
-    const fs = parseFloat(getComputedStyle(number).fontSize) || 40;
-    const glyphTop = 0;                                     // the reserved box is the visual block (digits grow into it)
-    const glyphHeight = Math.max(10, score.offsetHeight - 2);   // reserved digits + the COINS caption
-    const spinTop = spinButton.getBoundingClientRect().top;
     const box = large?.getBoundingClientRect();
-    const artBottom = box && box.height ? box.top + box.height * ART_BOTTOM : spinTop - glyphHeight - 28;
-    const gap = Math.max(8, (spinTop - artBottom - glyphHeight) / 2);
-    const top = artBottom + gap - glyphTop;                 // viewport y of the score box
-    score.style.top = (top - actions.getBoundingClientRect().top) + 'px';
+    if (!box?.height) return;
+    const actionBox = actions.getBoundingClientRect();
+    score.style.left = (box.left + box.width / 2 - actionBox.left) + 'px';
+    score.style.top = (box.top + box.height * .974 - score.offsetHeight / 2 - actionBox.top) + 'px';
   };
   new ResizeObserver(placeScore).observe(actions);
   if (large) new ResizeObserver(placeScore).observe(large);
@@ -66,11 +65,20 @@ if (dialog && viewer && actions) {
   viewer.append(layer);
   const show = () => {
     number.textContent = format(total);
+    score.dataset.coinTier = coinTierFor(total).id;
+    coinProgress.update(total);
     // The digits grow up to +40% (log scale, full size around 50 000 coins) inside their reserved box.
     const grow = Math.min(1, Math.log10(1 + total) / Math.log10(1 + 50000));
-    number.style.setProperty('--k', (1 + .4 * grow).toFixed(3));
+    const factor = 1 + .4 * grow;
+    number.style.setProperty('--k', factor.toFixed(3));
+    const room = Math.max(100, (large?.clientWidth || innerWidth) * .9 - 60);
+    const baseSize = innerWidth <= 800 ? 42 : 48;
+    score.style.setProperty('--fs', Math.min(baseSize, room / (format(total).length * .68 * factor)) + 'px');
+    numberBox.style.paddingInline = (number.offsetWidth * (factor - 1) / 2) + 'px';
     score.toggleAttribute('data-empty', total === 0);
     placeScore();
+    dialog.dataset.coinTotal = String(total);
+    dialog.dispatchEvent(new CustomEvent('v3-score-change', {detail: {total}}));
   };
   show();
 
@@ -150,9 +158,12 @@ if (dialog && viewer && actions) {
     const el = document.createElement('i');
     el.className = 'v3-fly-ring';
     el.dataset.tier = String(visualTier(value));
+    const buttonBox = spinButton.getBoundingClientRect();
+    el.style.width = buttonBox.width + 'px'; el.style.height = buttonBox.height + 'px';
+    el.style.boxSizing = 'border-box';
     el.style.left = x + 'px'; el.style.top = y + 'px';
     target.append(el);
-    el.animate([{transform: 'translate(-50%,-50%) scale(.7)', opacity: .95}, {transform: 'translate(-50%,-50%) scale(1.9)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
+    el.animate([{transform: 'translate(-50%,-50%) scale(1)', opacity: .95}, {transform: 'translate(-50%,-50%) scale(1.5)', opacity: 0}], {duration: 420, easing: 'ease-out'}).finished.then(() => el.remove(), () => el.remove());
   };
 
   document.addEventListener('click', event => {
@@ -248,7 +259,7 @@ if (dialog && viewer && actions) {
   if (spinButton && matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const hint = document.createElement('div');
     hint.className = 'v3-avatar-keyhint'; hint.setAttribute('aria-hidden', 'true');
-    hint.innerHTML = 'Click Spin or press <kbd>Space</kbd>';
+    hint.innerHTML = 'Click Spin Designer or press <kbd>Space</kbd>';
     actions.append(hint);
     // Dismiss once per visit, five seconds after the first accepted Spin.
     // Space uses the same click path; repeated spins do not extend the hint.
@@ -263,8 +274,9 @@ if (dialog && viewer && actions) {
     };
     new ResizeObserver(placeHint).observe(spinButton); placeHint();
     document.addEventListener('keydown', event => {
-      if (event.code !== 'Space' || event.repeat || !dialog.open || dialog.hasAttribute('data-opening') || spinButton.disabled) return;
+      if (event.defaultPrevented || event.code !== 'Space' || event.repeat || !dialog.open || dialog.hasAttribute('data-opening') || spinButton.disabled || document.querySelector('.v3-share-dialog[open]')) return;
       if (document.activeElement === spinButton) return;      // a focused button already reacts to Space itself
+      if (document.activeElement?.closest('button,a,input,textarea,select,[contenteditable]')) return;
       event.preventDefault();
       spinButton.setAttribute('data-key-spin', '');   // lets the button press + icon turn play like a real click
       spinButton.click();
