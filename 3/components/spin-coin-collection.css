@@ -28,7 +28,7 @@
 .v3-coin-collection__slot[data-flying] img { visibility:hidden; }
 .v3-coin-collection-flight { position:fixed; display:block; object-fit:contain; max-width:none; pointer-events:none; opacity:0; z-index:20; transform-origin:center; }
 /* Reserve the collection space before the first promotion as well. */
-.v3-avatar-dialog .v3-avatar-actions { padding-top:200px; }
+.v3-avatar-dialog .v3-avatar-actions { padding-top:176px; }
 .v3-avatar-dialog[data-share-idle] .v3-score-share,
 .v3-avatar-dialog[data-share-idle] .v3-coin-collection { animation:v3-coin-collection-idle 2200ms ease-in-out infinite; }
 @keyframes v3-coin-collection-idle { 0%,100% { scale:1; } 50% { scale:1.035; } }
@@ -40,7 +40,7 @@
   .v3-avatar-dialog .v3-avatar-large { max-width:max(100px,calc(100dvh - 340px)); }
 }
 @media (orientation:landscape) and (max-height:520px) {
-  .v3-avatar-dialog .v3-avatar-actions { width:100%; padding-top:168px; }
+  .v3-avatar-dialog .v3-avatar-actions { width:100%; padding-top:144px; }
   .v3-coin-collection { width:min(304px,calc(50vw - 64px)); }
 }
 @media (prefers-reduced-motion:reduce) {

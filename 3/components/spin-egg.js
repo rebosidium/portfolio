@@ -52,7 +52,8 @@ const JOKES = {
     'I don’t tip. I leave Figma comments. 💸',
     'This is Sparta! Three designers. One button. ⚔️',
     '🎨 Dobby is free! First draft approved.',
-    '🤝 Privet Tovarisch'
+    '🤝 Privet Tovarisch',
+    '🧢 MAKE SCRUM GREAT AGAIN'
   ],
   design: [
     'That 🩷 pink is a bold choice',

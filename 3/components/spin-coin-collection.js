@@ -1,4 +1,4 @@
-import {COIN_TIERS, coinTierFor, coinImageURL} from './spin-coin.js?v=0df2b1198d43';
+import {COIN_TIERS, coinTierFor, setCoinImageSource} from './spin-coin.js?v=da6b4412d4e6';
 
 const mountedCollections = new WeakMap();
 const MAX_ROW_COLUMNS = 10, FUTURE_SLOTS = 2;
@@ -44,9 +44,12 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
     rows[Math.floor((COIN_TIERS.length + index) / rowColumns)].append(slot);
   }
   collection.append(...rows); actions.append(collection);
+  const sourceSize = () => Math.max(1,(collection.clientWidth - (rowColumns - 1) * 5) / rowColumns) * 1.035;
 
   const place = () => {
     if (destroyed || collection.hidden || !game.open || !portrait) return;
+    const sizes = `${sourceSize()}px`;
+    collection.querySelectorAll('img').forEach(image => { if (image.sizes !== sizes) image.sizes = sizes; });
     if (matchMedia('(orientation:landscape) and (max-height:520px)').matches) {
       collection.style.left = '50%'; collection.style.top = '0px'; return;
     }
@@ -58,7 +61,7 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
   const stopIdle = () => {
     clearTimeout(idleTimer); idleTimer = 0; delete game.dataset.shareIdle;
   };
-  const canPulse = () => !destroyed && game.open && !game.v3AvatarShell?.closing && coinTierFor(total).minimum > 0 && !sheet.open && !reduced.matches && !document.hidden;
+  const canPulse = () => !destroyed && game.open && COIN_TIERS.indexOf(coinTierFor(total)) > 0 && !game.v3AvatarShell?.closing && !sheet.open && !reduced.matches && !document.hidden;
   const resetIdle = () => {
     stopIdle();
     if (!canPulse()) return;
@@ -70,9 +73,10 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
 
   const render = () => {
     const currentIndex = COIN_TIERS.indexOf(coinTierFor(total));
-    const visible = currentIndex > 0;
+    const visible = true;
     collection.hidden = !visible;
     game.toggleAttribute('data-coin-collection', visible);
+    const imageSize = sourceSize();
     slots.forEach((slot, index) => {
       const tier = COIN_TIERS[index];
       const filled = index < currentIndex || currentIndex === COIN_TIERS.length - 1;
@@ -82,7 +86,8 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
       slot.title = `${tier.label}: ${filled ? 'collected' : 'not collected'}`;
       if (filled && !slot.querySelector('img')) {
         const image = new Image(); image.alt = ''; image.draggable = false;
-        image.src = coinImageURL(tier); slot.append(image);
+        // Include the 3.5% idle pulse in the native source-size hint.
+        setCoinImageSource(image,tier,imageSize); slot.append(image);
       } else if (!filled) slot.replaceChildren();
     });
     place();
@@ -95,7 +100,7 @@ export function mountCoinCollection({game, actions, shareButton, sheet}) {
     if (!slot?.hasAttribute('data-filled') || reduced.matches || !game.open || sheet.open || !fromRect || ![fromRect.left, fromRect.top, fromRect.width, fromRect.height].every(Number.isFinite) || fromRect.width <= 0 || fromRect.height <= 0) return;
     const flight = document.createElement('img');
     flight.className = 'v3-coin-collection-flight'; flight.alt = ''; flight.draggable = false;
-    flight.setAttribute('aria-hidden', 'true'); flight.src = coinImageURL(COIN_TIERS[index]);
+    flight.setAttribute('aria-hidden', 'true'); setCoinImageSource(flight,COIN_TIERS[index],fromRect.width);
     Object.assign(flight.style, {left:`${fromRect.left}px`, top:`${fromRect.top}px`, width:`${fromRect.width}px`, height:`${fromRect.height}px`});
     slot.dataset.flying = ''; game.append(flight);
     let cancelled = false, animation = null;

@@ -1,10 +1,12 @@
 import {playCoinReturnEffect} from './spin-coin-return-effect.js?v=5eea94eeefc6';
+import {coinImageURL,setCoinImageSource} from './spin-coin-assets.js?v=e0cf7ecde03d';
+export {coinImageURL,setCoinImageSource};
 
-// Temporary global playtest: set to 0 to restore the designed thresholds below.
+// Regular playtest steps retain the owner's special 1000/67000 unlocks.
 const TEST_COIN_STEP = 20000;
 
 export const COIN_TIERS = Object.freeze([
-  {id: 'wood', label: 'Wood', minimum: 0},
+  {id: 'wood', label: 'Wood', minimum: 1000},
   {id: 'cracker', label: 'Salt cracker', minimum: 10000},
   {id: 'stone', label: 'Stone', minimum: 40000},
   {id: 'amber', label: 'Amber mosquito', minimum: 50000},
@@ -27,9 +29,8 @@ export const COIN_TIERS = Object.freeze([
   {id: 'trash', label: 'Trash lid', minimum: 830000},
   {id: 'ufo', label: 'UFO', minimum: 880000},
   {id: 'chest', label: 'Treasure chest', minimum: 980000}
-].map((tier,index) => TEST_COIN_STEP ? {...tier,minimum:index * TEST_COIN_STEP} : tier));
+].map((tier,index) => TEST_COIN_STEP && index && tier.id !== 'six-seven' ? {...tier,minimum:index * TEST_COIN_STEP} : tier));
 export const coinTierFor = score => COIN_TIERS.findLast(tier => score >= tier.minimum) || COIN_TIERS[0];
-export const coinImageURL = tier => `/3/assets/coins/${tier.id}.png`;
 
 export function createCoinProgression(host, reducedMotion) {
   let shown = null, requested = null, generation = 0, animation = null, overlay = null;
@@ -45,12 +46,16 @@ export function createCoinProgression(host, reducedMotion) {
     overlay?.remove(); overlay = null; animation = null; host.style.visibility = '';
     delete host.dataset.upgrading;
   };
-  const load = tier => {
-    if (!cache.has(tier.id)) cache.set(tier.id, (async () => {
-      const image = new Image(); image.src = coinImageURL(tier); image.alt = '';
+  const load = (tier, cssSize = 48) => {
+    const key = `${tier.id}:${cssSize}`;
+    if (!cache.has(key)) cache.set(key, (async () => {
+      const image = new Image(); image.alt = '';
+      setCoinImageSource(image,tier,cssSize);
       image.draggable = false; await image.decode(); return image;
-    })().catch(error => { cache.delete(tier.id); throw error; }));
-    return cache.get(tier.id);
+    })().catch(error => { cache.delete(key); throw error; }));
+    const pending = cache.get(key);
+    if (cache.size > 64) cache.delete(cache.keys().next().value);
+    return pending;
   };
   const preloadNext = tier => {
     const next = COIN_TIERS[COIN_TIERS.indexOf(tier) + 1];
@@ -58,6 +63,13 @@ export function createCoinProgression(host, reducedMotion) {
   };
   const update = async (score, {celebrate = true} = {}) => {
     lastScore = score;
+    if (score < COIN_TIERS[0].minimum) {
+      ++generation; requested = null; shown = null;
+      stopAnimations(); host.hidden = true; host.replaceChildren();
+      delete host.dataset.tier; host.removeAttribute('title');
+      return;
+    }
+    host.hidden = false;
     const tier = coinTierFor(score);
     if (requested === tier) return;
     requested = tier;
@@ -68,12 +80,9 @@ export function createCoinProgression(host, reducedMotion) {
     catch { if (token === generation) requested = null; return; }
     if (token !== generation) return;
     stopAnimations();
-    const previous = host.querySelector('img:last-child');
     const previousTier = shown;
-    const upgrade = shown && tier.minimum > shown.minimum;
-    host.querySelectorAll('img').forEach(node => { if (node !== previous) node.remove(); });
-    host.querySelector('svg')?.remove();
-    host.append(image);
+    const upgrade = !shown || tier.minimum > shown.minimum;
+    host.replaceChildren(image);
     host.dataset.tier = tier.id; host.title = `${tier.label} coin`;
     shown = tier; preloadNext(tier);
     if (upgrade && allowCelebration && game?.open && !closing && !game.v3AvatarShell?.closing) {
@@ -85,12 +94,32 @@ export function createCoinProgression(host, reducedMotion) {
       if (upgrade && allowCelebration && game?.open && !closing && !game.v3AvatarShell?.closing) document.dispatchEvent(new CustomEvent('v3-coin-level', {detail: {tier}}));
       return;
     }
+    const promotionSize = () => Math.min(innerWidth * .9, innerHeight * .68, 700);
+    let size;
+    // Celebrate only the newly earned material, including the first wood
+    // coin. Never enlarge or crossfade the previous tier.
+    let newImage;
+    try {
+      do {
+        size = promotionSize();
+        const large = await load(tier,Math.ceil(size * 1.07));
+        if (token !== generation || !game?.open || closing || game.v3AvatarShell?.closing || reducedMotion.matches) break;
+        newImage = large.cloneNode();
+      } while (size !== promotionSize());
+    } catch {
+      if (token === generation && game?.open && !closing && !game.v3AvatarShell?.closing) document.dispatchEvent(new CustomEvent('v3-coin-level', {detail:{tier}}));
+      return;
+    }
+    if (token !== generation) return;
+    if (!game?.open || closing || game.v3AvatarShell?.closing || reducedMotion.matches) {
+      if (game?.open && !closing && !game.v3AvatarShell?.closing) document.dispatchEvent(new CustomEvent('v3-coin-level', {detail:{tier}}));
+      return;
+    }
     host.dataset.upgrading = '';
     const rect = host.getBoundingClientRect();
     const portrait = host.closest('dialog')?.querySelector('[data-v3-avatar-large]')?.getBoundingClientRect();
     const x = portrait ? portrait.left + portrait.width / 2 : innerWidth / 2;
     const y = portrait ? portrait.top + portrait.height * .43 : innerHeight * .43;
-    const size = Math.min(innerWidth * .9, innerHeight * .68, 700);
     const dx = rect.left + rect.width / 2 - x, dy = rect.top + rect.height / 2 - y;
     const rest = `translate(${dx}px,${dy}px) scale(${rect.width / size})`;
     const stage = document.createElement('div');
@@ -101,8 +130,7 @@ export function createCoinProgression(host, reducedMotion) {
     Object.assign(art.style, {width:`${size}px`,height:`${size}px`,left:`${x-size/2}px`,top:`${y-size/2}px`});
     const rays = document.createElement('div'); rays.className = 'v3-coin-upgrade__rays'; art.append(rays);
     const aura = document.createElement('div'); aura.className = 'v3-coin-upgrade__aura'; art.append(aura);
-    const oldImage = (previous || image).cloneNode(), newImage = image.cloneNode();
-    art.append(oldImage, newImage);
+    art.append(newImage);
     for (let i = 0; i < 8; i++) {
       const spark = document.createElement('i'); spark.className = 'v3-coin-upgrade__spark';
       const angle = i * Math.PI / 4;
@@ -114,8 +142,7 @@ export function createCoinProgression(host, reducedMotion) {
     try { if (stage.popover === 'manual') stage.showPopover(); } catch { /* Native dialog descendant fallback below. */ }
     if (!stage.matches(':popover-open')) host.closest('dialog')?.append(stage);
     overlay = stage; host.style.visibility = 'hidden';
-    // The material transforms at full size over the portrait's face, with
-    // room for an unhurried sparkle before returning to the counter.
+    // The new material celebrates over the portrait, then returns to its counter.
     const flight = art.animate([
       {transform:rest, offset:0, easing:'cubic-bezier(.18,.8,.24,1)'},
       {transform:'translate(0,0) scale(1.03) rotate(-6deg)', offset:.28, easing:'ease-in-out'},
@@ -124,8 +151,6 @@ export function createCoinProgression(host, reducedMotion) {
       {transform:rest, offset:1}
     ], {duration:2200, easing:'linear'});
     animation = flight;
-    oldImage.animate([{opacity:1,offset:0},{opacity:1,offset:.4},{opacity:0,offset:.55},{opacity:0,offset:1}],{duration:2200,fill:'forwards'});
-    newImage.animate([{opacity:0,offset:0},{opacity:0,offset:.4},{opacity:1,offset:.55},{opacity:1,offset:1}],{duration:2200});
     try { await flight.finished; } catch { /* Closing or a newer upgrade took over. */ }
     // Always remove this call's stage, even if a newer image is still loading
     // or failed. Only the owner of the active stage may restore shared state.
@@ -144,6 +169,13 @@ export function createCoinProgression(host, reducedMotion) {
   };
   reducedMotion.addEventListener('change', () => {
     if (!reducedMotion.matches || !animation) return;
+    overlay?.getAnimations({subtree:true}).forEach(item => item.finish());
+    animation.finish();
+  });
+  // Settle a promotion before a rotated/resized viewport can clip its old
+  // geometry. Native srcset updates the counter and subsequent promotions.
+  window.addEventListener('resize', () => {
+    if (!animation) return;
     overlay?.getAnimations({subtree:true}).forEach(item => item.finish());
     animation.finish();
   });

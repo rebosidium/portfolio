@@ -1,6 +1,6 @@
-import {createShareCard} from './spin-share-card.js?v=f6a927162f6c';
-import {coinTierFor} from './spin-coin.js?v=0df2b1198d43';
-import {mountCoinCollection} from './spin-coin-collection.js?v=f0a82755a710';
+import {createShareCard} from './spin-share-card.js?v=3ad2ef9e1446';
+import {COIN_TIERS,coinTierFor} from './spin-coin.js?v=da6b4412d4e6';
+import {mountCoinCollection} from './spin-coin-collection.js?v=88380aebac56';
 
 const game = document.querySelector('.v3-avatar-dialog');
 const actions = game?.querySelector('.v3-avatar-actions');
@@ -84,7 +84,7 @@ if (game && actions) {
   };
   const onScore = value => {
     total = value;
-    shareButton.hidden = coinTierFor(total).minimum === 0;
+    shareButton.hidden = total < COIN_TIERS[1].minimum;
     requestAnimationFrame(placeButton);
     clearTimeout(idle);
     const crossed = milestones.filter(n => total >= n).at(-1) || 0;
