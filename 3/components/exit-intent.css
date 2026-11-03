@@ -9,7 +9,9 @@
 }
 .v3-exit-dialog:focus{outline:none}
 .v3-exit-dialog::backdrop{background:rgb(18 15 28 / .24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.v3-exit__layout{display:grid;grid-template-columns:41.365047% minmax(0,1fr);min-height:55.842812cqw}
+/* Clip decorative overflow at the full modal edge, keeping the CV corner
+   free to cross the slanted artwork edge without creating inner scrolling. */
+.v3-exit__layout{display:grid;grid-template-columns:41.365047% minmax(0,1fr);min-height:55.842812cqw;overflow:clip}
 .v3-exit__art{position:relative;min-width:0;overflow:visible;isolation:isolate}
 .v3-exit__art .v3-contact__field,.v3-exit__scene-clip{-webkit-mask:url(/3/assets/exit-intent-panel-mask.svg) center/100% 100% no-repeat;mask:url(/3/assets/exit-intent-panel-mask.svg) center/100% 100% no-repeat}
 .v3-exit__art .v3-contact__field{inset:0;z-index:0;clip-path:none;background:linear-gradient(160deg,#3dbf75,#5c98dd 28%,#896df2 52%,#f54752 76%,#ff9e47)}
