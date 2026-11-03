@@ -1,5 +1,5 @@
-import {coinTierFor,coinImageURL} from './spin-coin.js?v=1eba002e9c3b';
-import {createDemoLeaderboard} from './spin-leaderboard-data.js?v=0e0f190e90ea';
+import {coinTierFor,coinImageURL} from './spin-coin.js?v=0df2b1198d43';
+import {createDemoLeaderboard} from './spin-leaderboard-data.js?v=135fefee16ea';
 const trophy='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v6a4 4 0 0 1-8 0V3Z"/><path d="M8 5H4v2a4 4 0 0 0 4 4m8-6h4v2a4 4 0 0 1-4 4M12 13v5m-4 3h8m-6-3h4v3"/></svg>';
 const closeIcon='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 const format=n=>n.toLocaleString('en-US').replaceAll(',','\u00a0');

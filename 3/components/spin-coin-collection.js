@@ -1,4 +1,4 @@
-import {COIN_TIERS, coinTierFor, coinImageURL} from './spin-coin.js?v=1eba002e9c3b';
+import {COIN_TIERS, coinTierFor, coinImageURL} from './spin-coin.js?v=0df2b1198d43';
 
 const mountedCollections = new WeakMap();
 const MAX_ROW_COLUMNS = 10, FUTURE_SLOTS = 2;

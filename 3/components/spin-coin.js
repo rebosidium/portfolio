@@ -1,5 +1,8 @@
 import {playCoinReturnEffect} from './spin-coin-return-effect.js?v=5eea94eeefc6';
 
+// Temporary global playtest: set to 0 to restore the designed thresholds below.
+const TEST_COIN_STEP = 20000;
+
 export const COIN_TIERS = Object.freeze([
   {id: 'wood', label: 'Wood', minimum: 0},
   {id: 'cracker', label: 'Salt cracker', minimum: 10000},
@@ -24,7 +27,7 @@ export const COIN_TIERS = Object.freeze([
   {id: 'trash', label: 'Trash lid', minimum: 830000},
   {id: 'ufo', label: 'UFO', minimum: 880000},
   {id: 'chest', label: 'Treasure chest', minimum: 980000}
-]);
+].map((tier,index) => TEST_COIN_STEP ? {...tier,minimum:index * TEST_COIN_STEP} : tier));
 export const coinTierFor = score => COIN_TIERS.findLast(tier => score >= tier.minimum) || COIN_TIERS[0];
 export const coinImageURL = tier => `/3/assets/coins/${tier.id}.png`;
 
