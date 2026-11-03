@@ -150,7 +150,8 @@ const JOKES = {
     'Not reading code, Karpathy-style. 😎',
     '🚀 Houston, we have a problem. Token limit reached.',
     'No, I am your father. Source: 🤖 ChatGPT.',
-    'D’ya like dags? The AI gave mine eight legs. 🕷️'
+    'D’ya like dags? The AI gave mine eight legs. 🕷️',
+    'I’m not a meat proxy. I’m a muscle-powered MCP. 💪'
   ]
 };
 const ORDER = ['office', 'design', 'tech'];
