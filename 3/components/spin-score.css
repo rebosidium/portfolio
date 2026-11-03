@@ -42,6 +42,9 @@
 .v3-avatar-spin__ring[hidden] { display: none; }
 .v3-avatar-spin__ring[data-done] { opacity: 0; }
 .v3-avatar-spin__track { stroke: #6a63da26; }
+@media (prefers-color-scheme: dark) {
+ .v3-avatar-spin__track { stroke:#6a63da59; }
+}
 .v3-avatar-spin__fill { stroke-linecap: round; transition: stroke-dasharray 320ms ease-out; }
 
 /* The large portrait stays half transparent until the whole head is loaded (Spin needs it); the header thumbnail is untouched. */
