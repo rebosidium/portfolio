@@ -25,6 +25,14 @@
 .v3-case-cover-art > .v3-case-cover { position:absolute;left:0;bottom:0;height:calc(100% * var(--v3-cover-height) * var(--v3-field-scale) / (var(--v3-cover-height) + var(--v3-art-headroom)));border-bottom-left-radius:0;border-bottom-right-radius:0; }
 .v3-case-cover-window { position:absolute;z-index:1;left:calc(2.9762% - 2px);bottom:0;width:calc(94.13265% + 4px);height:calc(100% * (var(--v3-cover-height) + var(--v3-image-window-headroom,36)) / (var(--v3-cover-height) + var(--v3-art-headroom)));overflow:hidden;pointer-events:none; }
 .v3-case-cover-image { position:absolute;left:2px;top:var(--v3-image-top,3.657049980%);display:block;width:calc(100% - 4px);height:auto;user-select:none;-webkit-user-select:none; }
+/* Desktop keeps the screenshot attached to the field's shared lower clip.
+   One pixel of bleed prevents a fractional raster seam after scale/tilt. */
+@media(min-width:801px){
+ .v3-case-cover-image{top:auto;bottom:-1px}
+ /* Clip only beyond the flowing white panel's bottom. The negative top
+    and side insets retain the existing entrance, parallax and hover. */
+ .v3-case-cover-pin{clip-path:inset(-256px -256px var(--v3-cover-bottom-cut,-256px) -256px)}
+}
 /* The slot ends at the untransformed image baseline. No lower mesh
    padding is reserved for the overlapping fade; image geometry is unchanged. */
 .v3-case-card[data-project="brokerage"] { --v3-cover-height:436.2;--v3-image-rise:38;--v3-image-window-headroom:60;--v3-image-top:4.433696090%;--v3-field-scale:0.977074736359; }

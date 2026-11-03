@@ -208,7 +208,7 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
   }
   if(!desktop.matches||reduced.matches){
    for(const column of columns){setStyle(column,'transform','none');setStyle(column,'--v3-column-offset','0px');}
-   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale','--v3-image-shift','--v3-image-scale'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
+   for(const {article}of cards)for(const name of ['--v3-stack-scale','--v3-stack-opacity','--v3-stack-lift','--v3-cover-shift','--v3-cover-scale','--v3-image-shift','--v3-image-scale','--v3-cover-bottom-cut'])if(article.style.getPropertyValue(name))article.style.removeProperty(name);
    return;
   }
   for(const card of cards){
@@ -245,6 +245,11 @@ export function mountCaseCards(host=document.querySelector('.v3-page')){
    pin.toggleAttribute('data-stack-covered',overlap>=1&&!reduced.matches);
    const factor=Math.min(1,Math.max(0,pageY/180)),scale=active?1+.22*factor:1;
    const pinTop=Math.min(Math.max(articleTop,stackTop),articleTop+articleHeight-height);
+   // Sticky stops at the article bottom, while the white copy retains its
+   // existing upward lift. Bound the artwork there without changing motion
+   // or fading its still-visible upper part. One pixel covers layout rounding.
+   const copyBottom=articleTop+articleHeight+frame.lift;
+   setStyle(article,'--v3-cover-bottom-cut',`${Math.max(-256,pinTop+height-copyBottom+1).toFixed(3)}px`);
    if(image){
     // The entire art wrapper follows continuous article flow. Image, mesh
     // and clip share one pose; reverse scrolling retraces it without a reset.
